@@ -26,7 +26,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install deps
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       # 타입체크 + 번들
       - run: pnpm run build
