@@ -36,4 +36,4 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          pnpm dlx vercel@latest --prod --yes
+          pnpm dlx vercel@latest --prod --yes --scope=kingseokjin
