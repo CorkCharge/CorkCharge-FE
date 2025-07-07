@@ -24,11 +24,7 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-<<<<<<< HEAD
       - name: Install dependencies
-=======
-      - name: Install deps
->>>>>>> 5da50e85ed66659d62cb48e9d2925cdb3d15f763
         run: pnpm install
 
       - name: Build
