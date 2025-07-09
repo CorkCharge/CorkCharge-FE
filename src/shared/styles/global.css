@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Brand and UI color palette */
+:root {
+  --corkcharge-gray: #9fa2aa;
+}
+
 /* tailwind layer */
 @layer base {
   html {
