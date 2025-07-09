@@ -17,4 +17,10 @@
       linear-gradient(0deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.3) 100%),
       radial-gradient(201% 99.45% at -20.81% 68.19%, #90212a 0%, #dcdbe8 70.67%), #fff;
   }
+  .button-shadow {
+    box-shadow:
+      0px 4px 10px 0px rgba(0, 0, 0, 0.05),
+      1px 3px 20px 0px rgba(0, 0, 0, 0.1),
+      0.318px 0.318px 0.955px 0px #fff inset;
+  }
 }

@@ -1,9 +1,10 @@
-import StartPage from '../../shared/components/onBoarding/StartPage';
+import AboutCorkage from '@/shared/components/onBoarding/AboutCorkage';
+import StartPage from '@/shared/components/onBoarding/StartPage';
 
 function OnBoarding() {
   return (
     <>
-      <StartPage />
+      <AboutCorkage />
     </>
   );
 }
