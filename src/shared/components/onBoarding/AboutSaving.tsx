@@ -4,7 +4,7 @@ import savingSample from '@/shared/assets/images/saving-sample.png';
 
 function AboutSaving() {
   return (
-    <div className="h-screen">
+    <>
       <span className="fixed right-8 top-[50px] text-[var(--corkcharge-gray)] underline underline-offset-4">
         SKIP
       </span>
@@ -30,7 +30,7 @@ function AboutSaving() {
         </p>
         <Button value="다음" />
       </div>
-    </div>
+    </>
   );
 }
 

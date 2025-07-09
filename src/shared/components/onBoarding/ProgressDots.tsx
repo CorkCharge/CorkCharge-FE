@@ -8,6 +8,7 @@ interface DotsProps {
 const renderDots = (total: number, now: number, color?: string) =>
   [...new Array(total)].map((_, i) => (
     <span
+      key={i}
       className="block size-[6px] rounded-[50%]"
       style={{ backgroundColor: i < now ? '#e75257' : color }}
     ></span>
