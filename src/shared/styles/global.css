@@ -2,17 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  * {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+  }
+  html {
+    width: 393px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #f8f8f8;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  body {
+    -ms-overflow-style: none;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+  input {
+    border: none;
+    :focus {
+      outline: none;
+    }
+  }
+  a {
+    color: #fff;
+    text-decoration: none;
+    outline: none;
+  }
+  a:hover,
+  a:active {
+    text-decoration: none;
+  }
+}
+
 /* Brand and UI color palette */
 :root {
   --corkcharge-gray: #9fa2aa;
-}
-
-/* tailwind layer */
-@layer base {
-  html {
-    font-family: 'Pretendard Variable', sans-serif;
-    scroll-behavior: smooth;
-  }
 }
 
 @layer components {
@@ -22,6 +65,7 @@
       linear-gradient(0deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.3) 100%),
       radial-gradient(201% 99.45% at -20.81% 68.19%, #90212a 0%, #dcdbe8 70.67%), #fff;
   }
+  /* 버튼 shadow */
   .button-shadow {
     box-shadow:
       0px 4px 10px 0px rgba(0, 0, 0, 0.05),
