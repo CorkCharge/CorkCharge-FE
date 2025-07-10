@@ -2,9 +2,15 @@ import HandShake from './handshake.svg';
 import Logo from './logo_symbol.svg';
 import Arrow from './right_arrow.svg';
 import Back from '../../shared/assets/left_arrow.svg';
+import Bg from './bg.svg';
 const Doit = () => {
   return (
-    <div className="relative flex min-h-screen flex-col items-center bg-[beige]">
+    <div className="relative flex min-h-screen flex-col items-center">
+      <img
+        src={Bg}
+        alt="배경"
+        className="absolute left-0 top-0 z-[-1] h-full w-full object-cover"
+      />
       <img src={Back} alt="왼쪽 화살표" className="absolute left-[3vh] top-[7vh] cursor-pointer" />
       <div className="mt-[21.126vh] flex flex-col items-center">
         <img src={Logo} alt="로고" className="h-[77.265px] w-[52.727px]" />
