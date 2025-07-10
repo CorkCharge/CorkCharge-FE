@@ -16,8 +16,8 @@ const Doit = () => {
         <img src={Logo} alt="로고" className="h-[77.265px] w-[52.727px]" />
         <img src={HandShake} alt="악수로고" className="-mt-[16px] h-[98.318px] w-[176.607px]" />
       </div>
-      <div className="mt-[5.98vh] text-[20px] font-[700]">해주세요 서비스란?</div>
-      <div className="mt-[1.1737vh] flex flex-col items-center justify-center text-center text-[14px] font-[500]">
+      <div className="mt-[5.98vh] text-[20px] font-[700] text-white">해주세요 서비스란?</div>
+      <div className="mt-[1.1737vh] flex flex-col items-center justify-center text-center text-[14px] font-[500] text-white">
         코르크 차지의 콜키지 추가 방식은 매장에 직접 방문하여
         <br />
         사장님과 함께 콜키지 비즈니스를 시작하는 방식입니다.
