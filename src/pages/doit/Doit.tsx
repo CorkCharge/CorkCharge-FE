@@ -4,6 +4,7 @@ import Logo from './logo_symbol.svg';
 import Arrow from './right_arrow.svg';
 import Back from '../../shared/assets/left_arrow.svg';
 import Bg from './bg.svg';
+
 const Doit = () => {
   const navigate = useNavigate();
 

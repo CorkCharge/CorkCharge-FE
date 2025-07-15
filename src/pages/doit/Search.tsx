@@ -5,6 +5,7 @@ import SearchLogo from './logo_search.svg';
 import TextArea from './textArea.svg';
 import Glasses from './glasses.svg';
 import StoreItem from '../../shared/components/storeItem/StoreItem ';
+import NextButton from '../../shared/components/nextButton/NextButton';
 
 const Search = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const Search = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center">
+    <div className="relative flex h-screen flex-col items-center">
       {/* 헤더 */}
       <div className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
         <img
@@ -39,10 +40,18 @@ const Search = () => {
           <img src={Glasses} alt="돋보기" className="absolute right-[34.13px] h-[18px] w-[18px]" />
         </div>
       </div>
-      <div className="mt-[16px] flex w-full flex-col items-center gap-[16px]">
+      <div className="mt-[16px] flex h-[608px] w-full flex-grow flex-col items-center gap-[16px] overflow-y-auto pb-[180px]">
+        <StoreItem />
+        <StoreItem />
+        <StoreItem />
+        <StoreItem />
+        <StoreItem />
+        <StoreItem />
         <StoreItem />
         <StoreItem />
       </div>
+      <div className="fixed bottom-0 left-1/2 z-50 h-[168px] w-[393px] -translate-x-1/2 bg-gradient-to-b from-[rgba(255,255,255,0)] via-white to-white" />
+      <NextButton />
     </div>
   );
 };

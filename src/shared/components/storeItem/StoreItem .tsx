@@ -11,9 +11,10 @@ const StoreItem = () => {
 
   return (
     <div
-      className={`relative z-10 flex h-[88px] w-[361px] flex-row items-center rounded-[16px] ${
+      className={`relative z-10 flex min-h-[88px] w-[361px] flex-row items-center rounded-[16px] ${
         isChecked ? '' : 'bg-[#F3F3F6]'
       }`}
+      onClick={toggleChecked}
     >
       {isChecked && (
         <img
@@ -35,12 +36,7 @@ const StoreItem = () => {
         </div>
       </div>
       {/* 라디오 버튼 */}
-      <img
-        src={isChecked ? Checked : Circle}
-        alt="라디오버튼"
-        className="cursor-pointer"
-        onClick={toggleChecked}
-      />
+      <img src={isChecked ? Checked : Circle} alt="라디오버튼" className="cursor-pointer" />
     </div>
   );
 };
