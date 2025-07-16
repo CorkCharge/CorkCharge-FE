@@ -7,6 +7,9 @@ const Request = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
+  const handleRegisterClick = () => {
+    navigate('/doit/complete');
+  };
   return (
     <div className="relative flex h-screen flex-col items-center">
       <img
@@ -58,7 +61,10 @@ const Request = () => {
           >
             취소
           </button>
-          <button className="m-auto h-[48px] w-[156px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white">
+          <button
+            onClick={handleRegisterClick}
+            className="m-auto h-[48px] w-[156px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white"
+          >
             등록하기
           </button>
         </div>
