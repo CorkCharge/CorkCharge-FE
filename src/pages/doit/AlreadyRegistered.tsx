@@ -8,6 +8,9 @@ const AlreadyRegistered = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
+  const handleMenuClick = () => {
+    navigate('/doit/request');
+  };
 
   return (
     <div className="relative flex h-screen flex-col items-center">
@@ -31,7 +34,10 @@ const AlreadyRegistered = () => {
         </div>
       </div>
       {/* 여기먼저 해주세요 */}
-      <div className="mb-[16px] flex min-h-[72px] w-[361px] cursor-pointer flex-row items-center gap-[190px] rounded-[16px] bg-[#F3F3F6]">
+      <div
+        onClick={handleMenuClick}
+        className="mb-[16px] flex min-h-[72px] w-[361px] cursor-pointer flex-row items-center gap-[190px] rounded-[16px] bg-[#F3F3F6]"
+      >
         <div className="ml-[17px] text-[16px] font-[500] text-[#35353F]">여기 다시 해주세요</div>
         <img src={RightArrow} alt="오른쪽 화살표" className="h-[20.344px] w-[11.461px]" />
       </div>
