@@ -1,20 +1,19 @@
-import { useState } from 'react';
 import Circle from './circle.svg';
 import Checked from './checked_circle.svg';
 import Bg from './bg.svg';
 
-const StoreItem = () => {
-  const [isChecked, setIsChecked] = useState(false);
-  const toggleChecked = () => {
-    setIsChecked((prev) => !prev);
-  };
+interface StoreItemProps {
+  isChecked: boolean;
+  onClick: () => void;
+}
 
+const StoreItem = ({ isChecked, onClick }: StoreItemProps) => {
   return (
     <div
       className={`relative z-10 flex min-h-[88px] w-[361px] flex-row items-center rounded-[16px] ${
         isChecked ? '' : 'bg-[#F3F3F6]'
       }`}
-      onClick={toggleChecked}
+      onClick={onClick}
     >
       {isChecked && (
         <img
