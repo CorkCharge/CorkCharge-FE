@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import ProgressDots from './ProgressDots';
 import hotNow from '@/shared/components/onBoarding/images/hot-now.png';
 import numerodos from '@/shared/components/onBoarding/images/numerodos-store.png';
@@ -5,7 +7,17 @@ import newWave from '@/shared/components/onBoarding/images/new-wave-store.png';
 import mayvile from '@/shared/components/onBoarding/images/mayvile-store.png';
 import Button from '../common/Button';
 
-function AboutHotStore() {
+function AboutHotStore({ onNext }: { onNext: React.Dispatch<React.SetStateAction<number>> }) {
+  const [isSmallView, setIsSmallView] = useState(false);
+
+  useEffect(() => {
+    checkView();
+    window.addEventListener('resize', checkView);
+    return () => window.removeEventListener('resize', checkView);
+  }, []);
+
+  const checkView = () => setIsSmallView(window.innerWidth < 405);
+
   return (
     <div className="relative">
       <span className="absolute right-8 top-[50px] text-[var(--corkcharge-gray)] underline underline-offset-4">
@@ -26,27 +38,34 @@ function AboutHotStore() {
         </h2>
         <div className="mt-2 flex flex-col items-center">
           <img src={hotNow} className="w-full" />
-          <div className="relative h-[130vw] max-h-[1000px] w-full">
-            <img src={numerodos} className="absolute left-1/2 top-0 z-10 -translate-x-1/2" />
+          <div className="relative h-10 w-full">
+            <img src={numerodos} className="absolute left-1/2 top-0 z-10 w-full -translate-x-1/2" />
             <img
               src={newWave}
-              className="absolute left-1/2 z-[8] -translate-x-1/2 translate-y-1/4"
+              className="absolute left-1/2 z-[8] w-[99%] -translate-x-1/2 translate-y-1/4"
             />
             <img
               src={mayvile}
-              className="absolute left-1/2 z-[6] -translate-x-1/2 translate-y-[36%]"
+              className="absolute left-1/2 z-[6] w-[103%] -translate-x-1/2 translate-y-[36%]"
             />
-            <img
-              src={mayvile}
-              className="absolute left-1/2 z-[4] -translate-x-1/2 translate-y-[44%]"
-            />
-            <Button value="다음" className="absolute top-[110vw] md:top-[900px]" />
+            <div className="absolute left-1/2 z-[4] w-[103%] -translate-x-1/2 translate-y-[44%]">
+              <img src={mayvile} className="w-full" />
+              {!isSmallView && <Button value="다음" className="-ml-[7%] mb-4 w-[114%]" />}
+            </div>
           </div>
         </div>
       </div>
-      {/* <div className="fixed bottom-8 left-10 right-10">
-        <Button value="다음" />
-      </div> */}
+      {isSmallView && (
+        <div className="fixed bottom-8 w-full text-center">
+          <Button
+            value="다음"
+            className="w-4/5"
+            onClick={() => {
+              onNext((prev) => prev + 1);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

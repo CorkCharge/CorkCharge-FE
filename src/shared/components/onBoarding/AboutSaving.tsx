@@ -2,10 +2,10 @@ import Button from '../common/Button';
 import ProgressDots from './ProgressDots';
 import savingSample from '@/shared/assets/images/saving-sample.png';
 
-function AboutSaving() {
+function AboutSaving({ onNext }: { onNext: React.Dispatch<React.SetStateAction<number>> }) {
   return (
-    <>
-      <span className="fixed right-8 top-[50px] text-[var(--corkcharge-gray)] underline underline-offset-4">
+    <div className="relative">
+      <span className="absolute right-8 top-[50px] text-[var(--corkcharge-gray)] underline underline-offset-4">
         SKIP
       </span>
       <ProgressDots total={4} now={2} color={'var(--corkcharge-gray)'} className="pt-[60px]" />
@@ -24,13 +24,19 @@ function AboutSaving() {
         <img src={savingSample} className="block w-[196px] text-center" />
       </div>
 
-      <div className="fixed bottom-8 left-10 right-10">
+      <div className="fixed bottom-8 mx-auto w-full max-w-[600px] text-center">
         <p className="mb-8 text-center text-[15px] text-[var(--corkcharge-gray)]">
           저장하기 한표가 콜키지를 이끌어냅니다.
         </p>
-        <Button value="다음" />
+        <Button
+          value="다음"
+          className="w-4/5"
+          onClick={() => {
+            onNext((prev) => prev + 1);
+          }}
+        />
       </div>
-    </>
+    </div>
   );
 }
 

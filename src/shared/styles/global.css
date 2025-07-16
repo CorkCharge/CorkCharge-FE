@@ -51,6 +51,9 @@
   a:active {
     text-decoration: none;
   }
+  img {
+    max-width: none;
+  }
 }
 
 /* Brand and UI color palette */

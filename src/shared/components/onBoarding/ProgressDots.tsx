@@ -10,7 +10,7 @@ const renderDots = (total: number, now: number, color?: string) =>
     <span
       key={i}
       className="block size-[6px] rounded-[50%]"
-      style={{ backgroundColor: i < now ? '#e75257' : color }}
+      style={{ backgroundColor: i === now - 1 ? '#e75257' : color }}
     ></span>
   ));
 

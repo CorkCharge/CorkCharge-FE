@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Test from '../../pages/Test';
-import OnBoarding from '../../pages/onBoarding/OnBoarding';
+import Test from '@/pages/Test';
+import OnBoarding from '@/pages/onBoarding/OnBoarding';
+import SignIn from '@/pages/signIn/SignIn';
 
 const router = createBrowserRouter([
   {
@@ -10,6 +11,14 @@ const router = createBrowserRouter([
   {
     path: '/onboarding',
     element: <OnBoarding />,
+  },
+  {
+    path: '/signin',
+    element: <SignIn />,
+  },
+  {
+    path: '/prefer',
+    element: <SignIn />,
   },
 ]);
 
