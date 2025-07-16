@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
-import X from './x.svg';
+import X from './assets/x.svg';
 import RightArrow from '../../shared/assets/right_arrow.svg';
 
 const NotRegistered = () => {

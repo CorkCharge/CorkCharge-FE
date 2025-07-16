@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
-import X from './x.svg';
-import SearchLogo from './logo_search.svg';
-import TextArea from './textArea.svg';
-import Glasses from './glasses.svg';
+import X from './assets/x.svg';
+import SearchLogo from './assets/logo_search.svg';
+import TextArea from './assets/textArea.svg';
+import Glasses from './assets/glasses.svg';
 import StoreItem from '../../shared/components/storeItem/StoreItem ';
 import NextButton from '../../shared/components/nextButton/NextButton';
 

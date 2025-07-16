@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import HandShake from './handshake.svg';
-import Logo from './logo_symbol.svg';
-import Arrow from './right_arrow.svg';
+import HandShake from './assets/handshake.svg';
+import Logo from './assets/logo_symbol.svg';
+import Arrow from './assets/right_arrow.svg';
 import Back from '../../shared/assets/left_arrow.svg';
-import Bg from './bg.svg';
+import Bg from './assets/bg.svg';
 
 const Doit = () => {
   const navigate = useNavigate();
