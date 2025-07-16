@@ -26,7 +26,7 @@ const Search = () => {
 
   return (
     <div className="relative flex h-screen flex-col items-center">
-      {/* 헤더 */}
+      {/* 헤더1 */}
       <div className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
         <img
           src={Back}
