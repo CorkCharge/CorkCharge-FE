@@ -5,9 +5,11 @@ import Bg from './bg.svg';
 interface StoreItemProps {
   isChecked: boolean;
   onClick: () => void;
+  storeName: string;
+  address: string;
 }
 
-const StoreItem = ({ isChecked, onClick }: StoreItemProps) => {
+const StoreItem = ({ isChecked, onClick, storeName, address }: StoreItemProps) => {
   return (
     <div
       className={`relative z-10 flex min-h-[88px] w-[361px] flex-row items-center rounded-[16px] ${
@@ -26,12 +28,12 @@ const StoreItem = ({ isChecked, onClick }: StoreItemProps) => {
         <div
           className={`ml-[16px] text-[20px] font-[700] ${isChecked ? 'text-white' : 'text-black'}`}
         >
-          깍둑 - 경희대점
+          {storeName}
         </div>
         <div
           className={`ml-[16px] text-[14px] font-[500] ${isChecked ? 'text-white' : 'text-black'}`}
         >
-          서울 광진구 아차산로 24 2층
+          {address}
         </div>
       </div>
       {/* 라디오 버튼 */}

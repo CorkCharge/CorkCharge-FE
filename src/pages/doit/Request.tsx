@@ -1,9 +1,14 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Back from '../../shared/assets/whiteArrow.svg';
 import X from '../../shared/assets/whiteX.svg';
 import Bg from './assets/request_bg.svg';
 const Request = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { storeName, address } = location.state || {
+    storeName: '매장명 없음',
+    address: '주소 없음',
+  };
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -30,8 +35,8 @@ const Request = () => {
       </div>
       {/*가게정보*/}
       <div className="mb-[18px] ml-[20px] mt-[16px] flex w-full flex-col gap-[10px] text-white">
-        <div className={`ml-[16px] text-[30px] font-[700]`}>깍둑 - 경희대점</div>
-        <div className={`ml-[16px] text-[14px] font-[500]`}>서울 광진구 아차산로 24 2층</div>
+        <div className={`ml-[16px] text-[30px] font-[700]`}>{storeName}</div>
+        <div className={`ml-[16px] text-[14px] font-[500]`}>{address}</div>
       </div>
       <div
         className="h-[528px] w-[361px] rounded-[16px] bg-white/80"
@@ -58,6 +63,7 @@ const Request = () => {
                 '0px 0px 0.5px 0px rgba(66, 71, 76, 0.32), 0px 4px 8px 0px rgba(66, 71, 76, 0.05)',
               backdropFilter: 'blur(5px)',
             }}
+            onClick={handleBackClick}
           >
             취소
           </button>

@@ -14,8 +14,60 @@ const Search = () => {
     navigate(-1);
   };
 
+  const stores = [
+    {
+      storeName: '깍뚝 - 경희대점',
+      address: '서울 광진구 아차산로 24 2층',
+    },
+    {
+      storeName: '해장국 - 서울대입구점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    {
+      storeName: '봉구스밥버거 - 건대후문점',
+      address: '서울 관악구 신림로 123',
+    },
+    // ... 총 10개
+  ];
+
   const handleNextClick = () => {
-    navigate('/doit/search/request/1');
+    if (selectedIndex != null) {
+      const selectedStore = stores[selectedIndex];
+      navigate('/doit/search/request/1', {
+        state: {
+          storeName: selectedStore.storeName,
+          address: selectedStore.address,
+        },
+      });
+    }
   };
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -52,8 +104,14 @@ const Search = () => {
         </div>
       </div>
       <div className="mt-[16px] flex h-[608px] w-full flex-grow flex-col items-center gap-[16px] overflow-y-auto pb-[180px]">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <StoreItem key={i} isChecked={selectedIndex === i} onClick={() => handleItemClick(i)} />
+        {stores.map((store, i) => (
+          <StoreItem
+            key={i}
+            isChecked={selectedIndex === i}
+            onClick={() => handleItemClick(i)}
+            storeName={store.storeName}
+            address={store.address}
+          />
         ))}
       </div>
       <div className="fixed bottom-0 left-1/2 z-50 h-[168px] w-[393px] -translate-x-1/2 bg-gradient-to-b from-[rgba(255,255,255,0)] via-white to-white" />

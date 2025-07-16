@@ -1,15 +1,25 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
 import X from './assets/x.svg';
 import RightArrow from '../../shared/assets/right_arrow.svg';
 
 const NotRegistered = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { storeName, address } = location.state || {
+    storeName: '매장명 없음',
+    address: '주소 없음',
+  };
   const handleBackClick = () => {
     navigate(-1);
   };
   const handleMenuClick = () => {
-    navigate('/doit/request');
+    navigate('/doit/request', {
+      state: {
+        storeName,
+        address,
+      },
+    });
   };
 
   return (
@@ -28,10 +38,8 @@ const NotRegistered = () => {
 
       {/*가게정보*/}
       <div className="mb-[74px] ml-[20px] mt-[112px] flex w-full flex-col gap-[10px]">
-        <div className={`ml-[16px] text-[20px] font-[700] text-black`}>깍둑 - 경희대점</div>
-        <div className={`ml-[16px] text-[14px] font-[500] text-[#35353F]`}>
-          서울 광진구 아차산로 24 2층
-        </div>
+        <div className={`ml-[16px] text-[20px] font-[700] text-black`}>{storeName}</div>
+        <div className={`ml-[16px] text-[14px] font-[500] text-[#35353F]`}>{address}</div>
       </div>
       {/* 여기먼저 해주세요 */}
       <div
