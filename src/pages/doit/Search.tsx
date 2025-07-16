@@ -15,7 +15,7 @@ const Search = () => {
   };
 
   const handleNextClick = () => {
-    navigate('/doit/search/request1');
+    navigate('/doit/search/request/1');
   };
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);

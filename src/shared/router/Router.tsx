@@ -3,6 +3,7 @@ import Test from '../../pages/Test';
 import Doit from '../../pages/doit/Doit';
 import Search from '../../pages/doit/Search';
 import NotRegistered from '../../pages/doit/NotRegistered';
+import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 
 const router = createBrowserRouter([
   {
@@ -18,8 +19,12 @@ const router = createBrowserRouter([
     element: <Search />,
   },
   {
-    path: '/doit/search/request1',
+    path: '/doit/search/request/1',
     element: <NotRegistered />,
+  },
+  {
+    path: '/doit/search/request/2',
+    element: <AlreadyRegistered />,
   },
 ]);
 
