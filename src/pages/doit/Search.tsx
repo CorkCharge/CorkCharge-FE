@@ -14,6 +14,10 @@ const Search = () => {
     navigate(-1);
   };
 
+  const handleNextClick = () => {
+    navigate('/doit/search/request1');
+  };
+
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const handleItemClick = (index: number) => {
@@ -53,7 +57,7 @@ const Search = () => {
         ))}
       </div>
       <div className="fixed bottom-0 left-1/2 z-50 h-[168px] w-[393px] -translate-x-1/2 bg-gradient-to-b from-[rgba(255,255,255,0)] via-white to-white" />
-      {selectedIndex !== null && <NextButton />}
+      {selectedIndex !== null && <NextButton onClick={handleNextClick} />}
     </div>
   );
 };

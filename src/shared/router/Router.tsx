@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Test from '../../pages/Test';
 import Doit from '../../pages/doit/Doit';
 import Search from '../../pages/doit/Search';
+import NotRegistered from '../../pages/doit/NotRegistered';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/doit/search',
     element: <Search />,
+  },
+  {
+    path: '/doit/search/request1',
+    element: <NotRegistered />,
   },
 ]);
 
