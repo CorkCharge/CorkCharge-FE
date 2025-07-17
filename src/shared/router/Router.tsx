@@ -8,6 +8,8 @@ import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
 import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
+import StoreCheck from '@/pages/add/StoreCheck';
+import SearchStore from '@/pages/add/SearchStore';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +47,14 @@ const router = createBrowserRouter([
   {
     path: '/signin',
     element: <SignIn />,
+  },
+  {
+    path: '/add/storecheck',
+    element: <StoreCheck />,
+  },
+  {
+    path: '/add/search',
+    element: <SearchStore />,
   },
 ]);
 
