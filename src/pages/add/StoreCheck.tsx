@@ -14,7 +14,12 @@ const StoreCheck = () => {
     navigate(-1);
   };
   const handleRegisterClick = () => {
-    navigate('/');
+    navigate('/add/option', {
+      state: {
+        storeName: storeName,
+        address: address,
+      },
+    });
   };
   return (
     <div className="relative flex h-screen flex-col items-center">
@@ -56,7 +61,7 @@ const StoreCheck = () => {
         </div>
         <div className="mt-[67px] flex flex-row gap-[6px]">
           <button
-            onClick={handleBackClick}
+            onClick={handleRegisterClick}
             className="m-auto h-[48px] w-[123px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white"
           >
             맞습니다
@@ -68,7 +73,7 @@ const StoreCheck = () => {
                 '0px 0px 0.5px 0px rgba(66, 71, 76, 0.32), 0px 4px 8px 0px rgba(66, 71, 76, 0.05)',
               backdropFilter: 'blur(5px)',
             }}
-            onClick={handleRegisterClick}
+            onClick={handleBackClick}
           >
             아니요
           </button>

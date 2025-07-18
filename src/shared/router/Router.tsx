@@ -10,6 +10,7 @@ import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
 import StoreCheck from '@/pages/add/StoreCheck';
 import SearchStore from '@/pages/add/SearchStore';
+import AddOption from '@/pages/add/AddOption';
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: '/add/search',
     element: <SearchStore />,
+  },
+  {
+    path: '/add/option',
+    element: <AddOption />,
   },
 ]);
 
