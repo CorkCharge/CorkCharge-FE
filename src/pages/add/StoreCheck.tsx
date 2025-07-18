@@ -3,7 +3,7 @@ import Back from '../../shared/assets/whiteArrow.svg';
 import X from '../../shared/assets/whiteX.svg';
 import Bg from '../doit/assets/request_bg.svg';
 import Placeholder from '../../shared/assets/placeholder.svg';
-const Request = () => {
+const StoreCheck = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { storeName, address } = location.state || {
@@ -78,4 +78,4 @@ const Request = () => {
   );
 };
 
-export default Request;
+export default StoreCheck;
