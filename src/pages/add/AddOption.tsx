@@ -88,6 +88,8 @@ const AddOption = () => {
           + 다중 콜키지 추가
         </div>
       </div>
+      {/*구분선*/}
+      <div className="mt-[8px] h-[1px] w-[91vw] bg-[#DBDDE1]"></div>
     </div>
   );
 };
