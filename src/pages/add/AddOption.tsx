@@ -39,11 +39,6 @@ const AddOption = () => {
     navigate(-1);
   };
 
-  const [multipleOptions, setMultipleOptions] = useState([{ type: '', cost: '' }]);
-  const handleAddMultiple = () => {
-    setMultipleOptions((prev) => [...prev, { type: '', cost: '' }]);
-  };
-
   return (
     <div className="relative flex h-screen flex-col items-center">
       {/* 헤더1 */}
