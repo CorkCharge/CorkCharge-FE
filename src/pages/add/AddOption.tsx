@@ -39,6 +39,11 @@ const AddOption = () => {
     navigate(-1);
   };
 
+  const [multipleOptions, setMultipleOptions] = useState([{ type: '', cost: '' }]);
+  const handleAddMultiple = () => {
+    setMultipleOptions((prev) => [...prev, { type: '', cost: '' }]);
+  };
+
   return (
     <div className="relative flex h-screen flex-col items-center">
       {/* 헤더1 */}
@@ -108,36 +113,44 @@ const AddOption = () => {
       {/* 다중 콜키지 클릭 - 주종,비용, +다중콜키지 추가 묶음 div */}
       {selected === 'multiple' && (
         <div className="mt-[32px] flex w-full flex-col gap-[8px]">
-          {/* 주종, 입력창 묶음 div */}
-          <div className="flex w-full flex-row gap-[20px]">
-            <div className="ml-[32px] text-[16px] font-[700]">주종</div>
-            <div className="relative flex flex-row items-center">
-              <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
-              {/* 입력창 */}
-              <input
-                type="text"
-                placeholder="주종을 입력하세요"
-                className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
-              />
-              <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
+          {multipleOptions.map((_, index) => (
+            <div key={index}>
+              {/* 주종, 입력창 묶음 div */}
+              <div className="flex w-full flex-row gap-[20px]">
+                <div className="ml-[32px] text-[16px] font-[700]">주종</div>
+                <div className="relative flex flex-row items-center">
+                  <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
+                  {/* 입력창 */}
+                  <input
+                    type="text"
+                    placeholder="주종을 입력하세요"
+                    className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+                  />
+                  <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
+                </div>
+              </div>
+              {/* 비용, 입력창 묶음 div */}
+              <div className="flex w-full flex-row gap-[20px]">
+                <div className="ml-[32px] text-[16px] font-[700]">비용</div>
+                <div className="relative flex flex-row items-center">
+                  <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
+                  {/* 입력창 */}
+                  <input
+                    type="text"
+                    placeholder="비용을 입력하세요"
+                    className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+                  />
+                  <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
+                </div>
+              </div>
             </div>
-          </div>
-          {/* 비용, 입력창 묶음 div */}
-          <div className="flex w-full flex-row gap-[20px]">
-            <div className="ml-[32px] text-[16px] font-[700]">비용</div>
-            <div className="relative flex flex-row items-center">
-              <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
-              {/* 입력창 */}
-              <input
-                type="text"
-                placeholder="비용을 입력하세요"
-                className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
-              />
-              <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
-            </div>
-          </div>
+          ))}
+
           {/* +다중 콜키지 추가 버튼 : 주종, 비용 입력창 묶음 div가 한쌍 씩 추가되야함.*/}
-          <div className="ml-[61%] min-w-[130px] cursor-pointer text-[16px] font-[500] text-[#9FA2AA]">
+          <div
+            onClick={handleAddMultiple}
+            className="ml-[61%] min-w-[130px] cursor-pointer text-[16px] font-[500] text-[#9FA2AA]"
+          >
             + 다중 콜키지 추가
           </div>
         </div>
