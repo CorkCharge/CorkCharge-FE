@@ -9,6 +9,7 @@ import DoitComplete from '../../pages/doit/DoitComplete';
 import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
 import MainMyPage from '@/pages/myPage/MainMyPage';
+import ChooseRole from '../components/myPage/ChooseRole';
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: '/my',
     element: <MainMyPage />,
+  },
+  {
+    path: '/my/signin',
+    element: <ChooseRole />,
   },
 ]);
 
