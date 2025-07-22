@@ -38,6 +38,12 @@ const AddOption = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
+
+  const [multipleOptions, setMultipleOptions] = useState([{ type: '', cost: '' }]);
+  const handleAddMultiple = () => {
+    setMultipleOptions((prev) => [...prev, { type: '', cost: '' }]);
+  };
+
   return (
     <div className="relative flex h-screen flex-col items-center">
       {/* 헤더1 */}
@@ -215,7 +221,17 @@ const AddOption = () => {
           <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
         </div>
       )}
-
+      <div className="absolute bottom-[5.6vh] flex w-full flex-row justify-center gap-[12px]">
+        <button
+          className="h-[48px] w-[38%] cursor-pointer items-center rounded-[12px] bg-[#F3F3F6] text-[16px] font-[700] text-black"
+          onClick={handleBackClick}
+        >
+          뒤로가기
+        </button>
+        <button className="h-[48px] w-[38%] cursor-pointer items-center rounded-[12px] bg-[#90212A] text-[16px] font-[700] text-white">
+          등록하기
+        </button>
+      </div>
       <InfoModal />
     </div>
   );
