@@ -59,6 +59,9 @@
 /* Brand and UI color palette */
 :root {
   --corkcharge-gray: #9fa2aa;
+  --gray-1: #f3f3f6;
+  --gray-4: #c5c8cf;
+  --gray-6: #80818b;
 }
 
 @layer components {

@@ -8,6 +8,7 @@ import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
 import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
+import MainMyPage from '@/pages/myPage/MainMyPage';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: '/signin',
     element: <SignIn />,
+  },
+  {
+    path: '/my',
+    element: <MainMyPage />,
   },
 ]);
 
