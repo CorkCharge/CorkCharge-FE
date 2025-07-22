@@ -45,7 +45,7 @@ const AddOption = () => {
   };
 
   return (
-    <div className="relative flex h-screen flex-col items-center">
+    <div className="relative flex h-screen w-full flex-col items-stretch">
       {/* 헤더1 */}
       <div className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
         <img
@@ -63,172 +63,186 @@ const AddOption = () => {
         <div className={`ml-[32px] text-[14px] font-[500] text-[#35353F]`}>{address}</div>
       </div>
       {/*구분선*/}
-      <div className="mt-[8px] h-[1px] w-[91vw] bg-[#DBDDE1]"></div>
-      {/*기본정보 및 버튼*/}
-      <div className="mt-[22px] flex w-full flex-row gap-[20px]">
-        <div className="ml-[32px] text-[16px] font-[700]">기본정보</div>
-        <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
-          <button
-            onClick={() => handleSelect('free')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selected === 'free' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            콜키지 프리
-          </button>
-          <button
-            onClick={() => handleSelect('byBottle')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selected === 'byBottle' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            병당 콜키지
-          </button>
-          <button
-            onClick={() => handleSelect('byPerson')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selected === 'byPerson' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            인당 콜키지
-          </button>
-          <button
-            onClick={() => handleSelect('byTable')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selected === 'byTable' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            테이블 콜키지
-          </button>
-          <button
-            onClick={() => handleSelect('multiple')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selected === 'multiple' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            다중 콜키지
-          </button>
-        </div>
-      </div>
-      {/* 다중 콜키지 클릭 - 주종,비용, +다중콜키지 추가 묶음 div */}
-      {selected === 'multiple' && (
-        <div className="mt-[32px] flex w-full flex-col gap-[8px]">
-          {multipleOptions.map((_, index) => (
-            <div key={index}>
-              {/* 주종, 입력창 묶음 div */}
-              <div className="flex w-full flex-row gap-[20px]">
-                <div className="ml-[32px] text-[16px] font-[700]">주종</div>
-                <div className="relative flex flex-row items-center">
-                  <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
-                  {/* 입력창 */}
-                  <input
-                    type="text"
-                    placeholder="주종을 입력하세요"
-                    className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
-                  />
-                  <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
-                </div>
-              </div>
-              {/* 비용, 입력창 묶음 div */}
-              <div className="flex w-full flex-row gap-[20px]">
-                <div className="ml-[32px] text-[16px] font-[700]">비용</div>
-                <div className="relative flex flex-row items-center">
-                  <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
-                  {/* 입력창 */}
-                  <input
-                    type="text"
-                    placeholder="비용을 입력하세요"
-                    className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
-                  />
-                  <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {/* +다중 콜키지 추가 버튼 : 주종, 비용 입력창 묶음 div가 한쌍 씩 추가되야함.*/}
-          <div
-            onClick={handleAddMultiple}
-            className="ml-[61%] min-w-[130px] cursor-pointer text-[16px] font-[500] text-[#9FA2AA]"
-          >
-            + 다중 콜키지 추가
+      <div className="mt-[8px] h-[1px] w-[91%] bg-[#DBDDE1]"></div>
+      <div className="absolute mt-[22.6vh] h-[66vh] w-full flex-1 overflow-y-auto">
+        {/*기본정보 및 버튼*/}
+        <div className="mt-[22px] flex w-full flex-row gap-[20px]">
+          <div className="ml-[32px] text-[16px] font-[700]">기본정보</div>
+          <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
+            <button
+              onClick={() => handleSelect('free')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selected === 'free' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              콜키지 프리
+            </button>
+            <button
+              onClick={() => handleSelect('byBottle')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selected === 'byBottle' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              병당 콜키지
+            </button>
+            <button
+              onClick={() => handleSelect('byPerson')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selected === 'byPerson' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              인당 콜키지
+            </button>
+            <button
+              onClick={() => handleSelect('byTable')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selected === 'byTable' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              테이블 콜키지
+            </button>
+            <button
+              onClick={() => handleSelect('multiple')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selected === 'multiple' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              다중 콜키지
+            </button>
           </div>
         </div>
-      )}
-      {/* 병당, 인당, 테이블 콜키지 클릭 */}
-      {['byBottle', 'byPerson', 'byTable'].includes(selected!) && (
-        <div className="relative mt-[16px] flex flex-row items-center justify-center">
-          <img src={TextArea} alt="입력창" className="h-[47px] w-[337px]" />
-          {/* 입력창 */}
-          <input
-            type="text"
-            placeholder="비용을 입력하세요"
-            className="top-50 absolute left-[36px] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
-          />
-          <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
+        {/* 다중 콜키지 클릭 - 주종,비용, +다중콜키지 추가 묶음 div */}
+        {selected === 'multiple' && (
+          <div className="mt-[32px] flex w-full flex-col gap-[8px]">
+            {multipleOptions.map((_, index) => (
+              <div key={index}>
+                {/* 주종, 입력창 묶음 div */}
+                <div className="flex w-full flex-row gap-[20px]">
+                  <div className="ml-[32px] text-[16px] font-[700]">주종</div>
+                  <div className="relative flex flex-row items-center">
+                    <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
+                    {/* 입력창 */}
+                    <input
+                      type="text"
+                      placeholder="주종을 입력하세요"
+                      className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+                    />
+                    <img
+                      src={x}
+                      alt="x"
+                      className="absolute right-[26.81px] h-[11.3px] w-[9.18px]"
+                    />
+                  </div>
+                </div>
+                {/* 비용, 입력창 묶음 div */}
+                <div className="flex w-full flex-row gap-[20px]">
+                  <div className="ml-[32px] text-[16px] font-[700]">비용</div>
+                  <div className="relative flex flex-row items-center">
+                    <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
+                    {/* 입력창 */}
+                    <input
+                      type="text"
+                      placeholder="비용을 입력하세요"
+                      className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+                    />
+                    <img
+                      src={x}
+                      alt="x"
+                      className="absolute right-[26.81px] h-[11.3px] w-[9.18px]"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* +다중 콜키지 추가 버튼 : 주종, 비용 입력창 묶음 div가 한쌍 씩 추가되야함.*/}
+            <div
+              onClick={handleAddMultiple}
+              className="ml-[61%] min-w-[130px] cursor-pointer text-[16px] font-[500] text-[#9FA2AA]"
+            >
+              + 다중 콜키지 추가
+            </div>
+          </div>
+        )}
+        {/* 병당, 인당, 테이블 콜키지 클릭 */}
+        {['byBottle', 'byPerson', 'byTable'].includes(selected!) && (
+          <div className="relative mt-[16px] flex flex-row items-center justify-center">
+            <img src={TextArea} alt="입력창" className="h-[47px] w-[85.7%]" />
+            {/* 입력창 */}
+            <input
+              type="text"
+              placeholder="비용을 입력하세요"
+              className="top-50 absolute left-[12.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+            />
+            <img src={x} alt="x" className="absolute right-[14.2%] h-[11.3px] w-[9.18px]" />
+          </div>
+        )}
+        {/*구분선*/}
+        <div className="mt-[30px] h-[1px] w-[91%] bg-[#DBDDE1]"></div>
+        {/*세부옵션 및 버튼 */}
+        <div className="mt-[22px] flex w-full flex-row gap-[20px]">
+          <div className="ml-[32px] text-[16px] font-[700]">세부 옵션</div>
+          <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
+            <button
+              onClick={() => toggleOption('ice')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selectedOptions.ice ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              얼음 제공
+            </button>
+            <button
+              onClick={() => toggleOption('glass')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selectedOptions.glass ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              잔 제공
+            </button>
+            <button
+              onClick={() => toggleOption('freeBottle')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selectedOptions.freeBottle
+                  ? 'bg-[#90212A] text-white'
+                  : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              한 병 무료
+            </button>
+            <button
+              onClick={() => toggleOption('wineGlass')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selectedOptions.wineGlass
+                  ? 'bg-[#90212A] text-white'
+                  : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              와인잔 제공
+            </button>
+            <button
+              onClick={() => toggleOption('others')}
+              className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
+                selectedOptions.others ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+              }`}
+            >
+              여러 기타
+            </button>
+          </div>
         </div>
-      )}
-      {/*구분선*/}
-      <div className="mt-[30px] h-[1px] w-[91vw] bg-[#DBDDE1]"></div>
-      {/*세부옵션 및 버튼 */}
-      <div className="mt-[22px] flex w-full flex-row gap-[20px]">
-        <div className="ml-[32px] text-[16px] font-[700]">세부 옵션</div>
-        <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
-          <button
-            onClick={() => toggleOption('ice')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selectedOptions.ice ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            얼음 제공
-          </button>
-          <button
-            onClick={() => toggleOption('glass')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selectedOptions.glass ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            잔 제공
-          </button>
-          <button
-            onClick={() => toggleOption('freeBottle')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selectedOptions.freeBottle ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            한 병 무료
-          </button>
-          <button
-            onClick={() => toggleOption('wineGlass')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selectedOptions.wineGlass ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            와인잔 제공
-          </button>
-          <button
-            onClick={() => toggleOption('others')}
-            className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-              selectedOptions.others ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
-            }`}
-          >
-            여러 기타
-          </button>
-        </div>
+        {/*여러 기타 클릭*/}
+        {selectedOptions.others && (
+          <div className="relative mt-[16px] flex flex-row items-center justify-center">
+            <img src={TextArea} alt="입력창" className="h-[47px] w-[85.7%]" />
+            {/* 입력창 */}
+            <input
+              type="text"
+              placeholder="기타사항을 입력해주세요"
+              className="top-50 absolute left-[12.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+            />
+            <img src={x} alt="x" className="absolute right-[14.2%] h-[11.3px] w-[9.18px]" />
+          </div>
+        )}
       </div>
-      {/*여러 기타 클릭*/}
-      {selectedOptions.others && (
-        <div className="relative mt-[16px] flex flex-row items-center justify-center">
-          <img src={TextArea} alt="입력창" className="h-[47px] w-[337px]" />
-          {/* 입력창 */}
-          <input
-            type="text"
-            placeholder="기타사항을 입력해주세요"
-            className="top-50 absolute left-[36px] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
-          />
-          <img src={x} alt="x" className="absolute right-[26.81px] h-[11.3px] w-[9.18px]" />
-        </div>
-      )}
       <div className="absolute bottom-[5.6vh] flex w-full flex-row justify-center gap-[12px]">
         <button
           className="h-[48px] w-[38%] cursor-pointer items-center rounded-[12px] bg-[#F3F3F6] text-[16px] font-[700] text-black"
