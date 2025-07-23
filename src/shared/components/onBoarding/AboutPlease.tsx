@@ -42,7 +42,7 @@ function AboutPlease({ onNext }: { onNext: () => void }) {
           시작하는 방식입니다. ‘해주세요 리스트’에 등록된 매장은 우선적으로 콜키지 영업을 진행하게
           됩니다.
         </p>
-        {!isSmallView && <Button value="다음" className="mt-2" />}
+        {!isSmallView && <Button value="다음" className="mt-2" onClick={onNext} />}
       </div>
       {isSmallView && (
         <div className="fixed bottom-8 mx-auto w-full max-w-[600px] text-center">
