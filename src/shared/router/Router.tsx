@@ -11,6 +11,7 @@ import SignIn from '@/pages/signIn/SignIn';
 import PreferSelect from '@/pages/onBoarding/PreferSelect';
 import MainMyPage from '@/pages/myPage/MainMyPage';
 import MasterSignUp from '@/pages/myPage/MaterSignUp';
+import ModifyInfo from '@/pages/myPage/ModifyInfo';
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
   {
     path: '/master/signup',
     element: <MasterSignUp />,
+  },
+  {
+    path: '/my/modify',
+    element: <ModifyInfo />,
   },
 ]);
 
