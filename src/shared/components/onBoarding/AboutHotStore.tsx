@@ -50,7 +50,15 @@ function AboutHotStore({ onNext }: { onNext: React.Dispatch<React.SetStateAction
             />
             <div className="absolute left-1/2 z-[4] w-[103%] -translate-x-1/2 translate-y-[44%]">
               <img src={mayvile} className="w-full" />
-              {!isSmallView && <Button value="다음" className="-ml-[7%] mb-4 w-[114%]" />}
+              {!isSmallView && (
+                <Button
+                  value="다음"
+                  className="-ml-[7%] mb-4 w-[114%]"
+                  onClick={() => {
+                    onNext((prev) => prev + 1);
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

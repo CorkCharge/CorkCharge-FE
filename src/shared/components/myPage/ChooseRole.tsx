@@ -40,7 +40,7 @@ function ChooseRole() {
       </div>
 
       {role !== -1 && (
-        <button className="fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] max-w-[480px] rounded-[10px] bg-[var(--main)] font-bold text-white">
+        <button className="fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] max-w-[480px] rounded-[10px] bg-[var(--primary)] font-bold text-white">
           다음
         </button>
       )}

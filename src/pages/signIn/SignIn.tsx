@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+
 import logo from '@/shared/assets/images/mainLogo.svg';
 import naver from '@/shared/assets/images/naver.png';
 
 function SignIn() {
+  const navigate = useNavigate();
   return (
     <main className="bg-gradient h-full">
       <div className="flex flex-col pt-[104px] text-center text-3xl font-bold">
@@ -16,7 +19,12 @@ function SignIn() {
           <img src={naver} className="size-4" />
           <span>네이버 로그인</span>
         </button>
-        <span className="text-[#ecedef] underline underline-offset-4">로그인 없이 보기</span>
+        <span
+          className="text-[#ecedef] underline underline-offset-4"
+          onClick={() => navigate('/prefer')}
+        >
+          로그인 없이 보기
+        </span>
       </div>
     </main>
   );
