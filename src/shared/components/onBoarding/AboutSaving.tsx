@@ -1,6 +1,6 @@
 import Button from '../common/Button';
 import ProgressDots from './ProgressDots';
-import savingSample from '@/shared/assets/images/saving-sample.png';
+import savingSample from '@/shared/components/onBoarding/images/saving-sample.png';
 
 function AboutSaving({ onNext }: { onNext: React.Dispatch<React.SetStateAction<number>> }) {
   return (

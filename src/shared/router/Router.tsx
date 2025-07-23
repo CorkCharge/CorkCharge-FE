@@ -10,7 +10,7 @@ import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
 import PreferSelect from '@/pages/onBoarding/PreferSelect';
 import MainMyPage from '@/pages/myPage/MainMyPage';
-import ChooseRole from '../components/myPage/ChooseRole';
+import MasterSignUp from '@/pages/myPage/MaterSignUp';
 
 const router = createBrowserRouter([
   {
@@ -58,8 +58,8 @@ const router = createBrowserRouter([
     element: <MainMyPage />,
   },
   {
-    path: '/my/signin',
-    element: <ChooseRole />,
+    path: '/master/signup',
+    element: <MasterSignUp />,
   },
 ]);
 
