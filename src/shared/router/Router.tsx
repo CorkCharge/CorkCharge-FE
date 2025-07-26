@@ -67,3 +67,5 @@ const router = createBrowserRouter([
     element: <PreferSelect />,
   },
 ]);
+
+export default router;
