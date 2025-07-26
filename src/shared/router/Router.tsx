@@ -11,6 +11,7 @@ import SignIn from '@/pages/signIn/SignIn';
 import StoreCheck from '@/pages/add/StoreCheck';
 import SearchStore from '@/pages/add/SearchStore';
 import AddOption from '@/pages/add/AddOption';
+import PreferSelect from '@/pages/onBoarding/PreferSelect';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,8 @@ const router = createBrowserRouter([
     path: '/add/option',
     element: <AddOption />,
   },
+  {
+    path: '/onboarding/prefer',
+    element: <PreferSelect />,
+  },
 ]);
-
-export default router;
