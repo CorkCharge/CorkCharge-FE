@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
 import X from '../doit/assets/x.svg';
-import TextArea from '../doit/assets/textArea.svg';
+import TextArea from '../../shared/assets/Input.svg';
+import TextArea2 from '../../shared/assets/Input2.svg';
 import x from './assets/x.svg';
 import InfoModal from '@/shared/components/addModal/InfoModal';
 const AddOption = () => {
@@ -45,7 +46,7 @@ const AddOption = () => {
   };
 
   return (
-    <div className="relative flex h-screen w-full flex-col items-stretch">
+    <main className="relative flex h-screen w-full flex-col items-stretch">
       {/* 헤더1 */}
       <div className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
         <img
@@ -117,10 +118,10 @@ const AddOption = () => {
             {multipleOptions.map((_, index) => (
               <div key={index}>
                 {/* 주종, 입력창 묶음 div */}
-                <div className="flex w-full flex-row gap-[20px]">
+                <div className="mb-[10px] flex w-full flex-row gap-[20px]">
                   <div className="ml-[32px] text-[16px] font-[700]">주종</div>
                   <div className="relative flex flex-row items-center">
-                    <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
+                    <img src={TextArea2} alt="입력창" className="h-[47px] w-[262px]" />
                     {/* 입력창 */}
                     <input
                       type="text"
@@ -138,7 +139,7 @@ const AddOption = () => {
                 <div className="flex w-full flex-row gap-[20px]">
                   <div className="ml-[32px] text-[16px] font-[700]">비용</div>
                   <div className="relative flex flex-row items-center">
-                    <img src={TextArea} alt="입력창" className="h-[47px] w-[262px]" />
+                    <img src={TextArea2} alt="입력창" className="h-[47px] w-[262px]" />
                     {/* 입력창 */}
                     <input
                       type="text"
@@ -150,6 +151,9 @@ const AddOption = () => {
                       alt="x"
                       className="absolute right-[26.81px] h-[11.3px] w-[9.18px]"
                     />
+                    <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[#35353F]">
+                      원
+                    </span>
                   </div>
                 </div>
               </div>
@@ -167,14 +171,26 @@ const AddOption = () => {
         {/* 병당, 인당, 테이블 콜키지 클릭 */}
         {['byBottle', 'byPerson', 'byTable'].includes(selected!) && (
           <div className="relative mt-[16px] flex flex-row items-center justify-center">
+            <p className="absolute left-[15%]">
+              {selected === 'byBottle'
+                ? '병당'
+                : selected === 'byPerson'
+                  ? '인당'
+                  : selected === 'byTable'
+                    ? '테이블당'
+                    : ''}
+            </p>
             <img src={TextArea} alt="입력창" className="h-[47px] w-[85.7%]" />
             {/* 입력창 */}
             <input
               type="text"
-              placeholder="비용을 입력하세요"
-              className="top-50 absolute left-[12.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+              className="top-50 absolute left-[32.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
             />
             <img src={x} alt="x" className="absolute right-[14.2%] h-[11.3px] w-[9.18px]" />
+            {/* "원" 표시 */}
+            <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[#35353F]">
+              원
+            </span>
           </div>
         )}
         {/*구분선*/}
@@ -254,8 +270,8 @@ const AddOption = () => {
           등록하기
         </button>
       </div>
-      <InfoModal />
-    </div>
+      <InfoModal storeName={storeName} />
+    </main>
   );
 };
 
