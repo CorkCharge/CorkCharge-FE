@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
-import X from './assets/x.svg';
-import SearchLogo from './assets/logo_search.svg';
-import TextArea from './assets/textArea.svg';
-import Glasses from './assets/glasses.svg';
+import X from '../doit/assets/x.svg';
+import SearchLogo from '../doit/assets/logo_search.svg';
+import TextArea from '../doit/assets/textArea.svg';
+import Glasses from '../doit/assets/glasses.svg';
 import StoreItem from '../../shared/components/storeItem/StoreItem ';
 import NextButton from '../../shared/components/nextButton/NextButton';
 
-const Search = () => {
+const SearchStore = () => {
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate(-1);
@@ -59,9 +59,10 @@ const Search = () => {
   ];
 
   const handleNextClick = () => {
+    console.log('다음버튼 클릭!');
     if (selectedIndex != null) {
       const selectedStore = stores[selectedIndex];
-      navigate('/doit/search/request/1', {
+      navigate('/add/storecheck', {
         state: {
           storeName: selectedStore.storeName,
           address: selectedStore.address,
@@ -86,7 +87,7 @@ const Search = () => {
           className="ml-[3vh] h-[20.34px] w-[11.46px] cursor-pointer"
           onClick={handleBackClick}
         />
-        <p className="text-[16px] font-[700]">해주세요</p>
+        <p className="text-[16px] font-[700]">추가하기</p>
         <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
       </div>
       {/* 검색 영역 */}
@@ -120,4 +121,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchStore;
