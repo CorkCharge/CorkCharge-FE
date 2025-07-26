@@ -15,6 +15,8 @@ const AddOption = () => {
   };
 
   const [selected, setSelected] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleSelect = (key: string) => {
     setSelected((prev) => (prev === key ? null : key));
     console.log(key);
@@ -43,6 +45,15 @@ const AddOption = () => {
   const [multipleOptions, setMultipleOptions] = useState([{ type: '', cost: '' }]);
   const handleAddMultiple = () => {
     setMultipleOptions((prev) => [...prev, { type: '', cost: '' }]);
+  };
+
+  const handleRegister = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -266,11 +277,14 @@ const AddOption = () => {
         >
           뒤로가기
         </button>
-        <button className="h-[48px] w-[38%] cursor-pointer items-center rounded-[12px] bg-[#90212A] text-[16px] font-[700] text-white">
+        <button
+          onClick={handleRegister}
+          className="h-[48px] w-[38%] cursor-pointer items-center rounded-[12px] bg-[#90212A] text-[16px] font-[700] text-white"
+        >
           등록하기
         </button>
       </div>
-      <InfoModal storeName={storeName} />
+      {isModalOpen && <InfoModal storeName={storeName} onClose={handleCloseModal} />}
     </main>
   );
 };
