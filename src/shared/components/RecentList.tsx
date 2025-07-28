@@ -1,5 +1,5 @@
 // import React from 'react'
-import RecentSearch from './recentSearch';
+import RecentSearch from './RecentSearch';
 
 interface recentSearchProps {
   searchValue?: string;

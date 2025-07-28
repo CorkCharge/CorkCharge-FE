@@ -4,11 +4,11 @@ import stroke from '../../shared/assets/stroke.svg';
 
 interface recentSearchProps {
   text?: string;
-  searchValue?: string;
+  // searchValue?: string;
   setSearchValue?: (value: string) => void;
 }
 
-const RecentSearch = ({ text, searchValue, setSearchValue }: recentSearchProps) => {
+const RecentSearch = ({ text, setSearchValue }: recentSearchProps) => {
   const onclick = () => {
     console.log('해당 검색어 검색');
   };

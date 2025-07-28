@@ -3,7 +3,7 @@ import SearchBar from '../../shared/components/SearchBar';
 import TopBar from '../../shared/components/TopBar';
 // import RecommandList from '../../shared/components/RecommandList';
 // import RecentList from '../../shared/components/RecentList';
-import SearchedStoreList from '../../shared/components/SearchedStoreLIst';
+import SearchedStoreList from '../../shared/components/SearchedStoreList';
 import { useState } from 'react';
 
 const Search = () => {
