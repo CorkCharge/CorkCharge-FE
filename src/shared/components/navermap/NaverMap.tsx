@@ -6,11 +6,11 @@ const NaverMap = () => {
   useEffect(() => {
     if (!window.naver || !mapRef.current) return;
 
-    const center = new window.naver.maps.LatLng(37.3595704, 127.105399);
+    const center = new window.naver.maps.LatLng(37.543654, 127.070138);
 
     const map = new window.naver.maps.Map(mapRef.current, {
       center: center,
-      zoom: 16,
+      zoom: 19,
     });
 
     new window.naver.maps.Marker({
