@@ -16,6 +16,8 @@ import StoreCheck from '@/pages/add/StoreCheck';
 import SearchStore from '@/pages/add/SearchStore';
 import AddOption from '@/pages/add/AddOption';
 import PreferSelect from '@/pages/onBoarding/PreferSelect';
+import CorkageMap from '@/pages/corkagemap/CorkageMap';
+import Filter from '../../pages/corkagemap/Filter';
 
 const router = createBrowserRouter([
   {
@@ -85,6 +87,14 @@ const router = createBrowserRouter([
   {
     path: '/onboarding/prefer',
     element: <PreferSelect />,
+  },
+  {
+    path: '/corkagemap',
+    element: <CorkageMap />,
+  },
+  {
+    path: '/corkagemap/filter',
+    element: <Filter />,
   },
 ]);
 
