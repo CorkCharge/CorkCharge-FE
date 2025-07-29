@@ -22,6 +22,7 @@ import MainMyPage from '@/pages/myPage/MainMyPage';
 import MasterSignUp from '@/pages/myPage/MaterSignUp';
 import ModifyInfo from '@/pages/myPage/ModifyInfo';
 import Reservation from '@/pages/myPage/Reservation';
+import MyReview from '@/pages/myPage/MyReview';
 
 const router = createBrowserRouter([
   {
@@ -115,6 +116,10 @@ const router = createBrowserRouter([
   {
     path: '/my/reservation',
     element: <Reservation />,
+  },
+  {
+    path: '/my/review',
+    element: <MyReview />,
   },
 ]);
 

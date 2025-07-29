@@ -5,7 +5,7 @@ import { ControlLists, ControlItem } from '@/shared/components/myPage/ControlLis
 import { GuestMyPage, LoggedInMyPage } from '@/shared/components/myPage/MyPageBranch';
 
 function MainMyPage() {
-  const isLogged = useRef(true);
+  const isLogged = useRef(false);
 
   return (
     <main className="px-4">
