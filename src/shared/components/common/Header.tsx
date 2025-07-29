@@ -1,3 +1,11 @@
+/**
+ * Header type => back, additional, (undefined)
+ *
+ * back : Header의 제목과 back-arrow만 존재
+ * additional : Header 제목과 텍스트버튼으로 추가 기능 보유
+ * (undefined) : type 미기입 시 제목만 표기
+ */
+
 import { cn } from '@/shared/utils/utils';
 import arrow from '@/shared/assets/left_arrow.svg';
 

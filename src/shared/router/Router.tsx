@@ -21,6 +21,7 @@ import Filter from '../../pages/corkagemap/Filter';
 import MainMyPage from '@/pages/myPage/MainMyPage';
 import MasterSignUp from '@/pages/myPage/MaterSignUp';
 import ModifyInfo from '@/pages/myPage/ModifyInfo';
+import Reservation from '@/pages/myPage/Reservation';
 
 const router = createBrowserRouter([
   {
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
   {
     path: '/my/modify',
     element: <ModifyInfo />,
+  },
+  {
+    path: '/my/reservation',
+    element: <Reservation />,
   },
 ]);
 

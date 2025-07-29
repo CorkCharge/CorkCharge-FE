@@ -60,10 +60,12 @@
 :root {
   --primary: #90212a;
   --gray-1: #f3f3f6;
+  --gray-2: #ecedef;
   --gray-3: #dbdde1;
   --gray-4: #c5c8cf;
   --gray-5: #9fa2aa;
   --gray-6: #80818b;
+  --gray-7: #585a68;
   --gray-8: #35353f;
 }
 
