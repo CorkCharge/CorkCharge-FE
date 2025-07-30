@@ -24,6 +24,7 @@ import ModifyInfo from '@/pages/myPage/ModifyInfo';
 import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
 import Notification from '@/pages/myPage/Notification';
+import Contact from '@/pages/myPage/Contact';
 
 const router = createBrowserRouter([
   {
@@ -125,6 +126,10 @@ const router = createBrowserRouter([
   {
     path: '/my/notification',
     element: <Notification />,
+  },
+  {
+    path: '/my/contact',
+    element: <Contact />,
   },
 ]);
 
