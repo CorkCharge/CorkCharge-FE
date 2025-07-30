@@ -1,6 +1,9 @@
-import { useState } from 'react';
-const TopButtonContainer = () => {
-  const [selectedTab, setSelectedTab] = useState<'corkage' | 'region'>('corkage');
+interface TopButtonContainerProps {
+  selectedTab: 'corkage' | 'region';
+  setSelectedTab: (_: 'corkage' | 'region') => void;
+}
+
+const TopButtonContainer = ({ selectedTab, setSelectedTab }: TopButtonContainerProps) => {
   return (
     <div className="mx-auto mt-[12px] flex h-[48px] w-[91.8%] flex-row items-center rounded-[8px] bg-[#F3F3F6]">
       <button
