@@ -23,6 +23,7 @@ import MasterSignUp from '@/pages/myPage/MaterSignUp';
 import ModifyInfo from '@/pages/myPage/ModifyInfo';
 import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
+import Notification from '@/pages/myPage/Notification';
 
 const router = createBrowserRouter([
   {
@@ -120,6 +121,10 @@ const router = createBrowserRouter([
   {
     path: '/my/review',
     element: <MyReview />,
+  },
+  {
+    path: '/my/notification',
+    element: <Notification />,
   },
 ]);
 
