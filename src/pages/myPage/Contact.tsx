@@ -1,30 +1,20 @@
+import { useState } from 'react';
+
 import Header from '@/shared/components/common/Header';
+import ContactList from '@/shared/components/myPage/ContactList';
+import WriteContact from '@/shared/components/myPage/WriteContact';
+import ContactPost from '@/shared/components/myPage/ContactPost';
 
 function Contact() {
+  // 1번 - 문의글 리스트, 2번 - 문의글 작성, 3번 - 문의글 보기
+  const [contactController, setContactController] = useState(3);
+
   return (
-    <div className="px-4">
+    <div className="relative min-h-screen px-4">
       <Header title="문의하기" type="back" />
-      <div className="border-b border-t border-[var(--gray-3)] py-2 text-center text-sm font-medium text-[var(--gray-6)]">
-        내가 남긴 문의
-      </div>
-
-      <ul>
-        <li className="relative border-b border-[var(--gray-3)] px-2 py-4">
-          <p className="font-medium text-[var(--gray-8)]">문의제목입니다.</p>
-          <span className="text-[10px] font-medium text-[var(--gray-4)]">2025년 7월 24일</span>
-          <span className="absolute right-5 top-1/2 -translate-y-1/2 rounded-full bg-[#DACBB6] px-3 py-1 text-[10px] text-white">
-            대기중
-          </span>
-        </li>
-
-        <li className="relative border-b border-[var(--gray-3)] px-2 py-4">
-          <p className="font-medium text-[var(--gray-8)]">문의제목입니다.</p>
-          <span className="text-[10px] font-medium text-[var(--gray-4)]">2025년 7월 24일</span>
-          <span className="absolute right-5 top-1/2 -translate-y-1/2 rounded-full bg-[rgba(116,151,85,0.75)] px-3 py-1 text-[10px] text-white">
-            완료
-          </span>
-        </li>
-      </ul>
+      {contactController === 1 && <ContactList onWrite={() => setContactController(2)} />}
+      {contactController === 2 && <WriteContact />}
+      {contactController === 3 && <ContactPost />}
     </div>
   );
 }
