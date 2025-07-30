@@ -8,6 +8,7 @@ const Filter = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<'corkage' | 'region'>('corkage');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const handleBackClick = () => {
     navigate(-1);
@@ -49,200 +50,239 @@ const Filter = () => {
           지역
         </button>
       </div>
-      <div className="flex w-full flex-col gap-[4px] self-start">
-        <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">업종</div>
-        <div className="ml-[32px] flex w-full flex-row gap-[8px]">
-          {['한식', '중식', '양식', '일식'].map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`h-[32px] w-[14%] rounded-[20px] text-[14px] font-[500] ${
-                selectedCategory === category
-                  ? `bg-[#90212A] text-white`
-                  : `bg-[#F3F3F6] text-[#90212A]`
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+
+      {/*스크롤 가능한 필터 내용 영역 시작 */}
+      <div className="w-full flex-1 overflow-y-auto pb-[120px]">
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">업종</div>
+          <div className="ml-[32px] flex w-full flex-row gap-[8px]">
+            {['한식', '중식', '양식', '일식'].map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`h-[32px] w-[14%] rounded-[20px] text-[14px] font-[500] ${
+                  selectedCategory === category
+                    ? `bg-[#90212A] text-white`
+                    : `bg-[#F3F3F6] text-[#90212A]`
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="mb-[8px] ml-[32px] mt-[16px] self-start text-[20px] font-[500]">
+            콜키지 스토어
+          </div>
+          <Slider
+            range
+            allowCross={false}
+            defaultValue={[0, 5]}
+            min={0}
+            max={5}
+            step={1}
+            value={range}
+            onChange={(val) => setRange(val as [number, number])}
+            trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
+            handleStyle={[
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+            ]}
+            railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+            style={{ width: '83.2%', margin: 'auto' }}
+          />
+          <div className="mx-auto flex w-[83.2%] flex-row justify-between">
+            <span className="text-[14px] font-[500] text-[#8E8E93]">0점</span>
+            <span className="text-[14px] font-[500] text-[#8E8E93]">5점</span>
+          </div>
+          <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
+            {range[0]}점 ~ {range[1]}점
+          </span>
+        </div>
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="mb-[8px] ml-[32px] mt-[16px] self-start text-[20px] font-[500]">가격</div>
+          <div className="ml-[32px]">가격표시공간</div>
+        </div>
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="mb-[8px] ml-[32px] mt-[8px] self-start text-[16px] font-[500]">
+            병당 가격
+          </div>
+          <Slider
+            range
+            allowCross={false}
+            defaultValue={[0, 50000]}
+            min={0}
+            max={50000}
+            step={1000}
+            value={range2}
+            onChange={(val) => setRange2(val as [number, number])}
+            trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
+            handleStyle={[
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+            ]}
+            railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+            style={{ width: '83.2%', margin: 'auto' }}
+          />
+          <div className="mx-auto flex w-[83.2%] flex-row justify-between">
+            <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
+            <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
+          </div>
+          <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
+            {range2[0]}원 ~ {range2[1]}원
+          </span>
+        </div>
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="mb-[8px] ml-[32px] mt-[8px] self-start text-[16px] font-[500]">
+            인당 가격
+          </div>
+          <Slider
+            range
+            allowCross={false}
+            defaultValue={[0, 50000]}
+            min={0}
+            max={50000}
+            step={1000}
+            value={range3}
+            onChange={(val) => setRange3(val as [number, number])}
+            trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
+            handleStyle={[
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+            ]}
+            railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+            style={{ width: '83.2%', margin: 'auto' }}
+          />
+          <div className="mx-auto flex w-[83.2%] flex-row justify-between">
+            <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
+            <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
+          </div>
+          <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
+            {range3[0]}원 ~ {range3[1]}원
+          </span>
+        </div>
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="mb-[8px] ml-[32px] mt-[8px] self-start text-[16px] font-[500]">
+            테이블당 가격
+          </div>
+          <Slider
+            range
+            allowCross={false}
+            defaultValue={[0, 50000]}
+            min={0}
+            max={50000}
+            step={1000}
+            value={range4}
+            onChange={(val) => setRange4(val as [number, number])}
+            trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
+            handleStyle={[
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+              {
+                borderColor: '#90212A',
+                height: 24,
+                width: 24,
+                marginTop: -10,
+                backgroundColor: 'white',
+                boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+              },
+            ]}
+            railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+            style={{ width: '83.2%', margin: 'auto' }}
+          />
+          <div className="mx-auto flex w-[83.2%] flex-row justify-between">
+            <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
+            <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
+          </div>
+          <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
+            {range4[0]}원 ~ {range4[1]}원
+          </span>
+        </div>
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">기타</div>
+          <div className="ml-[32px] flex w-full flex-row gap-[8px]">
+            {['잔제공', '얼음제공', '한병 무료', '다중 콜키지'].map((option) => (
+              <button
+                key={option}
+                onClick={() => {
+                  setSelectedOption(option);
+                  console.log(option);
+                }}
+                className={`h-[32px] w-[18%] rounded-[20px] text-[14px] font-[500] ${
+                  selectedOption === option
+                    ? `bg-[#90212A] text-white`
+                    : `bg-[#F3F3F6] text-[#90212A]`
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="flex w-full flex-col gap-[4px] self-start">
-        <div className="mb-[8px] ml-[32px] mt-[16px] self-start text-[20px] font-[500]">
-          콜키지 스토어
-        </div>
-        <Slider
-          range
-          allowCross={false}
-          defaultValue={[0, 5]}
-          min={0}
-          max={5}
-          step={1}
-          value={range}
-          onChange={(val) => setRange(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
-          style={{ width: '83.2%', margin: 'auto' }}
-        />
-        <div className="mx-auto flex w-[83.2%] flex-row justify-between">
-          <span className="text-[14px] font-[500] text-[#8E8E93]">0점</span>
-          <span className="text-[14px] font-[500] text-[#8E8E93]">5점</span>
-        </div>
-        <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
-          {range[0]}점 ~ {range[1]}점
-        </span>
+      <div className="absolute bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%]">
+        <button className="mr-2 h-[48px] w-[35%] rounded-lg border bg-[#F3F3F6] py-2 font-bold">
+          초기화
+        </button>
+        <button className="h-[48px] w-[53.28%] rounded-lg bg-[#90212A] py-2 font-bold text-white">
+          적용하기
+        </button>
       </div>
-      <div className="flex w-full flex-col gap-[4px] self-start">
-        <div className="mb-[8px] ml-[32px] mt-[16px] self-start text-[20px] font-[500]">가격</div>
-        <div className="ml-[32px]">가격표시공간</div>
-      </div>
-      <div className="flex w-full flex-col gap-[4px] self-start">
-        <div className="mb-[8px] ml-[32px] mt-[8px] self-start text-[16px] font-[500]">
-          병당 가격
-        </div>
-        <Slider
-          range
-          allowCross={false}
-          defaultValue={[0, 50000]}
-          min={0}
-          max={50000}
-          step={1000}
-          value={range2}
-          onChange={(val) => setRange2(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
-          style={{ width: '83.2%', margin: 'auto' }}
-        />
-        <div className="mx-auto flex w-[83.2%] flex-row justify-between">
-          <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
-          <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
-        </div>
-        <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
-          {range2[0]}원 ~ {range2[1]}원
-        </span>
-      </div>
-      <div className="flex w-full flex-col gap-[4px] self-start">
-        <div className="mb-[8px] ml-[32px] mt-[8px] self-start text-[16px] font-[500]">
-          인당 가격
-        </div>
-        <Slider
-          range
-          allowCross={false}
-          defaultValue={[0, 50000]}
-          min={0}
-          max={50000}
-          step={1000}
-          value={range3}
-          onChange={(val) => setRange3(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
-          style={{ width: '83.2%', margin: 'auto' }}
-        />
-        <div className="mx-auto flex w-[83.2%] flex-row justify-between">
-          <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
-          <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
-        </div>
-        <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
-          {range3[0]}원 ~ {range3[1]}원
-        </span>
-      </div>
-      <div className="flex w-full flex-col gap-[4px] self-start">
-        <div className="mb-[8px] ml-[32px] mt-[8px] self-start text-[16px] font-[500]">
-          테이블당 가격
-        </div>
-        <Slider
-          range
-          allowCross={false}
-          defaultValue={[0, 50000]}
-          min={0}
-          max={50000}
-          step={1000}
-          value={range4}
-          onChange={(val) => setRange4(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
-          style={{ width: '83.2%', margin: 'auto' }}
-        />
-        <div className="mx-auto flex w-[83.2%] flex-row justify-between">
-          <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
-          <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
-        </div>
-        <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
-          {range4[0]}원 ~ {range4[1]}원
-        </span>
-      </div>
+      <div
+        className="pointer-events-none absolute bottom-0 h-[20.3vh] w-full"
+        style={{
+          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 4%, #FFF 63.5%)',
+        }}
+      ></div>
     </main>
   );
 };
