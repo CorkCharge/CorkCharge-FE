@@ -1,6 +1,12 @@
 import { useState, useEffect, useId } from 'react';
 
-export const StarRate = ({ rate }: { rate: number }) => {
+import { cn } from '@/shared/utils/utils';
+
+interface StarProps {
+  rate: number;
+  className?: string;
+}
+export const StarRate = ({ rate, className }: StarProps) => {
   const STARIDX = ['first', 'second', 'third', 'fourth', 'fifth'];
   const compId = useId(); // 컴포넌트 별 id 생성
   const [rateArr, setRateArr] = useState([0, 0, 0, 0, 0]);
@@ -21,7 +27,7 @@ export const StarRate = ({ rate }: { rate: number }) => {
   }, [rate]);
 
   return (
-    <div className="flex items-center">
+    <div className={cn('flex items-center', className)}>
       {STARIDX.map((item, idx) => (
         <span className="inline-flex" key={idx}>
           <svg
