@@ -20,10 +20,10 @@ function AboutHotStore({ onNext }: { onNext: React.Dispatch<React.SetStateAction
 
   return (
     <div className="relative">
-      <span className="absolute right-8 top-[50px] text-[var(--corkcharge-gray)] underline underline-offset-4">
+      <span className="absolute right-8 top-[50px] text-[var(--gray-5)] underline underline-offset-4">
         SKIP
       </span>
-      <ProgressDots total={4} now={3} color={'var(--corkcharge-gray)'} className="pt-[60px]" />
+      <ProgressDots total={4} now={3} color={'var(--gray-5)'} className="pt-[60px]" />
 
       <div className="mx-auto w-[70%]">
         <h1 className="mt-11 text-center text-3xl font-bold">

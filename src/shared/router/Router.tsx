@@ -1,7 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Test from '../../pages/Test';
+import Store from '../../pages/home/StoreList';
+import HotStores from '../../pages/home/HotStores';
+import RegionFilter from '../../pages/home/RegionFilter';
 import Doit from '../../pages/doit/Doit';
 import Search from '../../pages/doit/Search';
+import SearchMap from '../../pages/home/Search';
 import NotRegistered from '../../pages/doit/NotRegistered';
 import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 import Request from '../../pages/doit/Request';
@@ -14,11 +18,34 @@ import AddOption from '@/pages/add/AddOption';
 import PreferSelect from '@/pages/onBoarding/PreferSelect';
 import CorkageMap from '@/pages/corkagemap/CorkageMap';
 import Filter from '../../pages/corkagemap/Filter';
+import MainMyPage from '@/pages/myPage/MainMyPage';
+import MasterSignUp from '@/pages/myPage/MaterSignUp';
+import ModifyInfo from '@/pages/myPage/ModifyInfo';
+import Reservation from '@/pages/myPage/Reservation';
+import MyReview from '@/pages/myPage/MyReview';
+import Notification from '@/pages/myPage/Notification';
+import Contact from '@/pages/myPage/Contact';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Test />,
+  },
+  {
+    path: '/home',
+    element: <Store />,
+  },
+  {
+    path: '/searchMap',
+    element: <SearchMap />,
+  },
+  {
+    path: '/hotStores',
+    element: <HotStores />,
+  },
+  {
+    path: '/regionFilter',
+    element: <RegionFilter />,
   },
   {
     path: '/doit',
@@ -75,6 +102,34 @@ const router = createBrowserRouter([
   {
     path: '/corkagemap/filter',
     element: <Filter />,
+  },
+  {
+    path: '/my',
+    element: <MainMyPage />,
+  },
+  {
+    path: '/master/signup',
+    element: <MasterSignUp />,
+  },
+  {
+    path: '/my/modify',
+    element: <ModifyInfo />,
+  },
+  {
+    path: '/my/reservation',
+    element: <Reservation />,
+  },
+  {
+    path: '/my/review',
+    element: <MyReview />,
+  },
+  {
+    path: '/my/notification',
+    element: <Notification />,
+  },
+  {
+    path: '/my/contact',
+    element: <Contact />,
   },
 ]);
 
