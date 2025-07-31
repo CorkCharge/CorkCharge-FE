@@ -17,7 +17,6 @@ const Filter = () => {
     <main className="relative flex h-screen flex-col items-center">
       <Header />
       <TopButtonContainer selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-
       {selectedTab === 'corkage' ? (
         <>
           {/*스크롤 가능한 필터 내용 영역 시작 */}
