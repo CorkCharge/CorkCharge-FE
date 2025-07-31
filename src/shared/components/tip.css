@@ -1,0 +1,39 @@
+.button {
+  height: 32px;
+  /* width: 82px; */
+  /* background-color: gray; */
+  background-color: #f3f3f6;
+  border-radius: 20px;
+  padding: 12px 15px 12px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border: solid 1px black; */
+  white-space: nowrap;
+}
+
+.article {
+  border-radius: 8px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+}
+
+.hotstore {
+  display: flex;
+  height: 44px;
+  width: 331px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px;
+  /* opacity: 0.5; */
+  /* border: 1px solid black; */
+  padding-left: 10px;
+  padding-right: 10px;
+  /* background-color: #ffffff; */
+}
