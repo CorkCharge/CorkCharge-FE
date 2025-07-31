@@ -18,6 +18,13 @@ import AddOption from '@/pages/add/AddOption';
 import PreferSelect from '@/pages/onBoarding/PreferSelect';
 import CorkageMap from '@/pages/corkagemap/CorkageMap';
 import Filter from '../../pages/corkagemap/Filter';
+import MainMyPage from '@/pages/myPage/MainMyPage';
+import MasterSignUp from '@/pages/myPage/MaterSignUp';
+import ModifyInfo from '@/pages/myPage/ModifyInfo';
+import Reservation from '@/pages/myPage/Reservation';
+import MyReview from '@/pages/myPage/MyReview';
+import Notification from '@/pages/myPage/Notification';
+import Contact from '@/pages/myPage/Contact';
 
 const router = createBrowserRouter([
   {
@@ -95,6 +102,34 @@ const router = createBrowserRouter([
   {
     path: '/corkagemap/filter',
     element: <Filter />,
+  },
+  {
+    path: '/my',
+    element: <MainMyPage />,
+  },
+  {
+    path: '/master/signup',
+    element: <MasterSignUp />,
+  },
+  {
+    path: '/my/modify',
+    element: <ModifyInfo />,
+  },
+  {
+    path: '/my/reservation',
+    element: <Reservation />,
+  },
+  {
+    path: '/my/review',
+    element: <MyReview />,
+  },
+  {
+    path: '/my/notification',
+    element: <Notification />,
+  },
+  {
+    path: '/my/contact',
+    element: <Contact />,
   },
 ]);
 

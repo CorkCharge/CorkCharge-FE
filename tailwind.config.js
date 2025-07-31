@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'wine-background': 'url(/src/shared/assets/images/wine-background.png)',
+        'wine-background': 'url(/src/shared/components/onBoarding/images/wine-background.png)',
       },
     },
   },
