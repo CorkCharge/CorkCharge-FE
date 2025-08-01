@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
@@ -29,7 +28,7 @@ import Contact from '@/pages/myPage/Contact';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Test />,
+    element: <OnBoarding />,
   },
   {
     path: '/home',
@@ -70,10 +69,6 @@ const router = createBrowserRouter([
   {
     path: '/doit/complete',
     element: <DoitComplete />,
-  },
-  {
-    path: '/onboarding',
-    element: <OnBoarding />,
   },
   {
     path: '/signin',
