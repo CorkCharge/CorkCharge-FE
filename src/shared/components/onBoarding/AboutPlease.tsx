@@ -16,7 +16,7 @@ function AboutPlease({ onNext }: { onNext: () => void }) {
   const checkView = () => setIsSmallView(window.innerWidth < 405);
   return (
     <div>
-      <ProgressDots total={4} now={4} color={'var(--corkcharge-gray)'} className="pt-[60px]" />
+      <ProgressDots total={4} now={4} color={'var(--gray-5)'} className="pt-[60px]" />
       <h1 className="mt-11 text-center text-3xl font-bold">
         <p>코르크차지의</p>
         <p>

@@ -66,7 +66,7 @@ const neighborhoods: { [key: string]: string[] } = {
   ],
 };
 
-const RegionSelector = () => {
+const RegionFilter = () => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
@@ -82,7 +82,7 @@ const RegionSelector = () => {
   };
 
   return (
-    <div className="w-[393px]">
+    <div className="flex w-full flex-1 flex-col items-center overflow-y-auto pb-[120px]">
       <div className="mt-4 grid h-[40px] w-[393px] grid-cols-[81px_156px_156px] border-[0.5px] border-[#C5C8CF] bg-[#ECEDEF] font-[#35353F] text-[14px]">
         <div className="flex items-center justify-center border-r-[0.6px] border-[#C5C8CF]">
           시 · 도
@@ -169,19 +169,10 @@ const RegionSelector = () => {
               ))}
             </div>
           </div>
-
-          <div className="flex justify-between p-4">
-            <button className="mr-2 h-[48px] w-[174px] flex-1 rounded-lg border bg-[#F3F3F6] py-2 font-bold">
-              취소
-            </button>
-            <button className="h-[48px] w-[174px] flex-1 rounded-lg bg-[#90212A] py-2 font-bold text-white">
-              확인
-            </button>
-          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default RegionSelector;
+export default RegionFilter;

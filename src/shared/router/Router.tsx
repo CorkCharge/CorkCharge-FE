@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
@@ -20,11 +19,18 @@ import CorkageMap from '@/pages/corkagemap/CorkageMap';
 import Filter from '../../pages/corkagemap/Filter';
 import Info from '@/pages/detail/Info';
 import Review from '@/shared/components/detail/Review';
+import MainMyPage from '@/pages/myPage/MainMyPage';
+import MasterSignUp from '@/pages/myPage/MaterSignUp';
+import ModifyInfo from '@/pages/myPage/ModifyInfo';
+import Reservation from '@/pages/myPage/Reservation';
+import MyReview from '@/pages/myPage/MyReview';
+import Notification from '@/pages/myPage/Notification';
+import Contact from '@/pages/myPage/Contact';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Test />,
+    element: <OnBoarding />,
   },
   {
     path: '/home',
@@ -67,10 +73,6 @@ const router = createBrowserRouter([
     element: <DoitComplete />,
   },
   {
-    path: '/onboarding',
-    element: <OnBoarding />,
-  },
-  {
     path: '/signin',
     element: <SignIn />,
   },
@@ -105,6 +107,34 @@ const router = createBrowserRouter([
   {
     path: '/review',
     element: <Review />,
+  },
+  {
+    path: '/my',
+    element: <MainMyPage />,
+  },
+  {
+    path: '/master/signup',
+    element: <MasterSignUp />,
+  },
+  {
+    path: '/my/modify',
+    element: <ModifyInfo />,
+  },
+  {
+    path: '/my/reservation',
+    element: <Reservation />,
+  },
+  {
+    path: '/my/review',
+    element: <MyReview />,
+  },
+  {
+    path: '/my/notification',
+    element: <Notification />,
+  },
+  {
+    path: '/my/contact',
+    element: <Contact />,
   },
 ]);
 
