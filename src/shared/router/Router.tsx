@@ -18,6 +18,8 @@ import AddOption from '@/pages/add/AddOption';
 import PreferSelect from '@/pages/onBoarding/PreferSelect';
 import CorkageMap from '@/pages/corkagemap/CorkageMap';
 import Filter from '../../pages/corkagemap/Filter';
+import Info from '@/pages/detail/Info';
+import Review from '@/shared/components/detail/Review';
 
 const router = createBrowserRouter([
   {
@@ -95,6 +97,14 @@ const router = createBrowserRouter([
   {
     path: '/corkagemap/filter',
     element: <Filter />,
+  },
+  {
+    path: '/detailInfo',
+    element: <Info />,
+  },
+  {
+    path: '/review',
+    element: <Review />,
   },
 ]);
 

@@ -20,7 +20,7 @@ const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) =>
       //   };
     } else {
       console.log('검색창 이동');
-      navigate('/search'); //검색창 이동
+      navigate('/searchMap'); //검색창 이동
     }
   };
   const handleNotif = () => {
@@ -29,7 +29,7 @@ const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) =>
   };
 
   return (
-    <div className="flex h-[60px] items-center gap-4 pl-4 pr-4">
+    <div className="flex h-[60px] items-center justify-center gap-4 pl-4 pr-4">
       <img src={Cork}></img>
       <div className="flex h-[40px] w-[290px] items-center rounded-br-full rounded-tl-full bg-[#F3F3F6] pl-6 pr-6">
         <input
