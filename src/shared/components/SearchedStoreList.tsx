@@ -3,7 +3,7 @@ import SearchedStore from './SearchedStore';
 
 const SearchedStoreList = () => {
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center">
       <SearchedStore
         name="로니로티"
         local="500m 서울 광진구 어대로 1층"

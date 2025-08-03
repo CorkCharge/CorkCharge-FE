@@ -69,14 +69,14 @@ const StoreList = () => {
             onClick={handleRequest}
             className="flex h-[80px] w-[176px] items-center justify-center rounded-[16px] bg-[#F3F3F6]"
           >
-            <img src={Glass}></img>
+            <img src={smallGlass}></img>
             <div>해주세요</div>
           </button>
           <button
             onClick={handleCorkStore}
             className="flex h-[80px] w-[176px] items-center justify-center rounded-[16px] bg-[#F3F3F6]"
           >
-            <img src={smallGlass}></img>
+            <img src={Glass}></img>
             <div>콜키지스코어</div>
           </button>
         </div>
