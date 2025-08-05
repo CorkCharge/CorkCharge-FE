@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+// import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
@@ -26,12 +27,13 @@ import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
 import Notification from '@/pages/myPage/Notification';
 import Contact from '@/pages/myPage/Contact';
+import Tip from '@/pages/home/Tip';
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <OnBoarding />,
-  },
+  // {
+  //   path: '/',
+  //   element: <Test />,
+  // },
   {
     path: '/home',
     element: <Store />,
@@ -71,6 +73,10 @@ const router = createBrowserRouter([
   {
     path: '/doit/complete',
     element: <DoitComplete />,
+  },
+  {
+    path: '/onboarding',
+    element: <OnBoarding />,
   },
   {
     path: '/signin',
@@ -135,6 +141,10 @@ const router = createBrowserRouter([
   {
     path: '/my/contact',
     element: <Contact />,
+  },
+  {
+    path: '/tipArticle',
+    element: <Tip />,
   },
 ]);
 
