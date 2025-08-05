@@ -46,7 +46,11 @@ export const StarRate = ({ rate, isEditable = false, className }: StarProps) => 
             onMouseLeave={isEditable ? () => setHoverFill(clickIdx) : undefined}
           >
             <clipPath id={`${compId}-${item}`}>
-              <rect width={idx <= hoverIdx ? 14 : 0} height="18" />
+              {isEditable ? (
+                <rect width={idx <= hoverIdx ? 14 : 0} height="18" />
+              ) : (
+                <rect width={rateArr[idx]} height="18" />
+              )}
             </clipPath>
             <path
               id={`${compId}-${item}star`}

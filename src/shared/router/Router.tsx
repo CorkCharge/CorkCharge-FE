@@ -24,8 +24,10 @@ import MasterSignUp from '@/pages/myPage/MaterSignUp';
 import ModifyInfo from '@/pages/myPage/ModifyInfo';
 import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
-import Notification from '@/pages/myPage/Notification';
+import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
+import Notification from '@/pages/notification/Notification';
+import NotiPost from '../components/notification/images/NotiPost';
 
 const router = createBrowserRouter([
   {
@@ -129,12 +131,16 @@ const router = createBrowserRouter([
     element: <MyReview />,
   },
   {
-    path: '/my/notification',
-    element: <Notification />,
+    path: '/my/notification/setting',
+    element: <NotiSetting />,
   },
   {
     path: '/my/contact',
     element: <Contact />,
+  },
+  {
+    path: '/notification',
+    element: <NotiPost />,
   },
 ]);
 
