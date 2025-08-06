@@ -27,7 +27,6 @@ import MyReview from '@/pages/myPage/MyReview';
 import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
 import Notification from '@/pages/notification/Notification';
-import NotiPost from '../components/notification/images/NotiPost';
 
 const router = createBrowserRouter([
   {
@@ -140,7 +139,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/notification',
-    element: <NotiPost />,
+    element: <Notification />,
   },
 ]);
 
