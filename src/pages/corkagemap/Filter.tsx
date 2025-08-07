@@ -39,7 +39,7 @@ const Filter = () => {
       ) : (
         <RegionFilter />
       )}
-      <BottomButtonContainer />
+      <BottomButtonContainer selectedTab={selectedTab} />
     </main>
   );
 };
