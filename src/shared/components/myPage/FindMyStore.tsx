@@ -58,22 +58,22 @@ function FindMyStore({ onNext }: { onNext: () => void }) {
   };
 
   //temp code
-  const _renderStore = () =>
-    [...new Array(5)].map((_, idx) => (
-      <div
-        key={idx}
-        className={`rounded-2xl bg-[var(--gray-1)] p-4 text-sm font-medium ${selectedRestId === idx ? 'border border-[var(--primary)]' : 'border border-transparent'}`}
-        onClick={() => setSelectedRestId(idx)}
-      >
-        <span className="text-xl font-bold">로니로티</span>
-        <p className="mt-1 leading-6">서울 광진구 아차산로 225 단산화빌딩</p>
-        <p className="flex gap-3 leading-6">
-          <span>영업중</span>
-          <span>21:30 라스트오더</span>
-        </p>
-        <p className="leading-6">병당 콜키지 1병 10,000원</p>
-      </div>
-    ));
+  // const _renderStore = () =>
+  //   [...new Array(5)].map((_, idx) => (
+  //     <div
+  //       key={idx}
+  //       className={`rounded-2xl bg-[var(--gray-1)] p-4 text-sm font-medium ${selectedRestId === idx ? 'border border-[var(--primary)]' : 'border border-transparent'}`}
+  //       onClick={() => setSelectedRestId(idx)}
+  //     >
+  //       <span className="text-xl font-bold">로니로티</span>
+  //       <p className="mt-1 leading-6">서울 광진구 아차산로 225 단산화빌딩</p>
+  //       <p className="flex gap-3 leading-6">
+  //         <span>영업중</span>
+  //         <span>21:30 라스트오더</span>
+  //       </p>
+  //       <p className="leading-6">병당 콜키지 1병 10,000원</p>
+  //     </div>
+  //   ));
 
   return (
     <div className="px-4">
@@ -97,7 +97,7 @@ function FindMyStore({ onNext }: { onNext: () => void }) {
         onSearch={onSearch}
       />
 
-      <div className="flex flex-col gap-3 overflow-y-auto pb-[100px]">{_renderStore()}</div>
+      <div className="flex flex-col gap-3 overflow-y-auto pb-[100px]">{renderStore()}</div>
 
       {selectedRestId !== -1 && (
         <button
