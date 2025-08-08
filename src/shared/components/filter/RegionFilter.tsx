@@ -1,82 +1,20 @@
 import { useState } from 'react';
+import rawRegions from '@/shared/constants/regions.json';
 
-const regions = [
-  {
-    name: '서울',
-    districts: [
-      '강남구',
-      '강동구',
-      '강북구',
-      '강서구',
-      '관악구',
-      '광진구',
-      '구로구',
-      '금천구',
-      '노원구',
-      '도봉구',
-      '동대문구',
-      '동작구',
-      '마포구',
-      '서대문구',
-      '서초구',
-      '성동구',
-      '성북구',
-      '송파구',
-      '양천구',
-      '영등포구',
-      '용산구',
-      '은평구',
-      '종로구',
-      '중구',
-      '중랑구',
-    ],
-  },
-  {
-    name: '경기',
-    districts: ['전체'],
-  },
-  { name: '인천', districts: [] },
-  { name: '강원', districts: [] },
-  { name: '대전', districts: [] },
-  { name: '세종', districts: [] },
-  { name: '충북', districts: [] },
-  { name: '충남', districts: [] },
-  { name: '부산', districts: [] },
-  { name: '울산', districts: [] },
-  { name: '경남', districts: [] },
-  { name: '경북', districts: [] },
-  { name: '대구', districts: [] },
-  { name: '광주', districts: [] },
-];
-
-const neighborhoods: { [key: string]: string[] } = {
-  강남구: ['삼성동', '송파동'],
-  강동구: ['천호동'],
-  강북구: [
-    '강북구 전체',
-    '미아동',
-    '번동',
-    '번1동',
-    '번2동',
-    '번3동',
-    '삼각산동',
-    '삼양동',
-    '송중동',
-    '송천동',
-  ],
-};
+type RegionData = Record<string, Record<string, string[]>>;
+const regions = rawRegions as RegionData;
 
 const RegionFilter = () => {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
-  const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
+  const [selectedSido, setSelectedSido] = useState<string | null>(null);
+  const [selectedSigungu, setSelectedSigungu] = useState<string | null>(null);
+  const [selectedDongs, setSelectedDongs] = useState<string[]>([]);
 
-  const handleNeighborhoodSelect = (hood: string) => {
-    if (selectedNeighborhoods.includes(hood)) {
-      setSelectedNeighborhoods(selectedNeighborhoods.filter((h) => h !== hood));
+  const handleDongSelect = (dong: string) => {
+    if (selectedDongs.includes(dong)) {
+      setSelectedDongs(selectedDongs.filter((d) => d !== dong));
     } else {
-      if (selectedNeighborhoods.length < 10) {
-        setSelectedNeighborhoods([...selectedNeighborhoods, hood]);
+      if (selectedDongs.length < 10) {
+        setSelectedDongs([...selectedDongs, dong]);
       }
     }
   };
@@ -94,75 +32,67 @@ const RegionFilter = () => {
       </div>
       <div className="flex border-b text-sm">
         <div className="w-[81px] overflow-y-auto border-r">
-          {regions.map((region) => (
+          {Object.keys(regions).map((sido) => (
             <div
-              key={region.name}
+              key={sido}
               onClick={() => {
-                setSelectedRegion(region.name);
-                setSelectedDistrict(null);
-                // setSelectedNeighborhoods([]);
+                setSelectedSido(sido);
+                setSelectedSigungu(null);
               }}
               className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-                selectedRegion === region.name ? 'bg-[#90212A] font-semibold text-white' : ''
+                selectedSido === sido ? 'bg-[#90212A] font-semibold text-white' : ''
               }`}
             >
-              {region.name}
+              {sido}
             </div>
           ))}
         </div>
 
         <div className="w-[156px] overflow-y-auto border-r">
-          {selectedRegion &&
-            regions
-              .find((r) => r.name === selectedRegion)
-              ?.districts.map((d) => (
-                <div
-                  key={d}
-                  onClick={() => {
-                    setSelectedDistrict(d);
-                  }}
-                  className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-                    selectedDistrict === d ? 'bg-[#90214626] font-semibold text-[#90212A]' : ''
-                  }`}
-                >
-                  {d}
-                </div>
-              ))}
+          {selectedSido &&
+            Object.keys(regions[selectedSido]).map((sigungu) => (
+              <div
+                key={sigungu}
+                onClick={() => setSelectedSigungu(sigungu)}
+                className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
+                  selectedSigungu === sigungu ? 'bg-[#90214626] font-semibold text-[#90212A]' : ''
+                }`}
+              >
+                {sigungu}
+              </div>
+            ))}
         </div>
 
         <div className="max-h-[300px] w-[156px] overflow-y-auto">
-          {selectedDistrict &&
-            neighborhoods[selectedDistrict]?.map((hood) => (
+          {selectedSido &&
+            selectedSigungu &&
+            regions[selectedSido][selectedSigungu].map((dong) => (
               <div
-                key={hood}
-                onClick={() => handleNeighborhoodSelect(hood)}
+                key={dong}
+                onClick={() => handleDongSelect(dong)}
                 className={`flex cursor-pointer justify-between px-4 py-2 hover:bg-gray-100 ${
-                  selectedNeighborhoods.includes(hood) ? 'font-semibold text-[#90212A]' : ''
+                  selectedDongs.includes(dong) ? 'font-semibold text-[#90212A]' : ''
                 }`}
               >
-                {hood}
-                {selectedNeighborhoods.includes(hood) && <span>✔</span>}
+                {dong}
+                {selectedDongs.includes(dong) && <span>✔</span>}
               </div>
             ))}
         </div>
       </div>
 
-      {selectedNeighborhoods.length > 0 && (
+      {selectedDongs.length > 0 && (
         <div className="fixed bottom-0 h-[190px] w-[393px] bg-white shadow-[0_-1px_12px_-1px_rgba(0,0,0,0.2)]">
           <div className="flex flex-col gap-2 p-4">
-            <div className="flex text-[12px]">{selectedNeighborhoods.length}/10</div>
+            <div className="flex text-[12px]">{selectedDongs.length}/10</div>
             <div className="scrollbar-hide flex gap-2 overflow-x-auto whitespace-nowrap">
-              {selectedNeighborhoods.map((hood) => (
+              {selectedDongs.map((hood) => (
                 <span
                   key={hood}
                   className="flex h-[32px] items-center gap-1 rounded-lg bg-[#90214626] px-2 py-1 text-[12px] font-semibold text-[#90212A]"
                 >
                   {hood}
-                  <button
-                    onClick={() =>
-                      setSelectedNeighborhoods(selectedNeighborhoods.filter((h) => h !== hood))
-                    }
-                  >
+                  <button onClick={() => setSelectedDongs(selectedDongs.filter((h) => h !== hood))}>
                     ✕
                   </button>
                 </span>

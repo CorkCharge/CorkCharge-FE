@@ -26,6 +26,7 @@ import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
 import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
+import RestaurantsList from '@/pages/corkagemap/RestaurantsList';
 import Notification from '@/pages/notification/Notification';
 
 const router = createBrowserRouter([
@@ -136,6 +137,10 @@ const router = createBrowserRouter([
   {
     path: '/my/contact',
     element: <Contact />,
+  },
+  {
+    path: '/corkagemap/list',
+    element: <RestaurantsList />,
   },
   {
     path: '/notification',
