@@ -9,7 +9,10 @@ interface ButtonProps {
 function Button({ value, onClick, className }: ButtonProps) {
   return (
     <button
-      className={cn('button-shadow h-12 w-full rounded-lg bg-white/80 text-black', className)}
+      className={cn(
+        'button-shadow h-12 w-full rounded-lg bg-white/80 font-bold text-black',
+        className
+      )}
       onClick={onClick}
     >
       {value || ''}

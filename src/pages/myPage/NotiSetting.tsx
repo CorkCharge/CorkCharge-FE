@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Header from '@/shared/components/common/Header';
 
-function Notification() {
+function NotiSetting() {
   const [isNotiOn, setIsNotiOn] = useState(false);
   const [isNightOn, setIsNightOn] = useState(false);
   return (
@@ -36,4 +36,4 @@ function Notification() {
   );
 }
 
-export default Notification;
+export default NotiSetting;
