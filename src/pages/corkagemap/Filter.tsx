@@ -13,6 +13,9 @@ import RegionFilter from '@/shared/components/filter/RegionFilter';
 
 const Filter = () => {
   const [selectedTab, setSelectedTab] = useState<'corkage' | 'region'>('corkage');
+  const [selectedSido, setSelectedSido] = useState<string | null>(null);
+  const [selectedSigungu, setSelectedSigungu] = useState<string | null>(null);
+  const [selectedDongs, setSelectedDongs] = useState<string[]>([]);
   return (
     <main className="relative flex h-screen flex-col items-center">
       <Header />
@@ -37,9 +40,21 @@ const Filter = () => {
           ></div>
         </>
       ) : (
-        <RegionFilter />
+        <RegionFilter
+          selectedSido={selectedSido}
+          selectedSigungu={selectedSigungu}
+          selectedDongs={selectedDongs}
+          setSelectedSido={setSelectedSido}
+          setSelectedSigungu={setSelectedSigungu}
+          setSelectedDongs={setSelectedDongs}
+        />
       )}
-      <BottomButtonContainer selectedTab={selectedTab} />
+      <BottomButtonContainer
+        selectedTab={selectedTab}
+        selectedSido={selectedSido}
+        selectedSigungu={selectedSigungu}
+        selectedDongs={selectedDongs}
+      />
     </main>
   );
 };
