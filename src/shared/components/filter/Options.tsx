@@ -8,7 +8,7 @@ const Options = () => {
   const [range4, setRange4] = useState<[number, number]>([0, 50000]);
   const [selectedOptionsTypes, setSelectedOptionsTypes] = useState<string[]>([]);
   const [selectedCorkageTypes, setSelectedCorkageTypes] = useState<string[]>([]);
-  const optionTypes = ['잔제공', '얼음제공'];
+  const optionTypes = ['잔제공', '얼음제공', '기타'];
   const corkageTypes = ['한병 무료', '다중 콜키지'];
   const toggleOption = (option: string) => {
     setSelectedOptionsTypes((prev) =>
