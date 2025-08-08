@@ -24,10 +24,11 @@ import MasterSignUp from '@/pages/myPage/MaterSignUp';
 import ModifyInfo from '@/pages/myPage/ModifyInfo';
 import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
-import Notification from '@/pages/myPage/Notification';
+import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
 import RestaurantsList from '@/pages/corkagemap/RestaurantsList';
 import FilterResult from '@/pages/corkagemap/FilterResult';
+import Notification from '@/pages/notification/Notification';
 
 const router = createBrowserRouter([
   {
@@ -131,8 +132,8 @@ const router = createBrowserRouter([
     element: <MyReview />,
   },
   {
-    path: '/my/notification',
-    element: <Notification />,
+    path: '/my/notification/setting',
+    element: <NotiSetting />,
   },
   {
     path: '/my/contact',
@@ -145,6 +146,10 @@ const router = createBrowserRouter([
   {
     path: '/corkagemap/filter/result',
     element: <FilterResult />,
+  },
+  {
+    path: '/notification',
+    element: <Notification />,
   },
 ]);
 
