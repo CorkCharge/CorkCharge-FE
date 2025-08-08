@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+
 import logo from '@/shared/assets/images/logo.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
 
 function CompleteSignUp() {
+  const navigate = useNavigate();
   return (
     <div className="px-4">
       <div className="pt-[60px]"></div>
@@ -19,7 +22,10 @@ function CompleteSignUp() {
         <p>일주일 내 확인 후 가입이 승인됩니다.</p>
       </div>
 
-      <button className="mx-auto mt-10 inline-block flex h-[48px] max-w-[480px] items-center justify-center gap-3 rounded-[10px] bg-[var(--primary)] px-5 font-bold text-white">
+      <button
+        className="mx-auto mt-10 inline-block flex h-[48px] max-w-[480px] items-center justify-center gap-3 rounded-[10px] bg-[var(--primary)] px-5 font-bold text-white"
+        onClick={() => navigate('/home')}
+      >
         홈으로 돌아가기
         <img src={arrow} className="h-4 w-[9px] rotate-180" />
       </button>

@@ -1,6 +1,8 @@
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import pencil from '@/shared/components/myPage/images/pencil.png';
+import useProfileStore from '@/shared/store/useProfileStore';
+
 import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
 import plus from '@/shared/assets/images/plus.png';
@@ -40,22 +42,34 @@ const NoneReview = () => {
 export const LoggedInMyPage = () => {
   const hasReview = useRef(true);
   const isMaster = useRef(true);
+
+  const navigate = useNavigate();
+
+  const { profile } = useProfileStore();
+
   return (
     <>
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
         <div className="relative flex gap-[22px] pb-5">
           {/* <img src="" /> */}
-          <div className="flex size-16 items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
-            <img src={pencil} className="size-7" />
+          <div
+            className={`flex size-16 ${profile.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
+          >
+            <img src={profile.profile_image!} className="size-full rounded-full" />
+            {/* {profile.profile_image && <img src={profile.profile_image} className="size-full" />} */}
           </div>
           <div className="flex flex-col justify-center">
             <p className="flex items-center gap-1 text-xl font-bold">
-              애주가 코르크님
+              {profile.name}
               {isMaster.current && <img src={logo} className="h-[21px]" />}
             </p>
             <p className="text-sm font-medium text-[#80818B]">tempididid</p>
           </div>
-          <img src={arrow} className="absolute right-5 top-7 h-4" />
+          <img
+            src={arrow}
+            className="absolute right-5 top-7 h-4"
+            onClick={() => navigate('/my/modify')}
+          />
         </div>
 
         <div className="-mx-4 h-[1px] bg-[var(--gray-4)]"></div>

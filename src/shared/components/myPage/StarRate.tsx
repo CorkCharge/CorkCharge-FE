@@ -4,12 +4,15 @@ import { cn } from '@/shared/utils/utils';
 
 interface StarProps {
   rate: number;
+  isEditable?: boolean;
   className?: string;
 }
-export const StarRate = ({ rate, className }: StarProps) => {
+export const StarRate = ({ rate, isEditable = false, className }: StarProps) => {
   const STARIDX = ['first', 'second', 'third', 'fourth', 'fifth'];
   const compId = useId(); // 컴포넌트 별 id 생성
   const [rateArr, setRateArr] = useState([0, 0, 0, 0, 0]);
+  const [hoverIdx, setHoverIdx] = useState(-1); // 마우스가 hover된 index
+  const [clickIdx, setClickIdx] = useState(-1); // 클릭한 index
 
   useEffect(() => {
     const calcRate = (rate: number) => {
@@ -26,6 +29,8 @@ export const StarRate = ({ rate, className }: StarProps) => {
     calcRate(rate);
   }, [rate]);
 
+  const setHoverFill = (idx: number) => setHoverIdx(idx);
+
   return (
     <div className={cn('flex items-center', className)}>
       {STARIDX.map((item, idx) => (
@@ -35,10 +40,17 @@ export const StarRate = ({ rate, className }: StarProps) => {
             width="20"
             height="18"
             viewBox="0 0 14 13"
-            fill="transparent"
+            fill={isEditable ? 'var(--gray-4)' : 'transparent'}
+            onClick={isEditable ? () => setClickIdx(idx) : undefined}
+            onMouseEnter={isEditable ? () => setHoverFill(idx) : undefined}
+            onMouseLeave={isEditable ? () => setHoverFill(clickIdx) : undefined}
           >
             <clipPath id={`${compId}-${item}`}>
-              <rect width={rateArr[idx]} height="18" />
+              {isEditable ? (
+                <rect width={idx <= hoverIdx ? 14 : 0} height="18" />
+              ) : (
+                <rect width={rateArr[idx]} height="18" />
+              )}
             </clipPath>
             <path
               id={`${compId}-${item}star`}
