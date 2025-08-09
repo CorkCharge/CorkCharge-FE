@@ -27,6 +27,7 @@ import MyReview from '@/pages/myPage/MyReview';
 import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
 import RestaurantsList from '@/pages/corkagemap/RestaurantsList';
+import FilterResult from '@/pages/corkagemap/FilterResult';
 import Notification from '@/pages/notification/Notification';
 
 const router = createBrowserRouter([
@@ -141,6 +142,10 @@ const router = createBrowserRouter([
   {
     path: '/corkagemap/list',
     element: <RestaurantsList />,
+  },
+  {
+    path: '/corkagemap/filter/result',
+    element: <FilterResult />,
   },
   {
     path: '/notification',

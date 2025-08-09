@@ -1,14 +1,25 @@
-import { useState } from 'react';
 import rawRegions from '@/shared/constants/regions.json';
 
 type RegionData = Record<string, Record<string, string[]>>;
 const regions = rawRegions as RegionData;
 
-const RegionFilter = () => {
-  const [selectedSido, setSelectedSido] = useState<string | null>(null);
-  const [selectedSigungu, setSelectedSigungu] = useState<string | null>(null);
-  const [selectedDongs, setSelectedDongs] = useState<string[]>([]);
+interface RegionFilterProps {
+  selectedSido: string | null;
+  selectedSigungu: string | null;
+  selectedDongs: string[];
+  setSelectedSido: (_: string | null) => void;
+  setSelectedSigungu: (_: string | null) => void;
+  setSelectedDongs: (_: string[]) => void;
+}
 
+const RegionFilter = ({
+  selectedSido,
+  selectedSigungu,
+  selectedDongs,
+  setSelectedSido,
+  setSelectedSigungu,
+  setSelectedDongs,
+}: RegionFilterProps) => {
   const handleDongSelect = (dong: string) => {
     if (selectedDongs.includes(dong)) {
       setSelectedDongs(selectedDongs.filter((d) => d !== dong));
