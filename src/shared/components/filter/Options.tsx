@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Slider from 'rc-slider';
 
 const Options = () => {
@@ -8,8 +8,19 @@ const Options = () => {
   const [range4, setRange4] = useState<[number, number]>([0, 50000]);
   const [selectedOptionsTypes, setSelectedOptionsTypes] = useState<string[]>([]);
   const [selectedCorkageTypes, setSelectedCorkageTypes] = useState<string[]>([]);
-  const optionTypes = ['잔제공', '얼음제공', '기타'];
-  const corkageTypes = ['한병 무료', '다중 콜키지'];
+  const optionTypes = ['잔제공', '얼음제공'];
+  const corkageTypes = ['한병 무료', '두병무료'];
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // 어떤 슬라이더를 활성화할지 결정 (첫 번째 슬라이더는 항상 활성)
+  const enable = useMemo(() => {
+    return {
+      bottle: selectedCategory === '병당',
+      person: selectedCategory === '인당',
+      table: selectedCategory === '테이블당',
+    };
+  }, [selectedCategory]);
+
   const toggleOption = (option: string) => {
     setSelectedOptionsTypes((prev) =>
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
@@ -22,11 +33,53 @@ const Options = () => {
     );
   };
 
+  // 활성/비활성에 따른 스타일 세트
+  const sliderStyles = (isEnabled: boolean) => ({
+    trackStyle: [{ backgroundColor: isEnabled ? '#90212A' : '#E5E5EA', height: 6 }],
+    handleStyle: [
+      {
+        borderColor: isEnabled ? '#90212A' : '#E5E5EA',
+        height: 24,
+        width: 24,
+        marginTop: -10,
+        backgroundColor: isEnabled ? 'white' : '#F5F5F5',
+        boxShadow: isEnabled ? '0 0 5px rgba(0,0,0,0.2)' : 'none',
+      },
+      {
+        borderColor: isEnabled ? '#90212A' : '#E5E5EA',
+        height: 24,
+        width: 24,
+        marginTop: -10,
+        backgroundColor: isEnabled ? 'white' : '#F5F5F5',
+        boxShadow: isEnabled ? '0 0 5px rgba(0,0,0,0.2)' : 'none',
+      },
+    ],
+    railStyle: { backgroundColor: '#E5E5EA', height: 6 },
+  });
+
   return (
     <>
       <div className="flex w-full flex-col gap-[4px] self-start">
+        <div className="flex w-full flex-col gap-[4px] self-start">
+          <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">업종</div>
+          <div className="ml-[32px] flex w-full flex-row gap-[8px]">
+            {['프리', '병당', '인당', '테이블당', '다중'].map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`h-[32px] w-[14%] rounded-[20px] text-[14px] font-[500] ${
+                  selectedCategory === category
+                    ? `bg-[#90212A] text-white`
+                    : `bg-[#F3F3F6] text-[#90212A]`
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="mb-[8px] ml-[32px] mt-[16px] self-start text-[20px] font-[500]">
-          콜키지 스토어
+          콜키지 스코어
         </div>
         <Slider
           range
@@ -37,26 +90,7 @@ const Options = () => {
           step={1}
           value={range}
           onChange={(val) => setRange(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+          {...sliderStyles(true)}
           style={{ width: '83.2%', margin: 'auto' }}
         />
         <div className="mx-auto flex w-[83.2%] flex-row justify-between">
@@ -84,26 +118,8 @@ const Options = () => {
           step={1000}
           value={range2}
           onChange={(val) => setRange2(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+          disabled={!enable.bottle}
+          {...sliderStyles(!!enable.bottle)}
           style={{ width: '83.2%', margin: 'auto' }}
         />
         <div className="mx-auto flex w-[83.2%] flex-row justify-between">
@@ -125,26 +141,8 @@ const Options = () => {
           step={1000}
           value={range3}
           onChange={(val) => setRange3(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+          disabled={!enable.person}
+          {...sliderStyles(!!enable.person)}
           style={{ width: '83.2%', margin: 'auto' }}
         />
         <div className="mx-auto flex w-[83.2%] flex-row justify-between">
@@ -166,26 +164,8 @@ const Options = () => {
           step={1000}
           value={range4}
           onChange={(val) => setRange4(val as [number, number])}
-          trackStyle={[{ backgroundColor: '#90212A', height: 6 }]}
-          handleStyle={[
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-            {
-              borderColor: '#90212A',
-              height: 24,
-              width: 24,
-              marginTop: -10,
-              backgroundColor: 'white',
-              boxShadow: '0 0 5px rgba(0,0,0,0.2)',
-            },
-          ]}
-          railStyle={{ backgroundColor: '#E5E5EA', height: 6 }}
+          disabled={!enable.table}
+          {...sliderStyles(!!enable.table)}
           style={{ width: '83.2%', margin: 'auto' }}
         />
         <div className="mx-auto flex w-[83.2%] flex-row justify-between">
