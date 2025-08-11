@@ -91,7 +91,15 @@ function MyReviewItem({ review }: { review: MyReview }) {
           reviewId={review.reviewId}
         />
       }
-      {<DeleteModal isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} />}
+      {
+        <DeleteModal
+          isOpen={deleteOpen}
+          onClose={() => setDeleteOpen(false)}
+          restName={'jsndjf'}
+          createdAt={review.createdAt.split('T')[0]}
+          reviewId={review.reviewId}
+        />
+      }
     </>
   );
 }

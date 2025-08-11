@@ -10,6 +10,8 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   reviewId?: number;
+  restName?: string;
+  createdAt?: string;
 }
 
 export const ShareModal = ({ isOpen, onClose }: ModalProps) => {
@@ -98,12 +100,18 @@ export const ModifyModal = ({ isOpen, onClose, reviewId }: ModalProps) => {
   );
 };
 
-export const DeleteModal = ({ isOpen, onClose }: ModalProps) => {
+export const DeleteModal = ({ isOpen, onClose, restName, createdAt, reviewId }: ModalProps) => {
+  const deleteReview = () => {
+    apiClient
+      .delete(`/reviews/${reviewId}`, { params: { userId: 1 } })
+      .then()
+      .catch((e) => console.error('리뷰 삭제 실패 : ' + e));
+  };
   return (
     <Modal isOpen={isOpen} className="bg-[rgba(255,255,255,0.8)]">
       <h3 className="mb-2 text-center font-bold text-[var(--gray-8)]">후기를 삭제하시겠습니까?</h3>
-      <p className="mb-1 text-center text-sm font-medium text-[var(--gray-8)]">깍둑 건대점</p>
-      <p className="text-center text-[10px] text-[var(--gray-6)]">2025.07.24 작성</p>
+      <p className="mb-1 text-center text-sm font-medium text-[var(--gray-8)]">{restName}</p>
+      <p className="text-center text-[10px] text-[var(--gray-6)]">{createdAt} 작성</p>
       <div className="mt-5 flex w-full gap-1">
         <button
           className="h-[44px] flex-1 rounded-[10px] bg-white font-bold text-[var(--gray-7)]"
@@ -111,7 +119,10 @@ export const DeleteModal = ({ isOpen, onClose }: ModalProps) => {
         >
           취소
         </button>
-        <button className="h-[44px] flex-1 rounded-[10px] bg-[rgba(144,33,70,0.15)] font-bold text-[var(--primary)]">
+        <button
+          className="h-[44px] flex-1 rounded-[10px] bg-[rgba(144,33,70,0.15)] font-bold text-[var(--primary)]"
+          onClick={deleteReview}
+        >
           삭제
         </button>
       </div>
