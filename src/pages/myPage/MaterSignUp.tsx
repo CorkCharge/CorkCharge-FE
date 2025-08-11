@@ -5,7 +5,7 @@ import AuthMaster from '@/shared/components/myPage/AuthMaster';
 import CompleteSignUp from '@/shared/components/myPage/CompleteSignUp';
 
 function MasterSignUp() {
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
 
   const nextPage = () => setPage((prev) => prev + 1);
 

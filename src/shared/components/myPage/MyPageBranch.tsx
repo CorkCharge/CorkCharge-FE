@@ -1,7 +1,11 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useProfileStore from '@/shared/store/useProfileStore';
+import useMyPageStore from '@/shared/store/useMyPageStore';
+
+import apiClient from '@/shared/apis/apiClient';
+import type { Review } from '@/shared/types/mypage';
 
 import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
@@ -10,21 +14,27 @@ import shakehand from '@/shared/assets/images/shakehand.png';
 import check from '@/shared/assets/images/cork-check.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
 
-const renderReviews = () =>
-  [...new Array(4)].map((_, idx) => (
+const renderReviews = (reviews: Review[]) =>
+  reviews.map((review, idx) => (
     <div
       key={idx}
-      className="flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg bg-black p-3 text-white"
+      className={`flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white ${!review.thumbnailUrl && 'bg-black'}`}
+      style={{
+        backgroundImage: `url(${review.thumbnailUrl || ''})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
     >
-      <span className="text-[10px] font-medium">서울 광진구 화양동</span>
-      <span className="text-sm font-bold">엘루이 피자</span>
+      <span className="text-[10px] font-medium">{review.location}</span>
+      <span className="text-sm font-bold">{review.restaurantName}</span>
     </div>
   ));
 
-const ReviewArea = () => {
+const ReviewArea = ({ reviews }: { reviews: [] }) => {
   return (
     <>
-      <div className="mt-5 flex gap-2 overflow-x-auto">{renderReviews()}</div>
+      <div className="mt-5 flex gap-2 overflow-x-auto">{renderReviews(reviews)}</div>
     </>
   );
 };
@@ -40,12 +50,21 @@ const NoneReview = () => {
 };
 
 export const LoggedInMyPage = () => {
-  const hasReview = useRef(true);
   const isMaster = useRef(true);
 
   const navigate = useNavigate();
 
   const { profile } = useProfileStore();
+  const { myProfile, setMyProfile } = useMyPageStore();
+
+  useEffect(() => {
+    apiClient
+      .get('/users/page', { params: { userId: 1 } })
+      .then((res) => {
+        setMyProfile(res.data.data);
+      })
+      .catch((e) => console.error(e));
+  }, []);
 
   return (
     <>
@@ -60,10 +79,10 @@ export const LoggedInMyPage = () => {
           </div>
           <div className="flex flex-col justify-center">
             <p className="flex items-center gap-1 text-xl font-bold">
-              {profile.name}
+              {myProfile.nickname}
               {isMaster.current && <img src={logo} className="h-[21px]" />}
             </p>
-            <p className="text-sm font-medium text-[#80818B]">tempididid</p>
+            <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p>
           </div>
           <img
             src={arrow}
@@ -96,7 +115,7 @@ export const LoggedInMyPage = () => {
       <div className="relative mb-10 mt-10">
         <span className="font-bold">나의 리뷰</span>
         <img src={arrow} className="absolute right-3 top-1 h-4 w-[9px]" />
-        {hasReview.current ? <ReviewArea /> : <NoneReview />}
+        {myProfile.reviews.length > 0 ? <ReviewArea reviews={myProfile.reviews} /> : <NoneReview />}
       </div>
 
       <div className="-mx-4 h-2 bg-[var(--gray-1)]"></div>
