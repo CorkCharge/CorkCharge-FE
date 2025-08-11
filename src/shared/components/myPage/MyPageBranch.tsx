@@ -31,7 +31,7 @@ const renderReviews = (reviews: Review[]) =>
     </div>
   ));
 
-const ReviewArea = ({ reviews }: { reviews: [] }) => {
+const ReviewArea = ({ reviews }: { reviews: Review[] }) => {
   return (
     <>
       <div className="mt-5 flex gap-2 overflow-x-auto">{renderReviews(reviews)}</div>
