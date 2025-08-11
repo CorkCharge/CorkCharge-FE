@@ -6,8 +6,9 @@ interface StarProps {
   rate: number;
   isEditable?: boolean;
   className?: string;
+  starRating?: (n: number) => void;
 }
-export const StarRate = ({ rate, isEditable = false, className }: StarProps) => {
+export const StarRate = ({ rate, isEditable = false, starRating, className }: StarProps) => {
   const STARIDX = ['first', 'second', 'third', 'fourth', 'fifth'];
   const compId = useId(); // 컴포넌트 별 id 생성
   const [rateArr, setRateArr] = useState([0, 0, 0, 0, 0]);
@@ -30,6 +31,10 @@ export const StarRate = ({ rate, isEditable = false, className }: StarProps) => 
   }, [rate]);
 
   const setHoverFill = (idx: number) => setHoverIdx(idx);
+  const handleClick = (idx: number) => {
+    setClickIdx(idx);
+    if (starRating) starRating(idx + 1);
+  };
 
   return (
     <div className={cn('flex items-center', className)}>
@@ -41,7 +46,7 @@ export const StarRate = ({ rate, isEditable = false, className }: StarProps) => 
             height="18"
             viewBox="0 0 14 13"
             fill={isEditable ? 'var(--gray-4)' : 'transparent'}
-            onClick={isEditable ? () => setClickIdx(idx) : undefined}
+            onClick={isEditable ? () => handleClick(idx) : undefined}
             onMouseEnter={isEditable ? () => setHoverFill(idx) : undefined}
             onMouseLeave={isEditable ? () => setHoverFill(clickIdx) : undefined}
           >
