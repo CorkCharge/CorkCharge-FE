@@ -9,8 +9,13 @@ interface ContactPost {
   title: string;
   createdAt: string;
 }
+interface ContactListProps {
+  onWrite: () => void;
+  onDetail: () => void;
+  selectPost: React.Dispatch<React.SetStateAction<number>>;
+}
 
-function ContactList({ onWrite }: { onWrite: () => void }) {
+function ContactList({ onWrite, onDetail, selectPost }: ContactListProps) {
   const [posts, setPosts] = useState<ContactPost[]>([]);
 
   useEffect(() => {
@@ -24,7 +29,11 @@ function ContactList({ onWrite }: { onWrite: () => void }) {
 
   const renderPosts = () =>
     posts.map((post) => (
-      <li key={post.suggestionId} className="relative border-b border-[var(--gray-3)] px-2 py-4">
+      <li
+        key={post.suggestionId}
+        className="relative border-b border-[var(--gray-3)] px-2 py-4"
+        onClick={() => gotoPost(post.suggestionId)}
+      >
         <p className="font-medium text-[var(--gray-8)]">{post.title}</p>
         <span className="text-[10px] font-medium text-[var(--gray-4)]">
           {dateFormatter(post.createdAt)}
@@ -34,6 +43,11 @@ function ContactList({ onWrite }: { onWrite: () => void }) {
         </span>
       </li>
     ));
+
+  const gotoPost = (postId: number) => {
+    selectPost(postId);
+    onDetail();
+  };
 
   const dateFormatter = (date: string) => {
     const onlyDate = date.split('T')[0];
