@@ -142,31 +142,13 @@ const Options = () => {
           <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
           <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
         </div>
-        <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
+        <span
+          className={`mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A] ${
+            enable.bottle ? '' : 'invisible'
+          }`}
+          aria-hidden={!enable.bottle}
+        >
           {range2[0]}원 ~ {range2[1]}원
-        </span>
-      </div>
-      <div className="flex w-full flex-col gap-[4px] self-start">
-        <div className="mb-[8px] ml-[32px] self-start text-[16px] font-[500]">인당 가격</div>
-        <Slider
-          range
-          allowCross={false}
-          defaultValue={[0, 50000]}
-          min={0}
-          max={50000}
-          step={1000}
-          value={range3}
-          onChange={(val) => setRange3(val as [number, number])}
-          disabled={!enable.person}
-          {...sliderStyles(!!enable.person)}
-          style={{ width: '83.2%', margin: 'auto' }}
-        />
-        <div className="mx-auto flex w-[83.2%] flex-row justify-between">
-          <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
-          <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
-        </div>
-        <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
-          {range3[0]}원 ~ {range3[1]}원
         </span>
       </div>
       <div className="flex w-full flex-col gap-[4px] self-start">
@@ -178,8 +160,8 @@ const Options = () => {
           min={0}
           max={50000}
           step={1000}
-          value={range4}
-          onChange={(val) => setRange4(val as [number, number])}
+          value={range3}
+          onChange={(val) => setRange3(val as [number, number])}
           disabled={!enable.table}
           {...sliderStyles(!!enable.table)}
           style={{ width: '83.2%', margin: 'auto' }}
@@ -188,10 +170,44 @@ const Options = () => {
           <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
           <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
         </div>
-        <span className="mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A]">
+        <span
+          className={`mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A] ${
+            enable.table ? '' : 'invisible'
+          }`}
+          aria-hidden={!enable.table}
+        >
+          {range3[0]}원 ~ {range3[1]}원
+        </span>
+      </div>
+      <div className="flex w-full flex-col gap-[4px] self-start">
+        <div className="mb-[8px] ml-[32px] self-start text-[16px] font-[500]">인당 가격</div>
+        <Slider
+          range
+          allowCross={false}
+          defaultValue={[0, 50000]}
+          min={0}
+          max={50000}
+          step={1000}
+          value={range4}
+          onChange={(val) => setRange4(val as [number, number])}
+          disabled={!enable.person}
+          {...sliderStyles(!!enable.person)}
+          style={{ width: '83.2%', margin: 'auto' }}
+        />
+        <div className="mx-auto flex w-[83.2%] flex-row justify-between">
+          <span className="text-[14px] font-[500] text-[#8E8E93]">0원</span>
+          <span className="text-[14px] font-[500] text-[#8E8E93]">50,000원 이상</span>
+        </div>
+        <span
+          className={`mr-[8%] self-end text-right text-[14px] font-[700] text-[#90212A] ${
+            enable.person ? '' : 'invisible'
+          }`}
+          aria-hidden={!enable.person}
+        >
           {range4[0]}원 ~ {range4[1]}원
         </span>
       </div>
+
       <div className="flex w-full flex-col gap-[4px] self-start">
         <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">기타</div>
         <div className="ml-[32px] flex w-full flex-row gap-[8px]">
