@@ -10,16 +10,31 @@ const Options = () => {
   const [selectedCorkageTypes, setSelectedCorkageTypes] = useState<string[]>([]);
   const optionTypes = ['잔제공', '얼음제공'];
   const corkageTypes = ['한병 무료', '두병무료'];
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const categories = ['콜키지프리', '병당', '테이블당', '인당', '다중'];
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    );
+  };
 
   // 어떤 슬라이더를 활성화할지 결정 (첫 번째 슬라이더는 항상 활성)
   const enable = useMemo(() => {
+    const hasSpecific =
+      selectedCategories.includes('병당') ||
+      selectedCategories.includes('인당') ||
+      selectedCategories.includes('테이블당');
+
+    // 프리/다중만 선택된 경우 -> 모두 비활성
+    if (!hasSpecific) {
+      return { bottle: false, person: false, table: false };
+    }
     return {
-      bottle: selectedCategory === '병당',
-      person: selectedCategory === '인당',
-      table: selectedCategory === '테이블당',
+      bottle: selectedCategories.includes('병당'),
+      person: selectedCategories.includes('인당'),
+      table: selectedCategories.includes('테이블당'),
     };
-  }, [selectedCategory]);
+  }, [selectedCategories]);
 
   const toggleOption = (option: string) => {
     setSelectedOptionsTypes((prev) =>
@@ -63,19 +78,21 @@ const Options = () => {
         <div className="flex w-full flex-col gap-[4px] self-start">
           <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">업종</div>
           <div className="ml-[32px] flex w-full flex-row gap-[8px]">
-            {['프리', '병당', '인당', '테이블당', '다중'].map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`h-[32px] w-[14%] rounded-[20px] text-[14px] font-[500] ${
-                  selectedCategory === category
-                    ? `bg-[#90212A] text-white`
-                    : `bg-[#F3F3F6] text-[#90212A]`
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+            {categories.map((category) => {
+              const active = selectedCategories.includes(category);
+              return (
+                <button
+                  key={category}
+                  onClick={() => toggleCategory(category)}
+                  aria-pressed={active}
+                  className={`h-[32px] w-[14%] rounded-[20px] text-[14px] font-[500] ${
+                    active ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#90212A]'
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
           </div>
         </div>
         <div className="mb-[8px] ml-[32px] mt-[16px] self-start text-[20px] font-[500]">
@@ -103,7 +120,6 @@ const Options = () => {
       </div>
       <div className="flex w-full flex-col gap-[4px] self-start">
         <div className="mb-[8px] ml-[32px] self-start text-[20px] font-[500]">가격</div>
-        <div className="ml-[32px]">가격표시공간</div>
       </div>
       <div className="flex w-full flex-col gap-[4px] self-start">
         <div className="mb-[8px] ml-[32px] mt-[8px] self-start text-[16px] font-[500]">
