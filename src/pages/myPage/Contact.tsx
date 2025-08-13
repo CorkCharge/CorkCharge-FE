@@ -7,14 +7,21 @@ import ContactPost from '@/shared/components/myPage/ContactPost';
 
 function Contact() {
   // 1번 - 문의글 리스트, 2번 - 문의글 작성, 3번 - 문의글 보기
-  const [contactController, setContactController] = useState(2);
+  const [contactController, setContactController] = useState(1);
+  const [selectedSuggestionIdx, setSelectedSuggestionIdx] = useState(-1);
 
   return (
     <div className="relative min-h-screen px-4">
       <Header title="문의하기" type="back" />
-      {contactController === 1 && <ContactList onWrite={() => setContactController(2)} />}
+      {contactController === 1 && (
+        <ContactList
+          onWrite={() => setContactController(2)}
+          onDetail={() => setContactController(1)}
+          selectPost={setSelectedSuggestionIdx}
+        />
+      )}
       {contactController === 2 && <WriteContact />}
-      {contactController === 3 && <ContactPost />}
+      {contactController === 3 && <ContactPost selectedIdx={selectedSuggestionIdx} />}
     </div>
   );
 }
