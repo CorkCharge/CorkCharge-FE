@@ -2,6 +2,49 @@ import { useEffect, useRef } from 'react';
 import { getMapData } from '@/shared/apis/map/mapApi';
 import type { MapLevel, ClusterPoint, RestaurantPoint } from '@/shared/types/map';
 
+/* =========================
+   NEW: 유틸 함수 (동명 파싱/그룹핑)
+   ========================= */
+// 주소의 마지막 괄호(...)에서 "동/읍/면/리"로 끝나는 토큰 추출
+const getDongFromAddress = (address: string): string | null => {
+  // 예: "서울특별시 광진구 자양로 199-1 (구의동)"
+  const m = address.match(/\(([^)]+)\)\s*$/);
+  if (!m) return null;
+
+  const inner = m[1].trim();
+  const m2 = inner.match(/([^\s]+(?:동|읍|면|리))$/);
+  return m2 ? m2[1] : inner; // 못 찾으면 괄호 전체라도 리턴
+};
+
+type DongBucket = {
+  name: string;
+  count: number;
+  sumLat: number;
+  sumLon: number;
+};
+
+const groupByDong = (points: { latitude: number; longitude: number; address: string }[]) => {
+  const map = new Map<string, DongBucket>();
+  for (const p of points) {
+    const dong = getDongFromAddress(p.address) ?? '미상';
+    const b = map.get(dong);
+    if (b) {
+      b.count += 1;
+      b.sumLat += p.latitude;
+      b.sumLon += p.longitude;
+    } else {
+      map.set(dong, { name: dong, count: 1, sumLat: p.latitude, sumLon: p.longitude });
+    }
+  }
+  return Array.from(map.values()).map((b) => ({
+    name: b.name,
+    count: b.count,
+    centerLat: b.sumLat / b.count,
+    centerLon: b.sumLon / b.count,
+  }));
+};
+/* ========================= */
+
 const NaverMap = () => {
   // 지도를 담을 DOM 요소를 참조합니다.
   const mapRef = useRef<HTMLDivElement | null>(null);
@@ -24,26 +67,30 @@ const NaverMap = () => {
   /**
    * 클러스터 마커(원)의 HTML 문자열을 생성합니다.
    * @param count - 클러스터에 포함된 매장 수
+   * @param label - (선택) 동 이름 라벨
    */
-  const createClusterMarkerHtml = (count: number): string => {
+  const createClusterMarkerHtml = (count: number, label?: string): string => {
     // 매장 수에 비례하여 원의 크기를 조절합니다.
     const size = 35 + count * 1.5;
     return `
       <div style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: ${size}px;
-        height: ${size}px;
-        background-color: #90212A;
-        color: white;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        transition: all 0.2s;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        width:${size}px;
+        height:${size}px;
+        background-color:#90212A;
+        color:white;
+        font-size:12px;
+        font-weight:bold;
+        border-radius:50%;
+        box-shadow:0 2px 4px rgba(0,0,0,0.2);
+        transition:all 0.2s;
+        padding:4px;
       ">
-        ${count}
+        <div style="font-size:14px; line-height:1">${count}</div>
+        ${label ? `<div style="font-size:10px; margin-top:2px; white-space:nowrap">${label}</div>` : ''}
       </div>
     `;
   };
@@ -84,63 +131,86 @@ const NaverMap = () => {
     if (!mapInstance.current) return;
 
     const map = mapInstance.current;
-    const raw = map.getBounds();
+    const rawBounds = map.getBounds();
+
+    // NEW: 타입 가드 + 숫자 전용 API 사용 (south/north/west/east)
+    if (!(rawBounds instanceof naver.maps.LatLngBounds)) return;
 
     const zoom = map.getZoom();
     const level = getMapLevel(zoom);
 
-    // [수정된 부분] 메서드를 호출하여 숫자 값을 가져오도록 수정합니다.
-    if (raw instanceof naver.maps.LatLngBounds) {
-      const mapBounds = {
-        level,
-        latMin: raw.south(),
-        latMax: raw.north(),
-        lonMin: raw.west(),
-        lonMax: raw.east(),
-      };
+    const mapBounds = {
+      level,
+      latMin: rawBounds.south(),
+      latMax: rawBounds.north(),
+      lonMin: rawBounds.west(),
+      lonMax: rawBounds.east(),
+    };
 
-      try {
-        const response = await getMapData(mapBounds);
-        clearMarkers(); // 기존 마커 제거
+    try {
+      const response = await getMapData(mapBounds);
+      clearMarkers(); // 기존 마커 제거
 
-        if (level === 'restaurant') {
-          // 개별 매장 마커 생성
-          const restaurantData = response.data as RestaurantPoint[];
-          restaurantData.forEach((item) => {
-            const marker = new window.naver.maps.Marker({
-              position: new window.naver.maps.LatLng(item.latitude, item.longitude),
-              map: map,
-              icon: {
-                content: createRestaurantMarkerHtml(item.price),
-                anchor: new window.naver.maps.Point(30, 15), // 마커의 기준점 조정
-              },
-            });
-            markers.current.push(marker);
+      if (level === 'restaurant') {
+        // 개별 매장 마커 생성
+        const restaurantData = response.data as RestaurantPoint[];
+        restaurantData.forEach((item) => {
+          const marker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(item.latitude, item.longitude),
+            map: map,
+            icon: {
+              content: createRestaurantMarkerHtml(item.price),
+              anchor: new window.naver.maps.Point(30, 15), // 마커의 기준점 조정
+            },
           });
-        } else {
-          // 클러스터 마커 생성
-          const clusterData = response.data as ClusterPoint[];
-          if (clusterData.length > 0) {
-            // 클러스터의 중심점을 계산합니다. (모든 좌표의 평균)
-            const centerLat =
-              clusterData.reduce((acc, cur) => acc + cur.latitude, 0) / clusterData.length;
-            const centerLon =
-              clusterData.reduce((acc, cur) => acc + cur.longitude, 0) / clusterData.length;
+          markers.current.push(marker);
+        });
+      } else if (level === 'dong') {
+        // NEW: 동 단위로 그룹핑하여 동의 중심에 클러스터 마커 여러 개 생성
+        const clusterData = response.data as ClusterPoint[];
+        console.log(clusterData.map((d) => d.restaurantId)); // 주소 배열 확인용
 
-            const marker = new window.naver.maps.Marker({
-              position: new window.naver.maps.LatLng(centerLat, centerLon),
-              map: map,
-              icon: {
-                content: createClusterMarkerHtml(clusterData.length),
-                anchor: new window.naver.maps.Point(15, 15), // 마커의 기준점 조정
-              },
-            });
-            markers.current.push(marker);
-          }
+        const dongClusters = groupByDong(clusterData);
+
+        dongClusters.forEach(({ count, centerLat, centerLon }) => {
+          const marker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(centerLat, centerLon),
+            map: map,
+            icon: {
+              content: createClusterMarkerHtml(count), // 라벨: 동 이름
+              anchor: new window.naver.maps.Point(15, 15),
+            },
+          });
+
+          // 선택: 클릭 시 해당 동으로 살짝 확대/이동
+          // naver.maps.Event.addListener(marker, 'click', () => {
+          //   map.morph(new naver.maps.LatLng(centerLat, centerLon), Math.max(map.getZoom(), 15));
+          // });
+
+          markers.current.push(marker);
+        });
+      } else {
+        // 기존: 시군구/시도는 전체 묶음 1개만
+        const clusterData = response.data as ClusterPoint[];
+        if (clusterData.length > 0) {
+          const centerLat =
+            clusterData.reduce((acc, cur) => acc + cur.latitude, 0) / clusterData.length;
+          const centerLon =
+            clusterData.reduce((acc, cur) => acc + cur.longitude, 0) / clusterData.length;
+
+          const marker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(centerLat, centerLon),
+            map: map,
+            icon: {
+              content: createClusterMarkerHtml(clusterData.length),
+              anchor: new window.naver.maps.Point(15, 15), // 마커의 기준점 조정
+            },
+          });
+          markers.current.push(marker);
         }
-      } catch (error) {
-        console.error('지도 데이터를 가져오는 데 실패했습니다:', error);
       }
+    } catch (error) {
+      console.error('지도 데이터를 가져오는 데 실패했습니다:', error);
     }
   };
 
@@ -180,7 +250,7 @@ const NaverMap = () => {
         naver.maps.Event.clearInstanceListeners(map);
       }
     };
-  }, []); // [수정된 부분] 의존성 배열 추가
+  }, []); // 의존성 배열 추가
 
   return <div ref={mapRef} id="map" className="h-[100vh] w-full" />;
 };
