@@ -28,6 +28,8 @@ import MyReview from '@/pages/myPage/MyReview';
 import Notification from '@/pages/myPage/Notification';
 import Contact from '@/pages/myPage/Contact';
 import Tip from '@/pages/home/Tip';
+import CorkStores from '@/pages/home/CorkStores';
+import Keep from '@/pages/keep/Keep';
 
 const router = createBrowserRouter([
   // {
@@ -37,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/home',
     element: <Store />,
+  },
+  {
+    path: '/corkScore',
+    element: <CorkStores />,
   },
   {
     path: '/searchMap',
@@ -145,6 +151,10 @@ const router = createBrowserRouter([
   {
     path: '/tipArticle',
     element: <Tip />,
+  },
+  {
+    path: '/keep',
+    element: <Keep />,
   },
 ]);
 
