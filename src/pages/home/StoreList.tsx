@@ -30,7 +30,7 @@ const StoreList = () => {
   };
   const handleCorkStore = () => {
     console.log('콜키지스토어창 이동');
-    // navigate('/CorkStore');
+    navigate('/corkScore');
   };
   const handleHotStore = () => {
     console.log('지금 핫한 매장 리스트 이동');
@@ -39,6 +39,7 @@ const StoreList = () => {
 
   return (
     //Todo: TopBar fixed 주기
+    //SearchedStore.tsx, SearchedStoreList.tsx 안쓸듯?
     <div className="flex flex-col items-center">
       <TopBar searchDisabled={false} />
       <div className="relative mb-4">
