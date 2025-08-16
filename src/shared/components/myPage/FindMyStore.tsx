@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 
 import { SearchInput } from '../common/Input';
-import apiClient from '@/shared/apis/apiClient';
+import { searchRestaurants } from '@/shared/apis/restaurant/searchRestaurants';
 
 interface Restaurant {
   restaurantId: number;
@@ -22,17 +22,16 @@ function FindMyStore({ onNext }: { onNext: () => void }) {
     }
   };
 
-  const onSearch = () => {
+  const onSearch = async () => {
     if (!searchQuery) return;
     if (isFirstSearch.current) isFirstSearch.current = false;
 
-    apiClient
-      .get('/restaurants/search', { params: { keyword: searchQuery } })
-      .then((res) => {
-        console.log(res.data);
-        setRestaurants(res.data.data);
-      })
-      .catch((e) => console.log(e));
+    try {
+      const data = await searchRestaurants(searchQuery);
+      setRestaurants(data);
+    } catch (e) {
+      console.log('식당 검색 실패 : ' + e);
+    }
   };
 
   const renderStore = () => {
