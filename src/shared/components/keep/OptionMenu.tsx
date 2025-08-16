@@ -8,8 +8,11 @@ import deleteIcon from './assets/delete.svg';
 const OptionMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
   //   const [selected, setSeleted]=useState<string||null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [share, setShare] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [edit, setEdit] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [remove, setRemove] = useState<boolean>(false);
   //   const options=['공유하기', '수정하기', '삭제하기']
   //bg-[#F3F3F6]
