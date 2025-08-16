@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+// import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
@@ -29,15 +30,22 @@ import Contact from '@/pages/myPage/Contact';
 import RestaurantsList from '@/pages/corkagemap/RestaurantsList';
 import FilterResult from '@/pages/corkagemap/FilterResult';
 import Notification from '@/pages/notification/Notification';
+import Tip from '@/pages/home/Tip';
+import CorkStores from '@/pages/home/CorkStores';
+import Keep from '@/pages/keep/Keep';
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <OnBoarding />,
-  },
+  // {
+  //   path: '/',
+  //   element: <Test />,
+  // },
   {
     path: '/home',
     element: <Store />,
+  },
+  {
+    path: '/corkScore',
+    element: <CorkStores />,
   },
   {
     path: '/searchMap',
@@ -74,6 +82,10 @@ const router = createBrowserRouter([
   {
     path: '/doit/complete',
     element: <DoitComplete />,
+  },
+  {
+    path: '/onboarding',
+    element: <OnBoarding />,
   },
   {
     path: '/signin',
@@ -150,6 +162,14 @@ const router = createBrowserRouter([
   {
     path: '/notification',
     element: <Notification />,
+  },
+  {
+    path: '/tipArticle',
+    element: <Tip />,
+  },
+  {
+    path: '/keep',
+    element: <Keep />,
   },
 ]);
 
