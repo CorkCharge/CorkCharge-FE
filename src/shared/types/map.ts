@@ -45,3 +45,13 @@ export interface MapParams {
   lonMin: number;
   lonMax: number;
 }
+
+export interface ClusterListItem {
+  restaurantId: number;
+  name: string;
+  rating: number;
+  reviewCount: number;
+  corkagePrice: string;
+  corkageOptions: string[];
+  imageUrl: string | null;
+}

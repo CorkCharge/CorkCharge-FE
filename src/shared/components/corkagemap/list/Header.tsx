@@ -2,7 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import Back from '../../../../shared/assets/left_arrow.svg';
 import X from '../../../../pages/doit/assets/x.svg';
 
-const Header = () => {
+interface HeaderProps {
+  title: string;
+}
+
+const Header = ({ title }: HeaderProps) => {
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate(-1);
@@ -20,7 +24,7 @@ const Header = () => {
           className="ml-[13px] h-[20.34px] w-[11.46px] cursor-pointer"
           onClick={handleBackClick}
         />
-        <p className="font-500 text-[16px]">화양동</p>
+        <p className="font-500 text-[16px]">{title}</p>
       </div>
       <img src={X} alt="x" className="mr-[13px] h-[17px] w-[17px]" />
     </div>

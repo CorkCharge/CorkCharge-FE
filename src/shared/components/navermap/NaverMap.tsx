@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getMapData } from '@/shared/apis/map/mapApi';
 import type { MapLevel, ClusterPoint, RestaurantPoint } from '@/shared/types/map';
 
@@ -21,9 +22,10 @@ type DongBucket = {
   count: number;
   sumLat: number;
   sumLon: number;
+  ids: number[];
 };
 
-const groupByDong = (points: { latitude: number; longitude: number; address: string }[]) => {
+const groupByDong = (points: ClusterPoint[]) => {
   const map = new Map<string, DongBucket>();
   for (const p of points) {
     const dong = getDongFromAddress(p.address) ?? '미상';
@@ -32,8 +34,15 @@ const groupByDong = (points: { latitude: number; longitude: number; address: str
       b.count += 1;
       b.sumLat += p.latitude;
       b.sumLon += p.longitude;
+      b.ids.push(p.restaurantId);
     } else {
-      map.set(dong, { name: dong, count: 1, sumLat: p.latitude, sumLon: p.longitude });
+      map.set(dong, {
+        name: dong,
+        count: 1,
+        sumLat: p.latitude,
+        sumLon: p.longitude,
+        ids: [p.restaurantId],
+      });
     }
   }
   return Array.from(map.values()).map((b) => ({
@@ -41,6 +50,7 @@ const groupByDong = (points: { latitude: number; longitude: number; address: str
     count: b.count,
     centerLat: b.sumLat / b.count,
     centerLon: b.sumLon / b.count,
+    restaurantIds: b.ids,
   }));
 };
 /* ========================= */
@@ -52,6 +62,7 @@ const NaverMap = () => {
   const mapInstance = useRef<naver.maps.Map | null>(null);
   // 현재 지도에 표시된 마커들을 저장합니다.
   const markers = useRef<naver.maps.Marker[]>([]);
+  const navigate = useNavigate();
 
   /**
    * 줌 레벨에 따라 API 요청에 사용할 'level' 문자열을 반환합니다.
@@ -172,20 +183,25 @@ const NaverMap = () => {
 
         const dongClusters = groupByDong(clusterData);
 
-        dongClusters.forEach(({ count, centerLat, centerLon }) => {
+        dongClusters.forEach(({ name, count, centerLat, centerLon, restaurantIds }) => {
+          const size = 35 + count * 1.5;
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
+            clickable: true,
             icon: {
               content: createClusterMarkerHtml(count), // 라벨: 동 이름
-              anchor: new window.naver.maps.Point(15, 15),
+              anchor: new window.naver.maps.Point(size / 2, size / 2),
             },
           });
 
           // 선택: 클릭 시 해당 동으로 살짝 확대/이동
-          // naver.maps.Event.addListener(marker, 'click', () => {
-          //   map.morph(new naver.maps.LatLng(centerLat, centerLon), Math.max(map.getZoom(), 15));
-          // });
+          naver.maps.Event.addListener(marker, 'click', () => {
+            console.log('dong marker clicked', { name, restaurantIds });
+            navigate('/corkagemap/list', {
+              state: { level: 'dong' as MapLevel, areaName: name, restaurantIds },
+            });
+          });
 
           markers.current.push(marker);
         });
@@ -197,7 +213,7 @@ const NaverMap = () => {
             clusterData.reduce((acc, cur) => acc + cur.latitude, 0) / clusterData.length;
           const centerLon =
             clusterData.reduce((acc, cur) => acc + cur.longitude, 0) / clusterData.length;
-
+          const ids = clusterData.map((d) => d.restaurantId);
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
@@ -206,6 +222,21 @@ const NaverMap = () => {
               anchor: new window.naver.maps.Point(15, 15), // 마커의 기준점 조정
             },
           });
+
+          // 간단 파싱: 주소에서 시/도 or 구/군 이름 하나 뽑기 (첫 항목 기준)
+          const sample = clusterData[0].address || '';
+          const areaName =
+            level === 'sigungu'
+              ? (sample.match(/([가-힣A-Za-z0-9]+(?:구|군|시))/)?.[1] ?? '선택 지역')
+              : (sample.match(/([가-힣]+(?:특별시|광역시|특별자치시|특별자치도|도))/)?.[1] ??
+                '선택 지역');
+
+          naver.maps.Event.addListener(marker, 'click', () => {
+            navigate('/corkagemap/list', {
+              state: { level, areaName, restaurantIds: ids },
+            });
+          });
+
           markers.current.push(marker);
         }
       }
