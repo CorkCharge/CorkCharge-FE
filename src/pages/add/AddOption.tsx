@@ -234,7 +234,7 @@ const AddOption = () => {
                   : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
-              한 병 무료
+              한병 무료
             </button>
             <button
               onClick={() => toggleOption('wineGlass')}
@@ -244,7 +244,7 @@ const AddOption = () => {
                   : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
-              와인잔 제공
+              두병 무료
             </button>
             <button
               onClick={() => toggleOption('others')}
