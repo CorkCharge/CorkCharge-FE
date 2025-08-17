@@ -1,15 +1,38 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import Slider from 'rc-slider';
 
-const Options = () => {
-  const [range, setRange] = useState<[number, number]>([0, 5]);
-  const [range2, setRange2] = useState<[number, number]>([0, 50000]);
-  const [range3, setRange3] = useState<[number, number]>([0, 50000]);
-  const [range4, setRange4] = useState<[number, number]>([0, 50000]);
-  const [selectedOptionsTypes, setSelectedOptionsTypes] = useState<string[]>([]);
+interface OptionsProps {
+  range: [number, number];
+  setRange: (value: [number, number]) => void;
+  range2: [number, number];
+  setRange2: (value: [number, number]) => void;
+  range3: [number, number];
+  setRange3: (value: [number, number]) => void;
+  range4: [number, number];
+  setRange4: (value: [number, number]) => void;
+  selectedCorkageTypes: string[];
+  setSelectedCorkageTypes: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedOptionsTypes: string[];
+  setSelectedOptionsTypes: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const Options = ({
+  range,
+  setRange,
+  range2,
+  setRange2,
+  range3,
+  setRange3,
+  range4,
+  setRange4,
+  selectedCorkageTypes,
+  setSelectedCorkageTypes,
+  selectedOptionsTypes,
+  setSelectedOptionsTypes,
+}: OptionsProps) => {
   const optionTypes = ['잔제공', '얼음제공', '한병 무료', '두병무료'];
   const corkageTypes = ['콜키지프리', '병당', '테이블당', '인당', '다중'];
-  const [selectedCorkageTypes, setSelectedCorkageTypes] = useState<string[]>([]);
+
   const toggleCategory = (category: string) => {
     setSelectedCorkageTypes((prev) =>
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]

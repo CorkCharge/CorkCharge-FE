@@ -1,46 +1,19 @@
-import { useNavigate } from 'react-router-dom';
-
-interface OptionsProps {
-  minScore: number;
-  maxScore: number;
-  minBottlePrice: number | null;
-  maxBottlePrice: number | null;
-  minPersonPrice: number | null;
-  maxPersonPrice: number | null;
-  minTablePrice: number | null;
-  maxTablePrice: number | null;
-  optionTypes: string[];
-  corkageTypes: string[];
+interface CorkageFilterButtonProps {
+  onApply: () => void; // 적용하기 버튼 클릭 시 실행할 함수
+  onReset: () => void; // 초기화 버튼 클릭 시 실행할 함수
 }
 
-const CorkageFilterButton = ({
-  minScore,
-  maxScore,
-  minBottlePrice,
-  maxBottlePrice,
-  minPersonPrice,
-  maxPersonPrice,
-  minTablePrice,
-  maxTablePrice,
-  optionTypes,
-  corkageTypes,
-}: OptionsProps) => {
-  const navigate = useNavigate();
-
-  const handleApplyClick = () => {
-    navigate('/corkagemap/filter/result');
-  };
-
+const CorkageFilterButton = ({ onApply, onReset }: CorkageFilterButtonProps) => {
   return (
     <div className="absolute bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%]">
       <button
-        onClick={() => console.log('초기화 클릭')}
+        onClick={onReset}
         className="mr-2 h-[48px] w-[35%] rounded-lg border bg-[#F3F3F6] py-2 font-bold"
       >
         초기화
       </button>
       <button
-        onClick={handleApplyClick}
+        onClick={onApply}
         className="h-[48px] w-[53.28%] rounded-lg bg-[#90212A] py-2 font-bold text-white"
       >
         적용하기
