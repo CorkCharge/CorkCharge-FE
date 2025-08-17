@@ -26,6 +26,11 @@ const CorkageFilterButton = ({
   corkageTypes,
 }: OptionsProps) => {
   const navigate = useNavigate();
+
+  const handleApplyClick = () => {
+    navigate('/corkagemap/filter/result');
+  };
+
   return (
     <div className="absolute bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%]">
       <button
@@ -35,7 +40,7 @@ const CorkageFilterButton = ({
         초기화
       </button>
       <button
-        onClick={() => console.log('적용하기버튼 클릭!')}
+        onClick={handleApplyClick}
         className="h-[48px] w-[53.28%] rounded-lg bg-[#90212A] py-2 font-bold text-white"
       >
         적용하기
