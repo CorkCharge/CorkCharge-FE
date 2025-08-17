@@ -7,13 +7,11 @@ const Options = () => {
   const [range3, setRange3] = useState<[number, number]>([0, 50000]);
   const [range4, setRange4] = useState<[number, number]>([0, 50000]);
   const [selectedOptionsTypes, setSelectedOptionsTypes] = useState<string[]>([]);
+  const optionTypes = ['잔제공', '얼음제공', '한병 무료', '두병무료'];
+  const corkageTypes = ['콜키지프리', '병당', '테이블당', '인당', '다중'];
   const [selectedCorkageTypes, setSelectedCorkageTypes] = useState<string[]>([]);
-  const optionTypes = ['잔제공', '얼음제공'];
-  const corkageTypes = ['한병 무료', '두병무료'];
-  const categories = ['콜키지프리', '병당', '테이블당', '인당', '다중'];
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) =>
+    setSelectedCorkageTypes((prev) =>
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
   };
@@ -21,29 +19,23 @@ const Options = () => {
   // 어떤 슬라이더를 활성화할지 결정 (첫 번째 슬라이더는 항상 활성)
   const enable = useMemo(() => {
     const hasSpecific =
-      selectedCategories.includes('병당') ||
-      selectedCategories.includes('인당') ||
-      selectedCategories.includes('테이블당');
+      selectedCorkageTypes.includes('병당') ||
+      selectedCorkageTypes.includes('인당') ||
+      selectedCorkageTypes.includes('테이블당');
 
     // 프리/다중만 선택된 경우 -> 모두 비활성
     if (!hasSpecific) {
       return { bottle: false, person: false, table: false };
     }
     return {
-      bottle: selectedCategories.includes('병당'),
-      person: selectedCategories.includes('인당'),
-      table: selectedCategories.includes('테이블당'),
+      bottle: selectedCorkageTypes.includes('병당'),
+      person: selectedCorkageTypes.includes('인당'),
+      table: selectedCorkageTypes.includes('테이블당'),
     };
-  }, [selectedCategories]);
+  }, [selectedCorkageTypes]);
 
   const toggleOption = (option: string) => {
     setSelectedOptionsTypes((prev) =>
-      prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
-    );
-  };
-
-  const toggleOption2 = (option: string) => {
-    setSelectedCorkageTypes((prev) =>
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
     );
   };
@@ -78,8 +70,8 @@ const Options = () => {
         <div className="flex w-full flex-col gap-[4px] self-start">
           <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">업종</div>
           <div className="ml-[32px] flex w-full flex-row gap-[8px]">
-            {categories.map((category) => {
-              const active = selectedCategories.includes(category);
+            {corkageTypes.map((category) => {
+              const active = selectedCorkageTypes.includes(category);
               return (
                 <button
                   key={category}
@@ -219,24 +211,6 @@ const Options = () => {
                 onClick={() => {
                   toggleOption(option);
                   console.log('selectedOptions:', selectedOptionsTypes);
-                }}
-                aria-pressed={active}
-                className={`h-[32px] w-[18%] rounded-[20px] text-[14px] font-[500] ${
-                  active ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#90212A]'
-                }`}
-              >
-                {option}
-              </button>
-            );
-          })}
-          {corkageTypes.map((option) => {
-            const active = selectedCorkageTypes.includes(option);
-            return (
-              <button
-                key={option}
-                onClick={() => {
-                  toggleOption2(option);
-                  console.log('selectedCorkageTypes:', selectedCorkageTypes);
                 }}
                 aria-pressed={active}
                 className={`h-[32px] w-[18%] rounded-[20px] text-[14px] font-[500] ${
