@@ -4,6 +4,7 @@ import TopButtonContainer from '@/shared/components/filter/TopButtonContainer';
 import Options from '@/shared/components/filter/Options';
 import BottomButtonContainer from '@/shared/components/filter/BottomButtonContainer';
 import RegionFilter from '@/shared/components/filter/RegionFilter';
+import CorkageFilterButton from '@/shared/components/filter/CorkageFilterButton';
 
 const Filter = () => {
   const [selectedTab, setSelectedTab] = useState<'corkage' | 'region'>('corkage');
@@ -26,23 +27,25 @@ const Filter = () => {
               background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 4%, #FFF 63.5%)',
             }}
           ></div>
+          <CorkageFilterButton />
         </>
       ) : (
-        <RegionFilter
-          selectedSido={selectedSido}
-          selectedSigungu={selectedSigungu}
-          selectedDongs={selectedDongs}
-          setSelectedSido={setSelectedSido}
-          setSelectedSigungu={setSelectedSigungu}
-          setSelectedDongs={setSelectedDongs}
-        />
+        <>
+          <RegionFilter
+            selectedSido={selectedSido}
+            selectedSigungu={selectedSigungu}
+            selectedDongs={selectedDongs}
+            setSelectedSido={setSelectedSido}
+            setSelectedSigungu={setSelectedSigungu}
+            setSelectedDongs={setSelectedDongs}
+          />
+          <BottomButtonContainer
+            selectedSido={selectedSido}
+            selectedSigungu={selectedSigungu}
+            selectedDongs={selectedDongs}
+          />
+        </>
       )}
-      <BottomButtonContainer
-        selectedTab={selectedTab}
-        selectedSido={selectedSido}
-        selectedSigungu={selectedSigungu}
-        selectedDongs={selectedDongs}
-      />
     </main>
   );
 };
