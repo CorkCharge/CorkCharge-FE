@@ -6,8 +6,6 @@ import RegionFilter from '../../pages/home/RegionFilter';
 import Doit from '../../pages/doit/Doit';
 import Search from '../../pages/doit/Search';
 import SearchMap from '../../pages/home/Search';
-import NotRegistered from '../../pages/doit/NotRegistered';
-import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
 import OnBoarding from '@/pages/onBoarding/OnBoarding';
@@ -69,15 +67,7 @@ const router = createBrowserRouter([
     element: <Search />,
   },
   {
-    path: '/doit/search/request/1',
-    element: <NotRegistered />,
-  },
-  {
-    path: '/doit/search/request/2',
-    element: <AlreadyRegistered />,
-  },
-  {
-    path: '/doit/request',
+    path: '/doit/request/:restaurantId',
     element: <Request />,
   },
   {
