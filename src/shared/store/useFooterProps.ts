@@ -6,7 +6,7 @@ interface FooterPropsType {
 }
 
 const useFooterPropsStore = create<FooterPropsType>((set) => ({
-  footerProps: 1,
+  footerProps: 0,
   setFooterProps: (props: number) => set({ footerProps: props }),
 }));
 

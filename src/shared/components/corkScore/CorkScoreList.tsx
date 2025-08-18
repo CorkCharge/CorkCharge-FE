@@ -3,7 +3,7 @@ import CorkScore from './CorkScore';
 
 const CorkScoreList = () => {
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="mb-[60px] flex flex-col items-center justify-center gap-4">
       <CorkScore
         name="엔비 햄버거"
         keep={27}
