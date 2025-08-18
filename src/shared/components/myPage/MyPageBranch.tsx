@@ -79,10 +79,12 @@ export const LoggedInMyPage = () => {
           </div>
           <div className="flex flex-col justify-center">
             <p className="flex items-center gap-1 text-xl font-bold">
-              {myProfile.nickname}
+              {/* {myProfile.nickname} */}
+              박재하님
               {isMaster.current && <img src={logo} className="h-[21px]" />}
             </p>
-            <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p>
+            {/* <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p> */}
+            <p className="text-sm font-medium text-[#80818B]">pjh6183@naver.com</p>
           </div>
           <img
             src={arrow}
