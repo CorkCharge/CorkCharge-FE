@@ -33,6 +33,7 @@ import Notification from '@/pages/notification/Notification';
 import Tip from '@/pages/home/Tip';
 import CorkStores from '@/pages/home/CorkStores';
 import Keep from '@/pages/keep/Keep';
+import NaverCallback from '@/pages/signIn/NaverCallback';
 
 const router = createBrowserRouter([
   // {
@@ -170,6 +171,10 @@ const router = createBrowserRouter([
   {
     path: '/keep',
     element: <Keep />,
+  },
+  {
+    path: '/signin/callback',
+    element: <NaverCallback />,
   },
 ]);
 
