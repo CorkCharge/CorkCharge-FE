@@ -37,7 +37,12 @@ const StoreCheck = () => {
           onClick={handleBackClick}
         />
         <p className="text-[16px] font-[700] text-white">추가하기</p>
-        <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
+        <img
+          src={X}
+          alt="x"
+          onClick={() => navigate('/home')}
+          className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
+        />
       </div>
       <div className="mb-[26px] mt-[56px] text-[24px] font-[700] text-white">
         위 가게가 맞습니까?
@@ -62,20 +67,9 @@ const StoreCheck = () => {
         <div className="mt-[67px] flex flex-row gap-[6px]">
           <button
             onClick={handleRegisterClick}
-            className="m-auto h-[48px] w-[123px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white"
+            className="m-auto h-[48px] w-[246px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white"
           >
             맞습니다
-          </button>
-          <button
-            className="m-auto h-[48px] w-[123px] cursor-pointer items-center rounded-[12px] bg-white/80 font-[600] text-black"
-            style={{
-              boxShadow:
-                '0px 0px 0.5px 0px rgba(66, 71, 76, 0.32), 0px 4px 8px 0px rgba(66, 71, 76, 0.05)',
-              backdropFilter: 'blur(5px)',
-            }}
-            onClick={handleBackClick}
-          >
-            아니요
           </button>
         </div>
       </div>
