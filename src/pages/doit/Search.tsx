@@ -7,70 +7,54 @@ import TextArea from './assets/textArea.svg';
 import Glasses from './assets/glasses.svg';
 import StoreItem from '../../shared/components/storeItem/StoreItem ';
 import NextButton from '../../shared/components/nextButton/NextButton';
+import { searchRestaurants, type Restaurant } from '@/shared/apis/restaurant/searchRestaurants';
 
 const Search = () => {
   const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState(''); // 검색어 입력 상태
+  const [stores, setStores] = useState<Restaurant[]>([]); // API 검색 결과 상태
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const handleBackClick = () => {
     navigate(-1);
   };
 
-  const stores = [
-    {
-      storeName: '깍뚝 - 경희대점',
-      address: '서울 광진구 아차산로 24 2층',
-    },
-    {
-      storeName: '해장국 - 서울대입구점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    {
-      storeName: '봉구스밥버거 - 건대후문점',
-      address: '서울 관악구 신림로 123',
-    },
-    // ... 총 10개
-  ];
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      alert('검색어를 입력해주세요.');
+      return;
+    }
+    try {
+      const results = await searchRestaurants(searchQuery);
+      console.log('API에서 받은 응답 데이터:', results);
+      setStores(results);
+      setSelectedIndex(null); // 새로운 검색 후 선택 초기화
+    } catch (error) {
+      console.error('레스토랑 검색에 실패했습니다:', error);
+      alert('검색 중 오류가 발생했습니다.');
+    }
+  };
+
+  // Enter 키로 검색 실행
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handleNextClick = () => {
     if (selectedIndex != null) {
       const selectedStore = stores[selectedIndex];
-      navigate('/doit/search/request/1', {
+      navigate(`/doit/request/${selectedStore.restaurantId}`, {
         state: {
-          storeName: selectedStore.storeName,
+          restaurantId: selectedStore.restaurantId,
+          storeName: selectedStore.name,
           address: selectedStore.address,
         },
       });
     }
   };
-
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const handleItemClick = (index: number) => {
     setSelectedIndex((prev) => (prev === index ? null : index));
@@ -98,18 +82,26 @@ const Search = () => {
           <input
             type="text"
             placeholder="해주세요 매장 찾기"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="absolute left-[36px] top-0 z-10 h-[40px] w-[220px] bg-transparent text-[14px] text-[#999] focus:outline-none"
           />
-          <img src={Glasses} alt="돋보기" className="absolute right-[34.13px] h-[18px] w-[18px]" />
+          <img
+            src={Glasses}
+            onClick={handleSearch}
+            alt="돋보기"
+            className="absolute right-[34.13px] h-[18px] w-[18px]"
+          />
         </div>
       </div>
       <div className="mt-[16px] flex h-[608px] w-full flex-grow flex-col items-center gap-[16px] overflow-y-auto pb-[180px]">
         {stores.map((store, i) => (
           <StoreItem
-            key={i}
+            key={store.restaurantId}
             isChecked={selectedIndex === i}
             onClick={() => handleItemClick(i)}
-            storeName={store.storeName}
+            storeName={store.name}
             address={store.address}
           />
         ))}
