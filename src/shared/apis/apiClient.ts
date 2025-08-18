@@ -34,12 +34,6 @@ apiClient.interceptors.response.use(
             resolve(apiClient(originalReq));
           });
         });
-
-        pendingRequests.push((token: string) => {
-          originalReq.headers.Authorization = `Bearer ${token}`;
-          apiClient(originalReq);
-        });
-        return;
       }
 
       originalReq._retry = true;

@@ -1,3 +1,5 @@
+import { SyncLoader } from 'react-spinners';
+
 import apiClient from '@/shared/apis/apiClient';
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -18,15 +20,20 @@ function NaverCallback() {
         .get('/oauth/naver/login', { params: { code, state } })
         .then((res) => {
           login(res.data.data);
+          navigate('/home');
         })
         .catch((e) => {
           console.error('로그인 실패 : ' + e);
           alert('로그인에 실패하였습니다. 잠시 후 다시 시도해주세요');
-          navigate(-1);
+          navigate('/signin');
         });
     }
   }, [params]);
-  return <div></div>;
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <SyncLoader color={'var(--primary)'} />
+    </div>
+  );
 }
 
 export default NaverCallback;

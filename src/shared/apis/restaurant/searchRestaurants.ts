@@ -1,6 +1,6 @@
 import apiClient from '../apiClient';
 
-interface Restaurant {
+export interface Restaurant {
   restaurantId: number;
   name: string;
   address: string;

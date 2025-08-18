@@ -13,8 +13,13 @@ interface User {
   refreshToken: string;
 }
 
+interface StoredUser {
+  userId: number;
+  role: 'USER' | 'OWNER' | 'ADMIN';
+}
+
 interface AuthState {
-  user: { userId: number; role: string } | null;
+  user: StoredUser | null;
   login: (userInfo: User) => void;
   logout: () => void;
 }

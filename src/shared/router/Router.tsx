@@ -6,8 +6,6 @@ import RegionFilter from '../../pages/home/RegionFilter';
 import Doit from '../../pages/doit/Doit';
 import Search from '../../pages/doit/Search';
 import SearchMap from '../../pages/home/Search';
-import NotRegistered from '../../pages/doit/NotRegistered';
-import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
 import OnBoarding from '@/pages/onBoarding/OnBoarding';
@@ -34,6 +32,7 @@ import Tip from '@/pages/home/Tip';
 import CorkStores from '@/pages/home/CorkStores';
 import Keep from '@/pages/keep/Keep';
 import NaverCallback from '@/pages/signIn/NaverCallback';
+import ReservateDrink from '@/pages/reservation/ReservateDrink';
 import MainLayout from '../components/layout/Layout';
 
 const router = createBrowserRouter([
@@ -182,6 +181,10 @@ const router = createBrowserRouter([
         element: <NaverCallback />,
       },
     ],
+  },
+  {
+    path: '/reservate',
+    element: <ReservateDrink />,
   },
 ]);
 
