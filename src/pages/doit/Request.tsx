@@ -8,6 +8,7 @@ const Request = () => {
   const { storeName, address } = location.state || {
     storeName: '매장명 없음',
     address: '주소 없음',
+    restaurantId: 'Id 없음',
   };
   const handleBackClick = () => {
     navigate(-1);
@@ -46,9 +47,7 @@ const Request = () => {
         }}
       >
         {/*어떤 메뉴를 선택했는지에 따라*/}
-        <div className="mb-[10px] ml-[16px] mt-[24px] text-[20px] font-[700]">
-          여기 먼저 해주세요
-        </div>
+        <div className="mb-[10px] ml-[16px] mt-[24px] text-[20px] font-[700]">해주세요</div>
         <div className="m-auto mb-[24px] flex h-[360px] w-[329px] rounded-[16px] bg-white">
           <textarea
             placeholder={'원하는 콜키지 가격이나\n옵션을 작성해주세요'}
