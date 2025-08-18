@@ -32,6 +32,7 @@ import Tip from '@/pages/home/Tip';
 import CorkStores from '@/pages/home/CorkStores';
 import Keep from '@/pages/keep/Keep';
 import NaverCallback from '@/pages/signIn/NaverCallback';
+import ReservateDrink from '@/pages/reservation/ReservateDrink';
 
 const router = createBrowserRouter([
   // {
@@ -165,6 +166,10 @@ const router = createBrowserRouter([
   {
     path: '/signin/callback',
     element: <NaverCallback />,
+  },
+  {
+    path: '/reservate',
+    element: <ReservateDrink />,
   },
 ]);
 
