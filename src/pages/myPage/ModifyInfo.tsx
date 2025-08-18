@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/shared/components/common/Header';
 import Modal from '@/shared/components/common/Modal';
 import useProfileStore from '@/shared/store/useProfileStore';
+import useAuthStore from '@/shared/store/useAuthStore';
 
 import pencil from '@/shared/components/myPage/images/pencil.png';
 import crossMark from '@/shared/assets/images/plus.png';
@@ -25,6 +26,7 @@ function ModifyInfo() {
   const fileSelector = useRef<HTMLInputElement>(null);
 
   const { profile, setProfile } = useProfileStore();
+  const { user } = useAuthStore();
 
   // 탈퇴하기 모달 생성
   const withdrawCheck = () => (
@@ -93,7 +95,7 @@ function ModifyInfo() {
       .then(() => {
         // 서버 전송 후 업데이트 내용 store에 반영
         apiClient
-          .get('/users', { params: { userId: USERID } })
+          .get('/users', { params: { userId: user?.userId } })
           .then((res) => {
             setProfile(res.data.data);
           })
