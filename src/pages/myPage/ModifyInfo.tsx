@@ -125,6 +125,7 @@ function ModifyInfo() {
         addiFn={() => {
           setModalOpen(true);
         }}
+        backFn={() => navigate(-1)}
       />
 
       <div className="mt-10 flex flex-col items-center">
@@ -138,7 +139,7 @@ function ModifyInfo() {
             {previewUrl && <img src={previewUrl} className="size-full rounded-full" />}
 
             <div
-              className="absolute bottom-0 right-0 flex size-[48px] items-center justify-center rounded-full bg-[var(--gray-4)]"
+              className="absolute bottom-0 right-0 flex size-[48px] cursor-pointer items-center justify-center rounded-full bg-[var(--gray-4)]"
               onClick={() => fileSelector.current?.click()}
             >
               <img src={pencil} className="size-[28px]" />
@@ -162,7 +163,7 @@ function ModifyInfo() {
             <ImageInput
               placeholder="닉네임을 입력하세요"
               imgSrc={crossMark}
-              imgClassName="rotate-45"
+              imgClassName="rotate-45 cursor-pointer"
               onImgClick={() => setNickname('')}
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}

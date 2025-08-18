@@ -26,7 +26,7 @@ function SignIn() {
         </button>
         <span
           className="text-[#ecedef] underline underline-offset-4"
-          onClick={() => navigate('/prefer')}
+          onClick={() => navigate('/onboarding/prefer')}
         >
           로그인 없이 보기
         </span>
