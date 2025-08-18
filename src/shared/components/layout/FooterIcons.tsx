@@ -51,7 +51,7 @@ export const footerIcons = [
         />
       </svg>
     ),
-    path: '/home',
+    path: '/reservate',
   },
   {
     name: '저장',

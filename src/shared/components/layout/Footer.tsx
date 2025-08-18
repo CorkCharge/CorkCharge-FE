@@ -1,9 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 import { footerIcons } from './FooterIcons';
 import useFooterPropsStore from '@/shared/store/useFooterProps';
-import apiClient from '@/shared/apis/apiClient';
 
 const Footer = () => {
   const navigate = useNavigate();

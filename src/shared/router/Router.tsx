@@ -34,6 +34,8 @@ import Keep from '@/pages/keep/Keep';
 import NaverCallback from '@/pages/signIn/NaverCallback';
 import ReservateDrink from '@/pages/reservation/ReservateDrink';
 import MainLayout from '../components/layout/Layout';
+import NotRegistered from '@/pages/doit/NotRegistered';
+import AlreadyRegistered from '@/pages/doit/AlreadyRegistered';
 
 const router = createBrowserRouter([
   // {
@@ -180,11 +182,11 @@ const router = createBrowserRouter([
         path: 'signin/callback',
         element: <NaverCallback />,
       },
+      {
+        path: 'reservate',
+        element: <ReservateDrink />,
+      },
     ],
-  },
-  {
-    path: '/reservate',
-    element: <ReservateDrink />,
   },
 ]);
 
