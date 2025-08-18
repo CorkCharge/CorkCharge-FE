@@ -25,7 +25,7 @@ function NaverCallback() {
           navigate(-1);
         });
     }
-  }, []);
+  }, [params]);
   return <div></div>;
 }
 
