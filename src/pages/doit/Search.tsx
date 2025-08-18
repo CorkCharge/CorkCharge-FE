@@ -71,7 +71,12 @@ const Search = () => {
           onClick={handleBackClick}
         />
         <p className="text-[16px] font-[700]">해주세요</p>
-        <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
+        <img
+          src={X}
+          alt="x"
+          onClick={() => navigate('/home')}
+          className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
+        />
       </div>
       {/* 검색 영역 */}
       <div className="flex h-[40px] w-full flex-row items-center justify-center gap-[19.67px]">

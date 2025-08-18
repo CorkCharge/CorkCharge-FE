@@ -32,7 +32,12 @@ const Request = () => {
           onClick={handleBackClick}
         />
         <p className="text-[16px] font-[700] text-white">해주세요</p>
-        <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
+        <img
+          src={X}
+          alt="x"
+          className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
+          onClick={() => navigate('/home')}
+        />
       </div>
       {/*가게정보*/}
       <div className="mb-[18px] ml-[20px] mt-[16px] flex w-full flex-col gap-[10px] text-white">
