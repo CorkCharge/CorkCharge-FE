@@ -4,7 +4,7 @@ import Search from '@/shared/assets/search.svg';
 interface topBarProps {
   searchValue?: string;
   setSearchValue?: (value: string) => void;
-  directSearch?: () => void;
+  directSearch?: (value: string) => void;
 }
 
 const MapSearchBar = ({ searchValue, setSearchValue, directSearch }: topBarProps) => {
@@ -19,16 +19,20 @@ const MapSearchBar = ({ searchValue, setSearchValue, directSearch }: topBarProps
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
-              directSearch?.();
+              directSearch?.(searchValue || '');
             }
           }}
-          onSubmit={directSearch}
           onChange={(e) => {
             setSearchValue?.(e.target.value);
           }}
           className="flex-1 bg-transparent text-gray-500 placeholder-gray-400 outline-none"
         />
-        <img src={Search} alt="Search" className="cursor-pointer" onClick={directSearch} />
+        <img
+          src={Search}
+          alt="Search"
+          className="cursor-pointer"
+          onClick={() => directSearch?.(searchValue || '')}
+        />
       </div>
     </div>
   );

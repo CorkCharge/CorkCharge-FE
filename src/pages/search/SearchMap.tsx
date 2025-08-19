@@ -20,7 +20,11 @@ const SearchMap = () => {
   return (
     <div className="flex flex-col items-center">
       <TopBar text="corkcharge" />
-      <MapSearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
+      <MapSearchBar
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        directSearch={directSearch}
+      />
       <RecommandList />
       <RecentList
         searchValue={searchValue}
