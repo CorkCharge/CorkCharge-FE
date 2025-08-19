@@ -9,7 +9,8 @@ import InfoModal from '@/shared/components/addModal/InfoModal';
 const AddOption = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address, restaurantId } = location.state || {
+  const { storeName, address } = location.state || {
+    // restaurantId 추가하기.
     storeName: '매장명 없음',
     address: '주소 없음',
     restaurantId: 'Id 없음',
