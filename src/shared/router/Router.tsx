@@ -83,7 +83,7 @@ const router = createBrowserRouter([
         element: <AlreadyRegistered />,
       },
       {
-        path: 'doit/request',
+        path: 'doit/request/:restaurantId',
         element: <Request />,
       },
       {
