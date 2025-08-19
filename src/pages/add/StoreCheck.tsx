@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Back from '../../shared/assets/whiteArrow.svg';
 import X from '../../shared/assets/whiteX.svg';
 import Bg from '../doit/assets/request_bg.svg';
@@ -6,10 +7,16 @@ import Placeholder from '../../shared/assets/placeholder.svg';
 const StoreCheck = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address } = location.state || {
+  const { storeName, address, restaurantId, thumbnailUrl } = location.state || {
     storeName: '매장명 없음',
     address: '주소 없음',
+    restaurantId: 'Id 없음',
+    thumbnailUrl: '사진 미제공',
   };
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -18,6 +25,7 @@ const StoreCheck = () => {
       state: {
         storeName: storeName,
         address: address,
+        restaurantId: restaurantId,
       },
     });
   };
@@ -55,8 +63,8 @@ const StoreCheck = () => {
         }}
       >
         <img
-          src={Placeholder}
-          alt="placeholder"
+          src={thumbnailUrl === `사진 미제공` ? Placeholder : thumbnailUrl}
+          alt="가게 썸네일"
           className="mt-[27px] h-[201px] w-[268px] rounded-bl-[3%] rounded-br-[25%] rounded-tl-[25%] rounded-tr-[3%]"
         />
         {/*가게정보*/}

@@ -75,6 +75,18 @@ export const LoggedInMyPage = () => {
     setFooterProps(2);
   };
 
+  const enrollCorkage = () => {
+    apiClient
+      .get('/corkages/verify')
+      .then((res) => {
+        if (!res.data.success) throw new Error('OOPS');
+        const { restaurantName, restaurantId, ...rest } = res.data.data;
+        const stateObj = { storeName: restaurantName, restaurantId, ...rest };
+        navigate(`/add/storecheck/${restaurantId}`, { state: stateObj });
+      })
+      .catch((e) => console.error('<권한 검증 실패> ' + e));
+  };
+
   return (
     <>
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
@@ -102,7 +114,10 @@ export const LoggedInMyPage = () => {
 
         <div className="-mx-4 h-[1px] bg-[var(--gray-4)]"></div>
 
-        <div className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4">
+        <div
+          className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
+          onClick={enrollCorkage}
+        >
           <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
             <img src={plus} className="size-[14px]" />
           </div>
