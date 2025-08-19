@@ -32,7 +32,9 @@ const DoitComplete = () => {
         <div>접수가 완료되었습니다.</div>
       </div>
       <button className="m-auto flex h-[48px] w-[171.6px] cursor-pointer items-center justify-center gap-[10px] rounded-[12px] bg-white/50">
-        <div className="text-[17px] font-[600]">홈으로 돌아가기</div>
+        <div className="text-[17px] font-[600]" onClick={() => navigate('/home')}>
+          홈으로 돌아가기
+        </div>
         <img src={RightArrow} alt="오른쪽 화살표" className="mt-[3px] h-[16px] w-[9px]" />
       </button>
     </div>
