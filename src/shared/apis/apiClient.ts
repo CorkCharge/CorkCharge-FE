@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PAGE_TO_ANYONE } from '../constants/NoneAuthFiles';
+import { PAGE_TO_ANYONE } from '../constants/Routes';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
