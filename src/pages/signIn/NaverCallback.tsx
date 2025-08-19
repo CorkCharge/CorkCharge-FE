@@ -19,8 +19,10 @@ function NaverCallback() {
       apiClient
         .get('/oauth/naver/login', { params: { code, state } })
         .then((res) => {
-          login(res.data.data);
-          navigate('/home');
+          const ok = login(res.data.data);
+          if (ok) {
+            navigate('/home');
+          }
         })
         .catch((e) => {
           console.error('로그인 실패 : ' + e);
