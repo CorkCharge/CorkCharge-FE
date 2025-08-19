@@ -7,6 +7,7 @@ import CorkScore from './CorkScore';
 
 // type Props = { range: DayRange };
 
+// const CorkScoreList = ({ range }: Props) => {
 const CorkScoreList = () => {
   // const [corkage, setCorkage] = useState<CorkageScore[]>();
 

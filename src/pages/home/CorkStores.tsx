@@ -15,7 +15,8 @@ const CorkStores = () => {
         <div></div>
         <SelectBox value={range} setRange={setRange} />
       </div>
-      <CorkScoreList range={range} />
+      {/* <CorkScoreList range={range} /> */}
+      <CorkScoreList />
       <RegionSearchBar />
     </div>
   );
