@@ -6,11 +6,14 @@ interface recentSearchProps {
   text?: string;
   // searchValue?: string;
   setSearchValue?: (value: string) => void;
+  directSearch?: (value: string) => void;
 }
 
-const RecentSearch = ({ text, setSearchValue }: recentSearchProps) => {
+const RecentSearch = ({ text, setSearchValue, directSearch }: recentSearchProps) => {
   const onclick = () => {
     console.log('해당 검색어 검색');
+    setSearchValue?.(text || '');
+    directSearch?.(text || '');
   };
   const handleStroke = () => {
     console.log('해당 검색어 input box에 저장');

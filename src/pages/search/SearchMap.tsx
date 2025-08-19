@@ -1,27 +1,35 @@
 // import React from 'react'
-import SearchedStore from '@/shared/components/search/SearchedStore';
+// import SearchedStore from '@/shared/components/search/SearchedStore';
 import TopBar from '../../shared/components/TopBar';
-// import RecommandList from '../../shared/components/RecommandList';
-// import RecentList from '../../shared/components/RecentList';
-// import { useState } from 'react';
-// import MapSearchBar from '@/shared/components/search/MapSearchBar';
+import RecommandList from '../../shared/components/RecommandList';
+import RecentList from '../../shared/components/RecentList';
+import { useState } from 'react';
+import MapSearchBar from '@/shared/components/search/MapSearchBar';
+import { useNavigate } from 'react-router-dom';
 
 const SearchMap = () => {
-  // const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValue, setSearchValue] = useState<string>('');
+
+  const navigate = useNavigate();
+
+  const directSearch = (value: string) => {
+    if (!value || value.trim() === '') return;
+    navigate(`/searchMap/result?keyword=${encodeURIComponent(value)}`);
+  };
 
   return (
     <div className="flex flex-col items-center">
       <TopBar text="corkcharge" />
-      {/* <MapSearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
+      <MapSearchBar
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        directSearch={directSearch}
+      />
       <RecommandList />
-      <RecentList searchValue={searchValue} setSearchValue={setSearchValue} /> */}
-      <SearchedStore
-        name="앤비햄버거"
-        rating={4.2}
-        review={1250}
-        price="병당 1만원"
-        info={['잔 제공', '얼음 제공', '한병 무료']}
-        imageUrls="https://placehold.co/126x127"
+      <RecentList
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        directSearch={directSearch}
       />
     </div>
   );
