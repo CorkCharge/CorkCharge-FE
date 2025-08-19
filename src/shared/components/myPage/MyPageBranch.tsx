@@ -59,7 +59,7 @@ export const LoggedInMyPage = () => {
 
   useEffect(() => {
     apiClient
-      .get('/users/page', { params: { userId: 1 } })
+      .get('/users/page')
       .then((res) => {
         setMyProfile(res.data.data);
       })
@@ -79,14 +79,16 @@ export const LoggedInMyPage = () => {
           </div>
           <div className="flex flex-col justify-center">
             <p className="flex items-center gap-1 text-xl font-bold">
-              {myProfile.nickname}
+              {/* {myProfile.nickname} */}
+              박재하님
               {isMaster.current && <img src={logo} className="h-[21px]" />}
             </p>
-            <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p>
+            {/* <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p> */}
+            <p className="text-sm font-medium text-[#80818B]">pjh6183@naver.com</p>
           </div>
           <img
             src={arrow}
-            className="absolute right-5 top-7 h-4"
+            className="absolute right-5 top-7 h-4 cursor-pointer"
             onClick={() => navigate('/my/modify')}
           />
         </div>
@@ -102,13 +104,13 @@ export const LoggedInMyPage = () => {
       </div>
 
       <div className="flex h-20 w-full justify-center gap-3">
-        <div className="flex h-full flex-1 items-center justify-center rounded-2xl bg-[var(--gray-1)]">
+        <div className="flex h-full flex-1 items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]">
           <img src={shakehand} className="size-[66px]" />
-          <span>해주세요</span>
+          <span className="font-medium">해주세요</span>
         </div>
-        <div className="flex h-full flex-1 items-center justify-center rounded-2xl bg-[var(--gray-1)]">
+        <div className="flex h-full flex-1 items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]">
           <img src={check} className="size-[36px]" />
-          <span>나의 예약</span>
+          <span className="font-medium">나의 예약</span>
         </div>
       </div>
 

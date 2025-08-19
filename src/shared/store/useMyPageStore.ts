@@ -14,8 +14,8 @@ interface MyPageStore {
 
 const useMyPageStore = create<MyPageStore>((set) => ({
   myProfile: {
-    nickname: 'tempName',
-    socialId: 'naver_123456',
+    nickname: '박재하',
+    socialId: 'pjh6183@naver.com',
     reviews: [
       {
         restaurantName: null,

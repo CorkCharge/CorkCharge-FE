@@ -8,7 +8,7 @@ function MainMyPage() {
   const isLogged = useRef(true);
 
   return (
-    <main className="px-4">
+    <main className="mb-5 px-4">
       <Header title="마이페이지" />
 
       {isLogged.current ? <LoggedInMyPage /> : <GuestMyPage />}

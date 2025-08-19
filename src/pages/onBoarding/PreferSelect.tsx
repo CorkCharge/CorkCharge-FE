@@ -12,7 +12,7 @@ function PreferSelect() {
   return (
     <>
       {page === 1 && <PreferDrink onNext={setPage} />}
-      {page === 2 && <PreferMenu onNext={() => navigate('/')} />}
+      {page === 2 && <PreferMenu onNext={() => navigate('/home')} />}
     </>
   );
 }
