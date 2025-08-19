@@ -59,7 +59,7 @@ export const LoggedInMyPage = () => {
 
   useEffect(() => {
     apiClient
-      .get('/users/page', { params: { userId: 1 } })
+      .get('/users/page')
       .then((res) => {
         setMyProfile(res.data.data);
       })
