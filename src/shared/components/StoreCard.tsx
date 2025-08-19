@@ -38,7 +38,7 @@ const StoreCard = ({
     //초록 배경 밑에 있는 mb 어디서 나온건지 ? 없애고 싶음
     <div
       onClick={goStore}
-      className="mb-4 h-[365px] w-[361px] cursor-pointer border border-x-0 border-t-0 border-b-slate-300"
+      className="mb-4 w-[361px] cursor-pointer border border-x-0 border-t-0 border-b-slate-300 pb-2"
     >
       <div className="mb-[10px] h-[220px] w-[361px]">
         <div className="relative">
@@ -55,7 +55,7 @@ const StoreCard = ({
           {price}
         </div>
       </div>
-      <div className="flex flex-col gap-6 bg-lime-300 pl-2 pr-2">
+      <div className="flex flex-col gap-6 pl-2 pr-2">
         <div>
           <div className="mb-[2px] text-[20px] font-bold">{name}</div>
           <div>
