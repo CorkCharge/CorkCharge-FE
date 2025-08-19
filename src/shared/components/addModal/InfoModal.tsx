@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CompleteModal from './CompleteModal';
+import { addCorkageInfo, type AddCorkageRequest } from '@/shared/apis/corkage/corkageApi';
 
 type CorkageInfo = {
   selectedType: string | null;
@@ -17,6 +18,7 @@ type CorkageInfo = {
 
 type InfoModalProps = {
   storeName: string;
+  restaurantId: number;
   onClose: () => void;
   corkageInfo: CorkageInfo;
 };
@@ -37,32 +39,72 @@ const DETAIL_OPTION_TEXT: { [key: string]: string } = {
   TWO_BOTTLE_FREE: '두병 무료',
 };
 
-const InfoModal = ({ storeName, onClose, corkageInfo }: InfoModalProps) => {
+const InfoModal = ({ storeName, restaurantId, onClose, corkageInfo }: InfoModalProps) => {
   const {
     selectedType,
-    corkagePrice: price,
-    optionTypes: detailOptions,
+    corkagePrice,
+    multiCorkages,
+    optionTypes,
     etcContent: otherOptionText,
   } = corkageInfo;
 
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
-  const selectedDetailOptions = Object.entries(detailOptions)
+  const selectedDetailOptions = Object.entries(optionTypes)
     .filter(([key, value]) => key !== 'ETC' && value)
     .map(([key]) => DETAIL_OPTION_TEXT[key]);
 
   // "등록하기" 버튼 클릭 시 실행될 함수
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    if (!selectedType) {
+      alert('기본 정보를 선택해주세요.');
+      return;
+    }
+
+    // API가 요구하는 optionTypes 배열 형태로 변환
+    const optionTypesArray = Object.entries(optionTypes)
+      .filter(([, value]) => value === true)
+      .map(([key]) => key);
+
+    // API 요청 Body 생성
+    const requestBody: AddCorkageRequest = {
+      restaurantId,
+      corkageType: selectedType,
+      corkagePrice: 0, // 기본값
+      multiCorkages: null, // 기본값
+      optionTypes: optionTypesArray,
+      etcContent: optionTypes.ETC ? otherOptionText : null,
+    };
+
+    // 선택된 타입에 따라 Body 내용 조정
+    if (selectedType === 'MULTIPLE') {
+      requestBody.multiCorkages = multiCorkages.filter((opt) => opt.liquorType && opt.price > 0);
+    } else {
+      requestBody.corkagePrice = corkagePrice;
+    }
+
+    // API 호출
+    try {
+      console.log('API 요청 Body:', requestBody);
+      const response = await addCorkageInfo(requestBody);
+      console.log('API 응답:', response);
+
+      if (response.success) {
+        setIsCompleteModalOpen(true);
+      } else {
+        alert(`등록 실패: ${response.message}`);
+      }
+    } catch (error) {
+      console.error('콜키지 정보 등록 실패:', error);
+      alert('등록 중 오류가 발생했습니다.');
+    }
+
     console.log('등록할 정보:', corkageInfo);
-    // 여기에 실제 서버로 데이터를 보내는 API 호출 로직이 들어갑니다.
-    // API 호출이 성공했다고 가정하고, 완료 모달을 엽니다.
-    setIsCompleteModalOpen(true);
   };
 
   // "확인하러 가기" 버튼 클릭 시 실행될 함수
   const handleConfirm = () => {
     console.log('확인하러가기 버튼 클릭!');
-    // 필요하다면 여기서 페이지 이동 등의 로직을 처리합니다.
     setIsCompleteModalOpen(false); // 확인 후 모달 닫기
     onClose(); // 기존 정보 모달도 닫기
   };
@@ -86,12 +128,11 @@ const InfoModal = ({ storeName, onClose, corkageInfo }: InfoModalProps) => {
                 {/* [수정] 기본 정보 표시 로직 변경 */}
                 <div className="text-[16px] font-[500]">
                   {selectedType && CORKAGE_TYPE_TEXT[selectedType]}
-                  {['PER_BOTTLE', 'PER_PERSON', 'PER_TABLE'].includes(selectedType!) && price && (
-                    <span> {Number(price).toLocaleString()}원</span>
-                  )}
+                  {['PER_BOTTLE', 'PER_PERSON', 'PER_TABLE'].includes(selectedType!) &&
+                    corkagePrice && <span> {Number(corkagePrice).toLocaleString()}원</span>}
                 </div>
               </div>
-              {(selectedDetailOptions.length > 0 || (detailOptions.ETC && otherOptionText)) && (
+              {(selectedDetailOptions.length > 0 || (optionTypes.ETC && otherOptionText)) && (
                 <div className="flex flex-row gap-[20px]">
                   <div className="shrink-0 text-[16px] font-[700]">세부 옵션</div>
                   <div className="gap-[8px] text-[16px] font-[500]">
@@ -99,7 +140,7 @@ const InfoModal = ({ storeName, onClose, corkageInfo }: InfoModalProps) => {
                       <div key={optionText}>{optionText}</div>
                     ))}
                     {/* [수정] '여러 기타' 선택 시 '기타 사항'과 입력된 텍스트를 함께 표시 */}
-                    {detailOptions.ETC && otherOptionText && (
+                    {optionTypes.ETC && otherOptionText && (
                       <div className="max-w-[162px] overflow-hidden text-ellipsis whitespace-nowrap">
                         {otherOptionText}
                       </div>

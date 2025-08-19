@@ -9,16 +9,15 @@ import InfoModal from '@/shared/components/addModal/InfoModal';
 const AddOption = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address } = location.state || {
+  const { storeName, address, restaurantId } = location.state || {
     // restaurantId 추가하기.
     storeName: '매장명 없음',
     address: '주소 없음',
-    restaurantId: 'Id 없음',
+    restaurantId: 0,
   };
 
   const [selected, setSelected] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // 1. 가격 입력을 위한 상태 추가
   const [price, setPrice] = useState('');
   const [otherOptionText, setOtherOptionText] = useState('');
 
@@ -314,6 +313,7 @@ const AddOption = () => {
       {isModalOpen && (
         <InfoModal
           storeName={storeName}
+          restaurantId={restaurantId}
           onClose={handleCloseModal}
           corkageInfo={{
             selectedType: selected,
