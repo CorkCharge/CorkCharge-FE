@@ -48,7 +48,7 @@ const StoreList = () => {
         const res = await fetchCorkageList();
         console.log(res);
         setCorkage(res);
-      } catch (err) {
+      } catch {
         console.error('API  호출 실패');
       }
     };
@@ -63,7 +63,7 @@ const StoreList = () => {
         console.log(res);
         console.log('imageUrl: ' + res[0].imageUrl);
         setTiplist(res);
-      } catch (err) {
+      } catch {
         console.error('API  호출 실패');
       }
     };

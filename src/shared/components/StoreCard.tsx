@@ -7,7 +7,7 @@ import keepIcon from '../assets/keep.svg';
 import { useNavigate } from 'react-router-dom';
 
 interface storeProps {
-  restaurantId: number;
+  restaurantId?: number;
   imageUrl?: string;
   keep: number;
   price: string;

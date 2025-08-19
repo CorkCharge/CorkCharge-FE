@@ -90,7 +90,7 @@ const DetailHeader = ({
       navigator.clipboard.writeText(phone);
       setOpenCallModal(false);
       alert('클립보드에 복사되었습니다: ' + phone);
-    } catch (error) {
+    } catch {
       console.error('복사 실패');
       // alert('클립보드 복사에 실패하였습니다.');
     }
@@ -110,7 +110,7 @@ const DetailHeader = ({
       navigator.clipboard.writeText(pathURL);
       setOpenShareModal(false);
       alert('링크가 클립보드에 복사되었습니다: ');
-    } catch (error) {
+    } catch {
       console.error('복사 실패');
       // alert('클립보드 복사에 실패하였습니다.');
     }

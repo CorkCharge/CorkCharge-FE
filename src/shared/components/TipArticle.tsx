@@ -1,13 +1,13 @@
 // import React from 'react'
 
 interface articleProps {
-  tipId: number;
+  tipId?: number;
   category: string;
   mainTitle: string;
   subTitle?: string;
   info: string;
-  imageUrls: string[];
-  createdAt: string;
+  imageUrls?: string[];
+  createdAt?: string;
 }
 
 const TipArticle = ({

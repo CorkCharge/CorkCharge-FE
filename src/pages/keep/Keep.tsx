@@ -1,6 +1,6 @@
 // import React from 'react'
-// import StoreCard from '@/shared/components/StoreCard';
-// import Review from '../../shared/components/keep/Review';
+import StoreCard from '@/shared/components/StoreCard';
+import Review from '../../shared/components/keep/Review';
 import { useState } from 'react';
 import Curation from '@/shared/components/Curation';
 import Tip from '../../shared/components/Tip';

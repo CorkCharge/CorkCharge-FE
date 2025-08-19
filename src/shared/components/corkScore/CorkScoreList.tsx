@@ -1,13 +1,14 @@
 // import React from 'react'
 // import { fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
 import CorkScore from './CorkScore';
-import type { DayRange } from './types';
+// import type { DayRange } from './types';
 // import { useEffect, useState } from 'react';
 // import { fetchCorkageScore, type CorkageScore } from '@/shared/apis/restaurant/corkageScoreApi';
 
-type Props = { range: DayRange };
+// type Props = { range: DayRange };
 
-const CorkScoreList = ({ range }: Props) => {
+// const CorkScoreList = ({ range }: Props) => {
+const CorkScoreList = () => {
   // const [corkage, setCorkage] = useState<CorkageScore[]>();
 
   // useEffect(() => {

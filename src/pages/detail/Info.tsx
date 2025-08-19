@@ -16,20 +16,20 @@ const Info = () => {
       return;
     }
 
-    let cancelled = false;
+    // let cancelled = false;
     // const fetchData = async () => {
     (async () => {
       try {
         const res = await fetchRestaurant(restaurantId);
         console.log(res);
         setRestaurant(res);
-      } catch (err) {
+      } catch {
         console.error('API  호출 실패');
       }
       // };
     })();
     return () => {
-      cancelled = true;
+      // cancelled = true;
     };
     // fetchData();
   }, [restaurantId, id]);
