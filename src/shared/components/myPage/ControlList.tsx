@@ -19,7 +19,10 @@ export const ControlLists = ({ children, className }: ListProps) => {
 
 export const ControlItem = ({ children, onClick, className }: ItemProps) => {
   return (
-    <div className={cn('relative border-b px-4 py-5 font-bold', className)} onClick={onClick}>
+    <div
+      className={cn('relative cursor-pointer border-b px-4 py-5 font-bold', className)}
+      onClick={onClick}
+    >
       {children}
       <img src={arrow} className="absolute right-5 top-1/2 h-4 w-[9px] -translate-y-1/2" />
     </div>

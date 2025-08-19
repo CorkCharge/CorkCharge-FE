@@ -41,7 +41,10 @@ const useAuthStore = create<AuthState>()(
         return true;
       },
 
-      logout: () => set({ user: null }),
+      logout: () => {
+        set({ user: null });
+        sessionStorage.clear();
+      },
     }),
     { name: 'auth' }
   )
