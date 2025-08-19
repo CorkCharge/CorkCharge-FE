@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '@/shared/components/corkagemap/list/Header';
 import RestaurantBox from '@/shared/components/corkagemap/list/RestaurantBox';
 import { getClusterList } from '@/shared/apis/map/mapApi';
@@ -13,6 +13,7 @@ type LocationState = {
 
 const RestaurantsList = () => {
   const { state } = useLocation() as { state?: LocationState };
+  const navigate = useNavigate();
   const [items, setItems] = useState<ClusterListItem[]>([]);
   const title = state?.areaName ?? '목록';
 
@@ -56,6 +57,7 @@ const RestaurantsList = () => {
       <div className="overflow-y-auto pb-[120px] pt-[48px]">
         {items.map((r) => (
           <RestaurantBox
+            onClick={() => navigate(`/detailInfo/${r.restaurantId}`)}
             key={r.restaurantId}
             name={r.name}
             rating={r.rating}
