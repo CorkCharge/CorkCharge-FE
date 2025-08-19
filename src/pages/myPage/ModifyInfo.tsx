@@ -3,16 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 import Header from '@/shared/components/common/Header';
 import Modal from '@/shared/components/common/Modal';
-import useProfileStore from '@/shared/store/useProfileStore';
-import useAuthStore from '@/shared/store/useAuthStore';
+
+import useMyPageStore from '@/shared/store/useMyPageStore';
 
 import pencil from '@/shared/components/myPage/images/pencil.png';
 import crossMark from '@/shared/assets/images/plus.png';
 import { ImageInput } from '@/shared/components/common/Input';
 import apiClient from '@/shared/apis/apiClient';
-
-// temp code
-const USERID = 1;
 
 function ModifyInfo() {
   const navigate = useNavigate();
@@ -25,8 +22,7 @@ function ModifyInfo() {
 
   const fileSelector = useRef<HTMLInputElement>(null);
 
-  const { profile, setProfile } = useProfileStore();
-  const { user } = useAuthStore();
+  const { myProfile, setMyProfile } = useMyPageStore();
 
   // 탈퇴하기 모달 생성
   const withdrawCheck = () => (
@@ -89,17 +85,16 @@ function ModifyInfo() {
 
     apiClient
       .put('/users/modify', formData, {
-        params: { userId: USERID },
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(() => {
         // 서버 전송 후 업데이트 내용 store에 반영
         apiClient
-          .get('/users', { params: { userId: user?.userId } })
+          .get('/users')
           .then((res) => {
-            const { image_url, ...rest } = res.data.data;
-            const newPro = { profile_image: image_url, ...rest };
-            setProfile(newPro);
+            const { name, image_url } = res.data.data;
+            setMyProfile({ nickname: name, profile_image: image_url });
+            setNickname('');
           })
           .catch((e) => console.error('프로필 업데이트 실패 : ' + e));
       })
@@ -109,7 +104,7 @@ function ModifyInfo() {
   // 탈퇴 처리
   const withdraw = () => {
     apiClient
-      .delete('/users', { params: { userId: USERID } })
+      .delete('/users')
       .then(() => {
         setSecondModalOpen(true);
       })
@@ -133,10 +128,10 @@ function ModifyInfo() {
       <div className="mt-10 flex flex-col items-center">
         <div>
           <div
-            className={`relative mb-5 size-[130px] ${!previewUrl && profile?.profile_image && 'rounded-full bg-[var(--gray-3)]'}`}
+            className={`relative mb-5 size-[130px] ${!previewUrl && myProfile?.profile_image && 'rounded-full bg-[var(--gray-3)]'}`}
           >
-            {!previewUrl && profile?.profile_image && (
-              <img src={profile?.profile_image} className="size-full rounded-full" />
+            {!previewUrl && myProfile?.profile_image && (
+              <img src={myProfile?.profile_image} className="size-full rounded-full" />
             )}
             {previewUrl && <img src={previewUrl} className="size-full rounded-full" />}
 
@@ -156,8 +151,8 @@ function ModifyInfo() {
           </div>
         </div>
         <p className="mb-10 flex w-full gap-7 text-start font-bold text-[var(--gray-8)]">
-          <span>로그인한 계정</span>
-          <span>tempidiidiid</span>
+          <span className="min-w-[100px]">로그인한 계정</span>
+          <span className="overflow-auto break-words">{myProfile.socialId}</span>
         </p>
         <div className="flex w-full justify-start gap-7">
           <span className="font-bold text-[var(--gray-8)]">닉네임</span>
@@ -171,7 +166,7 @@ function ModifyInfo() {
               onChange={(e) => setNickname(e.target.value)}
             />
             <span className="text-sm font-medium text-[var(--gray-5)]">
-              현재 닉네임 : {profile?.name}
+              현재 닉네임 : {myProfile.nickname}
             </span>
           </div>
         </div>

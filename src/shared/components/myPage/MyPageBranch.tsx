@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import useProfileStore from '@/shared/store/useProfileStore';
 import useMyPageStore from '@/shared/store/useMyPageStore';
 import useFooterPropsStore from '@/shared/store/useFooterProps';
 
@@ -56,7 +55,7 @@ export const LoggedInMyPage = () => {
 
   const navigate = useNavigate();
 
-  const { profile } = useProfileStore();
+  // const { profile } = useProfileStore();
   const { myProfile, setMyProfile } = useMyPageStore();
   const { setFooterProps } = useFooterPropsStore();
 
@@ -81,10 +80,10 @@ export const LoggedInMyPage = () => {
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
         <div className="relative flex gap-[22px] pb-5">
           <div
-            className={`flex size-16 ${profile?.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
+            className={`flex size-16 ${myProfile?.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
           >
-            {profile?.profile_image && (
-              <img src={profile.profile_image} className="size-full rounded-full" />
+            {myProfile?.profile_image && (
+              <img src={myProfile.profile_image} className="size-full rounded-full" />
             )}
           </div>
           <div className="flex flex-col justify-center">

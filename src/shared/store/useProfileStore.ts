@@ -1,3 +1,7 @@
+/**
+ * 프로필 수정 시 사용하는 store
+ */
+
 import { create } from 'zustand';
 
 interface Profile {
