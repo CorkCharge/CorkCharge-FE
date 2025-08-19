@@ -16,7 +16,7 @@ const Info = () => {
       return;
     }
 
-    let cancelled = false;
+    // let cancelled = false;
     // const fetchData = async () => {
     (async () => {
       try {
@@ -29,7 +29,7 @@ const Info = () => {
       // };
     })();
     return () => {
-      cancelled = true;
+      // cancelled = true;
     };
     // fetchData();
   }, [restaurantId, id]);

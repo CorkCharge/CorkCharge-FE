@@ -27,7 +27,7 @@ const Tip = () =>
         return;
       }
 
-      let cancelled = false;
+      // let cancelled = false;
       // const fetchData = async () => {
       (async () => {
         try {
@@ -40,7 +40,7 @@ const Tip = () =>
         // };
       })();
       return () => {
-        cancelled = true;
+        // cancelled = true;
       };
       // fetchData();
     }, [tipId, id]);
