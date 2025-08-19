@@ -1,5 +1,11 @@
 import apiClient from '../apiClient';
-import type { ApiResponse, ClusterPoint, RestaurantPoint, MapParams } from '@/shared/types/map';
+import type {
+  ApiResponse,
+  ClusterPoint,
+  RestaurantPoint,
+  MapParams,
+  ClusterListItem,
+} from '@/shared/types/map';
 
 /**
  * 서버에 지도 데이터를 요청하는 API 함수입니다.
@@ -12,6 +18,18 @@ export const getMapData = async (params: MapParams) => {
     '/restaurants/map',
     { params }
   );
+  return response.data;
+};
 
+export const getClusterList = async (restaurantIds: number[]) => {
+  console.log('[getClusterList] request 요청형식', {
+    url: '/restaurants/cluster/list',
+    body: { restaurantIds },
+  });
+  const response = await apiClient.post<ApiResponse<ClusterListItem[]>>(
+    '/restaurants/cluster/list',
+    { restaurantIds }
+  );
+  console.log('[getClusterList] response', response.status, response.data);
   return response.data;
 };

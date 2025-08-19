@@ -33,6 +33,9 @@ import Notification from '@/pages/notification/Notification';
 import Tip from '@/pages/home/Tip';
 import CorkStores from '@/pages/home/CorkStores';
 import Keep from '@/pages/keep/Keep';
+import NaverCallback from '@/pages/signIn/NaverCallback';
+import ReservateDrink from '@/pages/reservation/ReservateDrink';
+import MainLayout from '../components/layout/Layout';
 
 const router = createBrowserRouter([
   // {
@@ -40,136 +43,150 @@ const router = createBrowserRouter([
   //   element: <Test />,
   // },
   {
-    path: '/home',
-    element: <Store />,
-  },
-  {
-    path: '/corkScore',
-    element: <CorkStores />,
-  },
-  {
-    path: '/searchMap',
-    element: <SearchMap />,
-  },
-  {
-    path: '/hotStores',
-    element: <HotStores />,
-  },
-  {
-    path: '/regionFilter',
-    element: <RegionFilter />,
-  },
-  {
-    path: '/doit',
-    element: <Doit />,
-  },
-  {
-    path: '/doit/search',
-    element: <Search />,
-  },
-  {
-    path: '/doit/search/request/1',
-    element: <NotRegistered />,
-  },
-  {
-    path: '/doit/search/request/2',
-    element: <AlreadyRegistered />,
-  },
-  {
-    path: '/doit/request',
-    element: <Request />,
-  },
-  {
-    path: '/doit/complete',
-    element: <DoitComplete />,
-  },
-  {
-    path: '/onboarding',
-    element: <OnBoarding />,
-  },
-  {
-    path: '/signin',
-    element: <SignIn />,
-  },
-  {
-    path: '/add/storecheck',
-    element: <StoreCheck />,
-  },
-  {
-    path: '/add/search',
-    element: <SearchStore />,
-  },
-  {
-    path: '/add/option',
-    element: <AddOption />,
-  },
-  {
-    path: '/onboarding/prefer',
-    element: <PreferSelect />,
-  },
-  {
-    path: '/corkagemap',
-    element: <CorkageMap />,
-  },
-  {
-    path: '/corkagemap/filter',
-    element: <Filter />,
-  },
-  {
-    path: '/detailInfo/:id',
-    element: <Info />,
-  },
-  {
-    path: '/review/:id',
-    element: <Review />,
-  },
-  {
-    path: '/my',
-    element: <MainMyPage />,
-  },
-  {
-    path: '/master/signup',
-    element: <MasterSignUp />,
-  },
-  {
-    path: '/my/modify',
-    element: <ModifyInfo />,
-  },
-  {
-    path: '/my/reservation',
-    element: <Reservation />,
-  },
-  {
-    path: '/my/review',
-    element: <MyReview />,
-  },
-  {
-    path: '/my/notification/setting',
-    element: <NotiSetting />,
-  },
-  {
-    path: '/my/contact',
-    element: <Contact />,
-  },
-  {
-    path: '/corkagemap/list',
-    element: <RestaurantsList />,
-  },
-  {
-    path: '/corkagemap/filter/result',
-    element: <FilterResult />,
-  },
-  {
-    path: '/notification',
-    element: <Notification />,
-  },
-  {
-    path: '/tipArticle/:tipId',
-    element: <Tip />,
-  },
-  {
-    path: '/keep',
-    element: <Keep />,
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      {
+        path: 'home',
+        element: <Store />,
+      },
+      {
+        path: 'corkScore',
+        element: <CorkStores />,
+      },
+      {
+        path: 'searchMap',
+        element: <SearchMap />,
+      },
+      {
+        path: 'hotStores',
+        element: <HotStores />,
+      },
+      {
+        path: 'regionFilter',
+        element: <RegionFilter />,
+      },
+      {
+        path: 'doit',
+        element: <Doit />,
+      },
+      {
+        path: 'doit/search',
+        element: <Search />,
+      },
+      {
+        path: 'doit/search/request/1',
+        element: <NotRegistered />,
+      },
+      {
+        path: 'doit/search/request/2',
+        element: <AlreadyRegistered />,
+      },
+      {
+        path: 'doit/request',
+        element: <Request />,
+      },
+      {
+        path: 'doit/complete',
+        element: <DoitComplete />,
+      },
+      {
+        path: 'onboarding',
+        element: <OnBoarding />,
+      },
+      {
+        path: 'signin',
+        element: <SignIn />,
+      },
+      {
+        path: 'add/storecheck/:restaurantId',
+        element: <StoreCheck />,
+      },
+      {
+        path: 'add/search',
+        element: <SearchStore />,
+      },
+      {
+        path: 'add/option',
+        element: <AddOption />,
+      },
+      {
+        path: 'onboarding/prefer',
+        element: <PreferSelect />,
+      },
+      {
+        path: 'corkagemap',
+        element: <CorkageMap />,
+      },
+      {
+        path: 'corkagemap/filter',
+        element: <Filter />,
+      },
+      {
+        path: 'detailInfo/:id',
+        element: <Info />,
+      },
+      {
+        path: 'review/:id',
+        element: <Review />,
+      },
+      {
+        path: 'my',
+        element: <MainMyPage />,
+      },
+      {
+        path: 'master/signup',
+        element: <MasterSignUp />,
+      },
+      {
+        path: 'my/modify',
+        element: <ModifyInfo />,
+      },
+      {
+        path: 'my/reservation',
+        element: <Reservation />,
+      },
+      {
+        path: 'my/review',
+        element: <MyReview />,
+      },
+      {
+        path: 'my/notification/setting',
+        element: <NotiSetting />,
+      },
+      {
+        path: 'my/contact',
+        element: <Contact />,
+      },
+      {
+        path: 'corkagemap/list',
+        element: <RestaurantsList />,
+      },
+      {
+        path: 'corkagemap/filter/result',
+        element: <FilterResult />,
+      },
+      {
+        path: 'notification',
+        element: <Notification />,
+      },
+      {
+        path: 'tipArticle',
+        element: <Tip />,
+      },
+      {
+        path: 'keep',
+        element: <Keep />,
+      },
+      {
+        path: 'signin/callback',
+        element: <NaverCallback />,
+      },
+      {
+        path: 'reservate',
+        element: <ReservateDrink />,
+      },
+    ],
   },
 ]);
 

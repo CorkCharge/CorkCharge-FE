@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Back from '../../shared/assets/whiteArrow.svg';
 import X from '../../shared/assets/whiteX.svg';
 import Bg from '../doit/assets/request_bg.svg';
@@ -6,10 +7,16 @@ import Placeholder from '../../shared/assets/placeholder.svg';
 const StoreCheck = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address } = location.state || {
+  const { storeName, address, restaurantId, thumbnailUrl } = location.state || {
     storeName: '매장명 없음',
     address: '주소 없음',
+    restaurantId: 'Id 없음',
+    thumbnailUrl: '사진 미제공',
   };
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -18,6 +25,7 @@ const StoreCheck = () => {
       state: {
         storeName: storeName,
         address: address,
+        restaurantId: restaurantId,
       },
     });
   };
@@ -37,7 +45,12 @@ const StoreCheck = () => {
           onClick={handleBackClick}
         />
         <p className="text-[16px] font-[700] text-white">추가하기</p>
-        <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
+        <img
+          src={X}
+          alt="x"
+          onClick={() => navigate('/home')}
+          className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
+        />
       </div>
       <div className="mb-[26px] mt-[56px] text-[24px] font-[700] text-white">
         위 가게가 맞습니까?
@@ -50,8 +63,8 @@ const StoreCheck = () => {
         }}
       >
         <img
-          src={Placeholder}
-          alt="placeholder"
+          src={thumbnailUrl === `사진 미제공` ? Placeholder : thumbnailUrl}
+          alt="가게 썸네일"
           className="mt-[27px] h-[201px] w-[268px] rounded-bl-[3%] rounded-br-[25%] rounded-tl-[25%] rounded-tr-[3%]"
         />
         {/*가게정보*/}
@@ -62,20 +75,9 @@ const StoreCheck = () => {
         <div className="mt-[67px] flex flex-row gap-[6px]">
           <button
             onClick={handleRegisterClick}
-            className="m-auto h-[48px] w-[123px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white"
+            className="m-auto h-[48px] w-[246px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white"
           >
             맞습니다
-          </button>
-          <button
-            className="m-auto h-[48px] w-[123px] cursor-pointer items-center rounded-[12px] bg-white/80 font-[600] text-black"
-            style={{
-              boxShadow:
-                '0px 0px 0.5px 0px rgba(66, 71, 76, 0.32), 0px 4px 8px 0px rgba(66, 71, 76, 0.05)',
-              backdropFilter: 'blur(5px)',
-            }}
-            onClick={handleBackClick}
-          >
-            아니요
           </button>
         </div>
       </div>

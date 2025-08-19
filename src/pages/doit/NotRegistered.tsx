@@ -2,9 +2,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
 import X from './assets/x.svg';
 import RightArrow from '../../shared/assets/right_arrow.svg';
+import { useParams } from 'react-router-dom';
 
 const NotRegistered = () => {
   const navigate = useNavigate();
+  const { restaurantId } = useParams();
+  console.log('현재 레스토랑 ID:', restaurantId);
   const location = useLocation();
   const { storeName, address } = location.state || {
     storeName: '매장명 없음',

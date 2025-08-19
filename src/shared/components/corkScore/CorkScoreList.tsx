@@ -26,7 +26,7 @@ const CorkScoreList = ({ range }: Props) => {
   //여기서 corkage 배열 중 createdAt 시간 계산해서 렌더링 필요
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="mb-[60px] flex flex-col items-center justify-center gap-4">
       <CorkScore
         name="엔비 햄버거"
         keep={27}

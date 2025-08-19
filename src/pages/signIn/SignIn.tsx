@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+import { NaverLogIn } from '@/shared/apis/signIn/Naver';
+
 import logo from '@/shared/assets/images/mainLogo.svg';
 import naver from '@/shared/assets/images/naver.png';
 
@@ -15,13 +17,16 @@ function SignIn() {
         <img src={logo} />
       </div>
       <div className="flex flex-col items-center gap-3">
-        <button className="flex h-[54px] w-[90%] items-center justify-center gap-4 rounded-[4px] bg-white">
+        <button
+          className="flex h-[54px] w-[90%] items-center justify-center gap-4 rounded-[4px] bg-white"
+          onClick={NaverLogIn}
+        >
           <img src={naver} className="size-4" />
           <span>네이버 로그인</span>
         </button>
         <span
           className="text-[#ecedef] underline underline-offset-4"
-          onClick={() => navigate('/prefer')}
+          onClick={() => navigate('/onboarding/prefer')}
         >
           로그인 없이 보기
         </span>

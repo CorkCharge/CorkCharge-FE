@@ -9,13 +9,17 @@ import InfoModal from '@/shared/components/addModal/InfoModal';
 const AddOption = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address } = location.state || {
+  const { storeName, address, restaurantId } = location.state || {
+    // restaurantId 추가하기.
     storeName: '매장명 없음',
     address: '주소 없음',
+    restaurantId: 0,
   };
 
   const [selected, setSelected] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [price, setPrice] = useState('');
+  const [otherOptionText, setOtherOptionText] = useState('');
 
   const handleSelect = (key: string) => {
     setSelected((prev) => (prev === key ? null : key));
@@ -23,11 +27,11 @@ const AddOption = () => {
   };
 
   const [selectedOptions, setSelectedOptions] = useState({
-    ice: false,
-    glass: false,
-    freeBottle: false,
-    wineGlass: false,
-    others: false,
+    ICE_PROVIDED: false,
+    GLASS_PROVIDED: false,
+    ONE_BOTTLE_FREE: false,
+    TWO_BOTTLE_FREE: false,
+    ETC: false,
   });
 
   const toggleOption = (key: keyof typeof selectedOptions) => {
@@ -42,9 +46,16 @@ const AddOption = () => {
     navigate(-1);
   };
 
-  const [multipleOptions, setMultipleOptions] = useState([{ type: '', cost: '' }]);
+  const [multipleOptions, setMultipleOptions] = useState([{ liquorType: '', price: '' }]);
   const handleAddMultiple = () => {
-    setMultipleOptions((prev) => [...prev, { type: '', cost: '' }]);
+    setMultipleOptions((prev) => [...prev, { liquorType: '', price: '' }]);
+  };
+
+  // 2. 다중 콜키지 입력값 변경 핸들러 추가
+  const handleMultipleChange = (index: number, field: 'liquorType' | 'price', value: string) => {
+    const newOptions = [...multipleOptions];
+    newOptions[index][field] = value;
+    setMultipleOptions(newOptions);
   };
 
   const handleRegister = () => {
@@ -82,41 +93,45 @@ const AddOption = () => {
           <div className="ml-[32px] text-[16px] font-[700]">기본정보</div>
           <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
             <button
-              onClick={() => handleSelect('free')}
+              onClick={() => handleSelect('FREE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'free' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'FREE' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               콜키지 프리
             </button>
             <button
-              onClick={() => handleSelect('byBottle')}
+              onClick={() => handleSelect('PER_BOTTLE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'byBottle' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'PER_BOTTLE'
+                  ? 'bg-[#90212A] text-white'
+                  : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               병당 콜키지
             </button>
             <button
-              onClick={() => handleSelect('byPerson')}
+              onClick={() => handleSelect('PER_PERSON')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'byPerson' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'PER_PERSON'
+                  ? 'bg-[#90212A] text-white'
+                  : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               인당 콜키지
             </button>
             <button
-              onClick={() => handleSelect('byTable')}
+              onClick={() => handleSelect('PER_TABLE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'byTable' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'PER_TABLE' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               테이블 콜키지
             </button>
             <button
-              onClick={() => handleSelect('multiple')}
+              onClick={() => handleSelect('MULTIPLE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'multiple' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'MULTIPLE' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               다중 콜키지
@@ -124,9 +139,9 @@ const AddOption = () => {
           </div>
         </div>
         {/* 다중 콜키지 클릭 - 주종,비용, +다중콜키지 추가 묶음 div */}
-        {selected === 'multiple' && (
+        {selected === 'MULTIPLE' && (
           <div className="mt-[32px] flex w-full flex-col gap-[8px]">
-            {multipleOptions.map((_, index) => (
+            {multipleOptions.map((option, index) => (
               <div key={index}>
                 {/* 주종, 입력창 묶음 div */}
                 <div className="mb-[10px] flex w-full flex-row gap-[20px]">
@@ -137,6 +152,8 @@ const AddOption = () => {
                     <input
                       type="text"
                       placeholder="주종을 입력하세요"
+                      value={option.liquorType}
+                      onChange={(e) => handleMultipleChange(index, 'liquorType', e.target.value)}
                       className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
                     />
                     <img
@@ -155,6 +172,7 @@ const AddOption = () => {
                     <input
                       type="text"
                       placeholder="비용을 입력하세요"
+                      onChange={(e) => handleMultipleChange(index, 'price', e.target.value)}
                       className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
                     />
                     <img
@@ -180,21 +198,23 @@ const AddOption = () => {
           </div>
         )}
         {/* 병당, 인당, 테이블 콜키지 클릭 */}
-        {['byBottle', 'byPerson', 'byTable'].includes(selected!) && (
+        {['PER_BOTTLE', 'PER_PERSON', 'PER_TABLE'].includes(selected!) && (
           <div className="relative mt-[16px] flex flex-row items-center justify-center">
             <p className="absolute left-[15%]">
-              {selected === 'byBottle'
+              {selected === 'PER_BOTTLE'
                 ? '병당'
-                : selected === 'byPerson'
+                : selected === 'PER_PERSON'
                   ? '인당'
-                  : selected === 'byTable'
+                  : selected === 'PER_TABLE'
                     ? '테이블당'
                     : ''}
             </p>
             <img src={TextArea} alt="입력창" className="h-[47px] w-[85.7%]" />
             {/* 입력창 */}
             <input
-              type="text"
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
               className="top-50 absolute left-[32.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
             />
             <img src={x} alt="x" className="absolute right-[14.2%] h-[11.3px] w-[9.18px]" />
@@ -211,45 +231,49 @@ const AddOption = () => {
           <div className="ml-[32px] text-[16px] font-[700]">세부 옵션</div>
           <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
             <button
-              onClick={() => toggleOption('ice')}
+              onClick={() => toggleOption('ICE_PROVIDED')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selectedOptions.ice ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selectedOptions.ICE_PROVIDED
+                  ? 'bg-[#90212A] text-white'
+                  : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               얼음 제공
             </button>
             <button
-              onClick={() => toggleOption('glass')}
+              onClick={() => toggleOption('GLASS_PROVIDED')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selectedOptions.glass ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selectedOptions.GLASS_PROVIDED
+                  ? 'bg-[#90212A] text-white'
+                  : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               잔 제공
             </button>
             <button
-              onClick={() => toggleOption('freeBottle')}
+              onClick={() => toggleOption('ONE_BOTTLE_FREE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selectedOptions.freeBottle
+                selectedOptions.ONE_BOTTLE_FREE
                   ? 'bg-[#90212A] text-white'
                   : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
-              한 병 무료
+              한병 무료
             </button>
             <button
-              onClick={() => toggleOption('wineGlass')}
+              onClick={() => toggleOption('TWO_BOTTLE_FREE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selectedOptions.wineGlass
+                selectedOptions.TWO_BOTTLE_FREE
                   ? 'bg-[#90212A] text-white'
                   : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
-              와인잔 제공
+              두병 무료
             </button>
             <button
-              onClick={() => toggleOption('others')}
+              onClick={() => toggleOption('ETC')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selectedOptions.others ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selectedOptions.ETC ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
               }`}
             >
               여러 기타
@@ -257,13 +281,15 @@ const AddOption = () => {
           </div>
         </div>
         {/*여러 기타 클릭*/}
-        {selectedOptions.others && (
+        {selectedOptions.ETC && (
           <div className="relative mt-[16px] flex flex-row items-center justify-center">
             <img src={TextArea} alt="입력창" className="h-[47px] w-[85.7%]" />
             {/* 입력창 */}
             <input
               type="text"
               placeholder="기타사항을 입력해주세요"
+              value={otherOptionText}
+              onChange={(e) => setOtherOptionText(e.target.value)}
               className="top-50 absolute left-[12.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
             />
             <img src={x} alt="x" className="absolute right-[14.2%] h-[11.3px] w-[9.18px]" />
@@ -284,7 +310,23 @@ const AddOption = () => {
           등록하기
         </button>
       </div>
-      {isModalOpen && <InfoModal storeName={storeName} onClose={handleCloseModal} />}
+      {isModalOpen && (
+        <InfoModal
+          storeName={storeName}
+          restaurantId={restaurantId}
+          onClose={handleCloseModal}
+          corkageInfo={{
+            selectedType: selected,
+            corkagePrice: Number(price) || 0,
+            multiCorkages: multipleOptions.map((opt) => ({
+              liquorType: opt.liquorType,
+              price: Number(opt.price) || 0,
+            })),
+            optionTypes: selectedOptions,
+            etcContent: otherOptionText,
+          }}
+        />
+      )}
     </main>
   );
 };

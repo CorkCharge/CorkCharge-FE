@@ -39,10 +39,14 @@ const AdditionalHeader = ({
   className,
 }: HeaderProps) => (
   <header className={cn('relative flex h-[48px] items-center justify-center font-bold', className)}>
-    <img src={arrow} onClick={backFn} className="absolute left-0 top-1/2 -translate-y-1/2" />
+    <img
+      src={arrow}
+      onClick={backFn}
+      className="absolute left-0 top-1/2 -translate-y-1/2 cursor-pointer"
+    />
     <span>{title}</span>
     <span
-      className="absolute right-0 top-1/2 -translate-y-1/2 text-sm font-medium text-[var(--gray-6)] underline"
+      className="absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer text-sm font-medium text-[var(--gray-6)] underline"
       onClick={addiFn}
     >
       {fnTitle}
@@ -54,7 +58,7 @@ function Header({ title, type, backFn, fnTitle, addiFn, className }: HeaderProps
   if (type === 'back') {
     return <BackHeader title={title} backFn={backFn} className={className} />;
   } else if (type === 'additional') {
-    return <AdditionalHeader title={title} fnTitle={fnTitle} addiFn={addiFn} />;
+    return <AdditionalHeader title={title} fnTitle={fnTitle} addiFn={addiFn} backFn={backFn} />;
   } else return <NormalHeader title={title} className={className} />;
 }
 
