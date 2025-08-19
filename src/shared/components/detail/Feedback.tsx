@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import black_x from '../../assets/detailPageImgs/black_x.svg';
 
 interface feedbackModalProps {
+  restaurantId: number;
   mainContent: string;
   option: string;
   handleOptClick: () => void;
 }
 
 //todo: handleOptClick 내용 없을 때 막기
-const Feedback = ({ mainContent, option, handleOptClick }: feedbackModalProps) => {
+const Feedback = ({ restaurantId, mainContent, option, handleOptClick }: feedbackModalProps) => {
   const [corkErr, setCorkErr] = useState<boolean>(false);
   const [storeErr, setStoreErr] = useState<boolean>(false);
   const handleCorkErr = () => {
@@ -35,7 +36,7 @@ const Feedback = ({ mainContent, option, handleOptClick }: feedbackModalProps) =
       console.log(corkErr);
       console.log(storeErr);
       console.log('건의하기완료');
-      navigate('/detailInfo', { state: { completeFb: true } });
+      navigate(`/detailInfo/${restaurantId}`, { state: { completeFb: true } });
     } else {
       return;
     }

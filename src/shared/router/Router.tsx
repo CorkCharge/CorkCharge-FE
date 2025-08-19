@@ -5,7 +5,7 @@ import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
 import Doit from '../../pages/doit/Doit';
 import Search from '../../pages/doit/Search';
-import SearchMap from '../../pages/home/Search';
+import SearchMap from '@/pages/search/SearchMap';
 import NotRegistered from '../../pages/doit/NotRegistered';
 import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 import Request from '../../pages/doit/Request';
@@ -116,11 +116,11 @@ const router = createBrowserRouter([
     element: <Filter />,
   },
   {
-    path: '/detailInfo',
+    path: '/detailInfo/:id',
     element: <Info />,
   },
   {
-    path: '/review',
+    path: '/review/:id',
     element: <Review />,
   },
   {
@@ -164,7 +164,7 @@ const router = createBrowserRouter([
     element: <Notification />,
   },
   {
-    path: '/tipArticle',
+    path: '/tipArticle/:tipId',
     element: <Tip />,
   },
   {

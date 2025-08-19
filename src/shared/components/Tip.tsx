@@ -37,28 +37,28 @@ const Tip = () => {
       <button
         type="button"
         onClick={handleAllBtn}
-        className={`button ${selectAll ? 'bg-[#90212A]' : 'bg-[#f3f3f6]'}`}
+        className={`button ${selectAll ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         전체
       </button>
       <button
         type="button"
         onClick={handleTipBtn}
-        className={`button ${selectTip ? 'bg-[#90212A]' : 'bg-[#f3f3f6]'}`}
+        className={`button ${selectTip ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         콜키지 팁
       </button>
       <button
         type="button"
         onClick={handlePrBtn}
-        className={`button ${selectPairing ? 'bg-[#90212A]' : 'bg-[#f3f3f6]'}`}
+        className={`button ${selectPairing ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         페어링 큐레이션
       </button>
       <button
         type="button"
         onClick={handleEvtBtn}
-        className={`button ${selectEvt ? 'bg-[#90212A]' : 'bg-[#f3f3f6]'}`}
+        className={`button ${selectEvt ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         EVENT
       </button>

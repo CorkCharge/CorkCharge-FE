@@ -7,13 +7,18 @@ import Glass from '../../shared/assets/glass.svg';
 import smallGlass from '../../shared/assets/smallGlass.svg';
 import arrow from '../../shared/assets/arrow.svg';
 import hotstore from '../../shared/assets/hotstore.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import keepIcon from '../../shared/assets/keep.svg';
+import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
+import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
 
 const StoreList = () => {
-  const [storeSelected, setStoreSelected] = useState<boolean>(true);
-  const [tipSelected, setTipSelected] = useState<boolean>(false);
+  const [storeSelected, setStoreSelected] = useState<boolean>(false);
+  const [tipSelected, setTipSelected] = useState<boolean>(true);
+
+  const [corkages, setCorkage] = useState<Corkage[]>([]);
+
   const handleStoreclick = () => {
     setStoreSelected(true);
     setTipSelected(false);
@@ -26,7 +31,7 @@ const StoreList = () => {
   const navigate = useNavigate();
   const handleRequest = () => {
     console.log('해주세요창 이동');
-    // navigate('/request');
+    navigate('/doit');
   };
   const handleCorkStore = () => {
     console.log('콜키지스토어창 이동');
@@ -36,6 +41,34 @@ const StoreList = () => {
     console.log('지금 핫한 매장 리스트 이동');
     navigate('/hotStores');
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetchCorkageList();
+        console.log(res);
+        setCorkage(res);
+      } catch (err) {
+        console.error('API  호출 실패');
+      }
+    };
+    fetchData();
+  }, []);
+
+  const [tiplist, setTiplist] = useState<TipList[]>();
+  useEffect(() => {
+    const fetchTipData = async () => {
+      try {
+        const res = await fetchTipList();
+        console.log(res);
+        console.log('imageUrl: ' + res[0].imageUrl);
+        setTiplist(res);
+      } catch (err) {
+        console.error('API  호출 실패');
+      }
+    };
+    fetchTipData();
+  }, []);
 
   return (
     //Todo: TopBar fixed 주기
@@ -83,43 +116,41 @@ const StoreList = () => {
         </div>
         <div className="flex h-[30px] w-[393px] items-center justify-center gap-14 border-b">
           <button
-            onClick={handleStoreclick}
-            className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${storeSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
-          >
-            매장
-          </button>
-          <button
             onClick={handleTipclick}
             className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${tipSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
           >
             Tip
           </button>
+          <button
+            onClick={handleStoreclick}
+            className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${storeSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+          >
+            매장
+          </button>
         </div>
         {storeSelected ? (
           <>
-            <StoreCard
-              keep={88}
-              price={1}
-              name="깍뚝"
-              local="500m 서울 광진구 어대로 1층"
-              time="평일 17:00~24:00"
-              rating={4.2}
-              review={3124}
-            />
-            <StoreCard
-              keep={51}
-              price={1}
-              name="엔비 햄버거"
-              local="1.2km 서울시 상동구 상수동 340-2"
-              time="평일 17:00~24:00"
-              rating={4.2}
-              review={3124}
-            />
+            {corkages &&
+              corkages.map((corkage) => {
+                return (
+                  <StoreCard
+                    restaurantId={corkage.restaurantId}
+                    imageUrl={corkage.imageUrl}
+                    keep={corkage.bookmarkCount}
+                    price={corkage.corkagePrice}
+                    name={corkage.name}
+                    local={corkage.address}
+                    time={corkage.openingHours}
+                    rating={corkage.averageRating}
+                    review={corkage.reviewCount}
+                  />
+                );
+              })}
           </>
         ) : (
           <>
             <Tip />
-            <Curation />
+            <Curation tiplist={tiplist} />
           </>
         )}
       </div>
