@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Header from '@/shared/components/corkagemap/list/Header';
 import RestaurantBox from '@/shared/components/corkagemap/list/RestaurantBox';
 import { searchRestaurants } from '@/shared/apis/restaurant/searchRestaurants';
@@ -8,7 +8,7 @@ import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/c
 const SearchMapResult = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword') ?? '';
-
+  const navigate = useNavigate();
   const [items, setItems] = useState<RestaurantInfo[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -62,6 +62,7 @@ const SearchMapResult = () => {
             corkagePrice={(r.corkagePrice ?? 0).toString()}
             corkageOptions={r.corkageOptions ?? []}
             imageUrl={r.mainImageUrl ?? ''}
+            onClick={() => navigate(`/detailInfo/${r.restaurantId}`)}
           />
         ))}
       </div>

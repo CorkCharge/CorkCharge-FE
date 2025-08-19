@@ -53,19 +53,18 @@ const groupByDong = (points: ClusterPoint[]) => {
     restaurantIds: b.ids,
   }));
 };
-/* ========================= */
 
 const NaverMap = () => {
-  // 지도를 담을 DOM 요소를 참조합니다.
+  // 지도를 담을 DOM 요소를 참조
   const mapRef = useRef<HTMLDivElement | null>(null);
-  // 생성된 네이버 맵 인스턴스를 저장합니다. 불필요한 리렌더링을 막기 위해 ref를 사용합니다.
+  // 생성된 네이버 맵 인스턴스를 저장, 불필요한 리렌더링을 막기 위해 ref를 사용
   const mapInstance = useRef<naver.maps.Map | null>(null);
-  // 현재 지도에 표시된 마커들을 저장합니다.
+  // 현재 지도에 표시된 마커들을 저장
   const markers = useRef<naver.maps.Marker[]>([]);
   const navigate = useNavigate();
 
   /**
-   * 줌 레벨에 따라 API 요청에 사용할 'level' 문자열을 반환합니다.
+   * 줌 레벨에 따라 API 요청에 사용할 'level' 문자열을 반환
    * @param zoom - 현재 지도의 줌 레벨
    */
   const getMapLevel = (zoom: number): MapLevel => {
@@ -76,12 +75,12 @@ const NaverMap = () => {
   };
 
   /**
-   * 클러스터 마커(원)의 HTML 문자열을 생성합니다.
+   * 클러스터 마커(원)의 HTML 문자열을 생성
    * @param count - 클러스터에 포함된 매장 수
    * @param label - (선택) 동 이름 라벨
    */
   const createClusterMarkerHtml = (count: number, label?: string): string => {
-    // 매장 수에 비례하여 원의 크기를 조절합니다.
+    // 매장 수에 비례하여 원의 크기를 조절
     const size = 35 + count * 1.5;
     return `
       <div style="
@@ -107,7 +106,7 @@ const NaverMap = () => {
   };
 
   /**
-   * 개별 매장 마커(가격)의 HTML 문자열을 생성합니다.
+   * 개별 매장 마커(가격)의 HTML 문자열을 생성.
    * @param price - 콜키지 가격 정보
    */
   const createRestaurantMarkerHtml = (price: string): string => {
@@ -128,7 +127,7 @@ const NaverMap = () => {
   };
 
   /**
-   * 이전에 생성된 모든 마커를 지도에서 제거합니다.
+   * 이전에 생성된 모든 마커를 지도에서 제거
    */
   const clearMarkers = () => {
     markers.current.forEach((marker) => marker.setMap(null));
@@ -136,7 +135,7 @@ const NaverMap = () => {
   };
 
   /**
-   * 지도 상태(줌, 위치)가 변경될 때마다 API를 호출하여 마커를 다시 그립니다.
+   * 지도 상태(줌, 위치)가 변경될 때마다 API를 호출하여 마커를 다시 생성
    */
   const fetchAndDrawMarkers = async () => {
     if (!mapInstance.current) return;
@@ -174,6 +173,11 @@ const NaverMap = () => {
               anchor: new window.naver.maps.Point(30, 15), // 마커의 기준점 조정
             },
           });
+
+          naver.maps.Event.addListener(marker, 'click', () => {
+            navigate(`/detailInfo/${item.restaurantId}`);
+          });
+
           markers.current.push(marker);
         });
       } else if (level === 'dong') {
@@ -245,7 +249,7 @@ const NaverMap = () => {
     }
   };
 
-  // 컴포넌트가 처음 마운트될 때 지도를 초기화합니다.
+  // 컴포넌트가 처음 마운트될 때 지도를 초기화
   useEffect(() => {
     if (!window.naver || !mapRef.current) return;
 
@@ -271,7 +275,7 @@ const NaverMap = () => {
       fetchAndDrawMarkers();
     });
 
-    // 지도 드래그가 끝나거나 줌이 변경될 때마다 마커를 다시 그리도록 이벤트 리스너를 등록합니다.
+    // 지도 드래그가 끝나거나 줌이 변경될 때마다 마커를 다시 그리도록 이벤트 리스너를 등록
     naver.maps.Event.addListener(map, 'dragend', fetchAndDrawMarkers);
     naver.maps.Event.addListener(map, 'zoom_changed', fetchAndDrawMarkers);
 
