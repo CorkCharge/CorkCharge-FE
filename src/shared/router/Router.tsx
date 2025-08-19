@@ -36,6 +36,7 @@ import Keep from '@/pages/keep/Keep';
 import NaverCallback from '@/pages/signIn/NaverCallback';
 import ReservateDrink from '@/pages/reservation/ReservateDrink';
 import MainLayout from '../components/layout/Layout';
+import SearchMapResult from '@/pages/search/SearchMapResult';
 
 const router = createBrowserRouter([
   // {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: 'searchMap',
         element: <SearchMap />,
+      },
+      {
+        path: 'searchMap/result',
+        element: <SearchMapResult />,
       },
       {
         path: 'hotStores',
@@ -171,7 +176,7 @@ const router = createBrowserRouter([
         element: <Notification />,
       },
       {
-        path: 'tipArticle',
+        path: 'tipArticle/:id',
         element: <Tip />,
       },
       {

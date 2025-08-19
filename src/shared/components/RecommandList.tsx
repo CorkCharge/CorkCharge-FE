@@ -8,7 +8,7 @@ const RecommandList = () => {
 
   return (
     <div>
-      <div className="flex w-[348px] gap-1 overflow-x-auto bg-pink-300">
+      <div className="overflow-x-aut flex w-[348px] gap-1">
         <button type="button" onClick={onclick} className="button">
           삼겹살 맛집
         </button>
