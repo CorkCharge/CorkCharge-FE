@@ -74,17 +74,17 @@ export const LoggedInMyPage = () => {
           <div
             className={`flex size-16 ${profile.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
           >
-            <img src={profile.profile_image!} className="size-full rounded-full" />
-            {/* {profile.profile_image && <img src={profile.profile_image} className="size-full" />} */}
+            {/* <img src={profile.profile_image!} className="size-full rounded-full" /> */}
+            {profile.profile_image && (
+              <img src={profile.profile_image} className="size-full rounded-full" />
+            )}
           </div>
           <div className="flex flex-col justify-center">
-            <p className="flex items-center gap-1 text-xl font-bold">
-              {/* {myProfile.nickname} */}
-              박재하님
+            <p className="it ems-center flex gap-1 text-xl font-bold">
+              {myProfile.nickname}
               {isMaster.current && <img src={logo} className="h-[21px]" />}
             </p>
-            {/* <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p> */}
-            <p className="text-sm font-medium text-[#80818B]">pjh6183@naver.com</p>
+            <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p>
           </div>
           <img
             src={arrow}
