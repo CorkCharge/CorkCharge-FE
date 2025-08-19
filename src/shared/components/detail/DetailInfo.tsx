@@ -51,7 +51,7 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
             <img src={star} />
             <img src={star} />
             <div className="ml-4 flex items-center gap-1">
-              <div className="text-[14px] underline">리뷰쓰기</div>
+              <div className="whitespace-nowrap text-[14px] underline">리뷰쓰기</div>
               <div>🡭</div>
             </div>
           </div>
