@@ -99,7 +99,7 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
       {
-        path: 'add/storecheck',
+        path: 'add/storecheck/:restaurantId',
         element: <StoreCheck />,
       },
       {

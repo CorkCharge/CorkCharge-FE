@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Back from '../../shared/assets/whiteArrow.svg';
 import X from '../../shared/assets/whiteX.svg';
 import Bg from '../doit/assets/request_bg.svg';
@@ -10,6 +11,10 @@ const StoreCheck = () => {
     storeName: '매장명 없음',
     address: '주소 없음',
   };
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
   const handleBackClick = () => {
     navigate(-1);
   };
