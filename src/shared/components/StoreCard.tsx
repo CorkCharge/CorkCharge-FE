@@ -1,7 +1,8 @@
 // import React from 'react';
-import bookmark from '../assets/bookmark.svg';
-import clock from '../assets/clock.svg';
-import share from '../assets/share.svg';
+// import bookmark from '../assets/bookmark.svg';
+import clock from '@/shared/components/home/assets/clock.svg';
+import bookmark from '@/shared/components/home/assets/keep.svg';
+import share from '@/shared/components/home/assets/share.svg';
 import star from '../assets/star.svg';
 import keepIcon from '../assets/keep.svg';
 import { useNavigate } from 'react-router-dom';
@@ -38,12 +39,22 @@ const StoreCard = ({
     //초록 배경 밑에 있는 mb 어디서 나온건지 ? 없애고 싶음
     <div
       onClick={goStore}
-      className="mb-4 w-[361px] cursor-pointer border border-x-0 border-t-0 border-b-slate-300 pb-2"
+      className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2"
     >
       <div className="mb-[10px] h-[220px] w-[361px]">
         <div className="relative">
-          {/* <img src="https://placehold.co/361x170" className="rounded-t-lg" /> */}
-          <img src={imageUrl} className="h-[170px] w-[361px] rounded-t-lg" />
+          {/* <img src="https://placehold.co/361x170" className="rounded-t-lg" />  */}
+          <img
+            src={imageUrl || 'https://placehold.co/361x170'}
+            className="h-[170px] w-[361px] overflow-hidden rounded-t-xl"
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (img.src !== 'https://placehold.co/361x170') {
+                img.onerror = null;
+                img.src = 'https://placehold.co/361x170';
+              }
+            }}
+          />
           <div className="absolute bottom-2 left-4">
             <div className="flex gap-2">
               <img src={keepIcon} />
