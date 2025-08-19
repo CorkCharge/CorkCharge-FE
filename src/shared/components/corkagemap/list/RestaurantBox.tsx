@@ -30,12 +30,12 @@ const RestaurantBox = ({
         <p className="ml-[4px] text-[16px] font-[500]">{rating}</p>
         <p className="ml-[7px] text-[16px] font-[400]">리뷰 total {reviewCount}</p>
         <div className="ml-auto flex flex-row gap-[6px]">
-          <button
+          {/* <button
             style={{ background: 'rgba(218, 203, 182, 0.30)' }}
             className="h-[28px] w-[54px] rounded-[20px] text-[12px] font-[500]"
           >
             예약
-          </button>
+          </button> */}
           <button
             style={{ background: 'rgba(218, 203, 182, 0.30)' }}
             className="h-[28px] w-[54px] rounded-[20px] text-[12px] font-[500]"
