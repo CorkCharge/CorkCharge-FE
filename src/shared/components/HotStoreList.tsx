@@ -14,7 +14,7 @@ const HotStoreList = () => {
         console.log('one item', hotRestaurants[0]);
         console.log(res);
         setHotRestaurants(res);
-      } catch (err) {
+      } catch {
         console.error('API  호출 실패');
       }
     };

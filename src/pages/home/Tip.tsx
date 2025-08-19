@@ -34,7 +34,7 @@ const Tip = () =>
           const res = await fetchTipInfo(tipId);
           console.log(res);
           setTip(res);
-        } catch (err) {
+        } catch {
           console.error('API  호출 실패, 더미 데이터 호출');
         }
         // };

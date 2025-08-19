@@ -23,7 +23,7 @@ const Info = () => {
         const res = await fetchRestaurant(restaurantId);
         console.log(res);
         setRestaurant(res);
-      } catch (err) {
+      } catch {
         console.error('API  호출 실패');
       }
       // };
