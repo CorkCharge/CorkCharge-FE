@@ -9,4 +9,12 @@ export const PAGE_TO_ANYONE = [
 
 // 하단 네비게이션 visible 여부
 export const FOOTERHIDDENURL = ['/my/modify', '/'];
-export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin'];
+export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin', '/doit'];
+
+export const FOOTERROUTER = {
+  home: ['/home'],
+  map: ['/corkagemap'],
+  book: ['/reservate'],
+  save: ['/keep'],
+  mypage: ['/my'],
+};

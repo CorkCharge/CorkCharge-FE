@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import useProfileStore from '@/shared/store/useProfileStore';
 import useMyPageStore from '@/shared/store/useMyPageStore';
+import useFooterPropsStore from '@/shared/store/useFooterProps';
 
 import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
@@ -13,6 +14,7 @@ import plus from '@/shared/assets/images/plus.png';
 import shakehand from '@/shared/assets/images/shakehand.png';
 import check from '@/shared/assets/images/cork-check.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
+import { NaverLogIn } from '@/shared/apis/signIn/Naver';
 
 const renderReviews = (reviews: Review[]) =>
   reviews.map((review, idx) => (
@@ -56,35 +58,41 @@ export const LoggedInMyPage = () => {
 
   const { profile } = useProfileStore();
   const { myProfile, setMyProfile } = useMyPageStore();
+  const { setFooterProps } = useFooterPropsStore();
 
   useEffect(() => {
+    if (myProfile.socialId) return;
+
     apiClient
       .get('/users/page')
       .then((res) => {
         setMyProfile(res.data.data);
       })
       .catch((e) => console.error(e));
-  }, []);
+  }, [myProfile.socialId, setMyProfile]);
+
+  const gotoReserVate = () => {
+    navigate('/reservate');
+    setFooterProps(2);
+  };
 
   return (
     <>
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
         <div className="relative flex gap-[22px] pb-5">
-          {/* <img src="" /> */}
           <div
-            className={`flex size-16 ${profile.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
+            className={`flex size-16 ${profile?.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
           >
-            {/* <img src={profile.profile_image!} className="size-full rounded-full" /> */}
-            {profile.profile_image && (
+            {profile?.profile_image && (
               <img src={profile.profile_image} className="size-full rounded-full" />
             )}
           </div>
           <div className="flex flex-col justify-center">
             <p className="it ems-center flex gap-1 text-xl font-bold">
-              {myProfile.nickname}
+              {myProfile?.nickname}
               {isMaster.current && <img src={logo} className="h-[21px]" />}
             </p>
-            <p className="text-sm font-medium text-[#80818B]">{myProfile.socialId}</p>
+            <p className="text-sm font-medium text-[#80818B]">{myProfile?.socialId}</p>
           </div>
           <img
             src={arrow}
@@ -95,7 +103,7 @@ export const LoggedInMyPage = () => {
 
         <div className="-mx-4 h-[1px] bg-[var(--gray-4)]"></div>
 
-        <div className="flex items-center gap-[22px] pl-2 pt-4">
+        <div className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4">
           <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
             <img src={plus} className="size-[14px]" />
           </div>
@@ -104,11 +112,17 @@ export const LoggedInMyPage = () => {
       </div>
 
       <div className="flex h-20 w-full justify-center gap-3">
-        <div className="flex h-full flex-1 items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]">
+        <div
+          className="flex h-full flex-1 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]"
+          onClick={() => navigate('/doit')}
+        >
           <img src={shakehand} className="size-[66px]" />
           <span className="font-medium">해주세요</span>
         </div>
-        <div className="flex h-full flex-1 items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]">
+        <div
+          className="flex h-full flex-1 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]"
+          onClick={gotoReserVate}
+        >
           <img src={check} className="size-[36px]" />
           <span className="font-medium">나의 예약</span>
         </div>
@@ -116,8 +130,16 @@ export const LoggedInMyPage = () => {
 
       <div className="relative mb-10 mt-10">
         <span className="font-bold">나의 리뷰</span>
-        <img src={arrow} className="absolute right-3 top-1 h-4 w-[9px]" />
-        {myProfile.reviews.length > 0 ? <ReviewArea reviews={myProfile.reviews} /> : <NoneReview />}
+        <img
+          src={arrow}
+          className="absolute right-3 top-1 h-4 w-[9px] cursor-pointer"
+          onClick={() => navigate('/my/review')}
+        />
+        {myProfile?.reviews.length > 0 ? (
+          <ReviewArea reviews={myProfile?.reviews} />
+        ) : (
+          <NoneReview />
+        )}
       </div>
 
       <div className="-mx-4 h-2 bg-[var(--gray-1)]"></div>
@@ -135,7 +157,10 @@ export const GuestMyPage = () => {
         <p className="text-center text-lg font-semibold text-[var(--gray-8)]">
           코르크차지 이용하기
         </p>
-        <div className="mx-auto mt-3 flex h-[54px] w-[60%] items-center justify-center gap-4 rounded bg-[#03C75A] text-white">
+        <div
+          className="mx-auto mt-3 flex h-[54px] w-[60%] cursor-pointer items-center justify-center gap-4 rounded bg-[#03C75A] text-white"
+          onClick={NaverLogIn}
+        >
           <img src={naver} className="size-4" />
           <span className="text-lg font-medium">네이버 로그인</span>
         </div>

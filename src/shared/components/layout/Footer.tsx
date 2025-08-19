@@ -21,7 +21,7 @@ const Footer = () => {
       return (
         <div
           key={item.name}
-          className="flex flex-col items-center justify-center bg-white"
+          className="z-[99] flex cursor-pointer flex-col items-center justify-center bg-white"
           onClick={() => setPropsIdx(idx, item.path)}
         >
           {item.icon(curColor)}

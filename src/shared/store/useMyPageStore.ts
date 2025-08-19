@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { Review } from '../types/mypage';
 
 interface MyProfile {
@@ -9,23 +10,29 @@ interface MyProfile {
 
 interface MyPageStore {
   myProfile: MyProfile;
-  setMyProfile: (fetched: Partial<MyProfile>) => void;
+  setMyProfile: (fetched: MyProfile) => void;
 }
 
-const useMyPageStore = create<MyPageStore>((set) => ({
-  myProfile: {
-    nickname: '',
-    socialId: '',
-    reviews: [
-      {
-        restaurantName: null,
-        location: null,
-        thumbnailUrl: '',
-      },
-    ],
-  },
+const initState = {
+  nickname: '',
+  socialId: '',
+  reviews: [],
+};
 
-  setMyProfile: (fetched) => set((state) => ({ myProfile: { ...state.myProfile, ...fetched } })),
-}));
+const useMyPageStore = create<MyPageStore>()(
+  persist<MyPageStore>(
+    (set) => ({
+      myProfile: {
+        nickname: '',
+        socialId: '',
+        reviews: [],
+      },
+
+      setMyProfile: (fetched) => set({ myProfile: fetched }),
+      clear: () => set({ myProfile: { ...initState } }),
+    }),
+    { name: 'my-profile' }
+  )
+);
 
 export default useMyPageStore;

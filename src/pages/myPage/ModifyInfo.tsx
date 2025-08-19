@@ -97,7 +97,9 @@ function ModifyInfo() {
         apiClient
           .get('/users', { params: { userId: user?.userId } })
           .then((res) => {
-            setProfile(res.data.data);
+            const { image_url, ...rest } = res.data.data;
+            const newPro = { profile_image: image_url, ...rest };
+            setProfile(newPro);
           })
           .catch((e) => console.error('프로필 업데이트 실패 : ' + e));
       })
@@ -131,10 +133,10 @@ function ModifyInfo() {
       <div className="mt-10 flex flex-col items-center">
         <div>
           <div
-            className={`relative mb-5 size-[130px] ${!previewUrl && !profile.profile_image && 'rounded-full bg-[var(--gray-3)]'}`}
+            className={`relative mb-5 size-[130px] ${!previewUrl && profile?.profile_image && 'rounded-full bg-[var(--gray-3)]'}`}
           >
-            {!previewUrl && profile.profile_image && (
-              <img src={profile.profile_image} className="size-full rounded-full" />
+            {!previewUrl && profile?.profile_image && (
+              <img src={profile?.profile_image} className="size-full rounded-full" />
             )}
             {previewUrl && <img src={previewUrl} className="size-full rounded-full" />}
 
@@ -169,7 +171,7 @@ function ModifyInfo() {
               onChange={(e) => setNickname(e.target.value)}
             />
             <span className="text-sm font-medium text-[var(--gray-5)]">
-              현재 닉네임 : {profile.name}
+              현재 닉네임 : {profile?.name}
             </span>
           </div>
         </div>
