@@ -173,6 +173,11 @@ const NaverMap = () => {
               anchor: new window.naver.maps.Point(30, 15), // 마커의 기준점 조정
             },
           });
+
+          naver.maps.Event.addListener(marker, 'click', () => {
+            navigate(`/detailInfo/${item.restaurantId}`);
+          });
+
           markers.current.push(marker);
         });
       } else if (level === 'dong') {
