@@ -9,8 +9,9 @@ import load from '../../assets/detailPageImgs/load.svg';
 import phone from '../../assets/detailPageImgs/phone.svg';
 import store from '../../assets/detailPageImgs/store.svg';
 import LocalDetail from './LocalDetail';
+import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 
-const StoreInfo = () => {
+const StoreInfo = (restaurant: RestaurantInfo) => {
   const [showLocal, setShowLocal] = useState<boolean>(false);
   const [showAllHours, setShowAllHours] = useState<boolean>(false);
   const [showDirections, setShowDirections] = useState<boolean>(false);
@@ -26,7 +27,8 @@ const StoreInfo = () => {
                 className="flex cursor-pointer items-center gap-2"
                 onClick={() => setShowLocal(!showLocal)}
               >
-                <span>서울 광진구 아차산로49길 12 1층</span>
+                {/* <span>서울 광진구 아차산로49길 12 1층</span> */}
+                <span>{restaurant.address}</span>
                 <span className="relative ml-1 mt-2">
                   {showLocal ? (
                     <>
@@ -41,7 +43,11 @@ const StoreInfo = () => {
               </div>
               {showLocal && (
                 <div className="absolute left-0 top-8 z-50">
-                  <LocalDetail showLocal={showLocal} setShowLocal={setShowLocal} />
+                  <LocalDetail
+                    showLocal={showLocal}
+                    setShowLocal={setShowLocal}
+                    local={restaurant.address}
+                  />
                 </div>
               )}
             </div>
@@ -110,7 +116,7 @@ const StoreInfo = () => {
         {/* 전화번호 */}
         <div className="flex gap-2 border border-x-0 border-t-0 pb-2 pt-2">
           <img src={phone} className="flex h-[20px] w-[18px] pl-1 pt-1" />
-          <span>0507-1111-1112</span>
+          <span>{restaurant.phone}</span>
         </div>
 
         {/* 기타정보 */}

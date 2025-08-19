@@ -10,7 +10,7 @@ interface topBarProps {
   setSearchValue?: (value: string) => void;
 }
 
-const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) => {
+const SearchBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) => {
   const navigate = useNavigate();
   const handleSearch = () => {
     if (searchDisabled) {
@@ -47,4 +47,4 @@ const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) =>
   );
 };
 
-export default TopBar;
+export default SearchBar;

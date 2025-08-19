@@ -3,11 +3,11 @@ import star from '../../assets/detailPageImgs/star.svg';
 import black_x from '../../assets/detailPageImgs/black_x.svg';
 import camera from '../../assets/detailPageImgs/camera.svg';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const Review = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setIsValid(value.trim().length > 0);
@@ -15,14 +15,14 @@ const Review = () => {
   const handleReview = () => {
     if (isValid) {
       console.log('리뷰등록완료');
-      navigate('/detailInfo', { state: { openReviewModal: true } });
+      // navigate(`/detailInfo/${restaurantId}`, { state: { openReviewModal: true } });
     } else {
       return;
     }
   };
   const handleCancel = () => {
     console.log('리뷰 등록취소');
-    navigate('/detailInfo');
+    // navigate(`/detailInfo/${restaurantId}`);
   };
 
   return (

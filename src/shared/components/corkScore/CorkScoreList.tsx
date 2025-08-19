@@ -1,7 +1,30 @@
 // import React from 'react'
+// import { fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
 import CorkScore from './CorkScore';
+import type { DayRange } from './types';
+// import { useEffect, useState } from 'react';
+// import { fetchCorkageScore, type CorkageScore } from '@/shared/apis/restaurant/corkageScoreApi';
 
-const CorkScoreList = () => {
+type Props = { range: DayRange };
+
+const CorkScoreList = ({ range }: Props) => {
+  // const [corkage, setCorkage] = useState<CorkageScore[]>();
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetchCorkageScore();
+  //       console.log(res);
+  //       setCorkage(res);
+  //     } catch (err) {
+  //       console.error('API  호출 실패');
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
+  //여기서 corkage 배열 중 createdAt 시간 계산해서 렌더링 필요
+
   return (
     <div className="mb-[60px] flex flex-col items-center justify-center gap-4">
       <CorkScore

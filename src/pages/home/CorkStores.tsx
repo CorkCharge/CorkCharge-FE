@@ -2,17 +2,20 @@
 import CorkScoreList from '@/shared/components/corkScore/CorkScoreList';
 import RegionSearchBar from '@/shared/components/corkScore/RegionSearchBar';
 import SelectBox from '@/shared/components/corkScore/SelectBox';
+import type { DayRange } from '@/shared/components/corkScore/types';
 import TopBar from '@/shared/components/TopBar';
+import { useState } from 'react';
 
 const CorkStores = () => {
+  const [range, setRange] = useState<DayRange>(1);
   return (
     <div className="flex flex-col items-center justify-center bg-white pb-4">
       <TopBar text="콜키지스코어" />
       <div className="flex w-[393px] items-center justify-between pr-5">
         <div></div>
-        <SelectBox />
+        <SelectBox value={range} setRange={setRange} />
       </div>
-      <CorkScoreList />
+      <CorkScoreList range={range} />
       <RegionSearchBar />
     </div>
   );

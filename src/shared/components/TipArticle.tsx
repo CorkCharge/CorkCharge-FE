@@ -1,17 +1,32 @@
 // import React from 'react'
 
 interface articleProps {
+  tipId: number;
   category: string;
   mainTitle: string;
-  subTitle: string;
+  subTitle?: string;
   info: string;
+  imageUrls: string[];
+  createdAt: string;
 }
 
-const TipArticle = ({ category, mainTitle, subTitle, info }: articleProps) => {
+const TipArticle = ({
+  tipId,
+  category,
+  mainTitle,
+  subTitle,
+  info,
+  imageUrls,
+  // createdAt,
+}: articleProps) => {
   return (
     <div className="mb-8">
       <div className="relative mb-6">
-        <img src="https://placehold.co/393x358" className="rounded-2xl" />
+        <img
+          key={tipId}
+          src={imageUrls ? imageUrls[0] : 'https://placehold.co/393x358'} //우선 첫 번째 사진 사용
+          className="h-[358px] w-[393px] rounded-2xl"
+        />
         <div className="absolute bottom-8 left-8">
           <div className="w-[280px] font-bold text-[#FFFFFF]">
             <div className="mb-2 text-[20px]">{category}</div>
