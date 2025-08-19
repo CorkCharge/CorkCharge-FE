@@ -1,15 +1,14 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
 import Footer from './Footer';
+import { FOOTERHIDDENPREFIX, FOOTERHIDDENURL } from '@/shared/constants/Routes';
 
 const MainLayout = () => {
   const location = useLocation();
 
-  const footerHiddenUrl: string[] = ['/my/modify'];
-  const footerHiddenPrefix: string[] = ['/onboarding', '/signin'];
   const isFooterHidden =
-    footerHiddenUrl.some((route) => location.pathname === route) ||
-    footerHiddenPrefix.some((route) => location.pathname.startsWith(route));
+    FOOTERHIDDENURL.some((route) => location.pathname === route) ||
+    FOOTERHIDDENPREFIX.some((route) => location.pathname.startsWith(route));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
