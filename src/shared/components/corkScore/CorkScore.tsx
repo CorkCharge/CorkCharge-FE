@@ -36,7 +36,7 @@ const CorkScore = ({ name, keep, rating, review, id, date }: corkScoreProps) => 
           <img className="h-[15px] w-[96px]" src={star} />
           <div className="text-[16px]">{rating}</div>
         </div>
-        <div className="mb-[2px] w-[180px] text-[14px]">{review}</div>
+        <div className="mb-[2px] line-clamp-2 w-[180px] text-[14px]">{review}</div>
         <div className="flex gap-2 text-[10px]">
           <div>{id}</div>
           <div>{date}</div>

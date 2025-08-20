@@ -81,10 +81,10 @@ const StoreCard = ({
             <span> 리뷰 total {review}</span>
           </div>
           <div className="flex gap-4 text-[10px] text-[#C5C8CF]">
-            <div>
+            {/* <div>
               <img src={clock} />
               <div>예약</div>
-            </div>
+            </div> */}
             <div>
               <img src={bookmark} />
               <div>저장</div>

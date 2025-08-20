@@ -1,18 +1,44 @@
 // import React from 'react';
+import { useState } from 'react';
 import './tip.css';
 
-const RecommandList = () => {
+interface RecommandProps {
+  setSearchValue?: (value: string) => void;
+  // directSearch?: (value: string) => void;
+}
+
+const RecommandList = ({ setSearchValue }: RecommandProps) => {
+  const [value, setValue] = useState<string | null>();
+
   const onclick = () => {
     console.log('해당 검색어 검색');
+    // setValue('제즈레스토랑');
+    setSearchValue?.(value || '');
+    // directSearch?.(text || '');
   };
 
+  //handleStroke 필요함
   return (
     <div>
-      <div className="overflow-x-aut flex w-[348px] gap-1">
-        <button type="button" onClick={onclick} className="button">
-          삼겹살 맛집
+      <div className="flex w-[348px] gap-1 overflow-x-auto">
+        <button
+          type="button"
+          onClick={() => {
+            setValue('제즈레스토랑');
+            onclick();
+          }}
+          className="button"
+        >
+          제즈레스토랑
         </button>
-        <button type="button" onClick={onclick} className="button">
+        <button
+          type="button"
+          onClick={() => {
+            setValue('라면 페어링');
+            onclick();
+          }}
+          className="button"
+        >
           라면 페어링
         </button>
         <button type="button" onClick={onclick} className="button">
