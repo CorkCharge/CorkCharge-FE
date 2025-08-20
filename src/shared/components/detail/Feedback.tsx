@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import black_x from '../../assets/detailPageImgs/black_x.svg';
+import apiClient from '@/shared/apis/apiClient';
 
 interface feedbackModalProps {
   restaurantId: number;
@@ -10,7 +11,7 @@ interface feedbackModalProps {
   handleOptClick: () => void;
 }
 
-//todo: handleOptClick 내용 없을 때 막기
+//todo:예외처리- handleOptClick 내용 없을 때 막기
 const Feedback = ({ restaurantId, mainContent, option, handleOptClick }: feedbackModalProps) => {
   const [corkErr, setCorkErr] = useState<boolean>(false);
   const [storeErr, setStoreErr] = useState<boolean>(false);
@@ -23,21 +24,42 @@ const Feedback = ({ restaurantId, mainContent, option, handleOptClick }: feedbac
     setCorkErr(false);
   };
 
+  //글자수가 1자 이상인지 확인
   const [isValid, setIsValid] = useState<boolean>(false);
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    setIsValid(value.trim().length > 0);
-  };
   const navigate = useNavigate();
+
+  // const [title, setTitle] = useState<string>('');
+  // const [category, setCategory] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+
+  const uploadPost = () => {
+    //title 및 category 임의 설정
+    // setTitle(`restaurantId: ${restaurantId}`);
+    // setCategory('CORKAGE_ERROR');
+    apiClient
+      .post('/suggestion', { title: restaurantId, content, category: 'CORKAGE_ERROR' })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  };
+
   const handleFeedback = () => {
     if (isValid && (corkErr || storeErr)) {
       // if (isValid || corkErr || storeErr) {
-      console.log(isValid);
-      console.log(corkErr);
-      console.log(storeErr);
       console.log('건의하기완료');
+      //콘솔 찍어 확인
+      console.log('isValid: ' + isValid);
+      console.log('corkErr: ' + corkErr);
+      console.log('storeErr: ' + storeErr);
+      uploadPost();
       navigate(`/detailInfo/${restaurantId}`, { state: { completeFb: true } });
     } else {
+      console.log('제출실패');
+      //콘솔 찍어 확인
+      console.log('isValid: ' + isValid);
+      console.log('content: ' + content);
+      console.log('content.length: ' + content.length);
+      console.log('corkErr: ' + corkErr);
+      console.log('storeErr: ' + storeErr);
       return;
     }
   };
@@ -72,7 +94,10 @@ const Feedback = ({ restaurantId, mainContent, option, handleOptClick }: feedbac
                   ? '어플에 나와있는 메뉴와 다른 메뉴가 있습니다. '
                   : '건의내용을 입력해주세요'
             }
-            onChange={handleInputChange}
+            onChange={(e) => {
+              setContent(e.target.value);
+              setIsValid(content.trim().length > 0);
+            }}
             className="mb-2 mt-4 h-[170px] w-[250px] resize-none bg-transparent text-[13px] text-[#9FA2AA] outline-none"
             rows={1}
           />
@@ -85,7 +110,7 @@ const Feedback = ({ restaurantId, mainContent, option, handleOptClick }: feedbac
 
         <button
           onClick={handleFeedback}
-          className="h-[48px] w-[263px] rounded-xl bg-white text-[17px] font-bold text-[#35353F] opacity-80"
+          className={`${isValid ? '' : 'cursor-not-allowed'} h-[48px] w-[263px] rounded-xl bg-white text-[17px] font-bold text-[#35353F] opacity-80`}
         >
           {option}
         </button>
