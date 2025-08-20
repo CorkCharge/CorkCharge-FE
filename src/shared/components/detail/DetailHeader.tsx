@@ -24,12 +24,6 @@ interface detailProps {
   mainImageUrl: string | null;
 }
 
-interface DetailState {
-  storeName: string;
-  address: string;
-  restaurantId: number;
-}
-
 const DetailHeader = ({
   resId,
   name,
