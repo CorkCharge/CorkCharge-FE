@@ -39,6 +39,7 @@ import MainLayout from '../components/layout/Layout';
 import SearchMapResult from '@/pages/search/SearchMapResult';
 import ChooseRole from '../components/myPage/ChooseRole';
 import { RootRedirect } from './RootRedirect';
+import Toc from '@/pages/myPage/Toc';
 
 const router = createBrowserRouter([
   // {
@@ -172,6 +173,10 @@ const router = createBrowserRouter([
       {
         path: 'my/contact',
         element: <Contact />,
+      },
+      {
+        path: 'my/toc',
+        element: <Toc />,
       },
       {
         path: 'corkagemap/list',

@@ -4,6 +4,7 @@ import Logo from './assets/logo_symbol.svg';
 import Arrow from './assets/right_arrow.svg';
 import Back from '../../shared/assets/left_arrow.svg';
 import Bg from './assets/bg.svg';
+import Header from '@/shared/components/common/Header';
 
 const Doit = () => {
   const navigate = useNavigate();
@@ -12,7 +13,8 @@ const Doit = () => {
     navigate('/doit/search');
   };
   return (
-    <div className="relative flex min-h-screen flex-col items-center">
+    <div className="relative flex min-h-screen flex-col items-center px-4">
+      <Header type="back" title="" className="w-full bg-transparent" backFn={() => navigate(-1)} />
       <img
         src={Bg}
         alt="배경"

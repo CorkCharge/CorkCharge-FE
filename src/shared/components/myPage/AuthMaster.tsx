@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 
 import upload from '@/shared/components/myPage/images/upload-image.png';
+import apiClient from '@/shared/apis/apiClient';
 
 function AuthMaster({ onNext }: { onNext: () => void }) {
   const fileSelector = useRef<HTMLInputElement>(null);
@@ -16,6 +17,19 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
     if (file) {
       setSelectedFile(file);
     }
+  };
+
+  const handVerification = () => {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append('images', selectedFile);
+    apiClient
+      .put('/users/registration', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then(() => {
+        onNext();
+      })
+      .catch((e) => console.error(e));
   };
 
   return (
@@ -52,7 +66,7 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
       {selectedFile && (
         <button
           className="fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] max-w-[480px] rounded-[10px] bg-[var(--primary)] font-bold text-white"
-          onClick={onNext}
+          onClick={handVerification}
         >
           다음
         </button>
