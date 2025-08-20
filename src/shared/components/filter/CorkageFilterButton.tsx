@@ -5,7 +5,7 @@ interface CorkageFilterButtonProps {
 
 const CorkageFilterButton = ({ onApply, onReset }: CorkageFilterButtonProps) => {
   return (
-    <div className="absolute bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%]">
+    <div className="fixed bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%] pb-[50px]">
       <button
         onClick={onReset}
         className="mr-2 h-[48px] w-[35%] rounded-lg border bg-[#F3F3F6] py-2 font-bold"
