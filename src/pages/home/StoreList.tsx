@@ -13,6 +13,10 @@ import keepIcon from '../../shared/assets/keep.svg';
 import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
 import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
 import type { Selected } from '@/shared/components/home/type';
+import {
+  fetchHomeRestaurant,
+  type HomeRestaruantInfo,
+} from '@/shared/apis/restaurant/homeRestaurantApi';
 
 const StoreList = () => {
   const [storeSelected, setStoreSelected] = useState<boolean>(false);
@@ -71,24 +75,55 @@ const StoreList = () => {
     fetchTipData();
   }, []);
 
+  //홈화면 가게 정보
+  const [signature, setSignature] = useState<HomeRestaruantInfo>();
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await fetchHomeRestaurant();
+        if (!cancelled) setSignature(data);
+        console.log('홈 화면 식당 정보 조회 성공');
+      } catch (e) {
+        console.error(e);
+        console.log('홈 화면 식당 정보 조회 실패');
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const goStore = () => {
+    console.log('홈 대표 가게 상세 정보 페이지 이동');
+    navigate(`/detailInfo/${signature?.restaurantId}`);
+  };
+
   //tip 카테고리 상태
   const [selected, setSelected] = useState<Selected>('ALL');
   const filtered =
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
   return (
-    //Todo: TopBar fixed 주기
-    //SearchedStore.tsx, SearchedStoreList.tsx 안쓸듯?
     <div className="flex flex-col items-center">
       <TopBar searchDisabled={false} />
       <div className="relative mb-4">
-        <img src="https://placehold.co/361x200" className="rounded-lg" />
-        <div className="absolute left-4 top-4">
+        {/* <img
+          src="http://t1.kakaocdn.net/fiy_reboot/place/C1B6E3FC902945369E993185518384E6"
+          className="h-[200px] w-[361px] cursor-pointer rounded-lg object-cover"
+          onClick={goStore}
+        /> */}
+        <img
+          onClick={goStore}
+          src={signature?.imageUrl ? signature.imageUrl : 'https://placehold.co/361x200'}
+          className="h-[200px] w-[361px] cursor-pointer rounded-lg object-cover"
+        />
+        <div className="pointer-events-none absolute inset-0 rounded-lg bg-black/40" />
+        <div className="absolute left-4 top-4 z-10">
           <div className="flex flex-col gap-2">
-            <div className="title">성수 누메로도스</div>
+            <div className="title">{signature?.restaurantName}</div>
             <div className="flex gap-2">
               <img src={keepIcon} />
-              <div className="title">198</div>
+              <div className="title">{signature?.bookmarkCount}</div>
             </div>
           </div>
         </div>
