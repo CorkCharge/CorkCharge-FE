@@ -11,7 +11,7 @@ function ContactPost({ selectedIdx }: { selectedIdx: number }) {
     if (selectedIdx < 0 || !selectedIdx) return;
 
     apiClient
-      .get(`/suggestion/${selectedIdx}`, { params: { userId: 1 } })
+      .get(`/suggestion/${selectedIdx}`)
       .then((res) => {
         setTitle(res.data.data.title);
         setContent(res.data.data.content);
