@@ -69,6 +69,7 @@ const DetailHeader = ({
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
   // const location = useLocation();
   useEffect(() => {
+    console.log(mainImageUrl);
     if (location.state?.openReviewModal) {
       setOpenReviewModal(true);
     }
@@ -122,14 +123,14 @@ const DetailHeader = ({
   };
 
   return (
-    <div className="flex w-[393px] flex-col">
+    <div className="flex w-full flex-col">
       {/* <img src="https://placehold.co/393X197" /> */}
       <img
         src={mainImageUrl ? mainImageUrl : 'https://placehold.co/393X197'}
-        className="h-[197px] w-[393px]"
+        className="h-[197px] w-full"
       />
       {/* 사진 없으면 기본 사진으로 대체 */}
-      <div className="pb-2 pt-2">
+      <div className="px-4 pb-2 pt-2">
         <div className="text-[24px] font-bold">{name}</div>
         <div className="flex items-center gap-2">
           <div>콜키지스코어</div>
@@ -142,11 +143,11 @@ const DetailHeader = ({
           <div className="text-[#80818B]">영업시간 {time} 영업종료</div>
         </div>
       </div>
-      <div className="mb-2 mt-2 flex gap-2 border border-x-0 border-t-0 pb-4">
+      <div className="mb-2 mt-2 flex justify-center gap-2 border border-x-0 border-t-0 px-4 pb-4">
         <button
           onClick={handleRequest}
           // onClick={handleModal}
-          className="flex h-[80px] w-[176px] items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
+          className="flex h-[80px] w-full items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
         >
           <div className="flex items-center justify-center gap-3 text-[16px] font-semibold text-[#35353F]">
             <img src={smallGlass}></img>
@@ -155,7 +156,7 @@ const DetailHeader = ({
         </button>
         <button
           onClick={handleKeepStore}
-          className="flex h-[80px] w-[176px] items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
+          className="flex h-[80px] w-full items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
         >
           <div className="flex items-center justify-center gap-3 text-[16px] font-semibold text-[#35353F]">
             <img src={keep}></img>

@@ -8,8 +8,6 @@ const Footer = () => {
   const { footerProps, setFooterProps } = useFooterPropsStore();
 
   const setPropsIdx = (idx: number, path: string) => {
-    if (footerProps === idx || !path) return; // 이미 해당 페이지에 있는경우
-
     setFooterProps(idx);
     navigate(path);
   };
