@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Star from '../../../../shared/assets/star.svg';
 import Placeholder from '../../../../shared/assets/placeholder.svg';
 import Share from '../../detail/Share';
@@ -27,17 +27,22 @@ const RestaurantBox = ({
   //링크 공유하기 기능
   const [openShareModal, setOpenShareModal] = useState<boolean>(false);
 
+  const pathUrl = useMemo(() => {
+    // window 안전 체크 (필요 시)
+    if (typeof window === 'undefined') return '';
+    return `${window.location.origin}/detailInfo/${resId}`;
+  }, [resId]);
+
   const handleShare = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     e.stopPropagation();
     console.log('공유하기 창 띄우기');
     setOpenShareModal(true);
   };
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     try {
-      const pathURL = `detailInfo/${resId};`;
-      console.log(pathURL);
-      navigator.clipboard.writeText(pathURL);
+      await navigator.clipboard.writeText(pathUrl);
       setOpenShareModal(false);
       alert('링크가 클립보드에 복사되었습니다: ');
     } catch {
@@ -72,6 +77,7 @@ const RestaurantBox = ({
           </button> */}
           <button
             style={{ background: 'rgba(218, 203, 182, 0.30)' }}
+            type="button"
             className="h-[28px] w-[54px] rounded-[20px] text-[12px] font-[500]"
             onClick={handleShare}
           >
@@ -111,6 +117,8 @@ const RestaurantBox = ({
       </div>
       {openShareModal && (
         <Share
+          restaurantName={name}
+          copylink={pathUrl}
           handleOpt1Click={() => handleCopyLink()}
           handleOpt2Click={() => setOpenShareModal(false)}
         />
