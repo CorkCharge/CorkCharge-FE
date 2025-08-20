@@ -3,9 +3,13 @@ import bookmark from '@/shared/components/home/assets/keep.svg';
 import share from '@/shared/components/home/assets/share.svg';
 import star from '../assets/star.svg';
 import keepIcon from '../assets/keep.svg';
+import bookmarked from '@/shared/components/keep/assets/bookmarked.svg';
 import { useNavigate } from 'react-router-dom';
+import { bookmarkRequest, deleteRequest } from '../apis/bookmark/bookmarkApi';
+import { useState } from 'react';
 
 interface storeProps {
+  key?: number;
   restaurantId?: number;
   imageUrl?: string;
   keep: number;
@@ -18,6 +22,7 @@ interface storeProps {
 }
 
 const StoreCard = ({
+  key,
   restaurantId,
   imageUrl,
   keep,
@@ -30,11 +35,61 @@ const StoreCard = ({
 }: storeProps) => {
   const navigate = useNavigate();
   const goStore = () => {
+    console.log('restaurantId: ' + key);
     console.log('가게 상세 정보 페이지 이동');
     navigate(`/detailInfo/${restaurantId}`);
   };
+
+  //가게 저장하기
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const keepStore = async () => {
+    try {
+      const res = await bookmarkRequest({
+        targetId: restaurantId ?? 0,
+        targetType: 'RESTAURANT',
+      });
+      console.log('저장성공: ', res);
+    } catch (err) {
+      console.log('저장실패: ', err);
+    }
+  };
+
+  //가게 저장취소
+  const deleteStore = async () => {
+    try {
+      const res = await deleteRequest({
+        targetId: restaurantId ?? 0,
+        targetType: 'RESTAURANT',
+      });
+      console.log('가게 저장 삭제성공: ', res);
+    } catch (err) {
+      console.log('가게 저장 삭제실패: ', err);
+    }
+  };
+
+  const [pending, setPending] = useState<boolean>(false);
+  const onBookmarkClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (pending) return;
+    setPending(true);
+    try {
+      if (isBookmarked) {
+        await deleteStore();
+        setIsBookmarked(false);
+        // console.log('가게 저장 삭제성공');
+      } else {
+        await keepStore();
+        setIsBookmarked(true);
+        // console.log('저장성공');
+      }
+    } catch (err) {
+      console.log('북마크 토글 실패:', err);
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
-    //초록 배경 밑에 있는 mb 어디서 나온건지 ? 없애고 싶음
     <div
       onClick={goStore}
       className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2"
@@ -79,9 +134,16 @@ const StoreCard = ({
             <span> 리뷰 total {review}</span>
           </div>
           <div className="flex gap-4 text-[10px] text-[#C5C8CF]">
-            <div>
-              <img src={bookmark} />
-              <div>저장</div>
+            <div
+              // onClick={(e) => {
+              //   e.stopPropagation();
+              //   // keepStore();
+              //   // setIsBookmarked(!isBookmarked);
+              // }}
+              onClick={onBookmarkClick}
+            >
+              <img src={isBookmarked ? bookmarked : bookmark} />
+              <div className={`${isBookmarked ? 'text-[#90212A]' : 'text-[#C5C8CF]'}`}>저장</div>
             </div>
             <div>
               <img src={share} />
