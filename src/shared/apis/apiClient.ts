@@ -26,7 +26,7 @@ apiClient.interceptors.response.use(
     const originalReq = error.config;
     const status = error.response?.status;
 
-    if (status === 401 && !originalReq._retry) {
+    if (status === 302 && !originalReq._retry) {
       if (isRefreshing) {
         return new Promise((resolve) => {
           pendingRequests.push((token: string) => {

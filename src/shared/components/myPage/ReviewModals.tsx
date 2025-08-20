@@ -103,7 +103,7 @@ export const ModifyModal = ({ isOpen, onClose, reviewId }: ModalProps) => {
 export const DeleteModal = ({ isOpen, onClose, restName, createdAt, reviewId }: ModalProps) => {
   const deleteReview = () => {
     apiClient
-      .delete(`/reviews/${reviewId}`, { params: { userId: 1 } })
+      .delete(`/reviews/${reviewId}`)
       .then()
       .catch((e) => console.error('리뷰 삭제 실패 : ' + e));
   };

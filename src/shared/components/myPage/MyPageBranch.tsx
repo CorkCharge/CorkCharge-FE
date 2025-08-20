@@ -1,8 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useMyPageStore from '@/shared/store/useMyPageStore';
 import useFooterPropsStore from '@/shared/store/useFooterProps';
+import useAuthStore from '@/shared/store/useAuthStore';
 
 import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
@@ -51,7 +52,8 @@ const NoneReview = () => {
 };
 
 export const LoggedInMyPage = () => {
-  const isMaster = useRef(true);
+  const { user } = useAuthStore();
+  const isMaster = user?.role === 'OWNER';
 
   const navigate = useNavigate();
 
@@ -79,7 +81,7 @@ export const LoggedInMyPage = () => {
       .get('/corkages/verify')
       .then((res) => {
         if (!res.data.success) throw new Error('OOPS');
-        const { restaurantName, restaurantId, ...rest } = res.data.data;
+        const { restaurantName, restaurantId, ...rest } = res.data.data[0];
         const stateObj = { storeName: restaurantName, restaurantId, ...rest };
         navigate(`/add/storecheck/${restaurantId}`, { state: stateObj });
       })
@@ -89,11 +91,10 @@ export const LoggedInMyPage = () => {
   return (
     <>
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
-        <div className="relative flex gap-[22px] pb-5">
+        <div className="relative flex gap-[22px]">
           <div
             className={`flex size-16 ${myProfile?.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
           >
-            {/* <div className="size-16 bg-black"> */}
             {myProfile?.profile_image && (
               <img src={myProfile.profile_image} className="size-full rounded-full" />
             )}
@@ -101,7 +102,7 @@ export const LoggedInMyPage = () => {
           <div className="flex max-w-[60%] flex-col justify-center">
             <p className="it ems-center flex gap-1 text-xl font-bold">
               {myProfile?.nickname}
-              {isMaster.current && <img src={logo} className="h-[21px]" />}
+              {isMaster && <img src={logo} className="h-[21px]" />}
             </p>
             <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[#80818B]">
               {myProfile?.socialId}
@@ -114,17 +115,19 @@ export const LoggedInMyPage = () => {
           />
         </div>
 
-        <div className="-mx-4 h-[1px] bg-[var(--gray-4)]"></div>
+        {isMaster && <div className="-mx-4 mt-5 h-[1px] bg-[var(--gray-4)]"></div>}
 
-        <div
-          className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
-          onClick={enrollCorkage}
-        >
-          <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
-            <img src={plus} className="size-[14px]" />
+        {isMaster && (
+          <div
+            className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
+            onClick={enrollCorkage}
+          >
+            <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
+              <img src={plus} className="size-[14px]" />
+            </div>
+            <p className="font-bold">콜키지 정보 등록하기</p>
           </div>
-          <p className="font-bold">콜키지 정보 등록하기</p>
-        </div>
+        )}
       </div>
 
       <div className="flex h-20 w-full justify-center gap-3">
