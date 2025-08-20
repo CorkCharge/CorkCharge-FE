@@ -40,7 +40,7 @@ const Doit = () => {
         콜키지 영업을 진행하게 됩니다.
       </div>
       <button
-        className="absolute bottom-[28.638vh] flex h-[48px] w-[186.6px] flex-row items-center justify-center gap-[10px] rounded-[12px] bg-white/50"
+        className="absolute bottom-[15.638vh] flex h-[48px] w-[186.6px] flex-row items-center justify-center gap-[10px] rounded-[12px] bg-white/50"
         onClick={handleClick}
       >
         <p className="text-[17px] font-[600]">해주세요 하러가기</p>
