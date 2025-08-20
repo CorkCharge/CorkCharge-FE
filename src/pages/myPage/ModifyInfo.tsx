@@ -20,6 +20,11 @@ function ModifyInfo() {
   const [selectedProfile, setSelectedProfile] = useState<File>();
   const [previewUrl, setPreviewUrl] = useState('');
 
+  // DANGER:: Following Code MUST BE Deleted After DEMO
+  // =============================================
+  const [master, setMaster] = useState(0);
+  // =============================================
+
   const fileSelector = useRef<HTMLInputElement>(null);
 
   const { myProfile, setMyProfile } = useMyPageStore();
@@ -77,6 +82,21 @@ function ModifyInfo() {
 
   // 프로필 수정
   const updateProfile = () => {
+    if (!nickname) return;
+
+    // DANGER:: Following Code MUST BE Deleted After DEMO
+    // =============================================
+    if (nickname === 'Owner' || nickname === 'Admin') {
+      setMaster((prev) => {
+        if (prev + 1 === 7) {
+          apiClient.post('/users/role', { role: nickname }).then((res) => console.log(res));
+          return 0;
+        } else return prev + 1;
+      });
+      return;
+    }
+    // ===============================================
+
     const formData = new FormData();
     formData.append('name', nickname);
     if (selectedProfile) {

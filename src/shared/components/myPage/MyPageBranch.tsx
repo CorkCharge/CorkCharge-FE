@@ -55,7 +55,6 @@ export const LoggedInMyPage = () => {
 
   const navigate = useNavigate();
 
-  // const { profile } = useProfileStore();
   const { myProfile, setMyProfile } = useMyPageStore();
   const { setFooterProps } = useFooterPropsStore();
 
