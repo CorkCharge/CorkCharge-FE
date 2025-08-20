@@ -1,14 +1,17 @@
 // import React from 'react';
-import bookmark from '../assets/bookmark.svg';
-import clock from '../assets/clock.svg';
-import share from '../assets/share.svg';
+// import bookmark from '../assets/bookmark.svg';
+import clock from '@/shared/components/home/assets/clock.svg';
+import bookmark from '@/shared/components/home/assets/keep.svg';
+import share from '@/shared/components/home/assets/share.svg';
 import star from '../assets/star.svg';
 import keepIcon from '../assets/keep.svg';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface storeProps {
+  restaurantId?: number;
+  imageUrl?: string;
   keep: number;
-  price: number;
+  price: string;
   name: string;
   local: string;
   time: string;
@@ -16,20 +19,42 @@ interface storeProps {
   review: number;
 }
 
-const StoreCard = ({ keep, price, name, local, time, rating, review }: storeProps) => {
-  //   const navigate = useNavigate();
+const StoreCard = ({
+  restaurantId,
+  imageUrl,
+  keep,
+  price,
+  name,
+  local,
+  time,
+  rating,
+  review,
+}: storeProps) => {
+  const navigate = useNavigate();
   const goStore = () => {
     console.log('가게 상세 정보 페이지 이동');
-    // navigate('/storeInfo');
+    navigate(`/detailInfo/${restaurantId}`);
   };
   return (
+    //초록 배경 밑에 있는 mb 어디서 나온건지 ? 없애고 싶음
     <div
       onClick={goStore}
-      className="mb-4 h-[365px] w-[361px] cursor-pointer border border-x-0 border-t-0 border-b-slate-300"
+      className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2"
     >
       <div className="mb-[10px] h-[220px] w-[361px]">
         <div className="relative">
-          <img src="https://placehold.co/361x170" className="rounded-t-lg" />
+          {/* <img src="https://placehold.co/361x170" className="rounded-t-lg" />  */}
+          <img
+            src={imageUrl || 'https://placehold.co/361x170'}
+            className="h-[170px] w-[361px] overflow-hidden rounded-t-xl"
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (img.src !== 'https://placehold.co/361x170') {
+                img.onerror = null;
+                img.src = 'https://placehold.co/361x170';
+              }
+            }}
+          />
           <div className="absolute bottom-2 left-4">
             <div className="flex gap-2">
               <img src={keepIcon} />
@@ -38,14 +63,16 @@ const StoreCard = ({ keep, price, name, local, time, rating, review }: storeProp
           </div>
         </div>
         <div className="flex h-[50px] items-center justify-center rounded-b-lg bg-gradient-to-r from-[#90212A]/65 to-[#DCDBE8] text-[18px] font-bold text-white">
-          병당 콜키지: 1병 {price}만원
+          {price}
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <div className="mb-[2px] text-[20px] font-bold">{name}</div>
+      <div className="flex flex-col gap-6 pl-2 pr-2">
         <div>
-          <div>{local}</div>
-          <div>{time}</div>
+          <div className="mb-[2px] text-[20px] font-bold">{name}</div>
+          <div>
+            <div>{local}</div>
+            <div>{time}</div>
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-2">

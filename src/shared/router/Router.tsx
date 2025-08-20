@@ -5,7 +5,9 @@ import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
 import Doit from '../../pages/doit/Doit';
 import Search from '../../pages/doit/Search';
-import SearchMap from '../../pages/home/Search';
+import SearchMap from '@/pages/search/SearchMap';
+import NotRegistered from '../../pages/doit/NotRegistered';
+import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
 import OnBoarding from '@/pages/onBoarding/OnBoarding';
@@ -34,8 +36,7 @@ import Keep from '@/pages/keep/Keep';
 import NaverCallback from '@/pages/signIn/NaverCallback';
 import ReservateDrink from '@/pages/reservation/ReservateDrink';
 import MainLayout from '../components/layout/Layout';
-import NotRegistered from '@/pages/doit/NotRegistered';
-import AlreadyRegistered from '@/pages/doit/AlreadyRegistered';
+import SearchMapResult from '@/pages/search/SearchMapResult';
 
 const router = createBrowserRouter([
   // {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
         element: <SearchMap />,
       },
       {
+        path: 'searchMap/result',
+        element: <SearchMapResult />,
+      },
+      {
         path: 'hotStores',
         element: <HotStores />,
       },
@@ -87,7 +92,7 @@ const router = createBrowserRouter([
         element: <AlreadyRegistered />,
       },
       {
-        path: 'doit/request',
+        path: 'doit/request/:restaurantId',
         element: <Request />,
       },
       {
@@ -127,11 +132,11 @@ const router = createBrowserRouter([
         element: <Filter />,
       },
       {
-        path: 'detailInfo',
+        path: 'detailInfo/:id',
         element: <Info />,
       },
       {
-        path: 'review',
+        path: 'review/:id',
         element: <Review />,
       },
       {
@@ -175,7 +180,7 @@ const router = createBrowserRouter([
         element: <Notification />,
       },
       {
-        path: 'tipArticle',
+        path: 'tipArticle/:id',
         element: <Tip />,
       },
       {

@@ -1,9 +1,10 @@
 // import React from 'react'
-// import StoreCard from '@/shared/components/StoreCard';
-// import Review from '../../shared/components/keep/Review';
+import StoreCard from '@/shared/components/StoreCard';
+import Review from '../../shared/components/keep/Review';
 import { useState } from 'react';
 import Curation from '@/shared/components/Curation';
 import Tip from '../../shared/components/Tip';
+import TopBar from '@/shared/components/TopBar';
 
 const Keep = () => {
   const [review, setReview] = useState<boolean>(true);
@@ -27,8 +28,9 @@ const Keep = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="flex h-[60px] items-center text-[16px] font-bold text-[#35353F]">저장</div>
-      <div className="flex h-[30px] w-[393px] items-center justify-center gap-14 border-b">
+      {/* <div className="flex h-[60px] items-center text-[16px] font-bold text-[#35353F]">저장</div> */}
+      <TopBar text="저장" />
+      <div className="mb-2 flex h-[30px] w-[393px] items-center justify-center gap-14 border-b">
         <button
           onClick={handleReviewSelected}
           className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${review ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
@@ -48,29 +50,34 @@ const Keep = () => {
           Tip
         </button>
       </div>
-      {/* <StoreCard
-        keep={88}
-        price={1}
-        name="깍뚝"
-        local="500m 서울 광진구 어대로 1층"
-        time="평일 17:00~24:00"
-        rating={4.2}
-        review={3124}
-      />
-      <StoreCard
-        keep={51}
-        price={1}
-        name="엔비 햄버거"
-        local="1.2km 서울시 상동구 상수동 340-2"
-        time="평일 17:00~24:00"
-        rating={4.2}
-        review={3124}
-      /> */}
-      <div>
-        <Tip />
-        <Curation />
-      </div>
-      {/* {review ? <Review /> : store?<></>} */}
+
+      {/* <div>
+
+      </div> */}
+      {review ? (
+        //저장한 리뷰 목록
+        <Review />
+      ) : store ? (
+        <>
+          {/* keep된것만 map 필요 */}
+
+          <StoreCard
+            keep={88}
+            price="1병당 1만원"
+            name="깍뚝"
+            local="500m 서울 광진구 어대로 1층"
+            time="평일 17:00~24:00"
+            rating={4.2}
+            review={3124}
+          />
+        </>
+      ) : (
+        <>
+          <Tip />
+          <div className="h-[10px]"></div>
+          <Curation />
+        </>
+      )}
     </div>
   );
 };

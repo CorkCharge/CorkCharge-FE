@@ -3,7 +3,7 @@ import CorkScore from '../corkScore/CorkScore';
 
 const Reivew = () => {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 bg-lime-300">
+    <div className="flex flex-col items-center justify-center gap-4">
       <CorkScore
         name="엔비 햄버거"
         keep={27}

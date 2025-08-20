@@ -10,13 +10,17 @@ import { useLocation } from 'react-router-dom';
 import Modal from './Modal';
 import Feedback from './Feedback';
 import { useNavigate } from 'react-router-dom';
+import Share from './Share';
 
 interface detailProps {
+  restaurantId: number;
   name: string;
   rating: number;
-  alias: string;
+  alias?: string;
   isOpen: boolean;
   time: string;
+  phone: string;
+  mainImageUrl: string | null;
 }
 
 const handleRequest = () => {
@@ -24,8 +28,18 @@ const handleRequest = () => {
   // navigate('/request');
 };
 
-const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
+const DetailHeader = ({
+  restaurantId,
+  name,
+  rating,
+  alias,
+  isOpen,
+  time,
+  phone,
+  mainImageUrl,
+}: detailProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // const [openModal, setOpenModal] = useState<boolean>(false);
   // const handleModal = () => {
@@ -37,7 +51,6 @@ const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
   };
   const [openKeepModal, setOpenKeepModal] = useState<boolean>(false);
   const handleKeepStore = () => {
-    //Todo: 저장하기 기능
     console.log('저장완료');
     setOpenKeepModal(true);
   };
@@ -49,14 +62,14 @@ const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
 
   //리뷰작성 후 돌아와서 모달창
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
-  const location = useLocation();
+  // const location = useLocation();
   useEffect(() => {
     if (location.state?.openReviewModal) {
       setOpenReviewModal(true);
     }
 
     // state 초기화 (새로고침 시 안 뜨게)
-    navigate('/detailInfo', { replace: true });
+    navigate(`/detailInfo/${restaurantId}`, { replace: true });
   }, [location.state]);
 
   //건의하기 후 돌아와서 모달창
@@ -68,13 +81,49 @@ const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
     }
 
     // state 초기화 (새로고침 시 안 뜨게)
-    navigate('/detailInfo', { replace: true });
+    navigate(`/detailInfo/${restaurantId}`, { replace: true });
   }, [location.state]);
 
-  //전화하기 버튼의 기능
+  //전화번호 복사하기 기능
+  const handleCopyPhone = (phone: string) => {
+    try {
+      navigator.clipboard.writeText(phone);
+      setOpenCallModal(false);
+      alert('클립보드에 복사되었습니다: ' + phone);
+    } catch {
+      console.error('복사 실패');
+      // alert('클립보드 복사에 실패하였습니다.');
+    }
+  };
+
+  //링크 공유하기 기능
+  const [openShareModal, setOpenShareModal] = useState<boolean>(false);
+  const handleShare = () => {
+    console.log('공유하기 창 띄우기');
+    setOpenShareModal(true);
+  };
+
+  const handleCopyLink = () => {
+    try {
+      const pathURL = `http://localhost:5173/detailInfo/${restaurantId};`;
+      console.log(pathURL);
+      navigator.clipboard.writeText(pathURL);
+      setOpenShareModal(false);
+      alert('링크가 클립보드에 복사되었습니다: ');
+    } catch {
+      console.error('복사 실패');
+      // alert('클립보드 복사에 실패하였습니다.');
+    }
+  };
+
   return (
     <div className="flex w-[393px] flex-col">
-      <img src="https://placehold.co/393X197" />
+      {/* <img src="https://placehold.co/393X197" /> */}
+      <img
+        src={mainImageUrl ? mainImageUrl : 'https://placehold.co/393X197'}
+        className="h-[197px] w-[393px]"
+      />
+      {/* 사진 없으면 기본 사진으로 대체 */}
       <div className="pb-2 pt-2">
         <div className="text-[24px] font-bold">{name}</div>
         <div className="flex items-center gap-2">
@@ -124,7 +173,10 @@ const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
           <img className="flex h-[16px] w-[16px] items-center justify-center" src={bubble} />
           <div className="text-[10px] text-[#80818B]">건의하기</div>
         </div>
-        <div className="flex w-[100px] flex-col items-center justify-center gap-1">
+        <div
+          onClick={handleShare}
+          className="flex w-[100px] cursor-pointer flex-col items-center justify-center gap-1"
+        >
           <img className="flex h-[16px] w-[16px] items-center justify-center" src={share} />
           <div className="text-[10px] text-[#80818B]">공유하기</div>
         </div>
@@ -132,13 +184,12 @@ const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
       <div className="h-[8px] bg-[#F3F3F6]"></div>
       {openCallModal && (
         <Modal
-          mainContent="02-450-1234"
-          option1="전화하기"
-          option2="번호 복사하기"
-          //Todo: 전화하기 기능 추가하기?
-          handleOpt1Click={() => setOpenCallModal(false)}
-          //Todo: 복사 기능 추가하기
-          handleOpt2Click={() => setOpenCallModal(false)}
+          mainContent={phone}
+          option1="번호 복사하기"
+          handleOpt1Click={() =>
+            // setOpenCallModal(false)
+            handleCopyPhone(phone)
+          }
         />
       )}
       {openKeepModal && (
@@ -163,6 +214,7 @@ const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
       )}
       {openFbModal && (
         <Feedback
+          restaurantId={restaurantId}
           mainContent="건의하기"
           option="제출하기"
           handleOptClick={() => setOpenFbModal(false)}
@@ -174,6 +226,12 @@ const DetailHeader = ({ name, rating, alias, isOpen, time }: detailProps) => {
           subContent="소중한 의견 감사합니다♥"
           option1="확인"
           handleOpt1Click={() => setCompleteFb(false)}
+        />
+      )}
+      {openShareModal && (
+        <Share
+          handleOpt1Click={() => handleCopyLink()}
+          handleOpt2Click={() => setOpenShareModal(false)}
         />
       )}
     </div>

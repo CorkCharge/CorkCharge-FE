@@ -9,7 +9,7 @@ const TopBar = ({ text }: { text: string }) => {
   };
 
   return (
-    <div className="flex h-[48px] w-[393px] items-center justify-between">
+    <div className="mb-2 flex h-[48px] w-[393px] items-center justify-between pl-4 pr-4">
       <img src={backarrow} onClick={handleClick} className="h-[20px] w-[12px] cursor-pointer" />
       <div className="font-bold text-[#35353F]">{text}</div>
       <div className="h-[20px] w-[12px]"></div>

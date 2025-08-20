@@ -1,20 +1,39 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Back from '../../shared/assets/whiteArrow.svg';
 import X from '../../shared/assets/whiteX.svg';
 import Bg from './assets/request_bg.svg';
+import { createHelpRequest } from '@/shared/apis/helpRequest/requestHelp';
+
 const Request = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address } = location.state || {
+  const { storeName, address, restaurantId } = (location.state as {
+    storeName?: string;
+    address?: string;
+    restaurantId?: number;
+  }) || {
     storeName: '매장명 없음',
     address: '주소 없음',
-    restaurantId: 'Id 없음',
+    restaurantId: 0,
   };
+
+  const [content, setContent] = useState('');
+
   const handleBackClick = () => {
     navigate(-1);
   };
-  const handleRegisterClick = () => {
-    navigate('/doit/complete');
+  const handleRegisterClick = async () => {
+    try {
+      const res = await createHelpRequest({
+        restaurantId: restaurantId ?? 0,
+        content,
+      });
+      console.log('요청성공: ', res);
+      navigate('/doit/complete');
+    } catch (err) {
+      console.log('요청실패: ', err);
+    }
   };
   return (
     <div className="relative flex h-screen flex-col items-center">
@@ -57,6 +76,8 @@ const Request = () => {
           <textarea
             placeholder={'원하는 콜키지 가격이나\n옵션을 작성해주세요'}
             className="m-auto h-[312px] w-[292px] focus:outline-none"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           ></textarea>
         </div>
         <div className="flex flex-row">
