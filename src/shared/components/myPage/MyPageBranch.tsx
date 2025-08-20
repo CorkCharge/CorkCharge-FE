@@ -81,7 +81,7 @@ export const LoggedInMyPage = () => {
       .get('/corkages/verify')
       .then((res) => {
         if (!res.data.success) throw new Error('OOPS');
-        const { restaurantName, restaurantId, ...rest } = res.data.data;
+        const { restaurantName, restaurantId, ...rest } = res.data.data[0];
         const stateObj = { storeName: restaurantName, restaurantId, ...rest };
         navigate(`/add/storecheck/${restaurantId}`, { state: stateObj });
       })
