@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 // import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
@@ -46,6 +46,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <MainLayout />,
     children: [
+      {
+        index: true, // path가 '/'인 경우
+        element: <Navigate to="home" replace />,
+      },
       {
         path: 'home',
         element: <Store />,
