@@ -23,11 +23,6 @@ interface detailProps {
   mainImageUrl: string | null;
 }
 
-const handleRequest = () => {
-  console.log('해주세요창 이동');
-  // navigate('/request');
-};
-
 const DetailHeader = ({
   restaurantId,
   name,
@@ -41,10 +36,22 @@ const DetailHeader = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  // const [openModal, setOpenModal] = useState<boolean>(false);
-  // const handleModal = () => {
-  //   setOpenModal(true);
-  // };
+  const { storeName, address } = location.state || {
+    storeName: '매장명 없음',
+    address: '주소 없음',
+  };
+
+  const handleRequest = () => {
+    console.log('해주세요창 이동');
+    // navigate(`doit/request/${restaurantId}`);
+    navigate(`/doit/request/${restaurantId}`, {
+      state: {
+        storeName,
+        address,
+      },
+    });
+  };
+
   const [openCallModal, setOpenCallModal] = useState<boolean>(false);
   const handleCallModal = () => {
     setOpenCallModal(true);
