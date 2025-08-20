@@ -47,6 +47,7 @@ const Info = () => {
             resId={restaurant.restaurantId}
             name={restaurant.restaurantName}
             rating={restaurant.rating}
+            adr={restaurant.address}
             // alias="광진구 햄버거 맛집"
             isOpen={true}
             time="4:00"
