@@ -81,6 +81,12 @@ const RegionSelector = () => {
     }
   };
 
+  const handleCancel = () => {
+    setSelectedRegion(null);
+    setSelectedDistrict(null);
+    setSelectedNeighborhoods([]);
+  };
+
   return (
     <div className="w-[393px]">
       <div className="mt-4 grid h-[40px] w-[393px] grid-cols-[81px_156px_156px] border-[0.5px] border-[#C5C8CF] bg-[#ECEDEF] font-[#35353F] text-[14px]">
@@ -130,7 +136,7 @@ const RegionSelector = () => {
               ))}
         </div>
 
-        <div className="max-h-[300px] w-[156px] overflow-y-auto">
+        <div className="w-[156px] overflow-y-auto">
           {selectedDistrict &&
             neighborhoods[selectedDistrict]?.map((hood) => (
               <div
@@ -171,7 +177,10 @@ const RegionSelector = () => {
           </div>
 
           <div className="flex justify-between p-4">
-            <button className="mr-2 h-[48px] w-[174px] flex-1 rounded-lg border bg-[#F3F3F6] py-2 font-bold">
+            <button
+              onClick={handleCancel}
+              className="mr-2 h-[48px] w-[174px] flex-1 rounded-lg border bg-[#F3F3F6] py-2 font-bold"
+            >
               취소
             </button>
             <button className="h-[48px] w-[174px] flex-1 rounded-lg bg-[#90212A] py-2 font-bold text-white">
