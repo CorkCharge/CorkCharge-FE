@@ -87,12 +87,12 @@ function ModifyInfo() {
     // DANGER:: Following Code MUST BE Deleted After DEMO
     // =============================================
     if (nickname === 'Owner' || nickname === 'Admin') {
-      setMaster((prev) => {
-        if (prev + 1 === 7) {
-          apiClient.post('/users/role', { role: nickname }).then((res) => console.log(res));
-          return 0;
-        } else return prev + 1;
-      });
+      if (master === 6) {
+        apiClient.post('/users/role', { role: nickname }).then((res) => console.log(res));
+        setMaster(0);
+      } else {
+        setMaster((prev) => prev + 1);
+      }
       return;
     }
     // ===============================================
