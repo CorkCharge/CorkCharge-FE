@@ -1,10 +1,12 @@
 // import React from 'react'
 import StoreCard from '@/shared/components/StoreCard';
 import Review from '../../shared/components/keep/Review';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Curation from '@/shared/components/Curation';
 import Tip from '../../shared/components/Tip';
 import TopBar from '@/shared/components/TopBar';
+import type { Selected } from '@/shared/components/home/type';
+import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
 
 const Keep = () => {
   const [review, setReview] = useState<boolean>(true);
@@ -25,6 +27,27 @@ const Keep = () => {
     setStore(false);
     setTip(true);
   };
+
+  //fetchTipData
+  const [tiplist, setTiplist] = useState<TipList[]>();
+  useEffect(() => {
+    const fetchTipData = async () => {
+      try {
+        const res = await fetchTipList();
+        console.log(res);
+        console.log('imageUrl: ' + res[0].imageUrl);
+        setTiplist(res);
+      } catch {
+        console.error('API  호출 실패');
+      }
+    };
+    fetchTipData();
+  }, []);
+
+  const [selected, setSelected] = useState<Selected>('ALL');
+
+  const filtered =
+    selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -73,9 +96,9 @@ const Keep = () => {
         </>
       ) : (
         <>
-          <Tip />
-          <div className="h-[10px]"></div>
-          <Curation />
+          <Tip value={selected} onChange={setSelected} />
+          <div className="h-[15px]"></div>
+          <Curation tiplist={filtered} />
         </>
       )}
     </div>
