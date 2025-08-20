@@ -26,7 +26,7 @@ const NormalHeader = ({ title, className }: HeaderProps) => (
 
 const BackHeader = ({ title, backFn = () => {}, className }: HeaderProps) => (
   <header className={cn('relative flex h-[48px] items-center justify-center font-bold', className)}>
-    <img src={arrow} className="absolute left-0" onClick={backFn} />
+    <img src={arrow} className="absolute left-0 cursor-pointer" onClick={backFn} />
     <span>{title}</span>
   </header>
 );

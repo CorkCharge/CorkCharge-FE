@@ -2,10 +2,19 @@ import Button from '../common/Button';
 import ProgressDots from './ProgressDots';
 import savingSample from '@/shared/components/onBoarding/images/saving-sample.png';
 
-function AboutSaving({ onNext }: { onNext: React.Dispatch<React.SetStateAction<number>> }) {
+function AboutSaving({
+  onNext,
+  onSkip,
+}: {
+  onNext: React.Dispatch<React.SetStateAction<number>>;
+  onSkip: () => void;
+}) {
   return (
     <div className="relative">
-      <span className="absolute right-8 top-[50px] text-[var(--gray-5)] underline underline-offset-4">
+      <span
+        className="absolute right-8 top-[50px] cursor-pointer text-[var(--gray-5)] underline underline-offset-4"
+        onClick={onSkip}
+      >
         SKIP
       </span>
       <ProgressDots total={4} now={2} color={'var(--gray-5)'} className="pt-[60px]" />

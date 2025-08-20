@@ -1,7 +1,13 @@
 import Button from '../common/Button';
 import ProgressDots from './ProgressDots';
 
-function AboutCorkage({ onNext }: { onNext: React.Dispatch<React.SetStateAction<number>> }) {
+function AboutCorkage({
+  onNext,
+  onSkip,
+}: {
+  onNext: React.Dispatch<React.SetStateAction<number>>;
+  onSkip: () => void;
+}) {
   return (
     <div className="flex h-full flex-col items-center bg-wine-background bg-[length:160%_120%] bg-[position:25%_35%] text-white">
       {/* 어두운 배경색 오버레이 */}
@@ -9,7 +15,13 @@ function AboutCorkage({ onNext }: { onNext: React.Dispatch<React.SetStateAction<
       {/* 배경 그라데이션 오버레이 */}
       <div className="absolute bottom-0 h-[20%] w-full max-w-[600px] bg-[linear-gradient(to_bottom,_rgba(255,255,255,0)_0%,_rgba(255,255,255,0.3)_30%,_rgba(255,255,255,0.8)_50%,_rgba(255,255,255,1)_70%,_rgba(255,255,255,1.0)_100%)]" />
 
-      <div className="z-10 w-full text-center">
+      <div className="relative z-10 w-full text-center">
+        <span
+          className="absolute right-8 top-[50px] cursor-pointer text-[var(--gray-5)] underline underline-offset-4"
+          onClick={onSkip}
+        >
+          SKIP
+        </span>
         <ProgressDots total={4} now={1} className="pt-[60px]" />
         <h1 className="mt-11 text-3xl font-bold">콜키지란?</h1>
         <div className="mt-[40px] flex flex-col text-center">

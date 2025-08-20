@@ -20,8 +20,9 @@ function ContactList({ onWrite, onDetail, selectPost }: ContactListProps) {
 
   useEffect(() => {
     apiClient
-      .get('/suggestion', { params: { userId: 1 } })
+      .get('/suggestion')
       .then((res) => {
+        if (!res.data.success) throw new Error();
         setPosts(res.data.data);
       })
       .catch((e) => console.error('문의하기 목록 호출 실패 : ' + e));
@@ -67,7 +68,7 @@ function ContactList({ onWrite, onDetail, selectPost }: ContactListProps) {
 
       <ul>{renderPosts()}</ul>
 
-      <div className="fixed bottom-[90px] left-0 right-0 mx-auto max-w-[600px] bg-[yellow]">
+      <div className="fixed bottom-[20px] left-0 right-0 mx-auto max-w-[600px] cursor-pointer bg-[yellow]">
         <img src={plus} className="absolute bottom-0 right-4" onClick={onWrite} />
       </div>
     </>
