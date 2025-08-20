@@ -1,4 +1,4 @@
-import rawRegions from '@/shared/constants/regions.json';
+import rawRegions from '@/shared/constants/regionssss.json';
 
 type RegionData = Record<string, Record<string, string[]>>;
 const regions = rawRegions as RegionData;
