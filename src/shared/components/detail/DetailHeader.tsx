@@ -235,6 +235,8 @@ const DetailHeader = ({
       )}
       {openShareModal && (
         <Share
+          copylink="복사할링크!"
+          restaurantName="식당이름!"
           handleOpt1Click={() => handleCopyLink()}
           handleOpt2Click={() => setOpenShareModal(false)}
         />

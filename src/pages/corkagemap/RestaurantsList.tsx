@@ -58,6 +58,7 @@ const RestaurantsList = () => {
         {items.map((r) => (
           <RestaurantBox
             onClick={() => navigate(`/detailInfo/${r.restaurantId}`)}
+            resId={r.restaurantId}
             key={r.restaurantId}
             name={r.name}
             rating={r.rating}
