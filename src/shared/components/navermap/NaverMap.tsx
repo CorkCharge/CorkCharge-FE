@@ -265,7 +265,7 @@ const NaverMap = () => {
       logoControl: false,
       mapDataControl: false,
       mapTypeControl: false,
-      zoomControl: true,
+      zoomControl: false,
     });
 
     mapInstance.current = map;

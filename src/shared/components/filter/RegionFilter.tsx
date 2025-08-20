@@ -74,7 +74,7 @@ const RegionFilter = ({
             ))}
         </div>
 
-        <div className="max-h-[300px] w-[156px] overflow-y-auto">
+        <div className="w-[156px] overflow-y-auto">
           {selectedSido &&
             selectedSigungu &&
             regions[selectedSido][selectedSigungu].map((dong) => (

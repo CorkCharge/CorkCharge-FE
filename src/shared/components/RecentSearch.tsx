@@ -12,7 +12,7 @@ interface recentSearchProps {
 const RecentSearch = ({ text, setSearchValue, directSearch }: recentSearchProps) => {
   const onclick = () => {
     console.log('해당 검색어 검색');
-    setSearchValue?.(text || '');
+    // setSearchValue?.(text || '');
     directSearch?.(text || '');
   };
   const handleStroke = () => {
@@ -29,7 +29,14 @@ const RecentSearch = ({ text, setSearchValue, directSearch }: recentSearchProps)
         <img src={search} className="h-[19px] w-[18px]" />
         <div>{text}</div>
       </div>
-      <img src={stroke} onClick={handleStroke} className="h-[12px] w-[12px]" />
+      <img
+        src={stroke}
+        onClick={(e) => {
+          e.stopPropagation(); // 부모 div의 onclick 실행 방지
+          handleStroke();
+        }}
+        className="h-[12px] w-[12px]"
+      />
     </div>
   );
 };
