@@ -1,64 +1,44 @@
-// import React from 'react'
+import type { Selected, tipCategory } from '@/shared/components//home/type';
 import './tip.css';
-import { useState } from 'react';
 
-const Tip = () => {
-  const [selectAll, setSelectAll] = useState<boolean>(true);
-  const [selectTip, setSelectTip] = useState<boolean>(false);
-  const [selectEvt, setSelectEvt] = useState<boolean>(false);
-  const [selectPairing, setSelectPairing] = useState<boolean>(false);
+type TipProps = {
+  value: Selected;
+  onChange: (v: Selected) => void;
+};
 
-  const handleAllBtn = () => {
-    setSelectAll(true);
-    setSelectTip(false);
-    setSelectEvt(false);
-    setSelectPairing(false);
-  };
-  const handleTipBtn = () => {
-    setSelectAll(false);
-    setSelectTip(true);
-    setSelectEvt(false);
-    setSelectPairing(false);
-  };
-  const handlePrBtn = () => {
-    setSelectAll(false);
-    setSelectTip(false);
-    setSelectEvt(false);
-    setSelectPairing(true);
-  };
-  const handleEvtBtn = () => {
-    setSelectAll(false);
-    setSelectTip(false);
-    setSelectEvt(true);
-    setSelectPairing(false);
-  };
+const Tip = ({ value, onChange }: TipProps) => {
+  const is = (v: Selected | tipCategory) => value === v;
+
   return (
     <div className="flex gap-1">
       <button
         type="button"
-        onClick={handleAllBtn}
-        className={`button ${selectAll ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
+        onClick={() => onChange('ALL')}
+        className={`button ${is('ALL') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         전체
       </button>
+
       <button
         type="button"
-        onClick={handleTipBtn}
-        className={`button ${selectTip ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
+        onClick={() => onChange('CORKAGE')}
+        className={`button ${is('CORKAGE') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         콜키지 팁
       </button>
+
       <button
         type="button"
-        onClick={handlePrBtn}
-        className={`button ${selectPairing ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
+        onClick={() => onChange('PAIRING')}
+        className={`button ${is('PAIRING') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         페어링 큐레이션
       </button>
+
       <button
         type="button"
-        onClick={handleEvtBtn}
-        className={`button ${selectEvt ? 'bg-[#90212A] text-[#ffffff]' : 'bg-[#f3f3f6] text-[#35353F]'}`}
+        onClick={() => onChange('EVENT')}
+        className={`button ${is('EVENT') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         EVENT
       </button>

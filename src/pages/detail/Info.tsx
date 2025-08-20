@@ -44,7 +44,7 @@ const Info = () => {
       <div>
         {restaurant && (
           <DetailHeader
-            restaurantId={restaurant.restaurantId}
+            resId={restaurant.restaurantId}
             name={restaurant.restaurantName}
             rating={restaurant.rating}
             // alias="광진구 햄버거 맛집"

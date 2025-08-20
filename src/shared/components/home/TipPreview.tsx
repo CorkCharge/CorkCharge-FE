@@ -12,9 +12,8 @@ const TipPreview = ({ tipId, title, tipCategory, imageUrl }: TipList) => {
   return (
     <div className="article relative cursor-pointer overflow-hidden">
       <img
-        key={tipId}
         src={imageUrl}
-        className="h-full w-full object-cover"
+        className="h-full w-[176px] object-cover"
         loading="lazy"
         onClick={handleGoTip}
         // onError={(e) => {

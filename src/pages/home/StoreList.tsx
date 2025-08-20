@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import keepIcon from '../../shared/assets/keep.svg';
 import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
 import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
+import type { Selected } from '@/shared/components/home/type';
 
 const StoreList = () => {
   const [storeSelected, setStoreSelected] = useState<boolean>(false);
@@ -69,6 +70,11 @@ const StoreList = () => {
     };
     fetchTipData();
   }, []);
+
+  //tip 카테고리 상태
+  const [selected, setSelected] = useState<Selected>('ALL');
+  const filtered =
+    selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
   return (
     //Todo: TopBar fixed 주기
@@ -149,8 +155,8 @@ const StoreList = () => {
           </>
         ) : (
           <>
-            <Tip />
-            <Curation tiplist={tiplist} />
+            <Tip value={selected} onChange={setSelected} />
+            <Curation tiplist={filtered} />
           </>
         )}
       </div>
