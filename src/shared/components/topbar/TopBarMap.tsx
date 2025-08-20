@@ -1,4 +1,3 @@
-// import React from 'react'
 import Cork from '../../assets/cork.svg';
 import Search from '../../assets/search.svg';
 import Bell from '../../assets/bell.svg';
@@ -13,14 +12,8 @@ interface topBarProps {
 const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) => {
   const navigate = useNavigate();
   const handleSearch = () => {
-    if (searchDisabled) {
-      console.log('검색허용');
-      //   onchange = (e) => {
-      //     setSearchValue(e.target.value);
-      //   };
-    } else {
-      console.log('검색창 이동');
-      navigate('/search'); //검색창 이동
+    if (!searchDisabled) {
+      navigate('/searchMap'); //검색창 이동
     }
   };
   const handleNotif = () => {
@@ -29,9 +22,9 @@ const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) =>
   };
 
   return (
-    <div className="flex h-[60px] items-center gap-4 pl-4 pr-4">
+    <div className="mx-auto flex h-[60px] w-full items-center gap-4 pl-4 pr-4">
       <img src={Cork}></img>
-      <div className="flex h-[40px] w-[290px] items-center rounded-br-full rounded-tl-full bg-white pl-6 pr-6 drop-shadow-[0_4px_20px_rgba(0,0,0,0.15)] filter">
+      <div className="flex h-[40px] w-[100%] items-center rounded-br-full rounded-tl-full bg-white pl-6 pr-6 drop-shadow-[0_4px_20px_rgba(0,0,0,0.15)] filter">
         <input
           type="text"
           value={searchValue}
