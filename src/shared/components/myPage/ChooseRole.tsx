@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useMyPageStore from '@/shared/store/useMyPageStore';
 
 import hello from '@/shared/components/myPage/images/hello.png';
+import apiClient from '@/shared/apis/apiClient';
 
 const GRADIENT_BG =
   'linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), radial-gradient(144.85% 146.88% at -4.43% 75%, #90212A 5.69%, #DCDBE8 86.4%)';
@@ -16,6 +17,7 @@ function ChooseRole() {
 
   const letsStart = () => {
     if (role === 0) {
+      apiClient.put('/users/role', { role: 'USER' });
       navigate('/home');
     } else if (role === 1) {
       navigate('/master/signup');

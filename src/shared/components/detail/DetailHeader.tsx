@@ -11,6 +11,7 @@ import Modal from './Modal';
 import Feedback from './Feedback';
 import { useNavigate } from 'react-router-dom';
 import Share from './Share';
+import arrow from '@/shared/assets/whiteArrow.svg';
 
 interface detailProps {
   resId: number;
@@ -123,12 +124,13 @@ const DetailHeader = ({
   };
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="relative flex w-full flex-col">
       {/* <img src="https://placehold.co/393X197" /> */}
       <img
         src={mainImageUrl ? mainImageUrl : 'https://placehold.co/393X197'}
         className="h-[197px] w-full"
       />
+      <img src={arrow} className="absolute left-3 top-2 h-4 w-[9px]" onClick={() => navigate(-1)} />
       {/* 사진 없으면 기본 사진으로 대체 */}
       <div className="px-4 pb-2 pt-2">
         <div className="text-[24px] font-bold">{name}</div>
@@ -164,24 +166,24 @@ const DetailHeader = ({
           </div>
         </button>
       </div>
-      <div className="flex h-[50px] w-[393px] justify-between pb-4 pl-[36px] pr-[36px] pt-2">
+      <div className="flex h-[50px] w-full justify-between pb-4 pl-[36px] pr-[36px] pt-2">
         <div
           onClick={handleCallModal}
-          className="flex w-[100px] cursor-pointer flex-col items-center justify-center gap-1"
+          className="flex w-[100px] flex-1 cursor-pointer flex-col items-center justify-center gap-1"
         >
           <img className="h-[16px] w-[16px]" src={call} />
           <div className="text-[10px] text-[#80818B]">전화하기</div>
         </div>
         <div
           onClick={handleFeedback}
-          className="flex w-[100px] cursor-pointer flex-col items-center justify-center gap-1 border border-y-0 border-[#F3F3F6]"
+          className="flex w-[100px] flex-1 cursor-pointer flex-col items-center justify-center gap-1 border border-y-0 border-[#F3F3F6]"
         >
           <img className="flex h-[16px] w-[16px] items-center justify-center" src={bubble} />
           <div className="text-[10px] text-[#80818B]">건의하기</div>
         </div>
         <div
           onClick={handleShare}
-          className="flex w-[100px] cursor-pointer flex-col items-center justify-center gap-1"
+          className="flex w-[100px] flex-1 cursor-pointer flex-col items-center justify-center gap-1"
         >
           <img className="flex h-[16px] w-[16px] items-center justify-center" src={share} />
           <div className="text-[10px] text-[#80818B]">공유하기</div>
