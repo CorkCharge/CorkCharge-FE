@@ -9,12 +9,22 @@ import type { MapLevel, ClusterPoint, RestaurantPoint } from '@/shared/types/map
 // 주소의 마지막 괄호(...)에서 "동/읍/면/리"로 끝나는 토큰 추출
 const getDongFromAddress = (address: string): string | null => {
   // 예: "서울특별시 광진구 자양로 199-1 (구의동)"
+  if (!address) return null;
   const m = address.match(/\(([^)]+)\)\s*$/);
-  if (!m) return null;
+  if (m) {
+    const innerTokens = m[1].trim().split(/\s+/);
+    const cand = innerTokens.find((t) => /(동|읍|면|리)$/.test(t));
+    if (cand) return cand;
+  }
 
-  const inner = m[1].trim();
-  const m2 = inner.match(/([^\s]+(?:동|읍|면|리))$/);
-  return m2 ? m2[1] : inner; // 못 찾으면 괄호 전체라도 리턴
+  const parts = address.split(/\s+/).reverse();
+  const cand2 = parts.find((t) => /(동|읍|면|리)$/.test(t));
+  if (cand2) return cand2;
+
+  const cand3 = parts.find((t) => /(구|군|시)$/.test(t));
+  if (cand3) return cand3;
+
+  return null;
 };
 
 type DongBucket = {
@@ -28,7 +38,8 @@ type DongBucket = {
 const groupByDong = (points: ClusterPoint[]) => {
   const map = new Map<string, DongBucket>();
   for (const p of points) {
-    const dong = getDongFromAddress(p.address) ?? '미상';
+    const parsed = getDongFromAddress(p.address);
+    const dong = parsed ?? '기타';
     const b = map.get(dong);
     if (b) {
       b.count += 1;
