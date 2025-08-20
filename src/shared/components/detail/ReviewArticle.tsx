@@ -38,7 +38,7 @@ export const ReviewArticle = ({ name, review }: reviewArticleProps) => {
           e.currentTarget.src = 'https://placehold.co/128x144';
         }}
         // src={review.imageUrls ? review.imageUrls[0] : 'https://placehold.co/128x144'}
-        className="rounded-r-2xl"
+        className="h-[144px] w-[128px] rounded-r-2xl"
       />
     </div>
   );

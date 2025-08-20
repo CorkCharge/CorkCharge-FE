@@ -12,6 +12,7 @@ import Feedback from './Feedback';
 import { useNavigate } from 'react-router-dom';
 import Share from './Share';
 import arrow from '@/shared/assets/whiteArrow.svg';
+import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
 
 interface detailProps {
   resId: number;
@@ -59,6 +60,11 @@ const DetailHeader = ({
   const handleKeepStore = () => {
     console.log('저장완료');
     setOpenKeepModal(true);
+  };
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const handleDeleteStore = () => {
+    console.log('저장취소완료');
+    setOpenDeleteModal(true);
   };
   const [openFbModal, setOpenFbModal] = useState<boolean>(false);
   const handleFeedback = () => {
@@ -112,7 +118,9 @@ const DetailHeader = ({
 
   const handleCopyLink = () => {
     try {
-      const pathURL = `http://localhost:5173/detailInfo/${resId};`;
+      const baseURL = window.location.origin;
+      const pathURL = `${baseURL}/detailInfo/${resId}`;
+      // const pathURL = `http://localhost:5173/detailInfo/${resId};`;
       console.log(pathURL);
       navigator.clipboard.writeText(pathURL);
       setOpenShareModal(false);
@@ -120,6 +128,55 @@ const DetailHeader = ({
     } catch {
       console.error('복사 실패');
       // alert('클립보드 복사에 실패하였습니다.');
+    }
+  };
+
+  //가게 저장하기
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const keepStore = async () => {
+    try {
+      const res = await bookmarkRequest({
+        targetId: resId ?? 0,
+        targetType: 'RESTAURANT',
+      });
+      console.log('저장성공: ', res);
+    } catch (err) {
+      console.log('저장실패: ', err);
+    }
+  };
+
+  //가게 저장취소
+  const deleteStore = async () => {
+    try {
+      const res = await deleteRequest({
+        targetId: resId ?? 0,
+        targetType: 'RESTAURANT',
+      });
+      console.log('가게 저장 삭제성공: ', res);
+    } catch (err) {
+      console.log('가게 저장 삭제실패: ', err);
+    }
+  };
+
+  const [pending, setPending] = useState<boolean>(false);
+  const onBookmarkClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (pending) return;
+    setPending(true);
+    try {
+      if (isBookmarked) {
+        await deleteStore();
+        setIsBookmarked(false);
+        handleDeleteStore();
+      } else {
+        await keepStore();
+        setIsBookmarked(true);
+        handleKeepStore();
+      }
+    } catch (err) {
+      console.log('북마크 토글 실패:', err);
+    } finally {
+      setPending(false);
     }
   };
 
@@ -157,12 +214,13 @@ const DetailHeader = ({
           </div>
         </button>
         <button
-          onClick={handleKeepStore}
-          className="flex h-[80px] w-full items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
+          onClick={onBookmarkClick}
+          className="flex h-[80px] w-[176px] items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
         >
           <div className="flex items-center justify-center gap-3 text-[16px] font-semibold text-[#35353F]">
+            {/* 저장 상태에 따라 ui변화 */}
             <img src={keep}></img>
-            <div>저장</div>
+            <div>{isBookmarked ? '저장됨' : '저장'}</div>
           </div>
         </button>
       </div>
@@ -210,6 +268,14 @@ const DetailHeader = ({
           handleOpt1Click={() => setOpenKeepModal(false)}
           //Todo: 저장 기능 추가하기
           handleOpt2Click={() => setOpenKeepModal(false)}
+        />
+      )}
+      {openDeleteModal && (
+        <Modal
+          mainContent="저장취소"
+          subContent="저장을 취소했습니다"
+          option1="확인"
+          handleOpt1Click={() => setOpenDeleteModal(false)}
         />
       )}
       {openReviewModal && (

@@ -140,6 +140,7 @@ const StoreList = () => {
               corkages.map((corkage) => {
                 return (
                   <StoreCard
+                    key={corkage.restaurantId}
                     restaurantId={corkage.restaurantId}
                     imageUrl={corkage.imageUrl}
                     keep={corkage.bookmarkCount}

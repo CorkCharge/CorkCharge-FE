@@ -1,7 +1,7 @@
 // import React from 'react'
 import CorkScore from '../corkScore/CorkScore';
 
-const Reivew = () => {
+const Review = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <CorkScore
@@ -48,4 +48,4 @@ const Reivew = () => {
   );
 };
 
-export default Reivew;
+export default Review;
