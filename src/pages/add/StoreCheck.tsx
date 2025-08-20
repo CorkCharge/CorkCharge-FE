@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Back from '../../shared/assets/whiteArrow.svg';
-import X from '../../shared/assets/whiteX.svg';
 import Bg from '../doit/assets/request_bg.svg';
 import Placeholder from '../../shared/assets/placeholder.svg';
 const StoreCheck = () => {
@@ -37,20 +36,14 @@ const StoreCheck = () => {
         className="absolute left-0 top-0 z-[-1] h-full w-full object-cover"
       />
       {/*헤더*/}
-      <div className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
+      <div className="mt-[7vh] flex h-[48px] w-full flex-row items-center">
         <img
           src={Back}
           alt="왼쪽 화살표"
           className="ml-[3vh] h-[20.34px] w-[11.46px] cursor-pointer"
           onClick={handleBackClick}
         />
-        <p className="text-[16px] font-[700] text-white">추가하기</p>
-        <img
-          src={X}
-          alt="x"
-          onClick={() => navigate('/home')}
-          className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
-        />
+        <p className="mx-auto items-center text-[16px] font-[700] text-white">추가하기</p>
       </div>
       <div className="mb-[26px] mt-[56px] text-[24px] font-[700] text-white">
         위 가게가 맞습니까?
