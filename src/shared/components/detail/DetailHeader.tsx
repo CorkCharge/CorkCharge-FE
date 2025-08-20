@@ -16,6 +16,7 @@ interface detailProps {
   resId: number;
   name: string;
   rating: number;
+  adr: string;
   alias?: string;
   isOpen: boolean;
   time: string;
@@ -27,6 +28,7 @@ const DetailHeader = ({
   resId,
   name,
   rating,
+  adr,
   alias,
   isOpen,
   time,
@@ -36,20 +38,14 @@ const DetailHeader = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { storeName, address, restaurantId } = location.state || {
-    storeName: '매장명 없음',
-    address: '주소 없음',
-    restaurantId: 0,
-  };
-
   const handleRequest = () => {
-    console.log('해주세요창 이동');
+    console.log('해주세요창 이동: ', location.state);
     // navigate(`doit/request/${restaurantId}`);
     navigate(`/doit/request/${resId}`, {
       state: {
-        storeName,
-        address,
-        restaurantId,
+        storeName: name ?? '매장명 없음',
+        address: adr ?? '주소 없음',
+        restaurantId: resId ?? 0,
       },
     });
   };
