@@ -19,11 +19,11 @@ const Curation = ({ tiplist = [] }: CurationProps) => {
       <article className="flex justify-between pl-4 pr-4">
         <div className="flex flex-col gap-2">
           {/* 왼쪽 list 나열 */}
-          {tiplist.length > 0 && leftList.map((tip) => <TipPreview {...tip} />)}
+          {tiplist.length > 0 && leftList.map((tip) => <TipPreview key={tip.tipId} {...tip} />)}
         </div>
         <div className="flex flex-col gap-2">
           {/* 오른쪽 list 나열 */}
-          {tiplist.length > 0 && rightList.map((tip) => <TipPreview {...tip} />)}
+          {tiplist.length > 0 && rightList.map((tip) => <TipPreview key={tip.tipId} {...tip} />)}
         </div>
       </article>
     </div>

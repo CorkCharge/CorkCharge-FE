@@ -103,8 +103,6 @@ export interface RestaurantResponse {
   data: RestaurantInfo;
 }
 
-// const restaurantId = (d: any) => (Array.isArray(d) ? d[0] : d);
-
 export const fetchRestaurant = async (id: number): Promise<RestaurantInfo> => {
   // const id = encodeURIComponent(String(restaurantId));
   const response = await apiClient.get<RestaurantResponse>(`/restaurants/${id}`);

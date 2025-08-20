@@ -3,8 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import whiteArrow from '../../shared/assets/TipImgs/whiteArrow.svg';
 import TipArticle from '@/shared/components/TipArticle';
 import keep from '@/shared/assets/keep.svg';
+import bookmarked from '@/shared/components/home/assets/bookmarked.svg';
 import { useEffect, useState } from 'react';
 import { fetchTipInfo, type TipInfo } from '@/shared/apis/tip/tipListApi';
+import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
 
 const Tip = () => {
   const navigate = useNavigate();
@@ -53,6 +55,53 @@ const Tip = () => {
   // };
   // const [tip, setTip] = useState<TipInfo>(dummyTip);
 
+  //tip 저장
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const keepStore = async () => {
+    try {
+      const res = await bookmarkRequest({
+        targetId: tipId ?? 0,
+        targetType: 'TIP',
+      });
+      console.log('tip 저장성공: ', res);
+    } catch (err) {
+      console.log('tip 저장실패: ', err);
+    }
+  };
+
+  //tip 저장취소
+  const deleteStore = async () => {
+    try {
+      const res = await deleteRequest({
+        targetId: tipId ?? 0,
+        targetType: 'TIP',
+      });
+      console.log('tip 저장 삭제성공: ', res);
+    } catch (err) {
+      console.log('tip 저장 삭제실패: ', err);
+    }
+  };
+
+  const [pending, setPending] = useState<boolean>(false);
+  const onBookmarkClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (pending) return;
+    setPending(true);
+    try {
+      if (isBookmarked) {
+        await deleteStore();
+        setIsBookmarked(false);
+      } else {
+        await keepStore();
+        setIsBookmarked(true);
+      }
+    } catch (err) {
+      console.log('북마크 토글 실패:', err);
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="relative">
@@ -72,7 +121,11 @@ const Tip = () => {
               className="h-[20px] w-[12px] cursor-pointer"
             />
             <div className="text-[16px] font-bold text-[#FFFFFF]">corkcharge TIP</div>
-            <img src={keep} className="cursor-pointer" />
+            <img
+              src={isBookmarked ? bookmarked : keep}
+              onClick={onBookmarkClick}
+              className="cursor-pointer"
+            />
           </div>
         </div>
       </div>

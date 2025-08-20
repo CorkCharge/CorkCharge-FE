@@ -78,13 +78,13 @@ const Keep = () => {
 
       </div> */}
       {review ? (
-        //저장한 리뷰 목록
+        //저장한 리뷰 목록 -> restaurantId 받아올 수 있음.
         <Review />
       ) : store ? (
         <>
           {/* keep된것만 map 필요 */}
-
           <StoreCard
+            key={1}
             keep={88}
             price="1병당 1만원"
             name="깍뚝"

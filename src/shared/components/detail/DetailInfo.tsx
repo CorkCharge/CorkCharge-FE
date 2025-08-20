@@ -12,7 +12,6 @@ import { ReviewArticle } from './ReviewArticle';
 //   info: string[] | null;
 // }
 
-//todo: 저장 버튼 및 ... 버튼 기능 추가
 const DetailInfo = (restaurant: RestaurantInfo) => {
   // const navigate = useNavigate();
   const onclick = () => {

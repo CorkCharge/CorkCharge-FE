@@ -23,9 +23,10 @@ const OptionMenu = () => {
   const handleCopyLink = () => {
     try {
       // const pathURL = `http://localhost:5173/detailInfo/${restaurantId};`;
-      const pathURL = `http://localhost:5173/detailInfo/1;`;
-      console.log(pathURL);
-      navigator.clipboard.writeText(pathURL);
+      // const baseURL = window.location.origin;
+      // const pathURL = `${baseURL}/detailInfo/${restaurantId}`;
+      // console.log(pathURL);
+      // navigator.clipboard.writeText(pathURL);
       setOpenShareModal(false);
       alert('링크가 클립보드에 복사되었습니다: ');
     } catch {
@@ -44,6 +45,7 @@ const OptionMenu = () => {
   const handleDeleteReview = () => {
     try {
       console.log('리뷰 삭제하기');
+
       setOpenDeleteModal(false);
     } catch {
       console.error('리뷰 삭제 실패');
@@ -89,7 +91,10 @@ const OptionMenu = () => {
         <Modal
           subContent="리뷰가 삭제되었습니다."
           option1="확인"
-          handleOpt1Click={() => handleDeleteReview()}
+          handleOpt1Click={() => {
+            handleDeleteReview();
+            setOpen(false);
+          }}
         />
       )}
     </div>
