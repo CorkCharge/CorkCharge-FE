@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import Share from './Share';
 
 interface detailProps {
-  restaurantId: number;
+  resId: number;
   name: string;
   rating: number;
   alias?: string;
@@ -24,7 +24,7 @@ interface detailProps {
 }
 
 const DetailHeader = ({
-  restaurantId,
+  resId,
   name,
   rating,
   alias,
@@ -36,18 +36,20 @@ const DetailHeader = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { storeName, address } = location.state || {
+  const { storeName, address, restaurantId } = location.state || {
     storeName: '매장명 없음',
     address: '주소 없음',
+    restaurantId: 0,
   };
 
   const handleRequest = () => {
     console.log('해주세요창 이동');
     // navigate(`doit/request/${restaurantId}`);
-    navigate(`/doit/request/${restaurantId}`, {
+    navigate(`/doit/request/${resId}`, {
       state: {
         storeName,
         address,
+        restaurantId,
       },
     });
   };
@@ -76,7 +78,7 @@ const DetailHeader = ({
     }
 
     // state 초기화 (새로고침 시 안 뜨게)
-    navigate(`/detailInfo/${restaurantId}`, { replace: true });
+    navigate(`/detailInfo/${resId}`, { replace: true });
   }, [location.state]);
 
   //건의하기 후 돌아와서 모달창
@@ -88,7 +90,7 @@ const DetailHeader = ({
     }
 
     // state 초기화 (새로고침 시 안 뜨게)
-    navigate(`/detailInfo/${restaurantId}`, { replace: true });
+    navigate(`/detailInfo/${resId}`, { replace: true });
   }, [location.state]);
 
   //전화번호 복사하기 기능
@@ -112,7 +114,7 @@ const DetailHeader = ({
 
   const handleCopyLink = () => {
     try {
-      const pathURL = `http://localhost:5173/detailInfo/${restaurantId};`;
+      const pathURL = `http://localhost:5173/detailInfo/${resId};`;
       console.log(pathURL);
       navigator.clipboard.writeText(pathURL);
       setOpenShareModal(false);
@@ -221,7 +223,7 @@ const DetailHeader = ({
       )}
       {openFbModal && (
         <Feedback
-          restaurantId={restaurantId}
+          restaurantId={resId}
           mainContent="건의하기"
           option="제출하기"
           handleOptClick={() => setOpenFbModal(false)}
