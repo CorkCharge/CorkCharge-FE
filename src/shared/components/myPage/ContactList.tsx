@@ -7,8 +7,10 @@ import plus from '@/shared/components/myPage/images/plus-button.svg';
 interface ContactPost {
   suggestionId: number;
   title: string;
+  completed: boolean;
   createdAt: string;
 }
+
 interface ContactListProps {
   onWrite: () => void;
   onDetail: () => void;
@@ -39,8 +41,10 @@ function ContactList({ onWrite, onDetail, selectPost }: ContactListProps) {
         <span className="text-[10px] font-medium text-[var(--gray-4)]">
           {dateFormatter(post.createdAt)}
         </span>
-        <span className="absolute right-5 top-1/2 -translate-y-1/2 rounded-full bg-[#DACBB6] px-3 py-1 text-[10px] text-white">
-          완료
+        <span
+          className={`absolute right-5 top-1/2 -translate-y-1/2 rounded-full px-3 py-2 text-[10px] text-white ${post.completed ? 'bg-[rgba(116,151,85,0.75)]' : 'bg-[#DACBB6]'}`}
+        >
+          {post.completed ? '완료' : '대기중'}
         </span>
       </li>
     ));
