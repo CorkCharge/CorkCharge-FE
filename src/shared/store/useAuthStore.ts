@@ -44,8 +44,8 @@ const useAuthStore = create<AuthState>()(
           apiClient
             .get('/users')
             .then((res) => {
-              const { name, social_id, image_url } = res.data.data;
-              const myPageData = { nickname: name, socialId: social_id, profile_image: image_url };
+              const { name, email, image_url } = res.data.data;
+              const myPageData = { nickname: name, email, profile_image: image_url };
               setMyProfile(myPageData);
             })
             .catch((e) => {

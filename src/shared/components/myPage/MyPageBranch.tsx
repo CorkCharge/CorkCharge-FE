@@ -61,7 +61,7 @@ export const LoggedInMyPage = () => {
   const { setFooterProps } = useFooterPropsStore();
 
   useEffect(() => {
-    if (myProfile.socialId) return;
+    if (myProfile.email) return;
 
     apiClient
       .get('/users/page')
@@ -69,7 +69,7 @@ export const LoggedInMyPage = () => {
         setMyProfile(res.data.data);
       })
       .catch((e) => console.error(e));
-  }, [myProfile.socialId, setMyProfile]);
+  }, [myProfile.email, setMyProfile]);
 
   const gotoReserVate = () => {
     navigate('/reservate');
@@ -105,7 +105,7 @@ export const LoggedInMyPage = () => {
               {isMaster && <img src={logo} className="h-[21px]" />}
             </p>
             <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[#80818B]">
-              {myProfile?.socialId}
+              {myProfile?.email}
             </p>
           </div>
           <img
