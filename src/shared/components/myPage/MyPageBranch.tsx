@@ -94,16 +94,19 @@ export const LoggedInMyPage = () => {
           <div
             className={`flex size-16 ${myProfile?.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
           >
+            {/* <div className="size-16 bg-black"> */}
             {myProfile?.profile_image && (
               <img src={myProfile.profile_image} className="size-full rounded-full" />
             )}
           </div>
-          <div className="flex flex-col justify-center">
+          <div className="flex max-w-[60%] flex-col justify-center">
             <p className="it ems-center flex gap-1 text-xl font-bold">
               {myProfile?.nickname}
               {isMaster.current && <img src={logo} className="h-[21px]" />}
             </p>
-            <p className="text-sm font-medium text-[#80818B]">{myProfile?.socialId}</p>
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[#80818B]">
+              {myProfile?.socialId}
+            </p>
           </div>
           <img
             src={arrow}

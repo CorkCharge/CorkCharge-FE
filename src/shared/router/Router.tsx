@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 // import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
@@ -37,6 +37,8 @@ import NaverCallback from '@/pages/signIn/NaverCallback';
 import ReservateDrink from '@/pages/reservation/ReservateDrink';
 import MainLayout from '../components/layout/Layout';
 import SearchMapResult from '@/pages/search/SearchMapResult';
+import ChooseRole from '../components/myPage/ChooseRole';
+import { RootRedirect } from './RootRedirect';
 
 const router = createBrowserRouter([
   // {
@@ -48,8 +50,8 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        index: true, // path가 '/'인 경우
-        element: <Navigate to="home" replace />,
+        index: true,
+        element: <RootRedirect />,
       },
       {
         path: 'home',
@@ -142,6 +144,10 @@ const router = createBrowserRouter([
       {
         path: 'my',
         element: <MainMyPage />,
+      },
+      {
+        path: 'my/role',
+        element: <ChooseRole />,
       },
       {
         path: 'master/signup',

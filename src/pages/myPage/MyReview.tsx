@@ -23,6 +23,7 @@ function MyReview() {
     apiClient
       .get('/users/reviews')
       .then((res) => {
+        if (!res.data.success) throw new Error();
         setReviews(res.data.data);
       })
       .catch((e) => console.error(e));

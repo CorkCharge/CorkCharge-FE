@@ -21,7 +21,8 @@ function NaverCallback() {
         .then((res) => {
           const ok = login(res.data.data);
           if (ok) {
-            navigate('/home');
+            if (res.data.data.role) navigate('/home');
+            else navigate('/my/role');
           }
         })
         .catch((e) => {

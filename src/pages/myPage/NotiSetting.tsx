@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '@/shared/components/common/Header';
 
 function NotiSetting() {
+  const navigate = useNavigate();
+
   const [isNotiOn, setIsNotiOn] = useState(false);
   const [isNightOn, setIsNightOn] = useState(false);
   return (
     <div className="px-4">
-      <Header title="알림설정" type="back" />
+      <Header title="알림설정" type="back" backFn={() => navigate(-1)} />
       <div className="mt-5 flex flex-col gap-5">
         <div className="flex justify-between">
           <span className="font-bold text-[var(--gray-8)]">Push 알림 허용</span>

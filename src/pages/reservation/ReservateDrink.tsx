@@ -9,8 +9,13 @@ function ReservateDrink() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      window.open(`https://dailyshot.co/m/search/result?q=${searchq}`, '_blank');
+      gotoDailyshot();
     }
+  };
+
+  const gotoDailyshot = () => {
+    if (!searchq) return;
+    window.open(`https://dailyshot.co/m/search/result?q=${searchq}`, '_blank');
   };
 
   return (
@@ -24,6 +29,7 @@ function ReservateDrink() {
           value={searchq}
           onChange={(e) => setSearchq(e.target.value)}
           onKeyDown={handleKeyDown}
+          onSearch={gotoDailyshot}
         />
       </div>
     </div>

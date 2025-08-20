@@ -11,9 +11,9 @@ function OnBoarding() {
   const navigate = useNavigate();
   return (
     <>
-      {page === 1 && <AboutCorkage onNext={setPage} />}
-      {page === 2 && <AboutSaving onNext={setPage} />}
-      {page === 3 && <AboutHotStore onNext={setPage} />}
+      {page === 1 && <AboutCorkage onNext={setPage} onSkip={() => navigate('/signin')} />}
+      {page === 2 && <AboutSaving onNext={setPage} onSkip={() => navigate('/signin')} />}
+      {page === 3 && <AboutHotStore onNext={setPage} onSkip={() => navigate('/signin')} />}
       {page === 4 && (
         <AboutPlease
           onNext={() => {

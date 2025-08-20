@@ -59,7 +59,7 @@ export const SearchInput = ({
 
       <img
         src={search}
-        className="absolute right-10 top-1/2 size-[18px] -translate-y-1/2"
+        className="absolute right-10 top-1/2 size-[18px] -translate-y-1/2 cursor-pointer"
         onClick={onSearch}
       />
     </div>

@@ -22,6 +22,7 @@ function ContactList({ onWrite, onDetail, selectPost }: ContactListProps) {
     apiClient
       .get('/suggestion')
       .then((res) => {
+        if (!res.data.success) throw new Error();
         setPosts(res.data.data);
       })
       .catch((e) => console.error('문의하기 목록 호출 실패 : ' + e));
