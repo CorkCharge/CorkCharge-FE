@@ -24,13 +24,12 @@ apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalReq = error.config;
-    const status = error.response?.status;
+    const code = error.code;
     console.log(error);
 
     const accTk = sessionStorage.getItem('accessToken');
 
-    if (status === 302) {
-      console.log('tt');
+    if (code === 'ERR_NETWORK') {
       if (accTk && !originalReq._retry) {
         if (isRefreshing) {
           return new Promise((resolve) => {
@@ -40,7 +39,6 @@ apiClient.interceptors.response.use(
             });
           });
         } else {
-          console.log('ss');
           window.location.href = '/signin';
         }
       }

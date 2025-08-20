@@ -6,6 +6,7 @@ import PairingArticle from './PairingArticle';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import ShowMoreBtn from './ShowMoreBtn';
 import { ReviewArticle } from './ReviewArticle';
+import { StarRate } from '../myPage/StarRate';
 
 // interface detailInfoProps {
 //   price: string;
@@ -45,11 +46,12 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
           className="flex h-[40px] w-[360px] cursor-pointer items-center justify-center rounded-br-full rounded-tl-full bg-[#F3F3F6] pl-6 pr-6"
         >
           <div className="flex gap-2">
+            {/* <img src={star} />
             <img src={star} />
             <img src={star} />
             <img src={star} />
-            <img src={star} />
-            <img src={star} />
+            <img src={star} /> */}
+            <StarRate rate={0} isEditable={true} />
             <div className="ml-4 flex items-center gap-1">
               <div className="whitespace-nowrap text-[14px] underline">리뷰쓰기</div>
               <div>🡭</div>

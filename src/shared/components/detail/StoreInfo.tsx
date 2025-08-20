@@ -24,7 +24,7 @@ const StoreInfo = (restaurant: RestaurantInfo) => {
         <div className="flex border border-x-0 pb-2 pt-2">
           <div className="w-[20%] text-[16px] font-bold">영업시간</div>
           <div>
-            {restaurant.openingHours.split(',').map((h) => (
+            {restaurant.openingHours.split('\n').map((h) => (
               <p>{h}</p>
             ))}
           </div>
