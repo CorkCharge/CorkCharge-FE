@@ -148,7 +148,7 @@ function ModifyInfo() {
       <div className="mt-10 flex flex-col items-center">
         <div>
           <div
-            className={`relative mb-5 size-[130px] ${!previewUrl && myProfile?.profile_image && 'rounded-full bg-[var(--gray-3)]'}`}
+            className={`relative mb-5 size-[130px] ${!previewUrl && !myProfile?.profile_image && 'rounded-full bg-[var(--gray-3)]'}`}
           >
             {!previewUrl && myProfile?.profile_image && (
               <img src={myProfile?.profile_image} className="size-full rounded-full" />

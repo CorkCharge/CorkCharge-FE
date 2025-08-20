@@ -4,27 +4,16 @@ import { Input } from '../common/Input';
 // import camera from '@/shared/components/myPage/images/camera.png';
 import apiClient from '@/shared/apis/apiClient';
 
-const TYPE = ['콜키지 정보 오류', '가게 정보 오류', '기타'];
-const TYPE_VAL = ['CORKAGE_ERROR', '', 'OTHER_ERROR'];
+// const TYPE = ['콜키지 정보 오류', '가게 정보 오류', '기타'];
+// const TYPE_VAL = ['CORKAGE_ERROR', '', 'OTHER_ERROR'];
 
 function WriteContact() {
-  const [contactType, setContactType] = useState(0);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  // const [category, setCategory] = useState(0);
-  const renderType = () =>
-    TYPE.map((type, idx) => (
-      <span
-        className={`cursor-pointer rounded-[20px] px-4 py-2 ${idx === contactType ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)] text-[var(--gray-8)]'}`}
-        onClick={() => setContactType(idx)}
-      >
-        {type}
-      </span>
-    ));
 
   const uploadPost = () => {
     apiClient
-      .post('/suggestion', { title, content, category: TYPE_VAL[contactType] })
+      .post('/suggestion', { title, content, category: 'OTHER_ERROR' })
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
   };
@@ -36,7 +25,6 @@ function WriteContact() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <div className="mt-3 flex gap-1 px-2 text-sm font-medium">{renderType()}</div>
       <textarea
         className="mt-3 h-[300px] w-full resize-none rounded-2xl bg-[var(--gray-1)] px-8 py-5"
         placeholder="문의 내용을 입력해주세요"

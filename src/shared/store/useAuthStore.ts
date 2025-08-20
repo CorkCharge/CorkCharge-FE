@@ -5,6 +5,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 
 import useMyPageStore from './useMyPageStore';
 import apiClient from '../apis/apiClient';
@@ -28,41 +29,43 @@ interface AuthState {
 }
 
 const useAuthStore = create<AuthState>()(
-  persist<AuthState>(
-    (set) => ({
-      user: null,
+  devtools(
+    persist<AuthState>(
+      (set) => ({
+        user: null,
 
-      login: (userInfo: User) => {
-        if (!userInfo.userId || !userInfo.accessToken || !userInfo.refreshToken) {
-          console.error('로그인에 필요한 정보가 부족합니다.');
-          return false;
-        }
-        const { userId, role, accessToken, refreshToken } = userInfo;
-        const { setMyProfile } = useMyPageStore.getState();
-        apiClient
-          .get('/users')
-          .then((res) => {
-            const { name, social_id, image_url } = res.data.data;
-            const myPageData = { nickname: name, socialId: social_id, profile_image: image_url };
-            setMyProfile(myPageData);
-          })
-          .catch((e) => {
-            console.error(e);
+        login: (userInfo: User) => {
+          if (!userInfo.userId || !userInfo.accessToken || !userInfo.refreshToken) {
+            console.error('로그인에 필요한 정보가 부족합니다.');
             return false;
-          });
+          }
+          const { userId, role, accessToken, refreshToken } = userInfo;
+          const { setMyProfile } = useMyPageStore.getState();
+          apiClient
+            .get('/users')
+            .then((res) => {
+              const { name, social_id, image_url } = res.data.data;
+              const myPageData = { nickname: name, socialId: social_id, profile_image: image_url };
+              setMyProfile(myPageData);
+            })
+            .catch((e) => {
+              console.error(e);
+              return false;
+            });
 
-        set({ user: { userId, role } });
-        sessionStorage.setItem('accessToken', accessToken);
-        sessionStorage.setItem('refreshToken', refreshToken);
-        return true;
-      },
+          set({ user: { userId, role } });
+          sessionStorage.setItem('accessToken', accessToken);
+          sessionStorage.setItem('refreshToken', refreshToken);
+          return true;
+        },
 
-      logout: () => {
-        set({ user: null });
-        sessionStorage.clear();
-      },
-    }),
-    { name: 'auth' }
+        logout: () => {
+          set({ user: null });
+          sessionStorage.clear();
+        },
+      }),
+      { name: 'auth' }
+    )
   )
 );
 
