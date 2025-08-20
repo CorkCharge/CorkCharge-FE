@@ -74,7 +74,7 @@ const Tip = () =>
             // info={tip.content}
             // imageUrls={tip.imageUrls}
             // createdAt={tip.createdAt}
-            tipId={1}
+            tipId={tip.tipId}
             category="페어링 큐레이션"
             mainTitle="삼겹살과 페어링하기 좋은 주류 츄천"
             // subTitle={tip.}
