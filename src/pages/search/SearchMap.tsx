@@ -1,7 +1,7 @@
 // import React from 'react'
 // import SearchedStore from '@/shared/components/search/SearchedStore';
 import TopBar from '../../shared/components/TopBar';
-import RecommandList from '../../shared/components/RecommandList';
+// import RecommandList from '../../shared/components/RecommandList';
 import RecentList from '../../shared/components/RecentList';
 import { useState } from 'react';
 import MapSearchBar from '@/shared/components/search/MapSearchBar';
@@ -25,7 +25,7 @@ const SearchMap = () => {
         setSearchValue={setSearchValue}
         directSearch={directSearch}
       />
-      <RecommandList />
+      {/* <RecommandList setSearchValue={setSearchValue} /> */}
       <RecentList
         searchValue={searchValue}
         setSearchValue={setSearchValue}

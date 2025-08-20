@@ -1,6 +1,4 @@
 // import React from 'react';
-// import bookmark from '../assets/bookmark.svg';
-import clock from '@/shared/components/home/assets/clock.svg';
 import bookmark from '@/shared/components/home/assets/keep.svg';
 import share from '@/shared/components/home/assets/share.svg';
 import star from '../assets/star.svg';
@@ -81,10 +79,6 @@ const StoreCard = ({
             <span> 리뷰 total {review}</span>
           </div>
           <div className="flex gap-4 text-[10px] text-[#C5C8CF]">
-            <div>
-              <img src={clock} />
-              <div>예약</div>
-            </div>
             <div>
               <img src={bookmark} />
               <div>저장</div>

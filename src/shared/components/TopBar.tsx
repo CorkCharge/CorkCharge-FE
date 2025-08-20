@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const TopBar = ({ text }: { text: string }) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate('/home');
+    navigate(-1);
   };
 
   return (
