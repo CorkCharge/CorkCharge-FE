@@ -8,7 +8,7 @@ export const PAGE_TO_ANYONE = [
 ];
 
 // 하단 네비게이션 visible 여부
-export const FOOTERHIDDENURL = ['/my/modify', '/', '/my/contact', '/my/role'];
+export const FOOTERHIDDENURL = ['/my/modify', '/', '/my/contact', '/my/role', '/my/toc'];
 export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin', '/doit', '/master'];
 
 export const FOOTERROUTER = {

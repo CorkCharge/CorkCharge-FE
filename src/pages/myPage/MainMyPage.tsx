@@ -24,7 +24,7 @@ function MainMyPage() {
 
       <ControlLists>
         <ControlItem onClick={() => navigate('/my/notification/setting')}>알림 설정</ControlItem>
-        <ControlItem>약관 및 개인정보 처리방침</ControlItem>
+        <ControlItem onClick={() => navigate('/my/toc')}>약관 및 개인정보 처리방침</ControlItem>
         <ControlItem onClick={() => navigate('/my/contact')}>문의하기</ControlItem>
       </ControlLists>
 
