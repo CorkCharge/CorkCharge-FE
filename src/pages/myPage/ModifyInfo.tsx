@@ -172,7 +172,7 @@ function ModifyInfo() {
         </div>
         <p className="mb-10 flex w-full gap-7 text-start font-bold text-[var(--gray-8)]">
           <span className="min-w-[100px]">로그인한 계정</span>
-          <span className="overflow-auto break-words">{myProfile.socialId}</span>
+          <span className="overflow-auto break-words">{myProfile.email}</span>
         </p>
         <div className="flex w-full justify-start gap-7">
           <span className="font-bold text-[var(--gray-8)]">닉네임</span>

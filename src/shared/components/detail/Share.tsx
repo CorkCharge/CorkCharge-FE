@@ -5,9 +5,11 @@ import close from '@/shared/components/detail/assets/close.svg';
 interface shareModalProps {
   handleOpt1Click: () => void;
   handleOpt2Click: () => void;
+  restaurantName: string;
+  copylink: string;
 }
 
-const Share = ({ handleOpt1Click, handleOpt2Click }: shareModalProps) => {
+const Share = ({ handleOpt1Click, handleOpt2Click, restaurantName, copylink }: shareModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="flex w-[293px] flex-col items-center justify-center rounded-2xl bg-[#FFFFFF] bg-opacity-80 p-4 backdrop-blur-sm">
@@ -16,11 +18,12 @@ const Share = ({ handleOpt1Click, handleOpt2Click }: shareModalProps) => {
           <div className="flex gap-4">
             <img src={corkcharge} />
             <div>
-              <div className="text-[16px] font-semibold text-[#000000]">앤비햄버거</div>
-              <div className="text-[13px] text-[#3C3C4399]">corkcharge.com</div>
+              <div className="text-[16px] font-semibold text-[#000000]">{restaurantName}</div>
+              <div className="max-w-[195px] overflow-hidden text-ellipsis whitespace-nowrap text-[13px] text-[#3C3C4399]">
+                {copylink}
+              </div>
             </div>
           </div>
-          <div></div>
           <img src={close} className="cursor-pointer" onClick={handleOpt2Click} />
         </div>
         <div className="h-[30px]"></div>

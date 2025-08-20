@@ -8,7 +8,7 @@ import type { Review } from '../types/mypage';
 
 interface MyProfile {
   nickname: string;
-  socialId: string;
+  email: string;
   reviews: Review[];
   profile_image: string;
 }
@@ -20,7 +20,7 @@ interface MyPageStore {
 
 const initState = {
   nickname: '',
-  socialId: '',
+  email: '',
   reviews: [],
   profile_image: '',
 };
@@ -30,7 +30,7 @@ const useMyPageStore = create<MyPageStore>()(
     (set) => ({
       myProfile: {
         nickname: '',
-        socialId: '',
+        email: '',
         reviews: [],
         profile_image: '',
       },

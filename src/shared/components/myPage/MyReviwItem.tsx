@@ -83,7 +83,13 @@ function MyReviewItem({ review }: { review: MyReview }) {
         </div>
         <div className="max-w-[150px] basis-1/3 rounded-e-2xl bg-[skyblue]"></div>
       </div>
-      {<ShareModal isOpen={shareOpen} onClose={() => setShareOpen(false)} />}
+      {
+        <ShareModal
+          isOpen={shareOpen}
+          onClose={() => setShareOpen(false)}
+          restId={review.restaurantId}
+        />
+      }
       {
         <ModifyModal
           isOpen={modifyOpen}

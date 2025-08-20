@@ -41,7 +41,7 @@ const Info = () => {
       <div>{restaurant?.corkageOptions}</div>
       <div>{restaurant?.phone}</div>
       <div>{restaurant?.reviews[0].content}</div> */}
-      <div>
+      <div className="w-full">
         {restaurant && (
           <DetailHeader
             resId={restaurant.restaurantId}

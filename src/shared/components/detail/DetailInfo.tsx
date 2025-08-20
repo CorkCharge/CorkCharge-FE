@@ -20,13 +20,13 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
   };
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[360px]">
+      <div className="w-full px-4">
         <div className="border border-x-0 pb-1 pt-4 text-[16px] font-bold">콜키지 정보</div>
         <div className="flex gap-12 border border-x-0 pb-2 pt-2">
           <div className="text-[16px] font-bold">비용</div>
           <div>{restaurant.corkagePrice}</div>
         </div>
-        <div className="flex w-[360px] gap-12 pb-2 pr-2 pt-2">
+        <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
           <div className="whitespace-nowrap text-[16px] font-bold">기타</div>
           <div className="whitespace-pre-line break-words">
             {/* <div>{info}</div> */}

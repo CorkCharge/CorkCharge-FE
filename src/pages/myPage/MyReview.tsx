@@ -5,6 +5,41 @@ import Header from '@/shared/components/common/Header';
 import apiClient from '@/shared/apis/apiClient';
 import MyReviewItem from '@/shared/components/myPage/MyReviwItem';
 
+// const R = [
+//   {
+//     reviewId: 1,
+//     restaurantId: 1,
+//     userId: 1,
+//     content: '콜키지 이용이 편리했고, 음식도 정말 훌륭했습니다.',
+//     rating: 5,
+//     createdAt: '2025-07-05T18:30:00',
+//   },
+//   {
+//     reviewId: 2,
+//     restaurantId: 10,
+//     userId: 1,
+//     content: '직원분도 친절하고 와인도 잘 챙겨주셨어요.',
+//     rating: 4,
+//     createdAt: '2025-07-04T13:20:00',
+//   },
+//   {
+//     reviewId: 3,
+//     restaurantId: 1,
+//     userId: 1,
+//     content: '맛있어요!',
+//     rating: 5,
+//     createdAt: '2025-07-28T17:29:32.234416',
+//   },
+//   {
+//     reviewId: 4,
+//     restaurantId: 1,
+//     userId: 1,
+//     content: '맛있어요!',
+//     rating: 5,
+//     createdAt: '2025-08-04T17:46:27.27511',
+//   },
+// ];
+
 interface MyReiew {
   reviewId: number;
   restaurantId: number;

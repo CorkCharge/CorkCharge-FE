@@ -25,15 +25,24 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalReq = error.config;
     const status = error.response?.status;
+    console.log(error);
 
-    if (status === 302 && !originalReq._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve) => {
-          pendingRequests.push((token: string) => {
-            originalReq.headers.Authorization = `Bearer ${token}`;
-            resolve(apiClient(originalReq));
+    const accTk = sessionStorage.getItem('accessToken');
+
+    if (status === 302) {
+      console.log('tt');
+      if (accTk && !originalReq._retry) {
+        if (isRefreshing) {
+          return new Promise((resolve) => {
+            pendingRequests.push((token: string) => {
+              originalReq.headers.Authorization = `Bearer ${token}`;
+              resolve(apiClient(originalReq));
+            });
           });
-        });
+        } else {
+          console.log('ss');
+          window.location.href = '/signin';
+        }
       }
 
       originalReq._retry = true;
@@ -60,7 +69,7 @@ apiClient.interceptors.response.use(
         isRefreshing = false;
         pendingRequests = [];
         sessionStorage.clear();
-        window.location.href = '/login';
+        window.location.href = '/signin';
         return Promise.reject(e);
       }
     }

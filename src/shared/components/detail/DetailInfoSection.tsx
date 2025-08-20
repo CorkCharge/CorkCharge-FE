@@ -32,19 +32,19 @@ const DetailInfoSection = (restaurantInfo: RestaurantInfo) => {
     setCorkSelected(false);
   };
   return (
-    <div>
-      <div className="flex h-[40px] w-[393px] items-center justify-center gap-14 border-b text-[14px]">
+    <div className="w-full">
+      <div className="flex h-[40px] w-full items-center justify-center gap-14 border-b text-[14px]">
         <button
           onClick={handleCorkclick}
           className={`border-b-1 h-full w-[120px] border-x-0 border-t-0 border-solid ${corkSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
         >
-          콜키지
+          콜키지 정보
         </button>
         <button
           onClick={handleStoreclick}
           className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${storeSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
         >
-          매장
+          가게 정보
         </button>
       </div>
       {corkSelected ? (
