@@ -55,6 +55,7 @@ const SearchMapResult = () => {
         {items.map((r) => (
           <RestaurantBox
             key={r.restaurantId}
+            resId={r.restaurantId}
             name={r.restaurantName}
             // address={r.address ?? ''}
             rating={r.rating ?? 0}

@@ -81,6 +81,8 @@ const OptionMenu = () => {
       )}
       {openShareModal && (
         <Share
+          copylink="복사한링크"
+          restaurantName="식당이름"
           handleOpt1Click={() => handleCopyLink()}
           handleOpt2Click={() => setOpenShareModal(false)}
         />
