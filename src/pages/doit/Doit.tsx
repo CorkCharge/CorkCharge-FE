@@ -21,6 +21,7 @@ const Doit = () => {
       <img
         src={Back}
         alt="왼쪽 화살표"
+        onClick={() => navigate(-1)}
         className="absolute left-[3vh] top-[7vh] h-[20.34px] w-[11.46px] cursor-pointer"
       />
       <div className="mt-[21.126vh] flex flex-col items-center">
