@@ -9,12 +9,19 @@ import apiClient from '@/shared/apis/apiClient';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  restId?: number;
   reviewId?: number;
   restName?: string;
   createdAt?: string;
 }
 
-export const ShareModal = ({ isOpen, onClose }: ModalProps) => {
+export const ShareModal = ({ isOpen, onClose, restId }: ModalProps) => {
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(`${window.location.origin}/detailInfo/${restId}/`);
+    alert('후기가 복사되었습니다');
+    onClose();
+  };
+
   return (
     <Modal isOpen={isOpen} className="bg-[rgba(255,255,255,0.8)]">
       <h3 className="mb-2 text-center font-bold text-[var(--gray-8)]">후기를 공유하시겠습니까?</h3>
@@ -27,7 +34,10 @@ export const ShareModal = ({ isOpen, onClose }: ModalProps) => {
         >
           취소
         </button>
-        <button className="h-[44px] flex-1 rounded-[10px] bg-[rgba(144,33,70,0.15)] font-bold text-[var(--primary)]">
+        <button
+          className="h-[44px] flex-1 rounded-[10px] bg-[rgba(144,33,70,0.15)] font-bold text-[var(--primary)]"
+          onClick={copyLink}
+        >
           공유
         </button>
       </div>
