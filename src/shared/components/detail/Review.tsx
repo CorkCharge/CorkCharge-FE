@@ -22,8 +22,10 @@ const Review = () => {
   const handleReview = () => {
     if (!content) return;
     const formData = new FormData();
-    formData.append('content', content);
-    formData.append('rating', rating);
+    const payload = { content, rating };
+    // formData.append('content', content);
+    // formData.append('rating', rating);
+    formData.append('request', JSON.stringify(payload));
     if (selectedfile) {
       formData.append('images', selectedfile);
     }

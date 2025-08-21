@@ -1,11 +1,14 @@
+import { useEffect, useState } from 'react';
+
 import Header from '@/shared/components/common/Header';
 
 import logo from '@/shared/assets/images/logo.svg';
 import { SearchInput } from '@/shared/components/common/Input';
-import { useState } from 'react';
 
 function ReservateDrink() {
   const [searchq, setSearchq] = useState('');
+
+  useEffect(() => {}, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

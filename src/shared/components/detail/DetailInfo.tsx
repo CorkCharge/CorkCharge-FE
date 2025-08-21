@@ -1,12 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 // import etc from '../../assets/detailPageImgs/etc.svg';
 import PairingArticle from './PairingArticle';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import ShowMoreBtn from './ShowMoreBtn';
 import { ReviewArticle } from './ReviewArticle';
 import { StarRate } from '../myPage/StarRate';
-import { useRef } from 'react';
-import { useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 
 // interface detailInfoProps {
@@ -20,6 +19,33 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
   const [reviewPage, setReviewPage] = useState(1);
   const { restInfo } = useRestaurantStore();
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const hash = useRef<string>('-1');
+
+  useEffect(() => {
+    hash.current = location.hash; // '#5'
+
+    // 해시가 있으면 해당 id로 스크롤
+    if (hash.current) {
+      const id = hash.current.replace('#', '');
+      hash.current = hash.current.replace('#', '');
+      // setTimeout 또는 requestAnimationFrame으로 렌더링 후 스크롤
+      console.log(id);
+      requestAnimationFrame(() => {
+        const el = document.getElementById(id);
+        console.log(el);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      });
+    } else {
+      // 해시 없으면 최상단
+      scrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [location.pathname, location.hash, hash]);
+
   const setRating = (r: number) => {
     rating.current = r;
     console.log(rating.current);
@@ -29,6 +55,30 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
     if (rating.current === 0) return;
 
     navigate('/review', { state: { rating: rating.current, restId: restaurant.restaurantId } });
+  };
+
+  const renderReviews = () => {
+    if (!restaurant.reviews) return null;
+    if (restaurant.reviews.length > 0) {
+      if (hash.current !== '-1') {
+        const newArr = [
+          ...restInfo.reviews.filter((item) => item.reviewId.toString() === hash.current),
+          ...restInfo.reviews.filter((item) => item.reviewId.toString() !== hash.current),
+        ];
+
+        return newArr
+          .slice(0, 5 * reviewPage)
+          .map((review) => (
+            <ReviewArticle name={restaurant.restaurantName} review={review} key={review.reviewId} />
+          ));
+      } else {
+        return restInfo.reviews
+          .slice(0, 5 * reviewPage)
+          .map((review) => (
+            <ReviewArticle name={restaurant.restaurantName} review={review} key={review.reviewId} />
+          ));
+      }
+    }
   };
 
   return (
@@ -65,10 +115,7 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
       <div
         className={`w-full px-4 ${Math.ceil(restInfo.reviews.length / 5) !== reviewPage && 'mb-3'}`}
       >
-        {restaurant.reviews &&
-          restInfo.reviews.slice(0, 5 * reviewPage).map((review) => {
-            return <ReviewArticle name={restaurant.restaurantName} review={review} />;
-          })}
+        {renderReviews()}
       </div>
 
       {/* <ReviewArticle name={restaurant.restaurantName} review={restaurant.reviews[0]} /> */}
