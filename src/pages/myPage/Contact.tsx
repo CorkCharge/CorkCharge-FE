@@ -15,15 +15,22 @@ function Contact() {
 
   return (
     <div className="relative min-h-screen px-4">
-      <Header title="문의하기" type="back" backFn={() => navigate(-1)} />
+      <Header
+        title="문의하기"
+        type="back"
+        backFn={() => {
+          if (contactController === 1) navigate(-1);
+          else setContactController(1);
+        }}
+      />
       {contactController === 1 && (
         <ContactList
           onWrite={() => setContactController(2)}
-          onDetail={() => setContactController(1)}
+          onDetail={() => setContactController(3)}
           selectPost={setSelectedSuggestionIdx}
         />
       )}
-      {contactController === 2 && <WriteContact />}
+      {contactController === 2 && <WriteContact onPreview={() => setContactController(0)} />}
       {contactController === 3 && <ContactPost selectedIdx={selectedSuggestionIdx} />}
     </div>
   );
