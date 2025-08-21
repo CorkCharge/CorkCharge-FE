@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
 import X from './assets/x.svg';
@@ -11,10 +11,14 @@ import { searchRestaurants, type Restaurant } from '@/shared/apis/restaurant/sea
 
 const Search = () => {
   const navigate = useNavigate();
-
+  const inputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState(''); // 검색어 입력 상태
   const [stores, setStores] = useState<Restaurant[]>([]); // API 검색 결과 상태
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus(); // 컴포넌트 마운트 시 포커스
+  }, []);
 
   const handleBackClick = () => {
     navigate(-1);
@@ -85,6 +89,7 @@ const Search = () => {
           <img src={TextArea} alt="입력창" className="h-[40px] w-[313px]" />
           {/* 입력창 */}
           <input
+            ref={inputRef}
             type="text"
             placeholder="해주세요 매장 찾기"
             value={searchQuery}

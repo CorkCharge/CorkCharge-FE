@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import HandShake from './assets/handshake.svg';
 import Logo from './assets/logo_symbol.svg';
 import Arrow from './assets/right_arrow.svg';
-import Back from '../../shared/assets/left_arrow.svg';
 import Bg from './assets/bg.svg';
 import Header from '@/shared/components/common/Header';
 
@@ -19,12 +18,6 @@ const Doit = () => {
         src={Bg}
         alt="배경"
         className="absolute left-0 top-0 z-[-1] h-full w-full object-cover"
-      />
-      <img
-        src={Back}
-        alt="왼쪽 화살표"
-        onClick={() => navigate(-1)}
-        className="absolute left-[3vh] top-[7vh] h-[20.34px] w-[11.46px] cursor-pointer"
       />
       <div className="mt-[21.126vh] flex flex-col items-center">
         <img src={Logo} alt="로고" className="h-[77.265px] w-[52.727px]" />
