@@ -24,11 +24,15 @@ const StoreInfo = (restaurant: RestaurantInfo) => {
         </div>
         <div className="flex border border-x-0 pb-2 pt-2">
           <div className="w-[20%] text-[16px] font-bold">영업시간</div>
-          <div>
-            {restaurant.openingHours.split('\n').map((h) => (
-              <p>{h}</p>
-            ))}
-          </div>
+          {restaurant.openingHours ? (
+            <div>
+              {restaurant.openingHours.split('\n').map((h) => (
+                <p>{h}</p>
+              ))}
+            </div>
+          ) : (
+            <p>운영시간 정보 없음</p>
+          )}
         </div>
       </div>
     </div>

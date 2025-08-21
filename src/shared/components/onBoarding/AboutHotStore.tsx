@@ -22,7 +22,7 @@ function AboutHotStore({
     return () => window.removeEventListener('resize', checkView);
   }, []);
 
-  const checkView = () => setIsSmallView(window.innerWidth < 405);
+  const checkView = () => setIsSmallView(window.innerWidth < 0);
 
   return (
     <div className="relative">
@@ -58,22 +58,23 @@ function AboutHotStore({
               className="absolute left-1/2 z-[6] w-[103%] -translate-x-1/2 translate-y-[36%]"
             />
             <div className="absolute left-1/2 z-[4] w-[103%] -translate-x-1/2 translate-y-[44%]">
-              <img src={mayvile} className="w-full" />
-              {!isSmallView && (
+              <img src={mayvile} className="relative w-full" />
+              {isSmallView && (
                 <Button
                   value="다음"
-                  className="-ml-[7%] mb-4 w-[114%]"
+                  className="absolute bottom-2 top-[300px] -ml-[7%] mb-4 w-[114%]"
                   onClick={() => {
                     onNext((prev) => prev + 1);
                   }}
                 />
               )}
+              <div className="absolute top-[350px] h-[80px]"></div>
             </div>
           </div>
         </div>
       </div>
-      {isSmallView && (
-        <div className="fixed bottom-8 w-full text-center">
+      {/* {isSmallView && (
+        <div className="absolute top-0 w-full text-center">
           <Button
             value="다음"
             className="w-4/5"
@@ -82,7 +83,7 @@ function AboutHotStore({
             }}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }
