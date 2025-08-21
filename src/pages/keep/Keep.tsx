@@ -2,8 +2,6 @@
 import StoreCard from '@/shared/components/StoreCard';
 import Review from './Review';
 import { useEffect, useState } from 'react';
-import Curation from '@/shared/components/Curation';
-import Tip from '../../shared/components/Tip';
 import TopBar from '@/shared/components/TopBar';
 import type { Selected } from '@/shared/components/home/type';
 import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
@@ -30,22 +28,6 @@ const Keep = () => {
     setStore(false);
     setTip(true);
   };
-
-  //fetchTipData
-  const [tiplist, setTiplist] = useState<TipList[]>();
-  useEffect(() => {
-    const fetchTipData = async () => {
-      try {
-        const res = await fetchTipList();
-        console.log(res);
-        console.log('imageUrl: ' + res[0].imageUrl);
-        setTiplist(res);
-      } catch {
-        console.error('API  호출 실패');
-      }
-    };
-    fetchTipData();
-  }, []);
 
   //fetchRestosData (저장된 매장만)
   const [savedRestos, SetSavedRestos] = useState<SavedResto[]>();
@@ -81,8 +63,6 @@ const Keep = () => {
   }, []);
 
   const [selected, setSelected] = useState<Selected>('ALL');
-  const filtered =
-    selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -132,10 +112,8 @@ const Keep = () => {
       ) : (
         <>
           {/* 이것도 저장한 것만 보여주도록 page 만들어야할듯 */}
-          <Tip selected={selected} setSelected={setSelected} />
           <div className="h-[15px]"></div>
           <div>저장한 tip</div>
-          <Curation tiplist={filtered} />
           <SavedCuration selected={selected} setSelected={setSelected} tiplist={savedTips} />
         </>
       )}
