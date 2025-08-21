@@ -57,6 +57,7 @@ const useRestaurantStore = create<RestaurantProps>((set) => ({
     openingHours: '매일 16:00 - 24:00',
     reviews: [
       {
+        reviewId: 1,
         writer: 'sds',
         content: '맛있어요!',
         rating: 5,
@@ -65,6 +66,7 @@ const useRestaurantStore = create<RestaurantProps>((set) => ({
         savedCount: 3,
       },
       {
+        reviewId: 2,
         writer: 'sds',
         content: '맛있어요!',
         rating: 5,
