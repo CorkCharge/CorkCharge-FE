@@ -64,6 +64,7 @@ apiClient.interceptors.response.use(
         return apiClient(originalReq);
       } catch (e) {
         console.log('리프레시 토큰이 만료되었습니다 : ' + e);
+        alert('토큰이 만료되었습니다 (ERR: E0001)');
         isRefreshing = false;
         pendingRequests = [];
         sessionStorage.clear();
