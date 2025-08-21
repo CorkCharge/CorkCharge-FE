@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useRef } from 'react';
 
 import useFooterPropsStore from '@/shared/store/useFooterProps';
 
@@ -29,6 +30,11 @@ const FooterSync = () => {
 
 const MainLayout = () => {
   const location = useLocation();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+  }, [location.pathname]);
 
   const isFooterHidden =
     FOOTERHIDDENURL.some((route) => location.pathname === route) ||
@@ -36,7 +42,7 @@ const MainLayout = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div style={{ flex: 1, overflow: 'auto' }} ref={scrollRef}>
         <Outlet />
       </div>
       <FooterSync />
