@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 interface Review {
+  reviewId: number;
   writer: string;
   content: string;
   rating: number;
@@ -29,8 +30,8 @@ interface Restaurant {
 }
 
 interface RestaurantProps {
-  restInfo: RestaurantInfo;
-  setRestInfo: (newRest: RestaurantInfo) => void;
+  restInfo: Restaurant;
+  setRestInfo: (newRest: Restaurant) => void;
 }
 
 const useRestaurantStore = create<RestaurantProps>((set) => ({
