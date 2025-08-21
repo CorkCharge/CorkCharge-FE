@@ -4,9 +4,9 @@ import share from '@/shared/components/home/assets/share.svg';
 import star from '../assets/star.svg';
 import keepIcon from '../assets/keep.svg';
 import bookmarked from '@/shared/components/keep/assets/bookmarked.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { bookmarkRequest, deleteRequest } from '../apis/bookmark/bookmarkApi';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface storeProps {
   key?: number;
@@ -38,8 +38,31 @@ const StoreCard = ({
     navigate(`/detailInfo/${restaurantId}`);
   };
 
+  const [isBookmarked, setIsBookmarked] = useState<boolean>();
+  const [keepCount, setKeepCount] = useState<number>(keep);
+  //가게 저장 취소 시 keepCount-1 및 화면 리렌더링
+
+  const didMountRef = useRef(false);
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname.startsWith('/keep')) {
+      //keep화면이면 저장됨 상태로 시작
+      setIsBookmarked(true);
+    } else {
+      setIsBookmarked(false);
+    }
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    //카운트 증감
+    setKeepCount((prev) => prev + (isBookmarked ? 1 : -1));
+
+    //강제 리렌더 1회
+    force((x) => x + 1);
+  }, [isBookmarked]);
+
   //가게 저장하기
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const keepStore = async () => {
     try {
       const res = await bookmarkRequest({
@@ -66,6 +89,7 @@ const StoreCard = ({
   };
 
   const [pending, setPending] = useState<boolean>(false);
+  const [, force] = useState(0);
   const onBookmarkClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (pending) return;
@@ -109,7 +133,7 @@ const StoreCard = ({
           <div className="absolute bottom-2 left-4">
             <div className="flex gap-2">
               <img src={keepIcon} />
-              <span className="text-[18px] font-bold text-white">{keep}</span>
+              <span className="text-[18px] font-bold text-white">{keepCount}</span>
             </div>
           </div>
         </div>
@@ -140,8 +164,10 @@ const StoreCard = ({
               // }}
               onClick={onBookmarkClick}
             >
-              <img src={isBookmarked ? bookmarked : bookmark} />
-              <div className={`${isBookmarked ? 'text-[#90212A]' : 'text-[#C5C8CF]'}`}>저장</div>
+              <img src={isBookmarked ? bookmarked : bookmark} className="h-[22px] w-[16px]" />
+              <div className={`flex-col ${isBookmarked ? 'text-[#90212A]' : 'text-[#C5C8CF]'}`}>
+                저장
+              </div>
             </div>
             <div>
               <img src={share} />
