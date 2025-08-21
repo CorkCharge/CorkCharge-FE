@@ -1,7 +1,6 @@
 // import React from 'react'
 import Cork from '../assets/cork.svg';
 import Search from '../assets/search.svg';
-import Bell from '../assets/bell.svg';
 import { useNavigate } from 'react-router-dom';
 
 interface topBarProps {
@@ -22,10 +21,6 @@ const SearchBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps)
       console.log('검색창 이동');
       navigate('/searchMap'); //검색창 이동
     }
-  };
-  const handleNotif = () => {
-    console.log('알림창 이동');
-    // navigate('/Notification'); //알림창 이동
   };
 
   return (
