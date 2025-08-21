@@ -7,23 +7,15 @@ import { useNavigate } from 'react-router-dom';
 
 interface hotStoreCardProps {
   key: number;
-  restaurantId: number;
+  restaurantId: number | string;
   imgUrl: string;
   keep: number;
   name: string;
   local: string;
-  time: string;
+  time?: string;
 }
 
-const HotStoreCard = ({
-  key,
-  restaurantId,
-  imgUrl,
-  keep,
-  name,
-  local,
-  time,
-}: hotStoreCardProps) => {
+const HotStoreCard = ({ key, restaurantId, imgUrl, keep, name, local }: hotStoreCardProps) => {
   const navigate = useNavigate();
   const goStore = () => {
     console.log('key: ' + key);
@@ -49,7 +41,7 @@ const HotStoreCard = ({
         <div>
           <div className="title mb-1 text-[24px]">{name}</div>
           <div>{local}</div>
-          <div>{time}</div>
+          {/* <div>{time}</div> */}
         </div>
         <div className="flex items-center justify-between">
           <div></div>

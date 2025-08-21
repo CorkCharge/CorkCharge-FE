@@ -75,7 +75,8 @@ const Tip = () => {
         await deleteStore();
         setIsBookmarked(false);
       } else {
-        await keepStore();
+        await keepStore(); //원래 이건데 왜 저장삭제 실패?
+        // await deleteStore();
         setIsBookmarked(true);
       }
     } catch (err) {

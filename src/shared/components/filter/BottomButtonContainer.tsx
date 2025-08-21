@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { fetchFilteredRegion } from '../../apis/restaurant/filterRegion';
+import { fetchFilteredRegion, type Restaurant } from '../../apis/restaurant/filterRegion';
 
 interface BottomButtonContainerProps {
   selectedSido: string | null;
@@ -7,7 +7,8 @@ interface BottomButtonContainerProps {
   selectedDongs: string[];
 
   filterType?: 'map' | 'hot';
-  onApply?: (data: any) => void; // 선택적 onApply prop 추가
+  handleReset: () => void;
+  onApply?: (data: Restaurant[]) => void; // 선택적 onApply prop 추가
 }
 
 const BottomButtonContainer = ({
@@ -15,6 +16,7 @@ const BottomButtonContainer = ({
   selectedSigungu,
   selectedDongs,
   filterType,
+  handleReset,
   onApply,
 }: BottomButtonContainerProps) => {
   const navigate = useNavigate();
@@ -26,13 +28,11 @@ const BottomButtonContainer = ({
         sigungu: selectedSigungu ?? undefined,
         dong: selectedDongs.length > 0 ? selectedDongs : undefined,
       });
-      console.log('넘어갈 data 배열:', res.data);
+      const restaurantsData = Array.isArray(res.data) ? res.data : res.data.restaurants;
 
       if (onApply) {
-        // onApply prop이 제공되면 해당 함수 호출
-        onApply(res.data);
+        onApply(restaurantsData);
       } else {
-        // 기본 동작: 결과 페이지로 이동
         navigate('/corkagemap/filter/result', { state: { restaurants: res.data } });
       }
     } catch (err) {
@@ -43,7 +43,10 @@ const BottomButtonContainer = ({
   return (
     <div className="fixed bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%] pb-[50px]">
       <button
-        onClick={() => console.log('초기화 클릭')}
+        onClick={() => {
+          console.log('초기화 클릭');
+          handleReset();
+        }}
         className="mr-2 h-[48px] w-[35%] rounded-lg border bg-[#F3F3F6] py-2 font-bold"
       >
         초기화
@@ -59,3 +62,4 @@ const BottomButtonContainer = ({
 };
 
 export default BottomButtonContainer;
+

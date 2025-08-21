@@ -1,10 +1,11 @@
 // import React from 'react'
+import type { Restaurant } from '@/shared/apis/restaurant/filterRegion';
 import { fetchHotRestaurant, type HotRestaurant } from '@/shared/apis/restaurant/hotStoreApi';
 import { useEffect, useState } from 'react';
 import HotStoreCard from './HotStoreCard';
 
 interface HotStoreListProps {
-  filteredData?: any[]; // 필터링된 데이터를 받을 수 있는 prop
+  filteredData?: Restaurant[]; // 필터링된 데이터를 받을 수 있는 prop
 }
 
 const HotStoreList = ({ filteredData }: HotStoreListProps) => {
@@ -29,23 +30,34 @@ const HotStoreList = ({ filteredData }: HotStoreListProps) => {
     }
   }, [filteredData]);
 
-  // 필터링된 데이터가 있으면 그것을 사용하고, 없으면 기본 핫 레스토랑 데이터 사용
-  const displayData = filteredData || hotRestaurants;
-
   return (
     <div className="w-[393px]">
       <div className="flex flex-col items-center justify-center gap-4">
-        {displayData?.map((r, index) => (
-          <HotStoreCard
-            key={filteredData ? index : r.restaurantId}
-            restaurantId={filteredData ? r.restaurantId : '1'}
-            imgUrl={filteredData ? r.imageUrl || '/default-image.jpg' : r.imageUrl}
-            keep={filteredData ? r.bookmarkCount || 0 : r.bookmarkCount}
-            name={filteredData ? r.name : r.restaurantName}
-            local={filteredData ? r.address : r.address}
-            time={filteredData ? r.openingHours || '영업시간 정보 없음' : r.openingHours}
-          />
-        ))}
+        {filteredData
+          ? // 필터링된 데이터 렌더링
+            filteredData.map((r, index) => (
+              <HotStoreCard
+                key={index}
+                restaurantId={r.restaurantId}
+                imgUrl={r.imageUrl || '/default-image.jpg'}
+                keep={r.bookmarkCount || 0}
+                name={r.name}
+                local={r.address}
+                // time={r.openingHours || '영업시간 정보 없음'}
+              />
+            ))
+          : // 기본 핫 레스토랑 데이터 렌더링
+            hotRestaurants.map((r) => (
+              <HotStoreCard
+                key={r.restaurantId}
+                restaurantId={r.restaurantId}
+                imgUrl={r.imageUrl}
+                keep={r.bookmarkCount}
+                name={r.restaurantName}
+                local={r.address}
+                // time={r.openingHours}
+              />
+            ))}
       </div>
     </div>
   );
