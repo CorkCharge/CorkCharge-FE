@@ -4,7 +4,6 @@ import Review from './Review';
 import { useEffect, useState } from 'react';
 import TopBar from '@/shared/components/TopBar';
 import type { Selected } from '@/shared/components/home/type';
-import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
 import { fetchSavedRestaurant, type SavedResto } from '@/shared/apis/bookmark/restaurantApi';
 import { fetchSavedTip, type SavedTip } from '@/shared/apis/bookmark/tipApi';
 import SavedCuration from './SavedCuration';
