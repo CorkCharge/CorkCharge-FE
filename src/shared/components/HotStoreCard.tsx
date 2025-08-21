@@ -1,6 +1,5 @@
 // import React from 'react'
 import keepIcon from '../../shared/assets/keep.svg';
-import clock from '../../shared/assets/clock.svg';
 import bookmark from '../../shared/assets/bookmark.svg';
 import share from '../../shared/assets/share.svg';
 import './tip.css';
