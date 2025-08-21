@@ -10,7 +10,7 @@ const CorkageMap = () => {
         <TopBarMap searchDisabled={false} />
       </div>
       <div
-        className="absolute left-[13%] top-[7%] z-10 flex h-[32px] w-[242px] cursor-pointer flex-row items-center justify-center gap-[7px] rounded-[20px] bg-white/85"
+        className="absolute left-[13%] top-[7%] z-10 flex h-[32px] w-[300px] cursor-pointer flex-row items-center justify-center gap-[7px] rounded-[20px] bg-white/85"
         onClick={() => navigate('filter')}
       >
         <img src={bttn} alt="필터링버튼" className="h-[13px] w-[18px]" />

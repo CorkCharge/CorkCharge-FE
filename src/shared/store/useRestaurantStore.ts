@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import type { RestaurantInfo } from '../apis/restaurant/corkageApi';
 
 // interface Review {
+//   reviewId: number;
 //   writer: string;
 //   content: string;
 //   rating: number;
@@ -17,8 +17,8 @@ import type { RestaurantInfo } from '../apis/restaurant/corkageApi';
 //   phone: string;
 //   rating: number;
 //   reviewCount: number;
-//   mainImageUrl: string;
-//   menuImageUrl: string;
+//   mainImageUrl: string | null;
+//   menuImageUrl: string | null;
 //   corkagePrice: string;
 //   corkageOptions: string[];
 //   representMenu: string;
@@ -29,12 +29,14 @@ import type { RestaurantInfo } from '../apis/restaurant/corkageApi';
 //   reviews: Review[];
 // }
 
-interface RestaurantProps {
+import type { RestaurantInfo } from '../apis/restaurant/corkageApi';
+
+type RestaurantStore = {
   restInfo: RestaurantInfo;
   setRestInfo: (newRest: RestaurantInfo) => void;
-}
+};
 
-const useRestaurantStore = create<RestaurantProps>((set) => ({
+const useRestaurantStore = create<RestaurantStore>((set) => ({
   restInfo: {
     restaurantId: 88,
     restaurantName: '램니쿠야',
@@ -78,7 +80,6 @@ const useRestaurantStore = create<RestaurantProps>((set) => ({
       },
     ],
   },
-
   setRestInfo: (newRest) => set({ restInfo: newRest }),
 }));
 

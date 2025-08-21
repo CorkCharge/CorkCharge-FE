@@ -58,6 +58,12 @@ const AddOption = () => {
     setMultipleOptions(newOptions);
   };
 
+  const handleClearInput = (index: number, field: 'liquorType' | 'price') => {
+    const newOptions = [...multipleOptions];
+    newOptions[index][field] = ''; // 해당 필드만 초기화
+    setMultipleOptions(newOptions);
+  };
+
   const handleRegister = () => {
     setIsModalOpen(true);
   };
@@ -68,7 +74,10 @@ const AddOption = () => {
   };
 
   return (
-    <main className="relative flex h-screen w-full flex-col items-stretch">
+    <main
+      className="relative flex h-screen w-full flex-col items-stretch"
+      style={{ height: 'calc(100vh - 60px)' }}
+    >
       {/* 헤더1 */}
       <div className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
         <img
@@ -87,7 +96,7 @@ const AddOption = () => {
       </div>
       {/*구분선*/}
       <div className="mt-[8px] h-[1px] w-[91%] bg-[#DBDDE1]"></div>
-      <div className="absolute mt-[22.6vh] h-[66vh] w-full flex-1 overflow-y-auto">
+      <div className="absolute top-[20px] mt-[22.6vh] h-[66vh] w-full flex-1 overflow-y-auto">
         {/*기본정보 및 버튼*/}
         <div className="mt-[22px] flex w-full flex-row gap-[20px]">
           <div className="ml-[32px] text-[16px] font-[700]">기본정보</div>
@@ -159,6 +168,7 @@ const AddOption = () => {
                     <img
                       src={x}
                       alt="x"
+                      onClick={() => handleClearInput(index, 'liquorType')}
                       className="absolute right-[26.81px] h-[11.3px] w-[9.18px]"
                     />
                   </div>
@@ -172,6 +182,7 @@ const AddOption = () => {
                     <input
                       type="text"
                       placeholder="비용을 입력하세요"
+                      value={option.price}
                       onChange={(e) => handleMultipleChange(index, 'price', e.target.value)}
                       className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
                     />
@@ -179,6 +190,7 @@ const AddOption = () => {
                       src={x}
                       alt="x"
                       className="absolute right-[26.81px] h-[11.3px] w-[9.18px]"
+                      onClick={() => handleClearInput(index, 'price')}
                     />
                     <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[#35353F]">
                       원

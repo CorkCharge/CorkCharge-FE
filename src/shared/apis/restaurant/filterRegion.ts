@@ -13,6 +13,9 @@ export interface Restaurant {
   address: string;
   latitude: number;
   longitude: number;
+  imageUrl?: string;
+  bookmarkCount?: number;
+  openingHours?: string;
 }
 
 export interface FilterRegionResponse {

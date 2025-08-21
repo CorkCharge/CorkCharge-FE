@@ -91,7 +91,7 @@ const Options = ({
     <>
       <div className="flex w-full flex-col gap-[4px] self-start">
         <div className="flex w-full flex-col gap-[4px] self-start">
-          <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">업종</div>
+          <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">콜키지 종류</div>
           <div className="ml-[32px] flex w-full flex-row gap-[8px]">
             {corkageTypes.map((category) => {
               const active = selectedCorkageTypes.includes(category);
@@ -100,7 +100,7 @@ const Options = ({
                   key={category}
                   onClick={() => toggleCategory(category)}
                   aria-pressed={active}
-                  className={`h-[32px] w-[14%] rounded-[20px] text-[14px] font-[500] ${
+                  className={`h-[32px] w-[80px] rounded-[20px] text-[14px] font-[500] ${
                     active ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#90212A]'
                   }`}
                 >
@@ -225,7 +225,7 @@ const Options = ({
 
       <div className="flex w-full flex-col gap-[4px] self-start">
         <div className="ml-[32px] mt-[14px] self-start text-[20px] font-[500]">기타</div>
-        <div className="ml-[32px] flex w-full flex-row gap-[8px]">
+        <div className="ml-[32px] flex w-full flex-row gap-[8px] pb-[20px]">
           {optionTypes.map((option) => {
             const active = selectedOptionsTypes.includes(option);
             return (

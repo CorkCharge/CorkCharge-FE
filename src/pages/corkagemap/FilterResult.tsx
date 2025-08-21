@@ -6,7 +6,9 @@ import StoreItem from '@/shared/components/filterStore/StoreItem ';
 
 const FilterResult = () => {
   const location = useLocation();
-  const { restaurants } = location.state as { restaurants: { name: string; address: string }[] };
+  const { restaurants } = location.state as {
+    restaurants: { name: string; address: string; restaurantId: number }[];
+  };
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate(-1);
@@ -22,11 +24,21 @@ const FilterResult = () => {
           onClick={handleBackClick}
         />
         <p className="text-[16px] font-[700]">필터링 결과조회</p>
-        <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
+        <img
+          src={X}
+          alt="x"
+          className="mr-[12px] h-[17px] w-[17px]"
+          onClick={() => navigate('/home')}
+        />
       </div>
       <div className="mt-[16px] flex h-[608px] w-full flex-grow flex-col items-center gap-[16px] overflow-y-auto pb-[180px]">
         {restaurants.map((r) => (
-          <StoreItem key={r.name} storeName={r.name} address={r.address} onClick={() => {}} />
+          <StoreItem
+            key={r.name}
+            storeName={r.name}
+            address={r.address}
+            onClick={() => navigate(`/detailInfo/${r.restaurantId}`)}
+          />
         ))}
       </div>
     </main>

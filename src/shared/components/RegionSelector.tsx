@@ -154,7 +154,7 @@ const RegionSelector = () => {
       </div>
 
       {selectedNeighborhoods.length > 0 && (
-        <div className="fixed bottom-0 h-[190px] w-[393px] bg-white shadow-[0_-1px_12px_-1px_rgba(0,0,0,0.2)]">
+        <div className="fixed bottom-12 h-[190px] w-[393px] bg-white shadow-[0_-1px_12px_-1px_rgba(0,0,0,0.2)]">
           <div className="flex flex-col gap-2 p-4">
             <div className="flex text-[12px]">{selectedNeighborhoods.length}/10</div>
             <div className="scrollbar-hide flex gap-2 overflow-x-auto whitespace-nowrap">

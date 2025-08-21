@@ -5,6 +5,7 @@ export interface CorkageScoreParams {
 }
 export interface CorkageScore {
   reviewId: number; //1,
+  restaurantId?: number;
   restaurantName: string; //"엔비 햄버거",
   userName: string; //"니콜라 테슬라",
   content: string; //"몰트향과 완벽하게 어우러지는 조화로운 페어링입니다.",

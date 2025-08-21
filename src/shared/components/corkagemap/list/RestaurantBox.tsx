@@ -75,6 +75,7 @@ const RestaurantBox = ({
           >
             예약
           </button> */}
+
           <button
             style={{ background: 'rgba(218, 203, 182, 0.30)' }}
             type="button"
@@ -82,12 +83,6 @@ const RestaurantBox = ({
             onClick={handleShare}
           >
             공유
-          </button>
-          <button
-            style={{ background: 'rgba(218, 203, 182, 0.30)' }}
-            className="h-[28px] w-[54px] rounded-[20px] text-[12px] font-[500]"
-          >
-            저장
           </button>
         </div>
       </div>

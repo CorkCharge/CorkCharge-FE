@@ -1,28 +1,40 @@
 import { useNavigate } from 'react-router-dom';
-import { fetchFilteredRegion } from '../../apis/restaurant/filterRegion';
+import { fetchFilteredRegion, type Restaurant } from '../../apis/restaurant/filterRegion';
 
 interface BottomButtonContainerProps {
   selectedSido: string | null;
   selectedSigungu: string | null;
   selectedDongs: string[];
+
+  filterType?: 'map' | 'hot';
+  handleReset: () => void;
+  onApply?: (data: Restaurant[]) => void; // 선택적 onApply prop 추가
 }
 
 const BottomButtonContainer = ({
   selectedSido,
   selectedSigungu,
   selectedDongs,
+  filterType,
+  handleReset,
+  onApply,
 }: BottomButtonContainerProps) => {
   const navigate = useNavigate();
   const handleApplyClick = async () => {
     try {
       const res = await fetchFilteredRegion({
-        type: 'map',
+        type: filterType ?? 'map',
         sido: selectedSido ?? undefined,
         sigungu: selectedSigungu ?? undefined,
         dong: selectedDongs.length > 0 ? selectedDongs : undefined,
       });
-      console.log('넘어갈 data 배열:', res.data);
-      navigate('/corkagemap/filter/result', { state: { restaurants: res.data } });
+      const restaurantsData = Array.isArray(res.data) ? res.data : res.data.restaurants;
+
+      if (onApply) {
+        onApply(restaurantsData);
+      } else {
+        navigate('/corkagemap/filter/result', { state: { restaurants: res.data } });
+      }
     } catch (err) {
       console.error('API 호출 실패', err);
     }
@@ -31,7 +43,10 @@ const BottomButtonContainer = ({
   return (
     <div className="fixed bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%] pb-[50px]">
       <button
-        onClick={() => console.log('초기화 클릭')}
+        onClick={() => {
+          console.log('초기화 클릭');
+          handleReset();
+        }}
         className="mr-2 h-[48px] w-[35%] rounded-lg border bg-[#F3F3F6] py-2 font-bold"
       >
         초기화

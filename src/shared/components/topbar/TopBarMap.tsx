@@ -1,6 +1,5 @@
 import Cork from '../../assets/cork.svg';
 import Search from '../../assets/search.svg';
-import Bell from '../../assets/bell.svg';
 import { useNavigate } from 'react-router-dom';
 
 interface topBarProps {
@@ -15,10 +14,6 @@ const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) =>
     if (!searchDisabled) {
       navigate('/searchMap'); //검색창 이동
     }
-  };
-  const handleNotif = () => {
-    console.log('알림창 이동');
-    // navigate('/Notification'); //알림창 이동
   };
 
   return (
@@ -35,7 +30,6 @@ const TopBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps) =>
         />
         <img src={Search} onClick={handleSearch} className="cursor-pointer"></img>
       </div>
-      <img src={Bell} onClick={handleNotif} className="cursor-pointer"></img>
     </div>
   );
 };
