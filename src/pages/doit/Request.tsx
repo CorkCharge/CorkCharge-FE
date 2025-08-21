@@ -36,7 +36,10 @@ const Request = () => {
     }
   };
   return (
-    <div className="relative flex h-screen flex-col items-center">
+    <div
+      className="relative flex h-screen flex-col items-center"
+      style={{ height: 'calc(100vh - 60px)' }}
+    >
       <img
         src={Bg}
         alt="배경"

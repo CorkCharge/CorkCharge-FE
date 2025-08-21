@@ -15,6 +15,7 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState(''); // 검색어 입력 상태
   const [stores, setStores] = useState<Restaurant[]>([]); // API 검색 결과 상태
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [isSearched, setIsSearched] = useState(false);
 
   useEffect(() => {
     inputRef.current?.focus(); // 컴포넌트 마운트 시 포커스
@@ -34,6 +35,7 @@ const Search = () => {
       console.log('API에서 받은 응답 데이터:', results);
       setStores(results);
       setSelectedIndex(null); // 새로운 검색 후 선택 초기화
+      setIsSearched(true);
     } catch (error) {
       console.error('레스토랑 검색에 실패했습니다:', error);
       alert('검색 중 오류가 발생했습니다.');
@@ -106,15 +108,21 @@ const Search = () => {
         </div>
       </div>
       <div className="mt-[16px] flex h-[608px] w-full flex-grow flex-col items-center gap-[16px] overflow-y-auto pb-[180px]">
-        {stores.map((store, i) => (
-          <StoreItem
-            key={store.restaurantId}
-            isChecked={selectedIndex === i}
-            onClick={() => handleItemClick(i)}
-            storeName={store.name}
-            address={store.address}
-          />
-        ))}
+        {isSearched && stores.length === 0 ? (
+          <p className="mt-[50px] text-[16px] font-[700] text-[#999]">
+            검색결과가 존재하지 않습니다.
+          </p>
+        ) : (
+          stores.map((store, i) => (
+            <StoreItem
+              key={store.restaurantId}
+              isChecked={selectedIndex === i}
+              onClick={() => handleItemClick(i)}
+              storeName={store.name}
+              address={store.address}
+            />
+          ))
+        )}
       </div>
       <div className="fixed bottom-0 left-1/2 z-50 h-[168px] w-[393px] -translate-x-1/2 bg-gradient-to-b from-[rgba(255,255,255,0)] via-white to-white" />
       {selectedIndex !== null && <NextButton onClick={handleNextClick} />}
