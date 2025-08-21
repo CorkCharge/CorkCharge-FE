@@ -5,7 +5,6 @@ import TopBar from '../../shared/components/TopBar';
 import RegionSearchBar from '../../shared/components/corkScore/RegionSearchBar';
 import BottomButtonContainer from '../../shared/components/filter/BottomButtonContainer';
 import RegionFilter from '../../shared/components/filter/RegionFilter';
-import type { HotRestaurant } from '@/shared/apis/restaurant/hotStoreApi';
 
 const HotStores = () => {
   // 지역 필터 상태

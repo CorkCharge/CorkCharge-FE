@@ -104,6 +104,13 @@ const Filter = () => {
     setSelectedCorkageTypes(initialCorkageState.selectedCorkageTypes);
     setSelectedOptionsTypes(initialCorkageState.selectedOptionsTypes);
   };
+  const handleReset = () => {
+    setSelectedSido(null);
+    setSelectedSigungu(null);
+    setSelectedDongs([]);
+    // setFilteredRestaurants([]);
+    // setIsFiltered(false);
+  };
 
   return (
     <main className="relative flex h-screen flex-col items-center">
@@ -150,6 +157,7 @@ const Filter = () => {
             selectedSido={selectedSido}
             selectedSigungu={selectedSigungu}
             selectedDongs={selectedDongs}
+            // handleReset={handleResetFilter}
           />
         </>
       )}
