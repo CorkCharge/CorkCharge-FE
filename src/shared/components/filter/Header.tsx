@@ -8,6 +8,11 @@ const Header = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
+
+  const handleXClick = () => {
+    navigate('/home');
+  };
+
   return (
     <header className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
       <img
@@ -17,7 +22,7 @@ const Header = () => {
         onClick={handleBackClick}
       />
       <p className="text-[16px] font-[700]">필터</p>
-      <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
+      <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" onClick={handleXClick} />
     </header>
   );
 };
