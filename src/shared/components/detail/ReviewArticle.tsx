@@ -1,6 +1,7 @@
 // import React from 'react';
 import etc from '@/shared/assets/detailPageImgs/etc.svg';
 import type { reviewProps } from '@/shared/apis/restaurant/corkageApi';
+import { StarRate } from '../myPage/StarRate';
 
 interface reviewArticleProps {
   name: string;
@@ -18,8 +19,8 @@ export const ReviewArticle = ({ name, review }: reviewArticleProps) => {
       className="relative mb-2 flex h-[144px] w-full justify-between rounded-2xl bg-[#F3F3F6] px-4"
       id={review.reviewId.toString()}
     >
-      <div className="mb-4 mt-4 flex w-full grow basis-0 flex-col gap-2">
-        <div className="flex w-full justify-between">
+      <div className="mb-4 mt-4 flex w-full grow basis-0 flex-col">
+        <div className="mb-2 flex w-full justify-between">
           <div className="text-[20px] font-bold">{name}</div>
           <div className="mr-3 flex items-center">
             <button className="mr-2 h-6 rounded-xl bg-[#DACBB64D] px-2 text-[10px]">
@@ -42,6 +43,12 @@ export const ReviewArticle = ({ name, review }: reviewArticleProps) => {
           {/* 몰트향과 완벽하게 어우러지는 조화로운 페어링입니다. */}
           {review.content}
         </div>
+
+        <div className="flex">
+          <StarRate rate={review.rating} />
+          <span>{review.rating}</span>
+        </div>
+
         <div className="absolute bottom-2 flex gap-2 text-[10px]">
           <div>{review.writer}</div>
           <div>{review.createdAt.split('T')[0]}</div>
