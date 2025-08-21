@@ -1,10 +1,27 @@
 // import React from 'react'
-import CorkScore from '../corkScore/CorkScore';
+// import CorkScore from '../corkScore/CorkScore';
 
+//이거 저장한 리뷰임...
 const Review = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
+      <div>저장한 리뷰 list</div>
+      {/* {corkages &&
+        corkages.map((corkage) => {
+          return (
       <CorkScore
+      reviewId={corkage.reviewId}
+        name={corkage.name}
+        userName={corkage.userName}
+        content={corkage.content}
+        rating={corkage.rating}
+        createdAt={corkage.createdAt}
+        imageUrl={corkage.imageUrl}
+        bookmarkCount={corkage.bookmarkCount}
+      />
+          );
+        })} */}
+      {/* <CorkScore
         name="엔비 햄버거"
         keep={27}
         rating={4.2}
@@ -43,7 +60,7 @@ const Review = () => {
         review="몰트향과 완벽하게 어우러지는 조화로운 페어링입니다."
         id="니콜라 테슬라"
         date="2025.01.01"
-      />
+      /> */}
     </div>
   );
 };
