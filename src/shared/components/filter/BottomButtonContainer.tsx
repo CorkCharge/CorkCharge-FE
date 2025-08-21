@@ -7,7 +7,7 @@ interface BottomButtonContainerProps {
   selectedDongs: string[];
 
   filterType?: 'map' | 'hot';
-  handleReset?: () => void;
+  handleReset: () => void;
   onApply?: (data: Restaurant[]) => void; // 선택적 onApply prop 추가
 }
 
@@ -45,7 +45,7 @@ const BottomButtonContainer = ({
       <button
         onClick={() => {
           console.log('초기화 클릭');
-          handleReset;
+          handleReset();
         }}
         className="mr-2 h-[48px] w-[35%] rounded-lg border bg-[#F3F3F6] py-2 font-bold"
       >
