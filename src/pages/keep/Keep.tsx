@@ -35,6 +35,7 @@ const Keep = () => {
       try {
         const res = await fetchSavedRestaurant();
         console.log(res);
+        console.log('저장한 식당 list API  호출 성공');
         SetSavedRestos(res);
       } catch {
         console.error('저장한 식당 list API  호출 실패');

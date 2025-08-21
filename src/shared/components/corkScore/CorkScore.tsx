@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import type { CorkageScore } from '@/shared/apis/restaurant/corkageScoreApi';
 import star from '../../assets/rating.svg';
 import OptionMenu from './OptionMenu';
+import { bookmarkRequest } from '@/shared/apis/bookmark/bookmarkApi';
+import { useState } from 'react';
 
 const CorkScore = ({
   reviewId,
@@ -17,6 +19,26 @@ const CorkScore = ({
   bookmarkCount,
 }: CorkageScore) => {
   const navigate = useNavigate();
+  //리뷰 저장
+  const handleKeep = () => {
+    console.log('리뷰저장');
+    keepReview();
+    setIsBookmarked(true);
+  };
+
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const keepReview = async () => {
+    try {
+      const res = await bookmarkRequest({
+        targetId: reviewId ?? 0,
+        targetType: 'REVIEW',
+      });
+      console.log('review 저장성공: ', res);
+    } catch (err) {
+      console.log('review 저장실패: ', err);
+    }
+  };
+
   const goStore = () => {
     console.log('가게 상세 정보 페이지 이동');
     navigate(`/detailInfo/${restaurantId}`);
@@ -40,8 +62,11 @@ const CorkScore = ({
         <div className="flex justify-between">
           <div className="text-[20px] font-bold">{restaurantName}</div>
           <div onClick={stop} className="flex items-center justify-center">
-            <button className="mr-2 h-[25px] w-[46px] rounded-xl bg-[#DACBB64D] text-[10px]">
-              저장 {bookmarkCount}
+            <button
+              onClick={handleKeep}
+              className="mr-2 h-[25px] w-[46px] rounded-xl bg-[#DACBB64D] text-[10px]"
+            >
+              {isBookmarked ? '저장됨' : '저장'} {bookmarkCount}
             </button>
             {/* <img className="h-[10px] w-[2px]" src={etc} /> */}
             <OptionMenu resId={restaurantId} resName={restaurantName} />

@@ -23,7 +23,7 @@ const Review = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <div>저장한 리뷰 list</div>
+      {/* <div>저장한 리뷰 list</div> */}
       {savedReviews &&
         savedReviews.map((savedReview) => {
           return (
