@@ -1,11 +1,11 @@
 // import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // import etc from '../../assets/detailPageImgs/etc.svg';
 import type { CorkageScore } from '@/shared/apis/restaurant/corkageScoreApi';
 import star from '../../assets/rating.svg';
 import OptionMenu from './OptionMenu';
 import { bookmarkRequest } from '@/shared/apis/bookmark/bookmarkApi';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const CorkScore = ({
   reviewId,
@@ -26,7 +26,20 @@ const CorkScore = ({
     setIsBookmarked(true);
   };
 
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [isBookmarked, setIsBookmarked] = useState<boolean>();
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+  }, [isBookmarked]);
+
+    const { pathname } = useLocation();
+  useEffect(() => {
+    setIsBookmarked(pathname.startsWith('/keep'));
+  }, [pathname]);
+
   const keepReview = async () => {
     try {
       const res = await bookmarkRequest({
