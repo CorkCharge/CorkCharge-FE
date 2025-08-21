@@ -2,7 +2,7 @@
 import StoreCard from '@/shared/components/StoreCard';
 import Review from './Review';
 import { useEffect, useState } from 'react';
-// import Curation from '@/shared/components/Curation';
+import Curation from '@/shared/components/Curation';
 import Tip from '../../shared/components/Tip';
 import TopBar from '@/shared/components/TopBar';
 import type { Selected } from '@/shared/components/home/type';
@@ -135,7 +135,7 @@ const Keep = () => {
           <Tip selected={selected} setSelected={setSelected} />
           <div className="h-[15px]"></div>
           <div>저장한 tip</div>
-          {/* <Curation tiplist={filtered} /> */}
+          <Curation tiplist={filtered} />
           <SavedCuration selected={selected} setSelected={setSelected} tiplist={savedTips} />
         </>
       )}
