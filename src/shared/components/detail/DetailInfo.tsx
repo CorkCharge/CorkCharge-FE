@@ -1,11 +1,13 @@
-// import React from 'react'
-// import { useNavigate } from 'react-router-dom';
-import star from '../../assets/detailPageImgs/star.svg';
+import { useNavigate } from 'react-router-dom';
 // import etc from '../../assets/detailPageImgs/etc.svg';
 import PairingArticle from './PairingArticle';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import ShowMoreBtn from './ShowMoreBtn';
 import { ReviewArticle } from './ReviewArticle';
+import { StarRate } from '../myPage/StarRate';
+import { useRef } from 'react';
+import { useState } from 'react';
+import useRestaurantStore from '@/shared/store/useRestaurantStore';
 
 // interface detailInfoProps {
 //   price: string;
@@ -13,11 +15,22 @@ import { ReviewArticle } from './ReviewArticle';
 // }
 
 const DetailInfo = (restaurant: RestaurantInfo) => {
-  // const navigate = useNavigate();
-  const onclick = () => {
-    console.log('리뷰창 이동');
-    // navigate('/review');
+  const navigate = useNavigate();
+  const rating = useRef(0);
+  const [reviewPage, setReviewPage] = useState(1);
+  const { restInfo } = useRestaurantStore();
+
+  const setRating = (r: number) => {
+    rating.current = r;
+    console.log(rating.current);
   };
+
+  const writeReview = () => {
+    if (rating.current === 0) return;
+
+    navigate('/review', { state: { rating: rating.current, restId: restaurant.restaurantId } });
+  };
+
   return (
     <div className="flex flex-col items-center">
       <div className="w-full px-4">
@@ -38,31 +51,26 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
         </div>
       </div>
       <PairingArticle {...restaurant} />
-      <div className="flex h-[60px] items-center justify-center gap-4 pl-4 pr-4">
-        <div
-          onClick={onclick}
-          className="flex h-[40px] w-[360px] cursor-pointer items-center justify-center rounded-br-full rounded-tl-full bg-[#F3F3F6] pl-6 pr-6"
-        >
-          <div className="flex gap-2">
-            <img src={star} />
-            <img src={star} />
-            <img src={star} />
-            <img src={star} />
-            <img src={star} />
-            <div className="ml-4 flex items-center gap-1">
+      <div className="flex h-[60px] w-full items-center justify-center gap-4 pl-4 pr-4">
+        <div className="flex h-[40px] w-[360px] w-full cursor-pointer items-center justify-center rounded-br-full rounded-tl-full bg-[#F3F3F6] pl-6 pr-6">
+          <div className="flex w-full justify-center gap-2">
+            <StarRate rate={0} isEditable={true} starRating={setRating} />
+            <div className="ml-4 flex items-center gap-1" onClick={writeReview}>
               <div className="whitespace-nowrap text-[14px] underline">리뷰쓰기</div>
               <div>🡭</div>
             </div>
           </div>
         </div>
       </div>
-      {restaurant.reviews &&
-        restaurant.reviews.map((review) => {
-          return <ReviewArticle name={restaurant.restaurantName} review={review} />;
-        })}
+      <div className="w-full px-4">
+        {restaurant.reviews &&
+          restInfo.reviews.slice(0, 5 * reviewPage).map((review) => {
+            return <ReviewArticle name={restaurant.restaurantName} review={review} />;
+          })}
+      </div>
 
       {/* <ReviewArticle name={restaurant.restaurantName} review={restaurant.reviews[0]} /> */}
-      <ShowMoreBtn />
+      <ShowMoreBtn onClick={() => setReviewPage((prev) => prev + 1)} />
     </div>
   );
 };

@@ -1,40 +1,41 @@
 import { create } from 'zustand';
+import type { RestaurantInfo } from '../apis/restaurant/corkageApi';
 
-interface Review {
-  writer: string;
-  content: string;
-  rating: number;
-  createdAt: string;
-  imageUrls: string[];
-  savedCount: number;
-}
+// interface Review {
+//   writer: string;
+//   content: string;
+//   rating: number;
+//   createdAt: string;
+//   imageUrls: string[];
+//   savedCount: number;
+// }
 
-interface Restaurant {
-  restaurantId: number;
-  restaurantName: string;
-  address: string;
-  phone: string;
-  rating: number;
-  reviewCount: number;
-  mainImageUrl: string;
-  menuImageUrl: string;
-  corkagePrice: string;
-  corkageOptions: string[];
-  representMenu: string;
-  pairingAlcohol: string;
-  pairingDescription: string;
-  pairingImageUrl: string;
-  openingHours: string;
-  reviews: Review[];
-}
+// interface Restaurant {
+//   restaurantId: number;
+//   restaurantName: string;
+//   address: string;
+//   phone: string;
+//   rating: number;
+//   reviewCount: number;
+//   mainImageUrl: string;
+//   menuImageUrl: string;
+//   corkagePrice: string;
+//   corkageOptions: string[];
+//   representMenu: string;
+//   pairingAlcohol: string;
+//   pairingDescription: string;
+//   pairingImageUrl: string;
+//   openingHours: string;
+//   reviews: Review[];
+// }
 
 interface RestaurantProps {
-  restaurant: Restaurant;
-  setRestaurant: (newRest: Restaurant) => void;
+  restInfo: RestaurantInfo;
+  setRestInfo: (newRest: RestaurantInfo) => void;
 }
 
 const useRestaurantStore = create<RestaurantProps>((set) => ({
-  restaurant: {
+  restInfo: {
     restaurantId: 88,
     restaurantName: '램니쿠야',
     address: '서울 광진구 아차산로 395',
@@ -56,6 +57,7 @@ const useRestaurantStore = create<RestaurantProps>((set) => ({
     openingHours: '매일 16:00 - 24:00',
     reviews: [
       {
+        reviewId: 1,
         writer: 'sds',
         content: '맛있어요!',
         rating: 5,
@@ -64,6 +66,7 @@ const useRestaurantStore = create<RestaurantProps>((set) => ({
         savedCount: 3,
       },
       {
+        reviewId: 2,
         writer: 'sds',
         content: '맛있어요!',
         rating: 5,
@@ -76,7 +79,7 @@ const useRestaurantStore = create<RestaurantProps>((set) => ({
     ],
   },
 
-  setRestaurant: (newRest) => set({ restaurant: newRest }),
+  setRestInfo: (newRest) => set({ restInfo: newRest }),
 }));
 
 export default useRestaurantStore;

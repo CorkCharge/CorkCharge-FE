@@ -76,7 +76,6 @@ const DetailHeader = ({
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
   // const location = useLocation();
   useEffect(() => {
-    console.log(mainImageUrl);
     if (location.state?.openReviewModal) {
       setOpenReviewModal(true);
     }
@@ -206,7 +205,7 @@ const DetailHeader = ({
         <button
           onClick={handleRequest}
           // onClick={handleModal}
-          className="flex h-[80px] w-full items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
+          className="flex h-[80px] w-full flex-1 items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
         >
           <div className="flex items-center justify-center gap-3 text-[16px] font-semibold text-[#35353F]">
             <img src={smallGlass}></img>
@@ -215,7 +214,7 @@ const DetailHeader = ({
         </button>
         <button
           onClick={onBookmarkClick}
-          className="flex h-[80px] w-[176px] items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
+          className={`flex h-[80px] w-[176px] flex-1 items-center justify-center gap-2 rounded-[16px] ${isBookmarked ? 'bg-[var(--gray-5)]' : 'bg-[#F3F3F6]'}`}
         >
           <div className="flex items-center justify-center gap-3 text-[16px] font-semibold text-[#35353F]">
             {/* 저장 상태에 따라 ui변화 */}
