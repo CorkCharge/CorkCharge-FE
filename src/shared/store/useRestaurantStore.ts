@@ -30,7 +30,7 @@ interface Restaurant {
 
 interface RestaurantProps {
   restaurant: Restaurant;
-  setRestaurant: (newRest: Restaurant) => void;
+  setRestaurant?: (newRest: Restaurant) => void;
 }
 
 const useRestaurantStore = create<RestaurantProps>((set) => ({

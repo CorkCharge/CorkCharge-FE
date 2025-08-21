@@ -108,8 +108,7 @@ const Filter = () => {
     setSelectedSido(null);
     setSelectedSigungu(null);
     setSelectedDongs([]);
-    // setFilteredRestaurants([]);
-    // setIsFiltered(false);
+    console.log('초기화 버튼 클릭');
   };
 
   return (
@@ -157,7 +156,7 @@ const Filter = () => {
             selectedSido={selectedSido}
             selectedSigungu={selectedSigungu}
             selectedDongs={selectedDongs}
-            // handleReset={handleResetFilter}
+            handleReset={handleReset}
           />
         </>
       )}
