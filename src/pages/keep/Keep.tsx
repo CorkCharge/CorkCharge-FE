@@ -1,7 +1,7 @@
 // import React from 'react'
 import StoreCard from '@/shared/components/StoreCard';
 import Review from './Review';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import TopBar from '@/shared/components/TopBar';
 import { fetchSavedRestaurant, type SavedResto } from '@/shared/apis/bookmark/restaurantApi';
 import { fetchSavedTip, type SavedTip } from '@/shared/apis/bookmark/tipApi';
@@ -28,7 +28,21 @@ const Keep = () => {
   };
 
   //fetchRestosData (저장된 매장만)
+  // const [savedRestos, SetSavedRestos] = useState<SavedResto[]>();
   const [savedRestos, SetSavedRestos] = useState<SavedResto[]>();
+  const refetchSavedRestaurants = useCallback(async () => {
+    try {
+      const res = await fetchSavedRestaurant();
+      SetSavedRestos(res);
+    } catch {
+      console.error('저장한 식당 list API  호출 실패');
+    }
+  }, []);
+
+  // 최초 1회 로딩
+  useEffect(() => {
+    refetchSavedRestaurants();
+  }, [refetchSavedRestaurants]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,6 +116,7 @@ const Keep = () => {
                   name={savedResto.name}
                   local={savedResto.address}
                   rating={savedResto.rating}
+                  onUnbookmarked={refetchSavedRestaurants}
                 />
               );
             })}

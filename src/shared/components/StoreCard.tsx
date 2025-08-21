@@ -18,6 +18,7 @@ interface storeProps {
   local: string;
   rating: number;
   review?: number;
+  onUnbookmarked?: () => void;
 }
 
 const StoreCard = ({
@@ -30,6 +31,7 @@ const StoreCard = ({
   local,
   rating,
   review,
+  onUnbookmarked,
 }: storeProps) => {
   const navigate = useNavigate();
   const goStore = () => {
@@ -38,29 +40,25 @@ const StoreCard = ({
     navigate(`/detailInfo/${restaurantId}`);
   };
 
-  const [isBookmarked, setIsBookmarked] = useState<boolean>();
-  const [keepCount, setKeepCount] = useState<number>(keep);
-  //가게 저장 취소 시 keepCount-1 및 화면 리렌더링
-
-  const didMountRef = useRef(false);
   const { pathname } = useLocation();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>();
+  // const [isBookmarked, setIsBookmarked] = useState<boolean>(() => pathname.startsWith('/keep'));
+  const [keepCount, setKeepCount] = useState<number>(keep);
+
+  //가게 저장 취소 시 리렌더링
+  const didMountRef = useRef(false);
   useEffect(() => {
-    if (pathname.startsWith('/keep')) {
-      //keep화면이면 저장됨 상태로 시작
-      setIsBookmarked(true);
-    } else {
-      setIsBookmarked(false);
-    }
     if (!didMountRef.current) {
       didMountRef.current = true;
       return;
     }
-    //카운트 증감
     setKeepCount((prev) => prev + (isBookmarked ? 1 : -1));
-
-    //강제 리렌더 1회
-    force((x) => x + 1);
   }, [isBookmarked]);
+
+  // 라우트가 바뀌면 북마크 초기 상태를 경로에 맞춰 동기화
+  useEffect(() => {
+    setIsBookmarked(pathname.startsWith('/keep'));
+  }, [pathname]);
 
   //가게 저장하기
   const keepStore = async () => {
@@ -89,7 +87,6 @@ const StoreCard = ({
   };
 
   const [pending, setPending] = useState<boolean>(false);
-  const [, force] = useState(0);
   const onBookmarkClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (pending) return;
@@ -98,6 +95,7 @@ const StoreCard = ({
       if (isBookmarked) {
         await deleteStore();
         setIsBookmarked(false);
+        onUnbookmarked?.(); //성공시 Keep.tsx 로 보냄
         // console.log('가게 저장 삭제성공');
       } else {
         await keepStore();
