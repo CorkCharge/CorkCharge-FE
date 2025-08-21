@@ -72,7 +72,9 @@ export interface reviewProps {
   content: string; //"딱히?!",
   rating: number; //2,
   createdAt: string; //"2025-07-21T20:02:52.879934",
-  imageUrls: string[] | null; //[]
+  imageUrls: string[] | null; //[],
+  savedCount: number;
+  reviewId: number;
 }
 
 //사용x

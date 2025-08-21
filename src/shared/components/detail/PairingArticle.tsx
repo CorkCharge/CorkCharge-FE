@@ -1,4 +1,3 @@
-// import React from 'react'
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import PairingInfo from './PairingInfo';
 

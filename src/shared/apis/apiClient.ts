@@ -39,7 +39,7 @@ apiClient.interceptors.response.use(
             });
           });
         } else {
-          window.location.href = '/signin';
+          // window.location.href = '/signin';
         }
       }
 
