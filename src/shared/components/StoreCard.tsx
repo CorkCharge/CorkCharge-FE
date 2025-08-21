@@ -17,7 +17,6 @@ interface storeProps {
   name: string;
   local: string;
   rating: number;
-  time?: string;
   review?: number;
 }
 
@@ -30,7 +29,6 @@ const StoreCard = ({
   name,
   local,
   rating,
-  time,
   review,
 }: storeProps) => {
   const navigate = useNavigate();

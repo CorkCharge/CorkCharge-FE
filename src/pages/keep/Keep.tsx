@@ -136,7 +136,11 @@ const Keep = () => {
           <div className="h-[15px]"></div>
           <div>저장한 tip</div>
           {/* <Curation tiplist={filtered} /> */}
-          <SavedCuration selected={selected} setSelected={setSelected} tiplist={savedTips} />
+          <SavedCuration
+            selected={selected}
+            setSelected={setSelected}
+            // tiplist={savedTips}
+          />
         </>
       )}
     </div>

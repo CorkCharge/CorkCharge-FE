@@ -182,7 +182,6 @@ const StoreList = () => {
                     price={corkage.corkagePrice}
                     name={corkage.name}
                     local={corkage.address}
-                    time={corkage.openingHours}
                     rating={corkage.averageRating}
                     review={corkage.reviewCount}
                   />
@@ -191,7 +190,7 @@ const StoreList = () => {
           </>
         ) : (
           <>
-            <Tip value={selected} onChange={setSelected} />
+            <Tip selected={selected} setSelected={setSelected} />
             <Curation tiplist={filtered} />
           </>
         )}
