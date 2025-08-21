@@ -39,9 +39,9 @@ export interface RestaurantInfo {
   menuImageUrl: string | null; //null,
   corkagePrice: string; //"소주 병당: 3000원, 맥주 병당: 4000원",
   corkageOptions: string[];
-  representMenu: string; //null,
-  pairingAlcohol: string; //null,
-  pairingDescription: string; //null,
+  representMenu: string|null; //null,
+  pairingAlcohol: string|null; //null,
+  pairingDescription: string | null; //null,
   pairingImageUrl: string; //null,
   openingHours: string; //null,
   reviews: reviewProps[];
