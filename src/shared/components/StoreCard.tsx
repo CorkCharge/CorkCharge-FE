@@ -4,9 +4,9 @@ import share from '@/shared/components/home/assets/share.svg';
 import star from '../assets/star.svg';
 import keepIcon from '../assets/keep.svg';
 import bookmarked from '@/shared/components/keep/assets/bookmarked.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { bookmarkRequest, deleteRequest } from '../apis/bookmark/bookmarkApi';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface storeProps {
   key?: number;
@@ -18,6 +18,7 @@ interface storeProps {
   local: string;
   rating: number;
   review?: number;
+  onUnbookmarked?: () => void;
 }
 
 const StoreCard = ({
@@ -30,6 +31,7 @@ const StoreCard = ({
   local,
   rating,
   review,
+  onUnbookmarked,
 }: storeProps) => {
   const navigate = useNavigate();
   const goStore = () => {
@@ -38,8 +40,27 @@ const StoreCard = ({
     navigate(`/detailInfo/${restaurantId}`);
   };
 
+  const { pathname } = useLocation();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>();
+  // const [isBookmarked, setIsBookmarked] = useState<boolean>(() => pathname.startsWith('/keep'));
+  const [keepCount, setKeepCount] = useState<number>(keep);
+
+  //가게 저장 취소 시 리렌더링
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    setKeepCount((prev) => prev + (isBookmarked ? 1 : -1));
+  }, [isBookmarked]);
+
+  // 라우트가 바뀌면 북마크 초기 상태를 경로에 맞춰 동기화
+  useEffect(() => {
+    setIsBookmarked(pathname.startsWith('/keep'));
+  }, [pathname]);
+
   //가게 저장하기
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const keepStore = async () => {
     try {
       const res = await bookmarkRequest({
@@ -74,6 +95,7 @@ const StoreCard = ({
       if (isBookmarked) {
         await deleteStore();
         setIsBookmarked(false);
+        onUnbookmarked?.(); //성공시 Keep.tsx 로 보냄
         // console.log('가게 저장 삭제성공');
       } else {
         await keepStore();
@@ -109,7 +131,7 @@ const StoreCard = ({
           <div className="absolute bottom-2 left-4">
             <div className="flex gap-2">
               <img src={keepIcon} />
-              <span className="text-[18px] font-bold text-white">{keep}</span>
+              <span className="text-[18px] font-bold text-white">{keepCount}</span>
             </div>
           </div>
         </div>
@@ -140,8 +162,10 @@ const StoreCard = ({
               // }}
               onClick={onBookmarkClick}
             >
-              <img src={isBookmarked ? bookmarked : bookmark} />
-              <div className={`${isBookmarked ? 'text-[#90212A]' : 'text-[#C5C8CF]'}`}>저장</div>
+              <img src={isBookmarked ? bookmarked : bookmark} className="h-[22px] w-[16px]" />
+              <div className={`flex-col ${isBookmarked ? 'text-[#90212A]' : 'text-[#C5C8CF]'}`}>
+                저장
+              </div>
             </div>
             <div>
               <img src={share} />
