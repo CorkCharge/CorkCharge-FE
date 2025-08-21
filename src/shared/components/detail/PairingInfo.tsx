@@ -6,18 +6,22 @@ const PairingInfo = (restaurant: RestaurantInfo) => {
   return (
     <div>
       <div className="relative">
-        <div className="flex h-[260px] gap-3 pl-0 pr-0">
-          <div className={`relative flex-1 ${!restaurant.menuImageUrl && 'bg-gray-500'}`}>
+        <div className="grid w-full grid-cols-2 gap-3 pl-0 pr-0">
+          <div className={`relative aspect-square ${!restaurant.menuImageUrl && 'bg-gray-500'}`}>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-transparent"></div>
             {restaurant.menuImageUrl && (
               <img src={restaurant.menuImageUrl} className="h-full w-full" />
             )}
-            <div className="absolute bottom-4 left-4 w-[90px] text-[24px] font-bold text-white">
+            <div className="absolute bottom-4 left-4 w-full text-[24px] font-bold text-white">
               {restaurant.representMenu}
             </div>
           </div>
-          <div className={`relative flex-1 ${!restaurant.pairingImageUrl && 'bg-gray-500'}`}>
-            <img src={restaurant.pairingImageUrl} className="w-full" />
-            <div className="absolute bottom-4 left-4 w-[90px] text-[24px] font-bold text-white">
+          <div className={`relative aspect-square ${!restaurant.pairingImageUrl && 'bg-gray-500'}`}>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-transparent"></div>
+            {restaurant.pairingImageUrl && (
+              <img src={restaurant.pairingImageUrl} className="h-full w-full" />
+            )}
+            <div className="absolute bottom-4 left-4 w-full text-[24px] font-bold text-white">
               {/* 기네스 스타우트 */}
               {restaurant.pairingAlcohol}
             </div>

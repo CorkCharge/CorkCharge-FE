@@ -14,32 +14,58 @@ interface reviewArticleProps {
 
 export const ReviewArticle = ({ name, review }: reviewArticleProps) => {
   return (
-    <div className="relative mb-2 flex h-[144px] w-[357px] justify-between rounded-2xl bg-[#F3F3F6]">
-      <div className="mb-4 ml-4 mt-4 flex flex-col gap-2">
-        <div className="flex">
-          <div className="mr-12 text-[20px] font-bold">{name}</div>
-          <button className="mr-2 w-[46px] rounded-xl bg-[#DACBB64D] text-[10px]">저장 27</button>
-          <img src={etc} />
+    <div
+      className="relative mb-2 flex h-[144px] w-full justify-between rounded-2xl bg-[#F3F3F6] px-4"
+      id={review.reviewId.toString()}
+    >
+      <div className="mb-4 mt-4 flex w-full grow basis-0 flex-col gap-2">
+        <div className="flex w-full justify-between">
+          <div className="text-[20px] font-bold">{name}</div>
+          <div className="mr-3 flex items-center">
+            <button className="mr-2 h-6 rounded-xl bg-[#DACBB64D] px-2 text-[10px]">
+              저장 {review.savedCount}
+            </button>
+            <img src={etc} className="h-4 w-[9px]" />
+          </div>
         </div>
-        <div className="w-[180px] text-[14px]">
+        <div
+          className="max-h-[55px] w-full overflow-hidden pr-5 text-[14px] text-sm"
+          style={{
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'normal',
+          }}
+        >
           {/* 몰트향과 완벽하게 어우러지는 조화로운 페어링입니다. */}
           {review.content}
         </div>
         <div className="absolute bottom-2 flex gap-2 text-[10px]">
           <div>{review.writer}</div>
-          <div>{review.createdAt}</div>
+          <div>{review.createdAt.split('T')[0]}</div>
         </div>
       </div>
 
-      <img
+      {review.imageUrls!.length > 0 ? (
+        <img
+          src={review.imageUrls?.[0]}
+          className="-mr-4 h-[144px] w-[33%] max-w-[150px] rounded-r-2xl"
+        />
+      ) : (
+        <div className="-mr-4 h-[144px] w-[33%] max-w-[150px] rounded-r-2xl bg-[var(--gray-8)]"></div>
+      )}
+
+      {/* <img
         //imageUrls 가 빈 배열일 경우 placeholder 게시
         src={review.imageUrls?.find(Boolean) ?? 'https://placehold.co/128x144'}
         onError={(e) => {
           e.currentTarget.src = 'https://placehold.co/128x144';
         }}
         // src={review.imageUrls ? review.imageUrls[0] : 'https://placehold.co/128x144'}
-        className="h-[144px] w-[128px] rounded-r-2xl"
-      />
+        className="h-[144px] w-[30%] rounded-r-2xl"
+      /> */}
     </div>
   );
 };

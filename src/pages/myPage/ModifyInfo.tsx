@@ -5,6 +5,7 @@ import Header from '@/shared/components/common/Header';
 import Modal from '@/shared/components/common/Modal';
 
 import useMyPageStore from '@/shared/store/useMyPageStore';
+import useAuthStore from '@/shared/store/useAuthStore';
 
 import pencil from '@/shared/components/myPage/images/pencil.png';
 import crossMark from '@/shared/assets/images/plus.png';
@@ -28,6 +29,7 @@ function ModifyInfo() {
   const fileSelector = useRef<HTMLInputElement>(null);
 
   const { myProfile, setMyProfile } = useMyPageStore();
+  const { logout } = useAuthStore();
 
   // 탈퇴하기 모달 생성
   const withdrawCheck = () => (
@@ -126,6 +128,7 @@ function ModifyInfo() {
     apiClient
       .delete('/users')
       .then(() => {
+        logout();
         setSecondModalOpen(true);
       })
       .catch((e) => {
