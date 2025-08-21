@@ -3,9 +3,9 @@ import StoreCard from '@/shared/components/StoreCard';
 import Review from './Review';
 import { useEffect, useState } from 'react';
 import TopBar from '@/shared/components/TopBar';
-// import type { Selected } from '@/shared/components/home/type';
 import { fetchSavedRestaurant, type SavedResto } from '@/shared/apis/bookmark/restaurantApi';
-// import { fetchSavedTip, type SavedTip } from '@/shared/apis/bookmark/tipApi';
+import { fetchSavedTip, type SavedTip } from '@/shared/apis/bookmark/tipApi';
+import SavedCuration from './SavedCuration';
 
 const Keep = () => {
   const [review, setReview] = useState<boolean>(true);
@@ -44,23 +44,21 @@ const Keep = () => {
   }, []);
 
   //fetchTipData (저장된 tip만)
-  // const [savedTips, SetSavedTips] = useState<SavedTip[]>();
+  const [savedTips, SetSavedTips] = useState<SavedTip[]>();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await fetchSavedTip();
-  //       // console.log(res);
-  //       console.log('저장한 tip list API  호출 성공');
-  //       SetSavedTips(res);
-  //     } catch {
-  //       console.error('저장한 tip list API  호출 실패');
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
-  // const [selected, setSelected] = useState<Selected>('ALL');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetchSavedTip();
+        // console.log(res);
+        console.log('저장한 tip list API  호출 성공');
+        SetSavedTips(res);
+      } catch {
+        console.error('저장한 tip list API  호출 실패');
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -109,9 +107,7 @@ const Keep = () => {
         </>
       ) : (
         <>
-          {/* 이것도 저장한 것만 보여주도록 page 만들어야할듯 */}
-          <div className="h-[15px]"></div>
-          <div>저장한 tip</div>
+          <SavedCuration tiplist={savedTips} />
         </>
       )}
     </div>

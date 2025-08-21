@@ -56,10 +56,6 @@ const HotStoreCard = ({
           <div></div>
           <div className="flex gap-4 text-[10px] text-[#ffffff]">
             <div>
-              <img src={clock} />
-              <div>예약</div>
-            </div>
-            <div>
               <img src={bookmark} />
               <div>저장</div>
             </div>

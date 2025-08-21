@@ -3,9 +3,10 @@
 import './tip.css';
 import { type TipList } from '../apis/tip/tipListApi';
 import TipPreview from './home/TipPreview';
+import type { SavedTip } from '../apis/bookmark/tipApi';
 
 interface CurationProps {
-  tiplist?: TipList[];
+  tiplist?: TipList[] | SavedTip[];
 }
 
 const Curation = ({ tiplist = [] }: CurationProps) => {
