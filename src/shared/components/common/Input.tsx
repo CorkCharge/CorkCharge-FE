@@ -50,7 +50,7 @@ export const SearchInput = ({
       )}
     >
       <input
-        className="w-full bg-transparent"
+        className="w-full bg-transparent focus:outline-none"
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={onKeyDown}

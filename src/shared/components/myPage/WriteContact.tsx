@@ -7,14 +7,17 @@ import apiClient from '@/shared/apis/apiClient';
 // const TYPE = ['콜키지 정보 오류', '가게 정보 오류', '기타'];
 // const TYPE_VAL = ['CORKAGE_ERROR', '', 'OTHER_ERROR'];
 
-function WriteContact() {
+function WriteContact({ onPreview }: { onPreview: () => void }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const uploadPost = () => {
     apiClient
       .post('/suggestion', { title, content, category: 'OTHER_ERROR' })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        onPreview();
+      })
       .catch((e) => console.log(e));
   };
   return (
