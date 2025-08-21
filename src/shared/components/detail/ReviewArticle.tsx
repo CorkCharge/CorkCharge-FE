@@ -18,7 +18,7 @@ export const ReviewArticle = ({ name, review }: reviewArticleProps) => {
       className="relative mb-2 flex h-[144px] w-full justify-between rounded-2xl bg-[#F3F3F6] px-4"
       id={review.reviewId.toString()}
     >
-      <div className="mb-4 ml-4 mt-4 flex w-full flex-col gap-2">
+      <div className="mb-4 mt-4 flex w-full grow basis-0 flex-col gap-2">
         <div className="flex w-full justify-between">
           <div className="text-[20px] font-bold">{name}</div>
           <div className="mr-3 flex items-center">
@@ -49,9 +49,12 @@ export const ReviewArticle = ({ name, review }: reviewArticleProps) => {
       </div>
 
       {review.imageUrls!.length > 0 ? (
-        <img src={review.imageUrls?.[0]} className="-mr-4 h-[144px] !w-[35%] rounded-r-2xl" />
+        <img
+          src={review.imageUrls?.[0]}
+          className="-mr-4 h-[144px] w-[33%] max-w-[150px] rounded-r-2xl"
+        />
       ) : (
-        <div className="-mr-4 h-[144px] !w-[35%] rounded-r-2xl bg-[var(--gray-8)]"></div>
+        <div className="-mr-4 h-[144px] w-[33%] max-w-[150px] rounded-r-2xl bg-[var(--gray-8)]"></div>
       )}
 
       {/* <img

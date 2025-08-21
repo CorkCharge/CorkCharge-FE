@@ -62,7 +62,9 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
           </div>
         </div>
       </div>
-      <div className="w-full px-4">
+      <div
+        className={`w-full px-4 ${Math.ceil(restInfo.reviews.length / 5) !== reviewPage && 'mb-3'}`}
+      >
         {restaurant.reviews &&
           restInfo.reviews.slice(0, 5 * reviewPage).map((review) => {
             return <ReviewArticle name={restaurant.restaurantName} review={review} />;
@@ -70,7 +72,9 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
       </div>
 
       {/* <ReviewArticle name={restaurant.restaurantName} review={restaurant.reviews[0]} /> */}
-      <ShowMoreBtn onClick={() => setReviewPage((prev) => prev + 1)} />
+      {Math.ceil(restInfo.reviews.length / 5) !== reviewPage && (
+        <ShowMoreBtn onClick={() => setReviewPage((prev) => prev + 1)} />
+      )}
     </div>
   );
 };
