@@ -75,27 +75,6 @@ export interface reviewProps {
   imageUrls: string[] | null; //[]
 }
 
-//사용x
-// interface corkageInfoProps {
-//   corkagePrice: string; //"1병당 1만원",
-//   additionalOptions: string[]; //[
-//   //   "잔 제공",
-//   //   "얼음 제공",
-//   //   "한병 무료"
-//   // ],
-//   pairing: string; //"라구버거 - 기네스 스타우트",
-//   description: string; //"진한 흑맥주 풍미가 라구버거의 풍미와 조화롭게 어우러집니다."
-// }
-
-// interface reviewProps {
-//   reviewId: number; //101,
-//   userName: string; //"니콜라 테슬라",
-//   content: string; //"몰트향과 완벽하게 어우러지는 조화로운 페어링입니다.",
-//   createdAt: string; //"2025-01-01",
-//   rating: number; //5,
-//   imageUrl: string | null; //"https://example.com/review1.jpg"
-// }
-
 export interface RestaurantResponse {
   success: boolean;
   code: number;

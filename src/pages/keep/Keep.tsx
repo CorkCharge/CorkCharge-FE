@@ -1,12 +1,15 @@
 // import React from 'react'
 import StoreCard from '@/shared/components/StoreCard';
-import Review from '../../shared/components/keep/Review';
+import Review from './Review';
 import { useEffect, useState } from 'react';
-import Curation from '@/shared/components/Curation';
-import Tip from '../../shared/components/Tip';
+// import Curation from '@/shared/components/Curation';
+// import Tip from '../../shared/components/Tip';
 import TopBar from '@/shared/components/TopBar';
 import type { Selected } from '@/shared/components/home/type';
 import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
+import { fetchSavedRestaurant, type SavedResto } from '@/shared/apis/bookmark/restaurantApi';
+import { fetchSavedTip, type SavedTip } from '@/shared/apis/bookmark/tipApi';
+import SavedCuration from './SavedCuration';
 
 const Keep = () => {
   const [review, setReview] = useState<boolean>(true);
@@ -44,10 +47,42 @@ const Keep = () => {
     fetchTipData();
   }, []);
 
-  const [selected, setSelected] = useState<Selected>('ALL');
+  //fetchRestosData (저장된 매장만)
+  const [savedRestos, SetSavedRestos] = useState<SavedResto[]>();
 
-  const filtered =
-    selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetchSavedRestaurant();
+        console.log(res);
+        SetSavedRestos(res);
+      } catch {
+        console.error('저장한 식당 list API  호출 실패');
+      }
+    };
+    fetchData();
+  }, []);
+
+  //fetchTipData (저장된 tip만)
+  const [savedTips, SetSavedTips] = useState<SavedTip[]>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetchSavedTip();
+        // console.log(res);
+        console.log('저장한 tip list API  호출 성공');
+        SetSavedTips(res);
+      } catch {
+        console.error('저장한 tip list API  호출 실패');
+      }
+    };
+    fetchData();
+  }, []);
+
+  const [selected, setSelected] = useState<Selected>('ALL');
+  // const filtered =
+  //   selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -73,32 +108,35 @@ const Keep = () => {
           Tip
         </button>
       </div>
-
-      {/* <div>
-
-      </div> */}
       {review ? (
         //저장한 리뷰 목록 -> restaurantId 받아올 수 있음.
         <Review />
       ) : store ? (
         <>
           {/* keep된것만 map 필요 */}
-          <StoreCard
-            key={1}
-            keep={88}
-            price="1병당 1만원"
-            name="깍뚝"
-            local="500m 서울 광진구 어대로 1층"
-            time="평일 17:00~24:00"
-            rating={4.2}
-            review={3124}
-          />
+          {savedRestos &&
+            savedRestos.map((savedResto) => {
+              return (
+                <StoreCard
+                  restaurantId={savedResto.restaurantId}
+                  imageUrl={savedResto.thumbnailUrl}
+                  keep={savedResto.bookmarkCount}
+                  price={savedResto?.corkagePrice ?? '0원'}
+                  name={savedResto.name}
+                  local={savedResto.address}
+                  rating={savedResto.rating}
+                />
+              );
+            })}
         </>
       ) : (
         <>
-          <Tip value={selected} onChange={setSelected} />
+          {/* 이것도 저장한 것만 보여주도록 page 만들어야할듯 */}
+          {/* <Tip value={selected} onChange={setSelected} /> */}
           <div className="h-[15px]"></div>
-          <Curation tiplist={filtered} />
+          <div>저장한 tip</div>
+          {/* <Curation tiplist={filtered} /> */}
+          <SavedCuration selected={selected} setSelected={setSelected} tiplist={savedTips} />
         </>
       )}
     </div>

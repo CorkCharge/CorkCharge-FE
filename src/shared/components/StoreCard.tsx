@@ -16,9 +16,9 @@ interface storeProps {
   price: string;
   name: string;
   local: string;
-  time: string;
   rating: number;
-  review: number;
+  time?: string;
+  review?: number;
 }
 
 const StoreCard = ({
@@ -29,8 +29,8 @@ const StoreCard = ({
   price,
   name,
   local,
-  time,
   rating,
+  time,
   review,
 }: storeProps) => {
   const navigate = useNavigate();
@@ -124,7 +124,7 @@ const StoreCard = ({
           <div className="mb-[2px] text-[20px] font-bold">{name}</div>
           <div>
             <div>{local}</div>
-            <div>{time}</div>
+            {/* <div>{time}</div> */}
           </div>
         </div>
         <div className="flex items-center justify-between">

@@ -40,6 +40,7 @@ const CorkScoreList = ({ range }: { range: DayRange }) => {
           return (
             <CorkScore
               reviewId={corkage.reviewId}
+              restaurantId={corkage.restaurantId}
               restaurantName={corkage.restaurantName}
               userName={corkage.userName}
               content={corkage.content}

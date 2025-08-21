@@ -4,8 +4,11 @@ import clock from '../../shared/assets/clock.svg';
 import bookmark from '../../shared/assets/bookmark.svg';
 import share from '../../shared/assets/share.svg';
 import './tip.css';
+import { useNavigate } from 'react-router-dom';
 
 interface hotStoreCardProps {
+  key: number;
+  restaurantId: number;
   imgUrl: string;
   keep: number;
   name: string;
@@ -13,9 +16,24 @@ interface hotStoreCardProps {
   time: string;
 }
 
-const HotStoreCard = ({ imgUrl, keep, name, local, time }: hotStoreCardProps) => {
+const HotStoreCard = ({
+  key,
+  restaurantId,
+  imgUrl,
+  keep,
+  name,
+  local,
+  time,
+}: hotStoreCardProps) => {
+  const navigate = useNavigate();
+  const goStore = () => {
+    console.log('key: ' + key);
+    console.log('가게 상세 정보 페이지 이동');
+    navigate(`/detailInfo/${restaurantId}`);
+  };
+
   return (
-    <div className="flex flex-col justify-center">
+    <div onClick={goStore} className="flex cursor-pointer flex-col justify-center">
       <div className="relative">
         {/* <img src="https://placehold.co/361x217" className="rounded-t-lg" /> */}
         <img src={imgUrl} className="h-[217px] w-[361px] rounded-t-lg" />

@@ -5,24 +5,36 @@ interface BottomButtonContainerProps {
   selectedSido: string | null;
   selectedSigungu: string | null;
   selectedDongs: string[];
+
+  filterType?: 'map' | 'hot';
+  onApply?: (data: any) => void; // 선택적 onApply prop 추가
 }
 
 const BottomButtonContainer = ({
   selectedSido,
   selectedSigungu,
   selectedDongs,
+  filterType,
+  onApply,
 }: BottomButtonContainerProps) => {
   const navigate = useNavigate();
   const handleApplyClick = async () => {
     try {
       const res = await fetchFilteredRegion({
-        type: 'map',
+        type: filterType ?? 'map',
         sido: selectedSido ?? undefined,
         sigungu: selectedSigungu ?? undefined,
         dong: selectedDongs.length > 0 ? selectedDongs : undefined,
       });
       console.log('넘어갈 data 배열:', res.data);
-      navigate('/corkagemap/filter/result', { state: { restaurants: res.data } });
+
+      if (onApply) {
+        // onApply prop이 제공되면 해당 함수 호출
+        onApply(res.data);
+      } else {
+        // 기본 동작: 결과 페이지로 이동
+        navigate('/corkagemap/filter/result', { state: { restaurants: res.data } });
+      }
     } catch (err) {
       console.error('API 호출 실패', err);
     }

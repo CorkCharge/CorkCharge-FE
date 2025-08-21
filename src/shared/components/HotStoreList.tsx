@@ -1,9 +1,13 @@
 // import React from 'react'
-import HotStoreCard from './HotStoreCard';
-import { useEffect, useState } from 'react';
 import { fetchHotRestaurant, type HotRestaurant } from '@/shared/apis/restaurant/hotStoreApi';
+import { useEffect, useState } from 'react';
+import HotStoreCard from './HotStoreCard';
 
-const HotStoreList = () => {
+interface HotStoreListProps {
+  filteredData?: any[]; // 필터링된 데이터를 받을 수 있는 prop
+}
+
+const HotStoreList = ({ filteredData }: HotStoreListProps) => {
   const [hotRestaurants, setHotRestaurants] = useState<HotRestaurant[]>([]);
 
   useEffect(() => {
@@ -18,26 +22,33 @@ const HotStoreList = () => {
         console.error('API  호출 실패');
       }
     };
-    fetchData();
-  }, []);
+
+    // 필터링된 데이터가 있으면 사용하고, 없으면 기본 데이터를 가져옴
+    if (!filteredData) {
+      fetchData();
+    }
+  }, [filteredData]);
+
+  // 필터링된 데이터가 있으면 그것을 사용하고, 없으면 기본 핫 레스토랑 데이터 사용
+  const displayData = filteredData || hotRestaurants;
 
   return (
     <div className="w-[393px]">
       <div className="flex flex-col items-center justify-center gap-4">
-        {hotRestaurants?.map((r) => (
+        {displayData?.map((r, index) => (
           <HotStoreCard
-            // key={r.restaurantId}
-            imgUrl={r.imageUrl}
-            keep={r.bookmarkCount}
-            name={r.restaurantName} //"뉴웨이브 서울"
-            local={r.address} //"1.2km 서울시 성동구 상수동 340-2"
-            //1.2km 정보 추가 필요
-            time={r.openingHours} //"평일 17:00~24:00"
-            //closeTime 추가 필요
+            key={filteredData ? index : r.restaurantId}
+            restaurantId={filteredData ? r.restaurantId : '1'}
+            imgUrl={filteredData ? r.imageUrl || '/default-image.jpg' : r.imageUrl}
+            keep={filteredData ? r.bookmarkCount || 0 : r.bookmarkCount}
+            name={filteredData ? r.name : r.restaurantName}
+            local={filteredData ? r.address : r.address}
+            time={filteredData ? r.openingHours || '영업시간 정보 없음' : r.openingHours}
           />
         ))}
       </div>
     </div>
   );
 };
+
 export default HotStoreList;

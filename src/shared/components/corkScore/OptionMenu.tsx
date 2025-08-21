@@ -7,26 +7,31 @@ import deleteIcon from './assets/delete.svg';
 import Share from '@/shared/components/detail/Share';
 import Modal from '../detail/Modal';
 
-const OptionMenu = () => {
+interface OptionMenuProps {
+  resId?: number;
+  resName?: string;
+}
+
+const OptionMenu = ({ resId, resName }: OptionMenuProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [share] = useState<boolean>(false);
-  // const [edit] = useState<boolean>(false);
   const [remove] = useState<boolean>(false);
 
   //링크 공유하기 기능
   const [openShareModal, setOpenShareModal] = useState<boolean>(false);
   const handleShare = () => {
     console.log('공유하기 창 띄우기');
+    // console.log('가게명: ' + resName);
+    // console.log('가게id: ' + resId);
     setOpenShareModal(true);
   };
 
+  const baseURL = window.location.origin;
+  const pathURL = `${baseURL}/detailInfo/${resId}`;
   const handleCopyLink = () => {
     try {
-      // const pathURL = `http://localhost:5173/detailInfo/${restaurantId};`;
-      // const baseURL = window.location.origin;
-      // const pathURL = `${baseURL}/detailInfo/${restaurantId}`;
-      // console.log(pathURL);
-      // navigator.clipboard.writeText(pathURL);
+      console.log('url: ' + pathURL);
+      navigator.clipboard.writeText(pathURL);
       setOpenShareModal(false);
       alert('링크가 클립보드에 복사되었습니다: ');
     } catch {
@@ -83,8 +88,8 @@ const OptionMenu = () => {
       )}
       {openShareModal && (
         <Share
-          copylink="복사한링크"
-          restaurantName="식당이름"
+          copylink={pathURL}
+          restaurantName={resName ?? '이름없음'}
           handleOpt1Click={() => handleCopyLink()}
           handleOpt2Click={() => setOpenShareModal(false)}
         />

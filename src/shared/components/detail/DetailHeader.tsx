@@ -116,10 +116,10 @@ const DetailHeader = ({
     setOpenShareModal(true);
   };
 
+  const baseURL = window.location.origin;
+  const pathURL = `${baseURL}/detailInfo/${resId}`;
   const handleCopyLink = () => {
     try {
-      const baseURL = window.location.origin;
-      const pathURL = `${baseURL}/detailInfo/${resId}`;
       // const pathURL = `http://localhost:5173/detailInfo/${resId};`;
       console.log(pathURL);
       navigator.clipboard.writeText(pathURL);
@@ -304,8 +304,8 @@ const DetailHeader = ({
       )}
       {openShareModal && (
         <Share
-          copylink="복사할링크!"
-          restaurantName="식당이름!"
+          copylink={pathURL}
+          restaurantName={name}
           handleOpt1Click={() => handleCopyLink()}
           handleOpt2Click={() => setOpenShareModal(false)}
         />
