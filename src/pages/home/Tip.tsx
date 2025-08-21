@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { fetchTipInfo, type TipInfo } from '@/shared/apis/tip/tipListApi';
 import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
 
+//이거 tipArticle/:id 페이지
 const Tip = () => {
   const navigate = useNavigate();
   const handleClick = () => {
@@ -36,24 +37,6 @@ const Tip = () => {
     })();
     return () => {};
   }, [tipId, id]);
-
-  //더미 데이터
-  // const dummyTip: TipInfo = {
-  //   tipId: 1,
-  //   title: '삼겹살과 페어링하기 좋은 주류 츄천',
-  //   content: `"그 맛은 두 배가 되죠.
-  //         소주만 먹기엔 뭔가 아쉽다…”
-
-  //         하셨던 분들께, 오늘은 삼겹살과 찰떡같이 어울리는 주류 조합을 소개해드립니다.
-
-  //         고기 한 점에 술 한 잔,
-
-  //         그 조화가 완벽해지는 순간을 위해 고른 추천 리스트"`,
-  //   tipCategory: '페어링 큐레이션',
-  //   imageUrls: ['https://placehold.co/393x358'],
-  //   createdAt: new Date().toISOString(),
-  // };
-  // const [tip, setTip] = useState<TipInfo>(dummyTip);
 
   //tip 저장
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
@@ -92,7 +75,8 @@ const Tip = () => {
         await deleteStore();
         setIsBookmarked(false);
       } else {
-        await keepStore();
+        await keepStore(); //원래 이건데 왜 저장삭제 실패?
+        // await deleteStore();
         setIsBookmarked(true);
       }
     } catch (err) {

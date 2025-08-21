@@ -1,6 +1,6 @@
 // import React from 'react'
 import CorkScoreList from '@/shared/components/corkScore/CorkScoreList';
-import RegionSearchBar from '@/shared/components/corkScore/RegionSearchBar';
+// import RegionSearchBar from '@/shared/components/corkScore/RegionSearchBar';
 import SelectBox from '@/shared/components/corkScore/SelectBox';
 import type { DayRange } from '@/shared/components/corkScore/types';
 import TopBar from '@/shared/components/TopBar';
@@ -17,7 +17,7 @@ const CorkStores = () => {
       </div>
       <CorkScoreList range={range} />
       {/* <CorkScoreList /> */}
-      <RegionSearchBar />
+      {/* <RegionSearchBar /> */}
     </div>
   );
 };

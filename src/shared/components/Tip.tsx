@@ -2,18 +2,18 @@ import type { Selected, tipCategory } from '@/shared/components//home/type';
 import './tip.css';
 
 type TipProps = {
-  value: Selected;
-  onChange: (v: Selected) => void;
+  selected: Selected;
+  setSelected: (v: Selected) => void;
 };
 
-const Tip = ({ value, onChange }: TipProps) => {
-  const is = (v: Selected | tipCategory) => value === v;
+const Tip = ({ selected, setSelected }: TipProps) => {
+  const is = (v: Selected | tipCategory) => selected === v;
 
   return (
     <div className="flex gap-1">
       <button
         type="button"
-        onClick={() => onChange('ALL')}
+        onClick={() => setSelected('ALL')}
         className={`button ${is('ALL') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         전체
@@ -21,7 +21,7 @@ const Tip = ({ value, onChange }: TipProps) => {
 
       <button
         type="button"
-        onClick={() => onChange('CORKAGE')}
+        onClick={() => setSelected('CORKAGE')}
         className={`button ${is('CORKAGE') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         콜키지 팁
@@ -29,7 +29,7 @@ const Tip = ({ value, onChange }: TipProps) => {
 
       <button
         type="button"
-        onClick={() => onChange('PAIRING')}
+        onClick={() => setSelected('PAIRING')}
         className={`button ${is('PAIRING') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         페어링 큐레이션
@@ -37,7 +37,7 @@ const Tip = ({ value, onChange }: TipProps) => {
 
       <button
         type="button"
-        onClick={() => onChange('EVENT')}
+        onClick={() => setSelected('EVENT')}
         className={`button ${is('EVENT') ? 'bg-[#90212A] text-white' : 'bg-[#f3f3f6] text-[#35353F]'}`}
       >
         EVENT

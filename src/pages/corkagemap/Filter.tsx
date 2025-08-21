@@ -104,6 +104,12 @@ const Filter = () => {
     setSelectedCorkageTypes(initialCorkageState.selectedCorkageTypes);
     setSelectedOptionsTypes(initialCorkageState.selectedOptionsTypes);
   };
+  const handleReset = () => {
+    setSelectedSido(null);
+    setSelectedSigungu(null);
+    setSelectedDongs([]);
+    console.log('초기화 버튼 클릭');
+  };
 
   return (
     <main className="relative flex h-screen flex-col items-center">
@@ -150,6 +156,7 @@ const Filter = () => {
             selectedSido={selectedSido}
             selectedSigungu={selectedSigungu}
             selectedDongs={selectedDongs}
+            handleReset={handleReset}
           />
         </>
       )}
