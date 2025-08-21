@@ -42,7 +42,7 @@ const SearchBar = ({ searchDisabled, searchValue, setSearchValue }: topBarProps)
         />
         <img src={Search} onClick={handleSearch} className="cursor-pointer"></img>
       </div>
-      <img src={Bell} onClick={handleNotif} className="cursor-pointer"></img>
+      {/* <img src={Bell} onClick={handleNotif} className="cursor-pointer"></img> */}
     </div>
   );
 };

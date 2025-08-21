@@ -260,8 +260,9 @@ const DetailHeader = ({
       {openKeepModal && (
         <Modal
           mainContent="저장완료"
-          subContent="엔비햄버거를 저장했습니다♥"
-          info={['저장 수 100개가 되면', '신규 콜키지 우선순위로 등록됩니다.', '현재 저장 수: 84']}
+          subContent={`${name}(을)를 저장했습니다♥`}
+          // subContent="엔비햄버거를 저장x했습니다♥"
+          // info={['저장 수 100개가 되면', '신규 콜키지 우선순위로 등록됩니다.', '현재 저장 수: {']}
           option1="확인"
           option2="공유하기"
           handleOpt1Click={() => setOpenKeepModal(false)}

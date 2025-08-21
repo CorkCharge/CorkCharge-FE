@@ -7,6 +7,7 @@ import bookmarked from '@/shared/components/keep/assets/bookmarked.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { bookmarkRequest, deleteRequest } from '../apis/bookmark/bookmarkApi';
 import { useEffect, useRef, useState } from 'react';
+import Share from './detail/Share';
 
 interface storeProps {
   key?: number;
@@ -109,12 +110,30 @@ const StoreCard = ({
     }
   };
 
+  //공유하기 기능
+  //링크 공유하기 기능
+  const [openShareModal, setOpenShareModal] = useState<boolean>(false);
+  const handleShare = () => {
+    console.log('공유하기 창 띄우기');
+    setOpenShareModal(true);
+  };
+
+  const baseURL = window.location.origin;
+  const pathURL = `${baseURL}/detailInfo/${restaurantId}`;
+  const handleCopyLink = () => {
+    try {
+      console.log(pathURL);
+      navigator.clipboard.writeText(pathURL);
+      setOpenShareModal(false);
+      alert('링크가 클립보드에 복사되었습니다: ');
+    } catch {
+      console.error('복사 실패');
+    }
+  };
+
   return (
-    <div
-      onClick={goStore}
-      className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2"
-    >
-      <div className="mb-[10px] h-[220px] w-[361px]">
+    <div className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2">
+      <div onClick={goStore} className="mb-[10px] h-[220px] w-[361px]">
         <div className="relative">
           {/* <img src="https://placehold.co/361x170" className="rounded-t-lg" />  */}
           <img
@@ -140,7 +159,7 @@ const StoreCard = ({
         </div>
       </div>
       <div className="flex flex-col gap-6 pl-2 pr-2">
-        <div>
+        <div onClick={goStore}>
           <div className="mb-[2px] text-[20px] font-bold">{name}</div>
           <div>
             <div>{local}</div>
@@ -168,12 +187,27 @@ const StoreCard = ({
               </div>
             </div>
             <div>
-              <img src={share} />
+              <img
+                src={share}
+                // onClick={handleShare}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleShare();
+                }}
+              />
               <div>공유</div>
             </div>
           </div>
         </div>
       </div>
+      {openShareModal && (
+        <Share
+          copylink={pathURL}
+          restaurantName={name}
+          handleOpt1Click={() => handleCopyLink()}
+          handleOpt2Click={() => setOpenShareModal(false)}
+        />
+      )}
     </div>
   );
 };
