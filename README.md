@@ -70,7 +70,8 @@
 - **주요 페이지**
 <p align="center">
   <img src="https://github.com/user-attachments/assets/0799c166-2f4b-4f19-99cf-f94ceeae6c25" width="350" height="640" />
-  <img src="https://github.com/user-attachments/assets/6e9a68e9-8d11-445a-b4ef-583afff2cdc5" width="350" height="640" />
+  <img width="350" height="640" alt="image" src="https://github.com/user-attachments/assets/fb819ab8-f5cd-4383-b124-4c71b2bbb91c" />
+
 </p>
 
   **콜키지맵** - 콜키지 가능 매당으로 등록된 장소가 지도에 마커로 표시됩니다. 줌 아웃시 클러스터링을 통해 해당 지역구에 등록된 매장 개수가 표시 됩니다.
