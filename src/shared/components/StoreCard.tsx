@@ -4,9 +4,10 @@ import share from '@/shared/components/home/assets/share.svg';
 import star from '../assets/star.svg';
 import keepIcon from '../assets/keep.svg';
 import bookmarked from '@/shared/components/keep/assets/bookmarked.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { bookmarkRequest, deleteRequest } from '../apis/bookmark/bookmarkApi';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Share from './detail/Share';
 
 interface storeProps {
   key?: number;
@@ -18,6 +19,7 @@ interface storeProps {
   local: string;
   rating: number;
   review?: number;
+  onUnbookmarked?: () => void;
 }
 
 const StoreCard = ({
@@ -30,6 +32,7 @@ const StoreCard = ({
   local,
   rating,
   review,
+  onUnbookmarked,
 }: storeProps) => {
   const navigate = useNavigate();
   const goStore = () => {
@@ -38,8 +41,27 @@ const StoreCard = ({
     navigate(`/detailInfo/${restaurantId}`);
   };
 
+  const { pathname } = useLocation();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>();
+  // const [isBookmarked, setIsBookmarked] = useState<boolean>(() => pathname.startsWith('/keep'));
+  const [keepCount, setKeepCount] = useState<number>(keep);
+
+  //가게 저장 취소 시 리렌더링
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    setKeepCount((prev) => prev + (isBookmarked ? 1 : -1));
+  }, [isBookmarked]);
+
+  // 라우트가 바뀌면 북마크 초기 상태를 경로에 맞춰 동기화
+  useEffect(() => {
+    setIsBookmarked(pathname.startsWith('/keep'));
+  }, [pathname]);
+
   //가게 저장하기
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const keepStore = async () => {
     try {
       const res = await bookmarkRequest({
@@ -74,6 +96,7 @@ const StoreCard = ({
       if (isBookmarked) {
         await deleteStore();
         setIsBookmarked(false);
+        onUnbookmarked?.(); //성공시 Keep.tsx 로 보냄
         // console.log('가게 저장 삭제성공');
       } else {
         await keepStore();
@@ -87,12 +110,30 @@ const StoreCard = ({
     }
   };
 
+  //공유하기 기능
+  //링크 공유하기 기능
+  const [openShareModal, setOpenShareModal] = useState<boolean>(false);
+  const handleShare = () => {
+    console.log('공유하기 창 띄우기');
+    setOpenShareModal(true);
+  };
+
+  const baseURL = window.location.origin;
+  const pathURL = `${baseURL}/detailInfo/${restaurantId}`;
+  const handleCopyLink = () => {
+    try {
+      console.log(pathURL);
+      navigator.clipboard.writeText(pathURL);
+      setOpenShareModal(false);
+      alert('링크가 클립보드에 복사되었습니다: ');
+    } catch {
+      console.error('복사 실패');
+    }
+  };
+
   return (
-    <div
-      onClick={goStore}
-      className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2"
-    >
-      <div className="mb-[10px] h-[220px] w-[361px]">
+    <div className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2">
+      <div onClick={goStore} className="mb-[10px] h-[220px] w-[361px]">
         <div className="relative">
           {/* <img src="https://placehold.co/361x170" className="rounded-t-lg" />  */}
           <img
@@ -109,7 +150,7 @@ const StoreCard = ({
           <div className="absolute bottom-2 left-4">
             <div className="flex gap-2">
               <img src={keepIcon} />
-              <span className="text-[18px] font-bold text-white">{keep}</span>
+              <span className="text-[18px] font-bold text-white">{keepCount}</span>
             </div>
           </div>
         </div>
@@ -118,7 +159,7 @@ const StoreCard = ({
         </div>
       </div>
       <div className="flex flex-col gap-6 pl-2 pr-2">
-        <div>
+        <div onClick={goStore}>
           <div className="mb-[2px] text-[20px] font-bold">{name}</div>
           <div>
             <div>{local}</div>
@@ -140,16 +181,33 @@ const StoreCard = ({
               // }}
               onClick={onBookmarkClick}
             >
-              <img src={isBookmarked ? bookmarked : bookmark} />
-              <div className={`${isBookmarked ? 'text-[#90212A]' : 'text-[#C5C8CF]'}`}>저장</div>
+              <img src={isBookmarked ? bookmarked : bookmark} className="h-[22px] w-[16px]" />
+              <div className={`flex-col ${isBookmarked ? 'text-[#90212A]' : 'text-[#C5C8CF]'}`}>
+                저장
+              </div>
             </div>
             <div>
-              <img src={share} />
+              <img
+                src={share}
+                // onClick={handleShare}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleShare();
+                }}
+              />
               <div>공유</div>
             </div>
           </div>
         </div>
       </div>
+      {openShareModal && (
+        <Share
+          copylink={pathURL}
+          restaurantName={name}
+          handleOpt1Click={() => handleCopyLink()}
+          handleOpt2Click={() => setOpenShareModal(false)}
+        />
+      )}
     </div>
   );
 };
