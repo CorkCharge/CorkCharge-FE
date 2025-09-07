@@ -8,6 +8,7 @@ const apiClient = axios.create({
   },
 });
 
+/*
 apiClient.interceptors.request.use((config) => {
   const accToken = sessionStorage.getItem('accessToken');
   if (accToken && !PAGE_TO_ANYONE.some((prefix) => config.url?.startsWith(prefix))) {
@@ -74,5 +75,6 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+*/
 
 export default apiClient;
