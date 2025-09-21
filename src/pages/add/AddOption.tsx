@@ -73,6 +73,10 @@ const AddOption = () => {
     setIsModalOpen(false);
   };
 
+  const handleXClick = () => {
+    navigate('/home');
+  };
+
   return (
     <main
       className="relative flex h-screen w-full flex-col items-stretch"
@@ -87,7 +91,12 @@ const AddOption = () => {
           onClick={handleBackClick}
         />
         <p className="text-[16px] font-[700]">추가하기</p>
-        <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" />
+        <img
+          src={X}
+          alt="x"
+          className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
+          onClick={handleXClick}
+        />
       </div>
       {/*가게정보*/}
       <div className="mt-[8px] flex w-full flex-col gap-[8px]">
@@ -239,7 +248,7 @@ const AddOption = () => {
         {/*구분선*/}
         <div className="mt-[30px] h-[1px] w-[91%] bg-[#DBDDE1]"></div>
         {/*세부옵션 및 버튼 */}
-        <div className="mt-[22px] flex w-full flex-row gap-[20px]">
+        <div className="mb-[136px] mt-[22px] flex w-full flex-row gap-[20px]">
           <div className="ml-[32px] text-[16px] font-[700]">세부 옵션</div>
           <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
             <button
