@@ -22,7 +22,12 @@ const Header = () => {
         onClick={handleBackClick}
       />
       <p className="text-[16px] font-[700]">필터</p>
-      <img src={X} alt="x" className="mr-[12px] h-[17px] w-[17px]" onClick={handleXClick} />
+      <img
+        src={X}
+        alt="x"
+        className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
+        onClick={handleXClick}
+      />
     </header>
   );
 };
