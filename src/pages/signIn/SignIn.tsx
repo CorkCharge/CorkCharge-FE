@@ -25,8 +25,8 @@ function SignIn() {
           <span>네이버 로그인</span>
         </button>
         <span
-          className="text-[#ecedef] underline underline-offset-4"
-          onClick={() => navigate('/onboarding/prefer')}
+          className="cursor-pointer text-[#ecedef] underline underline-offset-4"
+          onClick={() => navigate('/home')}
         >
           로그인 없이 보기
         </span>

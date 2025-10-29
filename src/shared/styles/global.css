@@ -7,7 +7,7 @@
     font-family: 'Pretendard Variable', Pretendard, sans-serif;
   }
   html {
-    max-width: 600px;
+    max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
     background-color: #f8f8f8;
@@ -67,6 +67,7 @@
   --gray-6: #80818b;
   --gray-7: #585a68;
   --gray-8: #35353f;
+  --glass-soft: rgba(220, 219, 232, 0.5);
 }
 
 @layer components {

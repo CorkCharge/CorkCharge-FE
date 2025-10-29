@@ -1,15 +1,10 @@
-// import React from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import StoreCard from '../../shared/components/StoreCard';
 import Curation from '../../shared/components/Curation';
 import Tip from '../../shared/components/Tip';
 import TopBar from '../../shared/components/SearchBar';
-import Glass from '../../shared/assets/glass.svg';
-import smallGlass from '../../shared/assets/smallGlass.svg';
-import arrow from '../../shared/assets/arrow.svg';
-import hotstore from '../../shared/assets/hotstore.svg';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import keepIcon from '../../shared/assets/keep.svg';
 import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
 import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
 import type { Selected } from '@/shared/components/home/type';
@@ -17,6 +12,13 @@ import {
   fetchHomeRestaurant,
   type HomeRestaruantInfo,
 } from '@/shared/apis/restaurant/homeRestaurantApi';
+
+import Glass from '../../shared/assets/glass.svg';
+import smallGlass from '../../shared/assets/smallGlass.svg';
+import arrow from '../../shared/assets/arrow.svg';
+import hotstore from '../../shared/assets/hotstore.svg';
+import keepIcon from '../../shared/assets/keep.svg';
+import DefaultImage from '@/shared/components/common/DefaultImage';
 
 const StoreList = () => {
   const [storeSelected, setStoreSelected] = useState<boolean>(false);
@@ -104,20 +106,22 @@ const StoreList = () => {
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center px-4">
       <TopBar searchDisabled={false} />
-      <div className="relative mb-4">
-        {/* <img
-          src="http://t1.kakaocdn.net/fiy_reboot/place/C1B6E3FC902945369E993185518384E6"
-          className="h-[200px] w-[361px] cursor-pointer rounded-lg object-cover"
-          onClick={goStore}
-        /> */}
-        <img
-          onClick={goStore}
-          src={signature?.imageUrl ? signature.imageUrl : 'https://placehold.co/361x200'}
-          className="h-[200px] w-[361px] cursor-pointer rounded-lg object-cover"
-        />
-        <div className="pointer-events-none absolute inset-0 rounded-lg bg-black/40" />
+      <div className="relative mb-4 flex w-full justify-center">
+        {signature?.imageUrl ? (
+          <>
+            <img
+              onClick={goStore}
+              src={signature.imageUrl}
+              className="h-[200px] w-[361px] cursor-pointer rounded-lg object-cover"
+            />
+            {/* 그라데이션 용 컴포넌트 */}
+            <div className="pointer-events-none absolute inset-0 rounded-lg bg-black/40" />
+          </>
+        ) : (
+          <DefaultImage width="100%" className="rounded-md" />
+        )}
         <div className="absolute left-4 top-4 z-10">
           <div className="flex flex-col gap-2">
             <div className="title">{signature?.restaurantName}</div>
@@ -138,33 +142,34 @@ const StoreList = () => {
           <img src={arrow} className="h-[17px] w-[10px]" />
         </div>
       </div>
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex gap-2">
+
+      <div className="flex w-full flex-col items-center gap-4">
+        <div className="flex w-full gap-2">
           <button
             onClick={handleRequest}
-            className="flex h-[80px] w-[176px] items-center justify-center rounded-[16px] bg-[#F3F3F6]"
+            className="flex h-[80px] flex-1 items-center justify-center rounded-[16px] bg-[var(--glass-soft)]"
           >
             <img src={smallGlass}></img>
             <div>해주세요</div>
           </button>
           <button
             onClick={handleCorkStore}
-            className="flex h-[80px] w-[176px] items-center justify-center rounded-[16px] bg-[#F3F3F6]"
+            className="flex h-[80px] flex-1 items-center justify-center rounded-[16px] bg-[var(--glass-soft)]"
           >
             <img src={Glass}></img>
             <div>콜키지스코어</div>
           </button>
         </div>
-        <div className="flex h-[30px] w-[393px] items-center justify-center gap-14 border-b">
+        <div className="flex h-[30px] w-full items-center justify-between gap-14 border-b px-[30px]">
           <button
             onClick={handleTipclick}
-            className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${tipSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+            className={`h-full w-[120px] flex-1 border-x-0 border-b-2 border-t-0 border-solid ${tipSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
           >
             Tip
           </button>
           <button
             onClick={handleStoreclick}
-            className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${storeSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+            className={`h-full w-[120px] flex-1 border-x-0 border-b-2 border-t-0 border-solid ${storeSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
           >
             매장
           </button>

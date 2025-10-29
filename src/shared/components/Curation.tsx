@@ -16,7 +16,7 @@ const Curation = ({ tiplist = [] }: CurationProps) => {
   const rightList = tiplist.slice(mid);
 
   return (
-    <div className="w-[393px]">
+    <div className="">
       <article className="flex justify-between pl-4 pr-4">
         <div className="flex flex-col gap-2">
           {/* 왼쪽 list 나열 */}

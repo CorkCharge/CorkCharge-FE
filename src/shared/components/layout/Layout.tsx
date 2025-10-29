@@ -32,17 +32,20 @@ const MainLayout = () => {
   const location = useLocation();
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // 페이지 이동 시 항상 스크롤 최상단 유지
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
   }, [location.pathname]);
 
   const isFooterHidden =
-    FOOTERHIDDENURL.some((route) => location.pathname === route) ||
-    FOOTERHIDDENPREFIX.some((route) => location.pathname.startsWith(route));
+    FOOTERHIDDENURL.some((route) => location.pathname.toLowerCase() === route.toLowerCase()) ||
+    FOOTERHIDDENPREFIX.some((route) =>
+      location.pathname.toLowerCase().startsWith(route.toLowerCase())
+    );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div style={{ flex: 1, overflow: 'auto' }} ref={scrollRef}>
+    <div className="flex h-dvh flex-col">
+      <div className="flex-1 overflow-auto" ref={scrollRef}>
         <Outlet />
       </div>
       <FooterSync />

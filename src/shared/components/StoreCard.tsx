@@ -132,7 +132,7 @@ const StoreCard = ({
   };
 
   return (
-    <div className="mb-4 w-[361px] cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2">
+    <div className="mb-4 cursor-pointer rounded-t-lg border border-x-0 border-t-0 border-b-slate-300 pb-2">
       <div onClick={goStore} className="mb-[10px] h-[220px] w-[361px]">
         <div className="relative">
           {/* <img src="https://placehold.co/361x170" className="rounded-t-lg" />  */}
