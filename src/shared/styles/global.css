@@ -67,6 +67,7 @@
   --gray-6: #80818b;
   --gray-7: #585a68;
   --gray-8: #35353f;
+  --glass-soft: rgba(220, 219, 232, 0.5);
 }
 
 @layer components {

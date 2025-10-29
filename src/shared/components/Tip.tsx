@@ -10,7 +10,7 @@ const Tip = ({ selected, setSelected }: TipProps) => {
   const is = (v: Selected | tipCategory) => selected === v;
 
   return (
-    <div className="flex gap-1">
+    <div className="flex w-full gap-1 overflow-auto">
       <button
         type="button"
         onClick={() => setSelected('ALL')}
