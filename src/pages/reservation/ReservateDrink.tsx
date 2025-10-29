@@ -1,14 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import Header from '@/shared/components/common/Header';
+import { SearchInput } from '@/shared/components/common/Input';
+import Modal from '@/shared/components/common/Modal';
 
 import logo from '@/shared/assets/images/logo.svg';
-import { SearchInput } from '@/shared/components/common/Input';
 
 function ReservateDrink() {
+  const searchbarRef = useRef<HTMLInputElement>(null);
   const [searchq, setSearchq] = useState('');
+  const [emptyModalVisible, setEmptyModalVisible] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (searchbarRef.current) {
+      searchbarRef.current.focus();
+    }
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -17,7 +24,12 @@ function ReservateDrink() {
   };
 
   const gotoDailyshot = () => {
-    if (!searchq) return;
+    // 검색어가 없는 상태로 검색 시도
+    if (!searchq) {
+      setEmptyModalVisible(true);
+      return;
+    }
+
     window.open(`https://dailyshot.co/m/search/result?q=${searchq}`, '_blank');
   };
 
@@ -33,8 +45,22 @@ function ReservateDrink() {
           onChange={(e) => setSearchq(e.target.value)}
           onKeyDown={handleKeyDown}
           onSearch={gotoDailyshot}
+          ref={searchbarRef}
         />
       </div>
+
+      {emptyModalVisible && (
+        <Modal
+          isOpen={emptyModalVisible}
+          hasCloseButton={true}
+          onClose={() => {
+            setEmptyModalVisible(false);
+            searchbarRef.current?.focus();
+          }}
+        >
+          검색어를 입력하세요
+        </Modal>
+      )}
     </div>
   );
 }

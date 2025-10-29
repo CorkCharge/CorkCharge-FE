@@ -1,3 +1,5 @@
+import { forwardRef } from 'react';
+
 import { cn } from '@/shared/utils/utils';
 
 import search from '@/shared/assets/images/search.png';
@@ -34,37 +36,33 @@ export const Input = ({ className, placeholder, onChange, value }: InputProps) =
 
 export const Textarea = () => {};
 
-export const SearchInput = ({
-  className,
-  placeholder,
-  onChange,
-  onKeyDown,
-  value,
-  onSearch,
-}: InputProps) => {
-  return (
-    <div
-      className={cn(
-        'relative flex h-[46px] items-center rounded-ee-full rounded-ss-full bg-[var(--gray-1)] pl-8 pr-[65px]',
-        className
-      )}
-    >
-      <input
-        className="w-full bg-transparent focus:outline-none"
-        placeholder={placeholder}
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        value={value}
-      />
+export const SearchInput = forwardRef<HTMLInputElement, InputProps>(
+  ({ className, placeholder, onChange, onKeyDown, value, onSearch }: InputProps, ref) => {
+    return (
+      <div
+        className={cn(
+          'relative flex h-[46px] items-center rounded-ee-full rounded-ss-full bg-[var(--gray-1)] pl-8 pr-[65px]',
+          className
+        )}
+      >
+        <input
+          className="w-full bg-transparent focus:outline-none"
+          placeholder={placeholder}
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          value={value}
+          ref={ref}
+        />
 
-      <img
-        src={search}
-        className="absolute right-10 top-1/2 size-[18px] -translate-y-1/2 cursor-pointer"
-        onClick={onSearch}
-      />
-    </div>
-  );
-};
+        <img
+          src={search}
+          className="absolute right-10 top-1/2 size-[18px] -translate-y-1/2 cursor-pointer"
+          onClick={onSearch}
+        />
+      </div>
+    );
+  }
+);
 
 export const ImageInput = ({
   imgSrc,

@@ -104,14 +104,9 @@ const StoreList = () => {
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center px-4">
       <TopBar searchDisabled={false} />
-      <div className="relative mb-4">
-        {/* <img
-          src="http://t1.kakaocdn.net/fiy_reboot/place/C1B6E3FC902945369E993185518384E6"
-          className="h-[200px] w-[361px] cursor-pointer rounded-lg object-cover"
-          onClick={goStore}
-        /> */}
+      <div className="relative mb-4 flex w-full justify-center">
         <img
           onClick={goStore}
           src={signature?.imageUrl ? signature.imageUrl : 'https://placehold.co/361x200'}

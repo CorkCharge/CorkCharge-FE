@@ -4,5 +4,5 @@ import { Navigate } from 'react-router-dom';
 export function RootRedirect() {
   // const { user } = useAuthStore();
 
-  return <Navigate to="/home" replace />;
+  return <Navigate to="/signin" replace />;
 }
