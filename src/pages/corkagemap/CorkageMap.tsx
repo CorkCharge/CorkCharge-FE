@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NaverMap from '@/shared/components/navermap/NaverMap';
 import TopBarMap from '@/shared/components/topbar/TopBarMap';
@@ -5,6 +6,8 @@ import save from './save.svg';
 import bttn from './filterImg.svg';
 const CorkageMap = () => {
   const navigate = useNavigate();
+  const [isActive, setIsActive] = useState(false);
+
   return (
     <main className="relative h-screen w-full overflow-hidden">
       {/* 지도: 화면 전체 덮기 */}
@@ -28,11 +31,11 @@ const CorkageMap = () => {
         </div>
 
         <div
-          onClick={() => navigate('saved')}
-          className="flex h-[36px] flex-[0.6] cursor-pointer items-center justify-center gap-2 rounded-full bg-white/90 shadow-sm backdrop-blur-sm"
+          onClick={() => setIsActive(!isActive)}
+          className={`flex h-[36px] flex-[0.6] cursor-pointer items-center justify-center gap-2 rounded-full ${isActive ? 'bg-[#90212A] text-[#FFF]' : 'bg-white/90 text-[#90212A]'} shadow-sm backdrop-blur-sm`}
         >
           <img src={save} alt="저장표시" className="h-[14px] w-[16px]" />
-          <p className="text-[14px] font-medium text-[#90212A]">저장한 매장</p>
+          <p className="text-[14px] font-medium">저장한 매장</p>
         </div>
       </div>
     </main>
