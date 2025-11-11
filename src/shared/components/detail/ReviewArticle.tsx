@@ -1,7 +1,7 @@
 // import React from 'react';
 import etc from '@/shared/assets/detailPageImgs/etc.svg';
 import type { reviewProps } from '@/shared/apis/restaurant/corkageApi';
-import { StarRate } from '../myPage/StarRate';
+import { StarRate } from '../common/StarRate';
 
 interface reviewArticleProps {
   name: string;

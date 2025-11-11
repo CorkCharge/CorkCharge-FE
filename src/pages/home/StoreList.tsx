@@ -5,6 +5,7 @@ import StoreCard from '../../shared/components/StoreCard';
 import Curation from '../../shared/components/Curation';
 import Tip from '../../shared/components/Tip';
 import TopBar from '../../shared/components/SearchBar';
+import { OverLayImage } from '@/shared/components/common/OverLayImage';
 import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
 import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
 import type { Selected } from '@/shared/components/home/type';
@@ -13,18 +14,23 @@ import {
   type HomeRestaruantInfo,
 } from '@/shared/apis/restaurant/homeRestaurantApi';
 
-import Glass from '../../shared/assets/glass.svg';
 import smallGlass from '../../shared/assets/smallGlass.svg';
-import arrow from '../../shared/assets/arrow.svg';
-import hotstore from '../../shared/assets/hotstore.svg';
-import keepIcon from '../../shared/assets/keep.svg';
-import DefaultImage from '@/shared/components/common/DefaultImage';
+import bell from '@/shared/assets/bell.svg';
+import bannerCover from '@/shared/components/home/assets/banner-cover.png';
+import newStore from '@/shared/components/home/assets/new-store.png';
+import stars from '@/shared/components/home/assets/stars.png';
+import arrow from '@/shared/assets/right_arrow.svg';
+import ReviewItem from '@/shared/components/home/ReviewItem';
 
 const StoreList = () => {
   const [storeSelected, setStoreSelected] = useState<boolean>(false);
   const [tipSelected, setTipSelected] = useState<boolean>(true);
 
   const [corkages, setCorkage] = useState<Corkage[]>([]);
+  //홈화면 가게 정보
+  const [signature, setSignature] = useState<HomeRestaruantInfo>();
+  //tip 카테고리 상태
+  const [selected, setSelected] = useState<Selected>('ALL');
 
   const handleStoreclick = () => {
     setStoreSelected(true);
@@ -77,8 +83,6 @@ const StoreList = () => {
     fetchTipData();
   }, []);
 
-  //홈화면 가게 정보
-  const [signature, setSignature] = useState<HomeRestaruantInfo>();
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -100,66 +104,63 @@ const StoreList = () => {
     navigate(`/detailInfo/${signature?.restaurantId}`);
   };
 
-  //tip 카테고리 상태
-  const [selected, setSelected] = useState<Selected>('ALL');
   const filtered =
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
+  const renderReviewItem = () => [1, 2, 3, 4, 5, 6].map(() => <ReviewItem />);
+
   return (
-    <div className="flex flex-col items-center px-4">
-      <TopBar searchDisabled={false} />
-      <div className="relative mb-4 flex w-full justify-center">
-        {signature?.imageUrl ? (
-          <>
-            <img
-              onClick={goStore}
-              src={signature.imageUrl}
-              className="h-[200px] w-[361px] cursor-pointer rounded-lg object-cover"
-            />
-            {/* 그라데이션 용 컴포넌트 */}
-            <div className="pointer-events-none absolute inset-0 rounded-lg bg-black/40" />
-          </>
-        ) : (
-          <DefaultImage width="100%" className="rounded-md" />
-        )}
-        <div className="absolute left-4 top-4 z-10">
-          <div className="flex flex-col gap-2">
-            <div className="title">{signature?.restaurantName}</div>
-            <div className="flex gap-2">
-              <img src={keepIcon} />
-              <div className="title">{signature?.bookmarkCount}</div>
-            </div>
-          </div>
-        </div>
-        <div
-          onClick={handleHotStore}
-          className="hotstore absolute bottom-4 left-4 bg-white bg-opacity-50"
-        >
-          <div className="flex gap-2">
-            <img src={hotstore} />
-            <button className="title text-[14px]">지금 핫한 매장</button>
-          </div>
-          <img src={arrow} className="h-[17px] w-[10px]" />
-        </div>
+    <div className="flex flex-col items-center bg-[rgba(255,255,255,0.8)]">
+      {/* 검색창 */}
+      <div className="flex w-full px-4" style={{ boxShadow: '0 4px 7px 0px rgba(0, 0, 0, 0.1)' }}>
+        <TopBar searchDisabled={false} className="flex-1" />
+        <img src={bell} />
       </div>
 
-      <div className="flex w-full flex-col items-center gap-4">
+      {/* 배너 */}
+      <OverLayImage src={bannerCover} className="mt-5 aspect-[2/1]" paddingX="16px">
+        <div className="absolute bottom-6 left-10 text-white">
+          <p className="text-sm font-medium sm:text-base">페어링 큐레이션</p>
+          <p className="font-bold sm:text-xl">회식 메뉴에 따라 달라지는 술 선택법</p>
+        </div>
+      </OverLayImage>
+
+      <div className="mt-4 flex w-full flex-col items-center gap-4 px-4">
+        {/* 해주세요 & 신규매장 */}
         <div className="flex w-full gap-2">
           <button
             onClick={handleRequest}
             className="flex h-[80px] flex-1 items-center justify-center rounded-[16px] bg-[var(--glass-soft)]"
           >
             <img src={smallGlass}></img>
-            <div>해주세요</div>
+            <span className="text-lg font-medium">해주세요</span>
           </button>
           <button
             onClick={handleCorkStore}
-            className="flex h-[80px] flex-1 items-center justify-center rounded-[16px] bg-[var(--glass-soft)]"
+            className="flex h-[80px] flex-1 items-center justify-center gap-2 rounded-[16px] bg-[var(--glass-soft)]"
           >
-            <img src={Glass}></img>
-            <div>콜키지스코어</div>
+            <img src={newStore} className="h-[45px] w-[51px]"></img>
+            <span className="text-lg font-medium">신규매장</span>
           </button>
         </div>
+      </div>
+
+      {/* 콜키지 리뷰 */}
+      <div className="relative mt-4 w-full px-4">
+        <div className="flex items-center gap-2">
+          <img src={stars} className="h-[18px] w-5" />
+          <span className="font-bold">콜키지 리뷰</span>
+        </div>
+        <p className="mt-1 pl-5 text-sm text-[var(--gray-6)]">
+          코르크차지만의 콜키지 리뷰를 확인해보세요
+        </p>
+        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px]" />
+      </div>
+
+      <div className="mt-2 flex w-full gap-2 overflow-x-scroll px-4">{renderReviewItem()}</div>
+
+      {/* Tip & 매장 */}
+      <div>
         <div className="flex h-[30px] w-full items-center justify-between gap-14 border-b px-[30px]">
           <button
             onClick={handleTipclick}

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 
 import Modal from '../common/Modal';
-import { StarRate } from './StarRate';
+import { StarRate } from '../common/StarRate';
 
 import camera from '@/shared/components/myPage/images/camera.png';
 import apiClient from '@/shared/apis/apiClient';

@@ -7,8 +7,19 @@ interface StarProps {
   isEditable?: boolean;
   className?: string;
   starRating?: (n: number) => void;
+  spacing?: string;
+  width?: string;
+  height?: string;
 }
-export const StarRate = ({ rate, isEditable = false, starRating, className }: StarProps) => {
+export const StarRate = ({
+  rate,
+  isEditable = false,
+  starRating,
+  spacing,
+  width,
+  height,
+  className,
+}: StarProps) => {
   const STARIDX = ['first', 'second', 'third', 'fourth', 'fifth'];
   const compId = useId(); // 컴포넌트 별 id 생성
   const [rateArr, setRateArr] = useState([0, 0, 0, 0, 0]);
@@ -37,13 +48,13 @@ export const StarRate = ({ rate, isEditable = false, starRating, className }: St
   };
 
   return (
-    <div className={cn('flex items-center', className)}>
+    <div className={cn('flex items-center', spacing && `gap-[${spacing}]`, className)}>
       {STARIDX.map((item, idx) => (
-        <span className="inline-flex" key={idx}>
+        <span className={cn('mr-3px inline-flex')} key={idx}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="18"
+            width={width ?? '20'}
+            height={height ?? '18'}
             viewBox="0 0 14 13"
             fill={isEditable ? 'var(--gray-4)' : 'transparent'}
             onClick={isEditable ? () => handleClick(idx) : undefined}
