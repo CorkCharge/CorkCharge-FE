@@ -41,7 +41,6 @@ export interface TipInfoResponse {
 
 export const fetchTipInfo = async (tipId: number): Promise<TipInfo> => {
   const response = await apiClient.get<TipInfoResponse>(`/tips/${tipId}`);
-  console.log(response.data.data);
 
   return response.data.data;
 };
