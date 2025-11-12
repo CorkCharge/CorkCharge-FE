@@ -10,23 +10,28 @@ interface CurationProps {
 }
 
 const Curation = ({ tiplist = [] }: CurationProps) => {
-  //tiplist 반으로 나누기
-  const mid = Math.ceil((tiplist?.length ?? 0) / 2);
-  const leftList = tiplist.slice(0, mid);
-  const rightList = tiplist.slice(mid);
+  const renderTipReviews = () =>
+    (tiplist.length ? tiplist : [...Array(9)]).map((_, idx) => (
+      <TipPreview
+        key={idx}
+        tipId={idx}
+        title={'코르크차지와 함께하는 내 주변 맛집 리스트'}
+        imageUrl=""
+        tipCategory="이벤트"
+      />
+    ));
 
   return (
-    <div className="">
-      <article className="flex justify-between pl-4 pr-4">
+    <div className="my-4 grid grid-cols-2 gap-3 px-4">
+      {/* <div className="flex justify-between pl-4 pr-4">
         <div className="flex flex-col gap-2">
-          {/* 왼쪽 list 나열 */}
           {tiplist.length > 0 && leftList.map((tip) => <TipPreview key={tip.tipId} {...tip} />)}
         </div>
         <div className="flex flex-col gap-2">
-          {/* 오른쪽 list 나열 */}
           {tiplist.length > 0 && rightList.map((tip) => <TipPreview key={tip.tipId} {...tip} />)}
         </div>
-      </article>
+      </div> */}
+      {renderTipReviews()}
     </div>
   );
 };

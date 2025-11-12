@@ -107,7 +107,7 @@ const StoreList = () => {
   const filtered =
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
-  const renderReviewItem = () => [1, 2, 3, 4, 5, 6].map(() => <ReviewItem />);
+  const renderReviewItem = () => [1, 2, 3, 4, 5, 6].map((_, idx) => <ReviewItem key={idx} />);
 
   return (
     <div className="flex flex-col items-center bg-[rgba(255,255,255,0.8)]">
@@ -160,7 +160,7 @@ const StoreList = () => {
       <div className="mt-2 flex w-full gap-2 overflow-x-scroll px-4">{renderReviewItem()}</div>
 
       {/* Tip & 매장 */}
-      <div>
+      <div className="mt-5 w-full">
         <div className="flex h-[30px] w-full items-center justify-between gap-14 border-b px-[30px]">
           <button
             onClick={handleTipclick}
@@ -175,6 +175,7 @@ const StoreList = () => {
             매장
           </button>
         </div>
+
         {storeSelected ? (
           <>
             {corkages &&

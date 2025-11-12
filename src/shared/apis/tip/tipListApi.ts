@@ -2,9 +2,9 @@ import apiClient from '../apiClient';
 
 //tip 리스트 출력 api
 export interface TipList {
-  tipId: number; //3,
-  title: string; //"내가 좋아하는 술, 마음껏 즐기려면? 콜키지 팁 대방출",
-  tipCategory: string; //"CORKAGE",
+  tipId: number;
+  title: string;
+  tipCategory?: string;
   imageUrl: string;
 }
 
