@@ -64,11 +64,9 @@ const StoreList = () => {
     const fetchTipData = async () => {
       try {
         const res = await fetchTipList();
-        console.log(res);
-        console.log('imageUrl: ' + res[0].imageUrl);
         setTiplist(res);
       } catch {
-        console.error('API  호출 실패');
+        console.error('Tip 가져오기 실패');
       }
     };
     fetchTipData();
@@ -166,24 +164,6 @@ const StoreList = () => {
         {storeSelected ? (
           <StoresInfo />
         ) : (
-          // <>
-          //   {corkages &&
-          //     corkages.map((corkage) => {
-          //       return (
-          //         <StoreCard
-          //           key={corkage.restaurantId}
-          //           restaurantId={corkage.restaurantId}
-          //           imageUrl={corkage.imageUrl}
-          //           keep={corkage.bookmarkCount}
-          //           price={corkage.corkagePrice}
-          //           name={corkage.name}
-          //           local={corkage.address}
-          //           rating={corkage.averageRating}
-          //           review={corkage.reviewCount}
-          //         />
-          //       );
-          //     })}
-          // </>
           <>
             <Tip selected={selected} setSelected={setSelected} />
             <Curation tiplist={filtered} />

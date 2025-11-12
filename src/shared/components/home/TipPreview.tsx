@@ -10,15 +10,13 @@ const TipPreview = ({ tipId, title, tipCategory, imageUrl }: TipList) => {
   };
 
   return (
-    <article className="article relative aspect-[5/6] cursor-pointer overflow-hidden">
+    <article
+      className="article relative aspect-[5/6] cursor-pointer overflow-hidden"
+      onClick={handleGoTip}
+    >
       {imageUrl ? (
         <>
-          <img
-            src={imageUrl}
-            className="h-full w-full object-cover"
-            loading="lazy"
-            onClick={handleGoTip}
-          />
+          <img src={imageUrl} className="h-full w-full object-cover" loading="lazy" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-transparent" />
         </>
       ) : (
