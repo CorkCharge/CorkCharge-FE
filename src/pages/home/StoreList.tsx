@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import StoreCard from '../../shared/components/StoreCard';
 import Curation from '../../shared/components/Curation';
 import Tip from '../../shared/components/Tip';
 import TopBar from '../../shared/components/SearchBar';
 import { OverLayImage } from '@/shared/components/common/OverLayImage';
-import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
+// import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
 import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
 import type { Selected } from '@/shared/components/home/type';
-import {
-  fetchHomeRestaurant,
-  type HomeRestaruantInfo,
-} from '@/shared/apis/restaurant/homeRestaurantApi';
+// import {
+//   fetchHomeRestaurant,
+//   type HomeRestaruantInfo,
+// } from '@/shared/apis/restaurant/homeRestaurantApi';
 
 import smallGlass from '../../shared/assets/smallGlass.svg';
 import bell from '@/shared/assets/bell.svg';
@@ -21,23 +20,20 @@ import newStore from '@/shared/components/home/assets/new-store.png';
 import stars from '@/shared/components/home/assets/stars.png';
 import arrow from '@/shared/assets/right_arrow.svg';
 import ReviewItem from '@/shared/components/home/ReviewItem';
+import StoresInfo from '@/shared/components/home/StoresInfo';
 
 const StoreList = () => {
-  const [storeSelected, setStoreSelected] = useState<boolean>(false);
-  const [tipSelected, setTipSelected] = useState<boolean>(true);
-
-  const [corkages, setCorkage] = useState<Corkage[]>([]);
+  const [storeSelected, setStoreSelected] = useState<boolean>(true);
   //홈화면 가게 정보
-  const [signature, setSignature] = useState<HomeRestaruantInfo>();
-  //tip 카테고리 상태
+  // const [corkages, setCorkage] = useState<Corkage[]>([]);
+  // const [signature, setSignature] = useState<HomeRestaruantInfo>();
   const [selected, setSelected] = useState<Selected>('ALL');
+  const [tiplist, setTiplist] = useState<TipList[]>();
 
   const handleStoreclick = () => {
     setStoreSelected(true);
-    setTipSelected(false);
   };
   const handleTipclick = () => {
-    setTipSelected(true);
     setStoreSelected(false);
   };
 
@@ -50,25 +46,20 @@ const StoreList = () => {
     console.log('콜키지스토어창 이동');
     navigate('/corkScore');
   };
-  const handleHotStore = () => {
-    console.log('지금 핫한 매장 리스트 이동');
-    navigate('/hotStores');
-  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetchCorkageList();
-        console.log(res);
-        setCorkage(res);
-      } catch {
-        console.error('API  호출 실패');
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetchCorkageList();
+  //       console.log(res);
+  //       setCorkage(res);
+  //     } catch {
+  //       console.error('API  호출 실패');
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
-  const [tiplist, setTiplist] = useState<TipList[]>();
   useEffect(() => {
     const fetchTipData = async () => {
       try {
@@ -83,26 +74,22 @@ const StoreList = () => {
     fetchTipData();
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const data = await fetchHomeRestaurant();
-        if (!cancelled) setSignature(data);
-        console.log('홈 화면 식당 정보 조회 성공');
-      } catch (e) {
-        console.error(e);
-        console.log('홈 화면 식당 정보 조회 실패');
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-  const goStore = () => {
-    console.log('홈 대표 가게 상세 정보 페이지 이동');
-    navigate(`/detailInfo/${signature?.restaurantId}`);
-  };
+  // useEffect(() => {
+  //   let cancelled = false;
+  //   (async () => {
+  //     try {
+  //       const data = await fetchHomeRestaurant();
+  //       if (!cancelled) setSignature(data);
+  //       console.log('홈 화면 식당 정보 조회 성공');
+  //     } catch (e) {
+  //       console.error(e);
+  //       console.log('홈 화면 식당 정보 조회 실패');
+  //     }
+  //   })();
+  //   return () => {
+  //     cancelled = true;
+  //   };
+  // }, []);
 
   const filtered =
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
@@ -164,7 +151,7 @@ const StoreList = () => {
         <div className="flex h-[30px] w-full items-center justify-between gap-14 border-b px-[30px]">
           <button
             onClick={handleTipclick}
-            className={`h-full w-[120px] flex-1 border-x-0 border-b-2 border-t-0 border-solid ${tipSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+            className={`h-full w-[120px] flex-1 border-x-0 border-b-2 border-t-0 border-solid ${!storeSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
           >
             Tip
           </button>
@@ -177,25 +164,26 @@ const StoreList = () => {
         </div>
 
         {storeSelected ? (
-          <>
-            {corkages &&
-              corkages.map((corkage) => {
-                return (
-                  <StoreCard
-                    key={corkage.restaurantId}
-                    restaurantId={corkage.restaurantId}
-                    imageUrl={corkage.imageUrl}
-                    keep={corkage.bookmarkCount}
-                    price={corkage.corkagePrice}
-                    name={corkage.name}
-                    local={corkage.address}
-                    rating={corkage.averageRating}
-                    review={corkage.reviewCount}
-                  />
-                );
-              })}
-          </>
+          <StoresInfo />
         ) : (
+          // <>
+          //   {corkages &&
+          //     corkages.map((corkage) => {
+          //       return (
+          //         <StoreCard
+          //           key={corkage.restaurantId}
+          //           restaurantId={corkage.restaurantId}
+          //           imageUrl={corkage.imageUrl}
+          //           keep={corkage.bookmarkCount}
+          //           price={corkage.corkagePrice}
+          //           name={corkage.name}
+          //           local={corkage.address}
+          //           rating={corkage.averageRating}
+          //           review={corkage.reviewCount}
+          //         />
+          //       );
+          //     })}
+          // </>
           <>
             <Tip selected={selected} setSelected={setSelected} />
             <Curation tiplist={filtered} />
