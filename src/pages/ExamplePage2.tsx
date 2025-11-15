@@ -1,16 +1,11 @@
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useState, useEffect } from 'react';
-// [수정] ReactNode 타입을 분리합니다.
 import type { ReactNode } from 'react';
-// [수정] PanInfo 타입을 분리합니다.
 import type { PanInfo } from 'framer-motion';
 
-// ==================================================================
 // BottomSheet.tsx 컴포넌트 코드
-// (임포트 오류를 해결하기 위해 예제 파일에 직접 포함시켰습니다)
-// ==================================================================
 
-// 바텀시트가 "착" 달라붙을 높이를 정의합니다. (vh 기준 숫자)
+// 바텀시트가 달라붙을 높이를 정의합니다. (vh 기준 숫자)
 const SNAP_POINTS = {
   // 피그마 기준: 852px일 때 700px 높이 -> (852 - 700) = 152px 지점
   // vh로 변환: (152 / 852) * 100 = 약 17.8vh
@@ -20,8 +15,7 @@ const SNAP_POINTS = {
   // vh로 변환: (490 / 852) * 100 = 약 57.5vh
   MID: 57.5, // 100vh - 362px (초기 높이)
 
-  // [수정] 피그마 기준: 852px일 때 132px 높이 -> (852 - 132) = 720px 지점
-  // vh로 변환: (720 / 852) * 100 = 약 84.5vh
+  //피그마 기준: 852px일 때 132px 높이 -> (852 - 132) = 720px 지점
   MIN: 77.5, // 100vh - 132px (최소 높이)
 
   // 화면 밖
@@ -38,7 +32,7 @@ interface BottomSheetProps {
   topSnapVh?: number; // 최대 높이(vh)를 prop으로 받기 (opt)
 }
 
-// [신규] vh를 px로 변환하는 헬퍼 함수
+// vh를 px로 변환하는 헬퍼 함수
 const vhToPx = (vh: number) => {
   if (typeof window === 'undefined') return 0;
   return (window.innerHeight * vh) / 100;
@@ -50,12 +44,12 @@ const BottomSheet = ({
   children,
   topSnapVh = SNAP_POINTS.DEFAULT_TOP,
 }: BottomSheetProps) => {
-  // [수정] y축 위치를 motionValue로 실시간 관리
+  //y축 위치를 motionValue로 실시간 관리
   const y = useMotionValue(vhToPx(SNAP_POINTS.HIDDEN));
-  // [신규] 현재 스냅 상태 추적 (스크롤 충돌 방지용)
+  //현재 스냅 상태 추적 (스크롤 충돌 방지용)
   const [currentSnap, setCurrentSnap] = useState<'TOP' | 'MID' | 'MIN'>('MID');
 
-  // [신규] 화면 크기 변경 시 스냅 지점(px)을 다시 계산하기 위한 상태
+  //화면 크기 변경 시 스냅 지점(px)을 다시 계산하기 위한 상태
   const [snapPx, setSnapPx] = useState(() => ({
     TOP: vhToPx(topSnapVh),
     MID: vhToPx(SNAP_POINTS.MID),
@@ -63,7 +57,7 @@ const BottomSheet = ({
     HIDDEN: vhToPx(SNAP_POINTS.HIDDEN),
   }));
 
-  // [신규] 화면 크기가 변경되면 스냅 지점(px)을 다시 계산
+  //화면 크기가 변경되면 스냅 지점(px)을 다시 계산
   useEffect(() => {
     const calculateSnapPx = () => {
       setSnapPx({
@@ -77,7 +71,7 @@ const BottomSheet = ({
     return () => window.removeEventListener('resize', calculateSnapPx);
   }, []);
 
-  // [수정] 배경 오버레이 투명도를 y값에 따라 실시간으로 변경
+  //배경 오버레이 투명도를 y값에 따라 실시간으로 변경
   const opacity = useTransform(y, [snapPx.TOP, snapPx.MID], [0.5, 0]);
 
   // isOpen 상태가 변경될 때 애니메이션 실행

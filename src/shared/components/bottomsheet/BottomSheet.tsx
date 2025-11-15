@@ -1,78 +1,132 @@
-import { motion, useAnimation } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { PanInfo } from 'framer-motion';
 
-// 바텀시트가 "착" 달라붙을 높이를 정의합니다. (vh 기준)
+// BottomSheet.tsx 컴포넌트 코드
+
+// 바텀시트가 달라붙을 높이를 정의합니다. (vh 기준 숫자)
 const SNAP_POINTS = {
   // 피그마 기준: 852px일 때 700px 높이 -> (852 - 700) = 152px 지점
   // vh로 변환: (152 / 852) * 100 = 약 17.8vh
-  TOP: '17.8vh', // 100vh - 700px (최대 높이)
+  DEFAULT_TOP: 17.8, // 100vh - 700px (최대 높이)
 
   // 피그마 기준: 852px일 때 362px 높이 -> (852 - 362) = 490px 지점
   // vh로 변환: (490 / 852) * 100 = 약 57.5vh
-  MID: '57.5vh', // 100vh - 362px (초기 높이)
+  MID: 57.5, // 100vh - 362px (초기 높이)
+
+  //피그마 기준: 852px일 때 132px 높이 -> (852 - 132) = 720px 지점
+  MIN: 77.5, // 100vh - 132px (최소 높이)
 
   // 화면 밖
-  HIDDEN: '100vh',
+  HIDDEN: 100,
 };
 
 // 드래그 속도 임계값
-const DRAG_VELOCITY_THRESHOLD = 500;
+const DRAG_VELOCITY_THRESHOLD = 500; // 휙- 스와이프 속도
 
 interface BottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  topSnapVh?: number; // 최대 높이(vh)를 prop으로 받기 (opt)
 }
 
-const BottomSheet = ({ isOpen, onClose, children }: BottomSheetProps) => {
-  const controls = useAnimation();
-  const sheetRef = useRef<HTMLDivElement>(null);
+// vh를 px로 변환하는 헬퍼 함수
+const vhToPx = (vh: number) => {
+  if (typeof window === 'undefined') return 0;
+  return (window.innerHeight * vh) / 100;
+};
+
+const BottomSheet = ({
+  isOpen,
+  onClose,
+  children,
+  topSnapVh = SNAP_POINTS.DEFAULT_TOP,
+}: BottomSheetProps) => {
+  //y축 위치를 motionValue로 실시간 관리
+  const y = useMotionValue(vhToPx(SNAP_POINTS.HIDDEN));
+  //현재 스냅 상태 추적 (스크롤 충돌 방지용)
+  const [currentSnap, setCurrentSnap] = useState<'TOP' | 'MID' | 'MIN'>('MID');
+
+  //화면 크기 변경 시 스냅 지점(px)을 다시 계산하기 위한 상태
+  const [snapPx, setSnapPx] = useState(() => ({
+    TOP: vhToPx(topSnapVh),
+    MID: vhToPx(SNAP_POINTS.MID),
+    MIN: vhToPx(SNAP_POINTS.MIN),
+    HIDDEN: vhToPx(SNAP_POINTS.HIDDEN),
+  }));
+
+  //화면 크기가 변경되면 스냅 지점(px)을 다시 계산
+  useEffect(() => {
+    const calculateSnapPx = () => {
+      setSnapPx({
+        TOP: vhToPx(topSnapVh),
+        MID: vhToPx(SNAP_POINTS.MID),
+        MIN: vhToPx(SNAP_POINTS.MIN),
+        HIDDEN: vhToPx(SNAP_POINTS.HIDDEN),
+      });
+    };
+    window.addEventListener('resize', calculateSnapPx);
+    return () => window.removeEventListener('resize', calculateSnapPx);
+  }, []);
+
+  //배경 오버레이 투명도를 y값에 따라 실시간으로 변경
+  const opacity = useTransform(y, [snapPx.TOP, snapPx.MID], [0.5, 0]);
 
   // isOpen 상태가 변경될 때 애니메이션 실행
   useEffect(() => {
     if (isOpen) {
-      // 열릴 때는 중간 높이로 스냅
-      controls.start('snapMid');
+      // [수정] controls.start 대신 animate 함수로 y값을 직접 제어
+      animate(y, snapPx.MID, {
+        type: 'tween',
+        duration: 0.4,
+        ease: 'easeOut',
+      });
+      setCurrentSnap('MID');
     } else {
-      // 닫힐 때는 화면 밖으로
-      controls.start('hidden');
+      animate(y, snapPx.HIDDEN, {
+        type: 'tween',
+        duration: 0.4,
+        ease: 'easeOut',
+      });
     }
-  }, [isOpen, controls]);
+  }, [isOpen, snapPx, y]);
 
   // 드래그 종료 시 호출되는 함수
   const onDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const { velocity } = info;
 
-    // 아래로 빠르게 쓸어내리면 닫기
+    // 1. 빠른 플릭(flick) 제스처 감지
     if (velocity.y > DRAG_VELOCITY_THRESHOLD) {
-      onClose();
+      onClose(); // (useEffect[isOpen]이 y를 HIDDEN으로 애니메이션함)
       return;
     }
-
-    // 위로 빠르게 쓸어올리면 최대 높이로
     if (velocity.y < -DRAG_VELOCITY_THRESHOLD) {
-      controls.start('snapTop');
+      animate(y, snapPx.TOP, { type: 'tween', duration: 0.3, ease: 'easeOut' });
+      setCurrentSnap('TOP');
       return;
     }
 
-    // 현재 y 위치 가져오기
-    const currentY = sheetRef.current ? sheetRef.current.getBoundingClientRect().y : 0;
+    // 2. 느린 드래그 (위치 기반 스냅)
+    const currentY = y.get(); // 현재 y 픽셀 값
 
-    // 현재 vh 값 계산 (대략적)
-    const currentVh = (currentY / window.innerHeight) * 100;
+    // 각 스냅 지점의 중간값 계산
+    const midPointTopMid = (snapPx.TOP + snapPx.MID) / 2;
+    const midPointMidMin = (snapPx.MID + snapPx.MIN) / 2;
+    const midPointMinClose = (snapPx.MIN + snapPx.HIDDEN) / 2;
 
-    // 중간 지점(top과 mid의 중간) 계산
-    // (17.8 + 57.5) / 2 = 약 37.6
-    const midPoint = (parseFloat(SNAP_POINTS.TOP) + parseFloat(SNAP_POINTS.MID)) / 2;
-
-    if (currentVh < midPoint) {
-      // 중간 지점보다 높으면 -> 최대 높이로 스냅
-      controls.start('snapTop');
+    if (currentY < midPointTopMid) {
+      animate(y, snapPx.TOP, { type: 'tween', duration: 0.3, ease: 'easeOut' });
+      setCurrentSnap('TOP');
+    } else if (currentY < midPointMidMin) {
+      animate(y, snapPx.MID, { type: 'tween', duration: 0.3, ease: 'easeOut' });
+      setCurrentSnap('MID');
+    } else if (currentY < midPointMinClose) {
+      animate(y, snapPx.MIN, { type: 'tween', duration: 0.3, ease: 'easeOut' });
+      setCurrentSnap('MIN');
     } else {
-      // 중간 지점보다 낮으면 -> 중간 높이로 스냅
-      controls.start('snapMid');
+      onClose(); // (useEffect[isOpen]이 y를 HIDDEN으로 애니메이션함)
     }
   };
 
@@ -80,44 +134,37 @@ const BottomSheet = ({ isOpen, onClose, children }: BottomSheetProps) => {
     <>
       {/* 1. 뒷 배경 (어둡게 처리) */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isOpen ? 0.5 : 0 }}
-        transition={{ duration: 0.3 }}
-        onClick={onClose}
+        // [수정] animate, variants, transition 대신 style={{ opacity }} 사용
         style={{
+          opacity,
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           position: 'fixed',
           inset: 0,
-          zIndex: 40,
+          zIndex: 100, // 네비바(99)보다 높게
           pointerEvents: isOpen ? 'auto' : 'none',
         }}
+        onClick={onClose}
       />
 
       {/* 2. 바텀시트 본체 */}
       <motion.div
-        ref={sheetRef}
-        drag="y" // y축으로만 드래그 가능
+        drag="y"
         onDragEnd={onDragEnd}
-        initial="hidden"
-        animate={controls}
-        transition={{
-          type: 'spring',
-          damping: 30, // 스프링의 튕김 정도
-          stiffness: 400, // 스프링의 강도
-        }}
-        variants={{
-          hidden: { y: SNAP_POINTS.HIDDEN },
-          snapMid: { y: SNAP_POINTS.MID },
-          snapTop: { y: SNAP_POINTS.TOP },
-        }}
-        dragConstraints={{ top: 0 }} // 상단 경계만 설정
-        dragElastic={0.1} // 드래그 범위 밖으로 얼마나 끌 수 있는지
-        className="fixed left-0 right-0 z-50 flex w-full flex-col rounded-t-[20px] bg-white shadow-lg"
+        // [수정] animate, transition, variants 대신 style={{ y }} 사용
+        // y값이 motionValue이므로 드래그 시 실시간으로 반영됨
         style={{
-          height: `calc(100vh - ${SNAP_POINTS.TOP})`, // 최대 높이
-          y: SNAP_POINTS.HIDDEN, // 초기 위치
+          y,
+          height: `calc(100vh - ${topSnapVh}vh)`, // 최대 높이
           touchAction: 'none', // 모바일에서 페이지 스크롤 방지
         }}
+        // [수정] 드래그 경계를 최대(top)와 최소(bottom)로 설정
+        dragConstraints={{
+          top: snapPx.TOP,
+          bottom: snapPx.MIN,
+        }}
+        // [수정] 드래그 탄성을 0으로 설정하여 경계에서 튕기지 않게 함
+        dragElastic={{ top: 0, bottom: 0 }}
+        className="fixed left-0 right-0 z-[101] flex w-full flex-col rounded-t-[20px] bg-white shadow-lg"
       >
         {/* 드래그 핸들 (회색 바) */}
         <div className="flex-shrink-0 cursor-grab py-4 active:cursor-grabbing">
@@ -125,7 +172,15 @@ const BottomSheet = ({ isOpen, onClose, children }: BottomSheetProps) => {
         </div>
 
         {/* 바텀시트 내용물 */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6">{children}</div>
+        {/* [수정] 스크롤 충돌 방지를 위해 overflow-y를 동적으로 제어 */}
+        <div
+          className="flex-1 px-6 pb-6"
+          style={{
+            overflowY: currentSnap === 'TOP' ? 'auto' : 'hidden',
+          }}
+        >
+          {children}
+        </div>
       </motion.div>
     </>
   );
