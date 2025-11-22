@@ -5,6 +5,7 @@ import TopBarMap from '@/shared/components/topbar/TopBarMap';
 import BottomSheet from '@/shared/components/bottomsheet/BottomSheet';
 import save from './save.svg';
 import bttn from './filterImg.svg';
+import List from './list/List';
 const CorkageMap = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
@@ -49,17 +50,7 @@ const CorkageMap = () => {
         </button>
       </div>
       <BottomSheet isOpen={isSheetOpen} onClose={handleSheetClose} topSnapVh={17.8}>
-        {/* 이 안에 넣는 내용이 그대로 바텀시트에 표시됩니다.
-          요청하신 '저장한 매장' 목록이나 '매장 상세' 내용을 여기에 넣으면 됩니다.
-        */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold">바텀시트 내용물</h2>
-          <p>여기에 어떤 React 컴포넌트나 JSX 태그든 넣을 수 있습니다.</p>
-          <div className="h-40 rounded-lg bg-gray-100 p-4">스크롤 테스트용 영역</div>
-          <div className="h-40 rounded-lg bg-gray-100 p-4">스크롤 테스트용 영역</div>
-          <div className="h-40 rounded-lg bg-gray-100 p-4">스크롤 테스트용 영역</div>
-          <div className="h-40 rounded-lg bg-gray-100 p-4">스크롤 테스트용 영역</div>
-        </div>
+        <List />
       </BottomSheet>
     </main>
   );
