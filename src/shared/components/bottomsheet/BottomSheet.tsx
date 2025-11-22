@@ -94,7 +94,7 @@ const BottomSheet = ({
   }, [isOpen, snapPx, y]);
 
   // 드래그 종료 시 호출되는 함수
-  const onDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const onDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const { velocity } = info;
 
     // 1. 빠른 플릭(flick) 제스처 감지

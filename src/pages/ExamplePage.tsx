@@ -80,7 +80,7 @@ const BottomSheet = ({ isOpen, onClose, children }: BottomSheetProps) => {
   }, [isOpen, controls]);
 
   // 드래그 종료 시 호출되는 함수
-  const onDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const onDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const { velocity } = info;
 
     // 아래로 빠르게 쓸어내리면 닫기
