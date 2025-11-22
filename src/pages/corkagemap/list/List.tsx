@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import Drop from './drop.svg';
-import New from './new.svg';
+import New from './plus.svg';
 import ToggleSwitch from './ToggleSwitch';
 import MyGroup from './MyGroup';
 import EditGroup from './EditGroup';
@@ -60,20 +59,15 @@ const List = () => {
     <div className="relative h-full w-full">
       {/* 1. 리스트 뷰 */}
       {view === 'list' && (
-        <div className="flex h-full w-full flex-col px-4 pt-2">
+        <div className="flex h-full w-full flex-col pt-2">
           {/* 헤더: 저장한 매장 + 드롭다운 */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-row items-center justify-between">
             <h1 className="text-[20px] font-bold text-[#35353F]">저장한 매장</h1>
-            <div className="flex h-8 cursor-pointer items-center gap-2 rounded-[20px] bg-[#F3F3F6] px-3 py-1">
-              <span className="text-[12px] font-[500] text-[#80818B]">최신순</span>
-              <img src={Drop} alt="Drop" />
+            {/* 토글 스위치 */}
+            <div className="flex h-8 cursor-pointer items-center gap-2 rounded-[20px] py-1">
+              <span className="text-[16px] font-[400] text-[#80818B]">콜키지 정보 on/off</span>
+              <ToggleSwitch />
             </div>
-          </div>
-
-          {/* 토글 스위치 */}
-          <div className="mt-4 flex items-center justify-between">
-            <span className="text-[16px] font-[400] text-[#80818B]">콜키지 정보 on/off</span>
-            <ToggleSwitch />
           </div>
 
           {/* 새 리스트 만들기 */}

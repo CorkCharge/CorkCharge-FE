@@ -45,7 +45,7 @@ const EditGroup = ({ onSave, onCancel }: EditGroupProps) => {
   const [groupName, setGroupName] = useState('');
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [privacy, setPrivacy] = useState<'public' | 'private'>('public');
-
+  const isValid = groupName.trim().length > 0 && selectedIcon !== null;
   const handleSave = () => {
     if (!groupName || !selectedIcon) {
       alert('그룹명과 마커를 선택해주세요.');
@@ -92,7 +92,7 @@ const EditGroup = ({ onSave, onCancel }: EditGroupProps) => {
               key={name}
               onClick={() => setSelectedIcon(name)}
               className={`relative h-8 w-8 rounded-full ${
-                selected ? 'ring-2 ring-gray-400 ring-offset-2' : ''
+                selected ? 'ring-2 ring-[#90212A] ring-offset-2' : ''
               }`}
             >
               <img src={Icon} alt={name} />
@@ -144,8 +144,13 @@ const EditGroup = ({ onSave, onCancel }: EditGroupProps) => {
       {/* 680px / 852px = 79.8% -> ~80vh */}
       <button
         onClick={handleSave}
-        className="absolute left-1/2 h-[52px] w-[312px] -translate-x-1/2 rounded-[10px] bg-[#F3F3F6] text-[16px] font-[700] text-[#80818B]"
-        style={{ top: 'calc(80vh - 48px)' }} // 680px 지점이 버튼 상단이 되도록
+        disabled={!isValid}
+        className={`absolute left-1/2 h-[52px] w-[312px] -translate-x-1/2 rounded-[10px] text-[16px] font-[700] transition-colors ${
+          isValid
+            ? 'cursor-pointer bg-[#90212A] text-[#fff]' // [수정] 활성화 시 스타일
+            : 'cursor-not-allowed bg-[#F3F3F6] text-[#80818B]' // [수정] 비활성화 시 스타일
+        }`}
+        style={{ top: 'calc(75vh - 48px)' }} // 680px 지점이 버튼 상단이 되도록
       >
         완료
       </button>
