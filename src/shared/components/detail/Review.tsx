@@ -2,7 +2,7 @@ import black_x from '../../assets/detailPageImgs/black_x.svg';
 import camera from '../../assets/detailPageImgs/camera.svg';
 import { useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { StarRate } from '../myPage/StarRate';
+import { StarRate } from '../common/StarRate';
 import Header from '../common/Header';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '@/shared/apis/apiClient';

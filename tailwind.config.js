@@ -7,6 +7,11 @@ module.exports = {
         'wine-background': 'url(/src/shared/components/onBoarding/images/wine-background.png)',
       },
     },
+
+    // breakpoint setting
+    screens: {
+      sm: '400px',
+    },
   },
   plugins: [],
 };

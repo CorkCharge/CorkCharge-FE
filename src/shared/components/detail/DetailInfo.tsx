@@ -4,7 +4,7 @@ import PairingArticle from './PairingArticle';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import ShowMoreBtn from './ShowMoreBtn';
 import { ReviewArticle } from './ReviewArticle';
-import { StarRate } from '../myPage/StarRate';
+import { StarRate } from '../common/StarRate';
 import { useRef, useState, useEffect } from 'react';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 

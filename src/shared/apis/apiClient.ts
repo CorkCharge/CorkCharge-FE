@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import { PAGE_TO_ANYONE } from '../constants/Routes';
+import { PAGE_TO_ANYONE } from '../constants/Routes';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -8,7 +8,6 @@ const apiClient = axios.create({
   },
 });
 
-/*
 apiClient.interceptors.request.use((config) => {
   const accToken = sessionStorage.getItem('accessToken');
   if (accToken && !PAGE_TO_ANYONE.some((prefix) => config.url?.startsWith(prefix))) {
@@ -18,6 +17,7 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+/*
 let isRefreshing = false; // 리프레시 토큰 갱신 중
 let pendingRequests: ((token: string) => void)[] = []; // 갱신 중 들어오는 추가요청은 큐잉처리
 

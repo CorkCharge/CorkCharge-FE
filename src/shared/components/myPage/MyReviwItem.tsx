@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-import { StarRate } from './StarRate';
+import { StarRate } from '../common/StarRate';
 import { ShareModal, ModifyModal, DeleteModal } from './ReviewModals';
 
 import threeDots from '@/shared/assets/images/threedots.png';
