@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import X from './X.svg';
 
 // SaveMarker1~12
@@ -37,15 +37,30 @@ type GroupData = {
 };
 
 type EditGroupProps = {
+  // 수정 모드일 경우 기존 데이터를 받음 (없으면 생성 모드)
+  initialData?: GroupData | null;
   onSave: (data: GroupData) => void;
   onCancel: () => void;
 };
 
-const EditGroup = ({ onSave, onCancel }: EditGroupProps) => {
+const EditGroup = ({ initialData, onSave, onCancel }: EditGroupProps) => {
   const [groupName, setGroupName] = useState('');
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [privacy, setPrivacy] = useState<'public' | 'private'>('public');
+
+  // 초기 데이터가 있으면 상태 업데이트 (편집 모드 진입 시)
+  useEffect(() => {
+    if (initialData) {
+      setGroupName(initialData.name);
+      setSelectedIcon(initialData.iconName);
+      setPrivacy(initialData.privacy);
+    }
+  }, [initialData]);
+
   const isValid = groupName.trim().length > 0 && selectedIcon !== null;
+  // 헤더 타이틀 동적 처리
+  const headerTitle = initialData ? '그룹 편집하기' : '새 그룹 만들기';
+
   const handleSave = () => {
     if (!groupName || !selectedIcon) {
       alert('그룹명과 마커를 선택해주세요.');
@@ -58,7 +73,7 @@ const EditGroup = ({ onSave, onCancel }: EditGroupProps) => {
     <div className="relative flex h-full w-full flex-col">
       {/* 헤더 */}
       <div className="relative flex h-[60px] w-full items-center justify-center">
-        <span className="text-[20px] font-bold text-[#35353F]">그룹 편집하기</span>
+        <span className="text-[20px] font-bold text-[#35353F]">{headerTitle}</span>
         <button onClick={onCancel} className="absolute right-4 top-1/2 -translate-y-1/2">
           <img src={X} alt="close" />
         </button>

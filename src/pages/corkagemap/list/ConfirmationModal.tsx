@@ -47,11 +47,31 @@ type ConfirmationModalProps = {
   groupName: string;
   iconName: string;
   onClose: () => void;
+  mode?: 'create' | 'edit' | 'delete';
 };
 
-const ConfirmationModal = ({ groupName, iconName, onClose }: ConfirmationModalProps) => {
+const ConfirmationModal = ({
+  groupName,
+  iconName,
+  onClose,
+  mode = 'create',
+}: ConfirmationModalProps) => {
   const IconSrc = markerIcons[iconName];
   const textColor = markerColorMap[iconName] ?? '#35353F';
+
+  // 모드별 메시지 분기
+  let message = '';
+  switch (mode) {
+    case 'create':
+      message = '그룹이 생성되었습니다!';
+      break;
+    case 'edit':
+      message = '그룹이 편집되었습니다!';
+      break;
+    case 'delete':
+      message = '그룹이 삭제되었습니다.';
+      break;
+  }
 
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/50">
@@ -70,7 +90,7 @@ const ConfirmationModal = ({ groupName, iconName, onClose }: ConfirmationModalPr
             {groupName}
           </span>
         </div>
-        <p className="mt-2 text-[16px] font-[500] text-[#35353F]">그룹이 편집 되었습니다!</p>
+        <p className="mt-2 text-[16px] font-[500] text-[#35353F]">{message}</p>
         <button
           onClick={onClose}
           className="mt-4 h-[48px] w-[263px] rounded-[12px] bg-[#90212A] text-[16px] font-bold text-white"
