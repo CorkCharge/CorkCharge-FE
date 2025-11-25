@@ -44,7 +44,7 @@ const MainLayout = () => {
     );
 
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-svh flex-col">
       <div className="flex-1 overflow-auto" ref={scrollRef}>
         <Outlet />
       </div>

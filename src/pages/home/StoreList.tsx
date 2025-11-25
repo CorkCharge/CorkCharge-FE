@@ -139,7 +139,7 @@ const StoreList = () => {
         <p className="mt-1 pl-5 text-sm text-[var(--gray-6)]">
           코르크차지만의 콜키지 리뷰를 확인해보세요
         </p>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px]" />
+        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
       </div>
 
       <div className="mt-2 flex w-full gap-2 overflow-x-scroll px-4">{renderReviewItem()}</div>

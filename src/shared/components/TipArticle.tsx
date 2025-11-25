@@ -23,7 +23,7 @@ const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
         {/* <div className="mb-8 w-[200px] whitespace-pre-line text-[24px] font-bold text-[#1E1E1E]">
           서브타이틀
         </div> */}
-        <div className="whitespace-pre-line text-[16px]">{content}</div>
+        <div className="whitespace-pre-line text-[16px] font-medium">{content}</div>
       </div>
     </>
   );

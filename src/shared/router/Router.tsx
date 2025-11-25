@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom';
-// import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
@@ -10,7 +9,7 @@ import NotRegistered from '../../pages/doit/NotRegistered';
 import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
-import OnBoarding from '@/pages/onBoarding/OnBoarding';
+// import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
 import StoreCheck from '@/pages/add/StoreCheck';
 import SearchStore from '@/pages/add/SearchStore';
@@ -102,10 +101,10 @@ const router = createBrowserRouter([
         path: 'doit/complete',
         element: <DoitComplete />,
       },
-      {
-        path: 'onboarding',
-        element: <OnBoarding />,
-      },
+      // {
+      //   path: 'onboarding',
+      //   element: <OnBoarding />,
+      // },
       {
         path: 'signin',
         element: <SignIn />,
