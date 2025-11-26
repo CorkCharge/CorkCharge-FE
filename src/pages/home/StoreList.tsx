@@ -99,7 +99,7 @@ const StoreList = () => {
       {/* 검색창 */}
       <div className="flex w-full px-4" style={{ boxShadow: '0 4px 7px 0px rgba(0, 0, 0, 0.1)' }}>
         <TopBar searchDisabled={false} className="flex-1" />
-        <img src={bell} />
+        <img src={bell} className="cursor-pointer" onClick={() => navigate('/notification')} />
       </div>
 
       {/* 배너 */}

@@ -39,6 +39,7 @@ import SearchMapResult from '@/pages/search/SearchMapResult';
 import ChooseRole from '../components/myPage/ChooseRole';
 import { RootRedirect } from './RootRedirect';
 import Toc from '@/pages/myPage/Toc';
+import NotiPost from '../components/notification/NotiPost';
 
 const router = createBrowserRouter([
   // {
@@ -188,6 +189,10 @@ const router = createBrowserRouter([
       {
         path: 'notification',
         element: <Notification />,
+      },
+      {
+        path: 'notification/:id',
+        element: <NotiPost />,
       },
       {
         path: 'tipArticle/:id',

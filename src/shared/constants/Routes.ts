@@ -18,7 +18,7 @@ export const FOOTERHIDDENURL = [
 ];
 
 // 하단 네비게이션 숨김 page URL(prefix)
-export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin', '/master'];
+export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin', '/master', '/notification'];
 
 // 하단 네비게이션의 각 아이템의 이동 링크 설정
 export const FOOTERROUTER = {
