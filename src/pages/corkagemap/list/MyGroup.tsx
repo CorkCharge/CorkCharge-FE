@@ -62,7 +62,7 @@ const MyGroup = ({ id, iconName, name, count, onEdit, onDelete }: MyGroupProps) 
   };
 
   return (
-    <div className="relative flex w-full items-center border-b border-[#DBDDE1] py-4">
+    <div className="relative flex w-full cursor-pointer items-center border-b border-[#DBDDE1] py-4">
       {IconSrc && <img src={IconSrc} alt={iconName} className="h-[23px] w-[23px]" />}
       <span className="ml-[12px] text-[14px] font-[500] text-[#35353F]">{name}</span>
       <span className="ml-[8px] text-[12px] font-[500] text-[#9FA2AA]">{count}</span>

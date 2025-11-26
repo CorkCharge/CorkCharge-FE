@@ -1,9 +1,13 @@
 import V from './v.svg';
 import StoreCard from '../../../shared/components/storecard/StoreCard'; // 경로 확인 필요
-
+import Marker from '../list/savemarker/SaveMarker2.svg';
 const MyStore = () => {
   return (
     <div className="relative flex h-full w-full flex-col bg-white">
+      <img
+        src={Marker}
+        className="absolute left-[40px] top-0 z-10 h-[60px] w-[60px] -translate-y-1/2"
+      />
       {/* 전체 규격: 393px x 852px 기준
          반응형 대응: h-full, w-full로 부모 컨테이너(바텀시트)에 맞춤
       */}
