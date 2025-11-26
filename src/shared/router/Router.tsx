@@ -42,6 +42,7 @@ import { RootRedirect } from './RootRedirect';
 import Toc from '@/pages/myPage/Toc';
 import ExamplePage from '@/pages/ExamplePage';
 import ExamplePage2 from '@/pages/ExamplePage2';
+import MyStore from '@/pages/corkagemap/mystore/MyStore';
 
 const router = createBrowserRouter([
   // {
@@ -215,6 +216,10 @@ const router = createBrowserRouter([
       {
         path: 'example2',
         element: <ExamplePage2 />,
+      },
+      {
+        path: 'mystore',
+        element: <MyStore />,
       },
     ],
   },
