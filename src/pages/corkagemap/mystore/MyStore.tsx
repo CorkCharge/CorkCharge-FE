@@ -49,7 +49,7 @@ const MyStore = ({ group }: MyStoreProps) => {
       <img
         src={MarkerSrc}
         alt={group.iconName}
-        className="z-100 absolute left-[40px] top-0 h-[60px] w-[60px] -translate-y-1/2"
+        className="absolute left-[40px] top-0 z-[100] h-[60px] w-[60px] -translate-y-1/2"
       />
       {/* 전체 규격: 393px x 852px 기준
          반응형 대응: h-full, w-full로 부모 컨테이너(바텀시트)에 맞춤
