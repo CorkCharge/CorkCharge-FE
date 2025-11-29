@@ -37,8 +37,8 @@ const CorkageMap = () => {
     setSheetView('store'); // 뷰를 상세(MyStore)로 변경
   };
 
-  // MyStore 뷰일 때 topSnapVh는 19.8, List일 땐 17.8
-  const currentTopSnapVh = sheetView === 'store' ? 19.8 : 17.8;
+  // MyStore 뷰일 때 topSnapVh는 19.8, List일 땐 17.8, 근데 이게 처음에 BottomSheet가 마운트될때 이미 17.8로 마운트되서 바뀌질 않음
+  const currentTopSnapVh = sheetView === 'store' ? 17.8 : 17.8;
 
   return (
     <main className="relative h-screen w-full overflow-hidden">
