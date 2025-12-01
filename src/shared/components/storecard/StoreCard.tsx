@@ -8,7 +8,7 @@ const StoreCard = () => {
   return (
     <div className="flex w-full flex-col bg-white">
       {/* 1. 상단 정보 영역 (이름, 아이콘) */}
-      <div className="relative flex w-full items-start justify-between pl-[17px] pr-[16px]">
+      <div className="relative flex w-full items-start justify-between pl-[17px]">
         {/* 식당 이름 */}
         <h2 className="text-[20px] font-bold leading-none text-[#35353F]">엔비햄버거</h2>
         {/* 우측 아이콘 버튼들 */}
