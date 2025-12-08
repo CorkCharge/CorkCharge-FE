@@ -39,6 +39,8 @@ import SearchMapResult from '@/pages/search/SearchMapResult';
 import ChooseRole from '../components/myPage/ChooseRole';
 import { RootRedirect } from './RootRedirect';
 import Toc from '@/pages/myPage/Toc';
+import ExamplePage from '@/pages/ExamplePage';
+import ExamplePage2 from '@/pages/ExamplePage2';
 import NotiPost from '../components/notification/NotiPost';
 
 const router = createBrowserRouter([
@@ -209,6 +211,14 @@ const router = createBrowserRouter([
       {
         path: 'reservate',
         element: <ReservateDrink />,
+      },
+      {
+        path: 'example',
+        element: <ExamplePage />,
+      },
+      {
+        path: 'example2',
+        element: <ExamplePage2 />,
       },
     ],
   },
