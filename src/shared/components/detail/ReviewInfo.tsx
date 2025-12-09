@@ -1,21 +1,11 @@
-import { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import { StarRate } from '../common/StarRate';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
 
 import share from '@/shared/assets/detailPageImgs/share.svg';
 
 const ReviewInfo = () => {
-  const navigate = useNavigate();
-  const rating = useRef(0);
-
   const selectedReviews = useMyReviewStore((state) => state.selectedReviews);
   const toggleReview = useMyReviewStore((state) => state.toggleReview);
-
-  const setRating = (r: number) => {
-    rating.current = r;
-  };
 
   const renderReviews = () =>
     [...new Array(3)].map((_, idx) => (
@@ -95,19 +85,6 @@ const ReviewInfo = () => {
       </div>
 
       <div className="flex flex-col gap-3">{renderReviews()}</div>
-      {/* <div className="flex h-[60px] w-full items-center justify-center gap-4 pl-4 pr-4">
-        <div className="flex h-[40px] w-[360px] w-full cursor-pointer items-center justify-center rounded-br-full rounded-tl-full bg-[#F3F3F6] pl-6 pr-6">
-          <div className="flex w-full justify-center gap-2">
-            <StarRate rate={0} isEditable={true} starRating={setRating} />
-            <div className="ml-4 flex items-center gap-1">
-              <div className="text-[14px] underline">리뷰쓰기</div>
-              <div>🡭</div>
-            </div>
-          </div>
-
-
-        </div>
-      </div> */}
     </div>
   );
 };

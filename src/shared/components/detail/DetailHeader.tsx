@@ -11,7 +11,6 @@ import star from '../../assets/star.svg';
 import call from '../../assets/detailPageImgs/call.svg';
 import bubble from '../../assets/detailPageImgs/bubble.svg';
 import share from '../../assets/detailPageImgs/share.svg';
-import keep from '../../assets/detailPageImgs/keep.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
 
 interface detailProps {
@@ -41,18 +40,6 @@ const DetailHeader = ({
   const location = useLocation();
 
   const [isKeep, setIsKeep] = useState(false);
-
-  const handleRequest = () => {
-    console.log('해주세요창 이동: ', location.state);
-    // navigate(`doit/request/${restaurantId}`);
-    navigate(`/doit/request/${resId}`, {
-      state: {
-        storeName: name ?? '매장명 없음',
-        address: adr ?? '주소 없음',
-        restaurantId: resId ?? 0,
-      },
-    });
-  };
 
   const [openCallModal, setOpenCallModal] = useState<boolean>(false);
   const handleCallModal = () => {

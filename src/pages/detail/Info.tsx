@@ -1,7 +1,8 @@
 import DetailHeader from '@/shared/components/detail/DetailHeader';
 import DetailInfoSection from '@/shared/components/detail/DetailInfoSection';
 import { useState, useEffect } from 'react';
-import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
+// import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
+import { type RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import { useParams } from 'react-router-dom';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 
