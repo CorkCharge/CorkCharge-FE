@@ -1,4 +1,3 @@
-// import React from 'react';
 import DetailHeader from '@/shared/components/detail/DetailHeader';
 import DetailInfoSection from '@/shared/components/detail/DetailInfoSection';
 import { useState, useEffect } from 'react';
@@ -18,49 +17,61 @@ const Info = () => {
       return;
     }
 
-    //let cancelled = false;
-    // const fetchData = async () => {
     (async () => {
       try {
-        const res = await fetchRestaurant(restaurantId);
-        console.log(res);
+        // const res = await fetchRestaurant(restaurantId);
+        const res = {
+          restaurantId: 88,
+          restaurantName: '램니쿠야',
+          address: '서울 광진구 아차산로 395',
+          phone: '0507-1404-1532',
+          rating: 4.2,
+          scrap: true,
+          scrapCount: 2,
+          mainImageUrl:
+            'https://corkcharge-bucket.s3.ap-northeast-2.amazonaws.com/restaurant/%EB%9E%A8%EB%8B%88%EC%BF%A0%EC%95%BC_%EB%A7%A4%EC%9E%A5%EC%82%AC%EC%A7%84.png',
+          menuImageUrl:
+            'https://corkcharge-bucket.s3.ap-northeast-2.amazonaws.com/restaurant/%EB%9E%A8%EB%8B%88%EC%BF%A0%EC%95%BC_%EB%A9%94%EB%89%B4%EC%82%AC%EC%A7%84.png',
+          corkagePrice: '병당 5000원',
+          corkageOptions: ['잔 제공', '얼음 제공'],
+          representMenu: '양갈비',
+          pairingAlcohol: '월계관 준마이',
+          pairingDescription:
+            '월계관 준마이의 은은한 쌀 내음과 부드러운 목넘김이 양고기 징기스칸의 진한 육즙과 만나 풍미를 더욱 깊게 만들어줍니다.',
+          pairingImageUrl:
+            'https://corkcharge-bucket.s3.ap-northeast-2.amazonaws.com/corkage/%EB%9E%A8%EB%8B%88%EC%BF%A0%EC%95%BC_%EC%A3%BC%EB%A5%98%EC%82%AC%EC%A7%84.png',
+          openingHours: '매일 16:00 - 24:00',
+        };
         setRestaurant(res);
         setRestInfo(res);
       } catch {
         console.error('API  호출 실패');
       }
-      // };
     })();
-    return () => {
-      //cancelled = true;
-    };
-    // fetchData();
   }, [restaurantId, id]);
 
-  //reviewCount 는 어디에 써야 하는지? 대신 저장 개수가 필요함
   return (
     <div className="flex flex-col items-center bg-white">
-      {/* <div>{restaurant?.address}</div>
-      <div>{restaurant?.corkageOptions}</div>
-      <div>{restaurant?.phone}</div>
-      <div>{restaurant?.reviews[0].content}</div> */}
       <div className="w-full">
-        {restaurant && (
+        {restaurant ? (
           <DetailHeader
             resId={restaurant.restaurantId}
             name={restaurant.restaurantName}
             rating={restaurant.rating}
             adr={restaurant.address}
-            // alias="광진구 햄버거 맛집"
             isOpen={true}
             time="4:00"
             phone={restaurant.phone}
             mainImageUrl={restaurant.mainImageUrl}
           />
+        ) : (
+          <p className="flex min-h-[100svh] items-center justify-center bg-inherit">
+            가게 정보를 불러오는데 실패하였습니다.
+          </p>
         )}
       </div>
+
       {restaurant && <DetailInfoSection {...restaurant} />}
-      {/* restaurant 내 필드를 펼쳐서 props 로 전달 */}
     </div>
   );
 };

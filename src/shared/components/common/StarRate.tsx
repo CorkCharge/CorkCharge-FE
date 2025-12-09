@@ -48,7 +48,7 @@ export const StarRate = ({
   };
 
   return (
-    <div className={cn('flex items-center', spacing && `gap-[${spacing}]`, className)}>
+    <div className={cn('flex items-center', className)} style={{ gap: spacing }}>
       {STARIDX.map((item, idx) => (
         <span className={cn('mr-3px inline-flex')} key={idx}>
           <svg

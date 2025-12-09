@@ -14,7 +14,7 @@ function Notification() {
   };
 
   const renderNotiPosts = () =>
-    [...new Array(9)].map(() => (
+    [...new Array(5)].map(() => (
       <div
         className="relative flex cursor-pointer items-center gap-5 border-b border-[var(--gray-3)] p-4"
         onClick={gotoPost}
@@ -31,7 +31,7 @@ function Notification() {
     ));
 
   return (
-    <div>
+    <div className="relative">
       <Header type="back" title="알림" className="mx-4" backFn={() => navigate('/home')} />
 
       <div
@@ -52,22 +52,12 @@ function Notification() {
         />
       </div>
 
-      <div>
-        {renderNotiPosts()}
-        <div
-          className="relative flex cursor-pointer items-center gap-5 border-b border-[var(--gray-3)] p-4"
-          onClick={gotoPost}
-        >
-          <span className="rounded-[20px] bg-[var(--gray-2)] px-4 py-2 text-sm font-medium">
-            EVENT
-          </span>
-          <div className="flex flex-col justify-center font-medium">
-            <p className="text-[var(--gray-8)]">후기 남기고 커피받자</p>
-            <span className="text-[10px] text-[var(--gray-4)]">2025년 05월 17일</span>
-          </div>
-          <img src={grayArrow} className="absolute right-4 top-1/2 h-4 w-[9px] -translate-y-1/2" />
-        </div>
-      </div>
+      <div>{renderNotiPosts()}</div>
+
+      {/* empty state */}
+      {/* <p className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-medium">
+        알림이 없습니다
+      </p> */}
     </div>
   );
 }

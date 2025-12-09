@@ -197,7 +197,7 @@ const router = createBrowserRouter([
         element: <NotiPost />,
       },
       {
-        path: 'tipArticle/:id',
+        path: 'tip-article/:id',
         element: <Tip />,
       },
       {

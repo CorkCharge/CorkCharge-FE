@@ -1,18 +1,18 @@
-// import React from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
+import Modal from './Modal';
+import Feedback from './Feedback';
+import Share from './Share';
+
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
 import call from '../../assets/detailPageImgs/call.svg';
 import bubble from '../../assets/detailPageImgs/bubble.svg';
 import share from '../../assets/detailPageImgs/share.svg';
 import keep from '../../assets/detailPageImgs/keep.svg';
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import Modal from './Modal';
-import Feedback from './Feedback';
-import { useNavigate } from 'react-router-dom';
-import Share from './Share';
 import arrow from '@/shared/assets/whiteArrow.svg';
-import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
 
 interface detailProps {
   resId: number;
@@ -39,6 +39,8 @@ const DetailHeader = ({
 }: detailProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [isKeep, setIsKeep] = useState(false);
 
   const handleRequest = () => {
     console.log('해주세요창 이동: ', location.state);
@@ -179,74 +181,114 @@ const DetailHeader = ({
     }
   };
 
+  const keepMarker = (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <circle
+        cx="16"
+        cy="16"
+        r="15"
+        fill={isKeep ? '#E75257' : 'none'}
+        stroke={isKeep ? 'none' : 'var(--gray-3)'}
+      />
+      <path
+        d="M10.7239 23.6525C10.4143 23.6525 10.1728 23.5764 9.99935 23.4242C9.82596 23.272 9.73926 23.058 9.73926 22.7821V10.3959C9.73926 9.71567 9.9591 9.20434 10.3988 8.86186C10.8385 8.51939 11.4949 8.34814 12.3681 8.34814H19.6322C20.5054 8.34814 21.1618 8.51939 21.6015 8.86186C22.0412 9.20434 22.261 9.71567 22.261 10.3959V22.7821C22.261 23.058 22.1744 23.272 22.0009 23.4242C21.8276 23.5764 21.586 23.6525 21.2763 23.6525C21.0473 23.6525 20.8336 23.5931 20.6355 23.4742C20.4435 23.3553 20.1369 23.1412 19.7158 22.832L16.0837 20.0851C16.028 20.0375 15.9723 20.0375 15.9165 20.0851L12.2845 22.832C11.8634 23.1459 11.5537 23.36 11.3556 23.4742C11.1574 23.5931 10.9468 23.6525 10.7239 23.6525Z"
+        fill="white"
+        stroke={isKeep ? 'none' : 'var(--gray-7)'}
+        strokeWidth={1.5}
+      />
+    </svg>
+  );
+
   return (
     <div className="relative flex w-full flex-col">
-      {/* <img src="https://placehold.co/393X197" /> */}
+      {mainImageUrl ? (
+        <img src={mainImageUrl} className="h-[197px] w-full" />
+      ) : (
+        <div className="grid grid-cols-2 gap-[1px]">
+          <div className="aspect-square bg-gray-300"></div>
+          <div className="grid grid-cols-2 gap-[1px]">
+            <div className="aspect-square bg-gray-300"></div>
+            <div className="aspect-square bg-gray-300"></div>
+            <div className="aspect-square bg-gray-300"></div>
+            <div className="aspect-square bg-gray-300"></div>
+          </div>
+        </div>
+      )}
       <img
-        src={mainImageUrl ? mainImageUrl : 'https://placehold.co/393X197'}
-        className="h-[197px] w-full"
+        src={arrow}
+        className="absolute left-3 top-2 h-4 w-[9px] cursor-pointer"
+        onClick={() => navigate(-1)}
       />
-      <img src={arrow} className="absolute left-3 top-2 h-4 w-[9px]" onClick={() => navigate(-1)} />
-      {/* 사진 없으면 기본 사진으로 대체 */}
-      <div className="px-4 pb-2 pt-2">
+
+      {/* 가게 정보 */}
+      <div className="relative px-4 pb-2 pt-2">
         <div className="text-[24px] font-bold">{name}</div>
-        <div className="flex items-center gap-2">
-          <div>콜키지스코어</div>
+        <div className="flex items-center">
+          <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
           <img src={star} />
-          <span className="text-[16px]">{rating}</span>
-          <span className="text-[14px] text-[#749755]">{alias}</span>
+          <span className="ml-1 font-medium">{rating}</span>
         </div>
-        <div className="flex items-center gap-2 text-[14px]">
-          <div>{isOpen ? '영업중' : '영업종료'}</div>
-          <div className="text-[#80818B]">영업시간 {time} 영업종료</div>
+        <div className="mt-1 flex items-center gap-2 text-[14px]">
+          <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>
+          <span className="text-[#80818B]">영업시간 {time} 영업종료</span>
+        </div>
+        <div
+          className="absolute right-4 top-2 cursor-pointer"
+          onClick={() => setIsKeep((prev) => !prev)}
+        >
+          {keepMarker}
         </div>
       </div>
-      <div className="mb-2 mt-2 flex justify-center gap-2 border border-x-0 border-t-0 px-4 pb-4">
+
+      {/* 버튼 그룹 */}
+      <div className="mt-2 box-content flex h-9 w-full justify-center gap-2 px-4 pb-4">
         <button
-          onClick={handleRequest}
-          // onClick={handleModal}
-          className="flex h-[80px] w-full flex-1 items-center justify-center gap-2 rounded-[16px] bg-[#F3F3F6]"
+          className="flex items-center justify-center gap-1 rounded-full px-4"
+          style={{ border: 'solid 1px var(--gray-3)' }}
         >
-          <div className="flex items-center justify-center gap-3 text-[16px] font-semibold text-[#35353F]">
-            <img src={smallGlass}></img>
-            <div>해주세요</div>
-          </div>
+          <img src={smallGlass} className="size-6" />
+          <span className="text-sm font-medium text-[var(--primary)]">해주세요</span>
         </button>
         <button
-          onClick={onBookmarkClick}
-          className={`flex h-[80px] w-[176px] flex-1 items-center justify-center gap-2 rounded-[16px] ${isBookmarked ? 'bg-[var(--gray-5)]' : 'bg-[#F3F3F6]'}`}
+          className="flex items-center justify-center gap-1 rounded-full px-4"
+          style={{ border: 'solid 1px var(--gray-3)' }}
         >
-          <div className="flex items-center justify-center gap-3 text-[16px] font-semibold text-[#35353F]">
-            {/* 저장 상태에 따라 ui변화 */}
-            <img src={keep}></img>
-            <div>{isBookmarked ? '저장됨' : '저장'}</div>
-          </div>
+          <img src={share} />
+          <span className="text-sm font-medium text-[var(--gray-7)]">공유</span>
+        </button>
+        <button
+          className="flex items-center justify-center gap-1 rounded-full px-4"
+          style={{ border: 'solid 1px var(--gray-3)' }}
+        >
+          <img src={call} />
+          <span className="text-sm font-medium text-[var(--gray-7)]">전화</span>
+        </button>
+        <button
+          className="flex items-center justify-center gap-1 rounded-full px-4"
+          style={{ border: 'solid 1px var(--gray-3)' }}
+        >
+          <img src={bubble} />
+          <span className="text-sm font-medium text-[var(--gray-7)]">문의</span>
         </button>
       </div>
-      <div className="flex h-[50px] w-full justify-between pb-4 pl-[36px] pr-[36px] pt-2">
-        <div
-          onClick={handleCallModal}
-          className="flex w-[100px] flex-1 cursor-pointer flex-col items-center justify-center gap-1"
-        >
-          <img className="h-[16px] w-[16px]" src={call} />
-          <div className="text-[10px] text-[#80818B]">전화하기</div>
+
+      {/* 콜키지 정보 */}
+      <div className="mb-7 w-full px-4">
+        <div className="mt-2 border-b-2 pb-1 font-bold">콜키지 정보</div>
+        <div className="flex gap-12 border-b py-2">
+          <div className="font-bold">비용</div>
+          <span>병당 1만원</span>
         </div>
-        <div
-          onClick={handleFeedback}
-          className="flex w-[100px] flex-1 cursor-pointer flex-col items-center justify-center gap-1 border border-y-0 border-[#F3F3F6]"
-        >
-          <img className="flex h-[16px] w-[16px] items-center justify-center" src={bubble} />
-          <div className="text-[10px] text-[#80818B]">건의하기</div>
-        </div>
-        <div
-          onClick={handleShare}
-          className="flex w-[100px] flex-1 cursor-pointer flex-col items-center justify-center gap-1"
-        >
-          <img className="flex h-[16px] w-[16px] items-center justify-center" src={share} />
-          <div className="text-[10px] text-[#80818B]">공유하기</div>
+        <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
+          <div className="font-bold">기타</div>
+          <div>
+            <p>잔 제공</p>
+            <p>얼음 제공</p>
+            <p>리뷰 이벤트 : 한 병 무료</p>
+          </div>
         </div>
       </div>
-      <div className="h-[8px] bg-[#F3F3F6]"></div>
+
       {openCallModal && (
         <Modal
           mainContent={phone}

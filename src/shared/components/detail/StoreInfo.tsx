@@ -8,7 +8,7 @@ const StoreInfo = (restaurant: RestaurantInfo) => {
   return (
     <div>
       <div className="px-4">
-        <div className="border border-x-0 pb-1 pt-4 text-[16px] font-bold">가게 정보</div>
+        <div className="border-b-2 pb-1 pt-4 text-[16px] font-bold">가게 정보</div>
         <div className="flex border border-x-0 pb-2 pt-2">
           <div className="w-[20%] text-[16px] font-bold">가게명</div>
           <div>{restaurant.restaurantName}</div>
@@ -26,8 +26,8 @@ const StoreInfo = (restaurant: RestaurantInfo) => {
           <div className="w-[20%] text-[16px] font-bold">영업시간</div>
           {restaurant.openingHours ? (
             <div>
-              {restaurant.openingHours.split('\n').map((h) => (
-                <p>{h}</p>
+              {restaurant.openingHours.split('\n').map((h, idx) => (
+                <p key={idx}>{h}</p>
               ))}
             </div>
           ) : (

@@ -47,19 +47,6 @@ const StoreList = () => {
     navigate('/corkScore');
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await fetchCorkageList();
-  //       console.log(res);
-  //       setCorkage(res);
-  //     } catch {
-  //       console.error('API  호출 실패');
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchTipData = async () => {
       try {
@@ -71,23 +58,6 @@ const StoreList = () => {
     };
     fetchTipData();
   }, []);
-
-  // useEffect(() => {
-  //   let cancelled = false;
-  //   (async () => {
-  //     try {
-  //       const data = await fetchHomeRestaurant();
-  //       if (!cancelled) setSignature(data);
-  //       console.log('홈 화면 식당 정보 조회 성공');
-  //     } catch (e) {
-  //       console.error(e);
-  //       console.log('홈 화면 식당 정보 조회 실패');
-  //     }
-  //   })();
-  //   return () => {
-  //     cancelled = true;
-  //   };
-  // }, []);
 
   const filtered =
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
@@ -103,7 +73,12 @@ const StoreList = () => {
       </div>
 
       {/* 배너 */}
-      <OverLayImage src={bannerCover} className="mt-5 aspect-[2/1]" paddingX="16px">
+      <OverLayImage
+        src={bannerCover}
+        className="mt-5 aspect-[2/1] cursor-pointer"
+        paddingX="16px"
+        onClick={() => navigate('/tip-article/1')}
+      >
         <div className="absolute bottom-6 left-10 text-white">
           <p className="text-sm font-medium sm:text-base">페어링 큐레이션</p>
           <p className="font-bold sm:text-xl">회식 메뉴에 따라 달라지는 술 선택법</p>
