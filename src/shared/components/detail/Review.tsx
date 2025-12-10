@@ -8,6 +8,7 @@ import useRestaurantStore from '@/shared/store/useRestaurantStore';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
 
 import camera from '../../assets/detailPageImgs/camera.svg';
+import Modal from '../common/Modal';
 
 const Review = () => {
   const location = useLocation();
@@ -18,6 +19,7 @@ const Review = () => {
   const [content, setContent] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
   const [selectedfile, setSelectedFile] = useState<File>();
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   const fileSelector = useRef<HTMLInputElement>(null);
 
@@ -28,8 +30,6 @@ const Review = () => {
     if (!content) return;
     const formData = new FormData();
     const payload = { content, rating };
-    // formData.append('content', content);
-    // formData.append('rating', rating);
     formData.append('request', JSON.stringify(payload));
     if (selectedfile) {
       formData.append('images', selectedfile);
@@ -41,6 +41,9 @@ const Review = () => {
         navigate(`/detailInfo/${restId}`, { state: { openReviewModal: true } });
       })
       .catch((e) => console.error(e));
+
+    // api 통신 성공 시 호출
+    setIsModalOpen(true);
   };
 
   const handelImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +52,11 @@ const Review = () => {
       setPreviewUrl(URL.createObjectURL(file));
       setSelectedFile(file);
     }
+  };
+
+  const reviewFinish = () => {
+    setIsModalOpen(false);
+    navigate(-1);
   };
 
   return (
@@ -99,7 +107,7 @@ const Review = () => {
 
       <div
         onClick={handleReview}
-        className={`mb-4 mt-12 flex h-[48px] w-[361px] items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[#90212A]' : 'cursor-not-allowed bg-[#FFFFFF]'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
+        className={`mb-4 mt-12 flex h-[48px] w-[361px] items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
       >
         <div className="flex gap-2">
           <div className={`text-[16px] font-bold ${content ? 'text-white' : 'text-[#35353F]'}`}>
@@ -107,6 +115,19 @@ const Review = () => {
           </div>
         </div>
       </div>
+
+      <Modal isOpen={isModalOpen}>
+        <span className="inline-block w-full text-center text-2xl font-bold">작성완료</span>
+        <p className="mb-5 mt-1 text-center font-medium text-[var(--gray-8)]">
+          소중한 리뷰 감사합니다
+        </p>
+        <button
+          className="h-12 w-full rounded-xl bg-[var(--primary)] font-semibold text-white"
+          onClick={reviewFinish}
+        >
+          확인
+        </button>
+      </Modal>
     </div>
   );
 };
