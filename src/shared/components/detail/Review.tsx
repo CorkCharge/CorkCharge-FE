@@ -6,9 +6,9 @@ import Header from '../common/Header';
 import apiClient from '@/shared/apis/apiClient';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
+import Modal from '../common/Modal';
 
 import camera from '../../assets/detailPageImgs/camera.svg';
-import Modal from '../common/Modal';
 
 const Review = () => {
   const location = useLocation();

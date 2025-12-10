@@ -42,6 +42,7 @@ import Toc from '@/pages/myPage/Toc';
 import ExamplePage from '@/pages/ExamplePage';
 import ExamplePage2 from '@/pages/ExamplePage2';
 import NotiPost from '../components/notification/NotiPost';
+import NewStores from '@/pages/home/NewStores';
 
 const router = createBrowserRouter([
   // {
@@ -211,6 +212,10 @@ const router = createBrowserRouter([
       {
         path: 'reservate',
         element: <ReservateDrink />,
+      },
+      {
+        path: 'new-stores',
+        element: <NewStores />,
       },
       {
         path: 'example',

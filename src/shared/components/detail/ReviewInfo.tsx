@@ -67,7 +67,7 @@ const ReviewInfo = () => {
               />
             </svg>
           </div>
-          <span className="font-meidum text-[10px] text-[var(--gray-8)]">99+</span>
+          <span className="text-[10px] font-medium text-[var(--gray-8)]">99+</span>
           <div className="relative flex size-6 cursor-pointer rounded-full bg-white">
             <img
               src={share}

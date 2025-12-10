@@ -42,9 +42,8 @@ const StoreList = () => {
     console.log('해주세요창 이동');
     navigate('/doit');
   };
-  const handleCorkStore = () => {
-    console.log('콜키지스토어창 이동');
-    navigate('/corkScore');
+  const handleNewStore = () => {
+    navigate('/new-stores');
   };
 
   useEffect(() => {
@@ -96,7 +95,7 @@ const StoreList = () => {
             <span className="text-lg font-medium">해주세요</span>
           </button>
           <button
-            onClick={handleCorkStore}
+            onClick={handleNewStore}
             className="flex h-[80px] flex-1 items-center justify-center gap-2 rounded-[16px] bg-[var(--glass-soft)]"
           >
             <img src={newStore} className="h-[45px] w-[51px]"></img>

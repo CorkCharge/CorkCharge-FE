@@ -56,8 +56,8 @@
   }
 }
 
-/* Brand and UI color palette */
 :root {
+  /* Brand and UI color palette */
   --primary: #90212a;
   --gray-1: #f3f3f6;
   --gray-2: #ecedef;
@@ -69,6 +69,12 @@
   --gray-8: #35353f;
   --glass: #dcdbe8;
   --glass-soft: rgba(220, 219, 232, 0.5);
+
+  /* App max width */
+  --app-width: 480px;
+
+  /* footer height */
+  --footer-h: 60px;
 }
 
 @layer components {
