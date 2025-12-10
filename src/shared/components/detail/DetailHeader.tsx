@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import Modal from '../common/Modal';
+import Button from '../common/Button';
 
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
@@ -9,8 +10,8 @@ import call from '../../assets/detailPageImgs/call.svg';
 import bubble from '../../assets/detailPageImgs/bubble.svg';
 import share from '../../assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
-import { Input } from '../common/Input';
-import Button from '../common/Button';
+import logo from '@/shared/assets/images/logo.svg';
+import check from './assets/check.svg';
 
 interface detailProps {
   resId: number;
@@ -24,17 +25,7 @@ interface detailProps {
   mainImageUrl: string | null;
 }
 
-const DetailHeader = ({
-  resId,
-  name,
-  rating,
-  adr,
-  alias,
-  isOpen,
-  time,
-  phone,
-  mainImageUrl,
-}: detailProps) => {
+const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }: detailProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,6 +33,9 @@ const DetailHeader = ({
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
   const [contactContent, setContactContent] = useState('');
   const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false); // 전화하기 modal 열기
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
 
   // const location = useLocation();
 
@@ -67,6 +61,30 @@ const DetailHeader = ({
       />
     </svg>
   );
+
+  // 공유 클릭 시 주소 복사
+  const clipLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsShareModalOpen(false);
+    setIsCopiedModalOpen(true);
+    setTimeout(() => setIsCopiedModalOpen(false), 1000);
+  };
+
+  // 전화 클릭 시 전화 이동 or 번호 복사
+  const copyPhoneNumber = () => {
+    // 사용자 기기 종류 확인
+    const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    console.log(isMobile);
+
+    if (isMobile) {
+      window.location.href = `tel:${phone}`;
+    } else {
+      navigator.clipboard.writeText(phone);
+      setIsShareModalOpen(false);
+      setIsCopiedModalOpen(true);
+      setTimeout(() => setIsCopiedModalOpen(false), 1000);
+    }
+  };
 
   return (
     <div className="relative flex w-full flex-col">
@@ -121,6 +139,7 @@ const DetailHeader = ({
         <button
           className="flex items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
+          onClick={() => setIsShareModalOpen(true)}
         >
           <img src={share} />
           <span className="text-sm font-medium text-[var(--gray-7)]">공유</span>
@@ -128,6 +147,7 @@ const DetailHeader = ({
         <button
           className="flex items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
+          onClick={() => setIsCallModalOpen(true)}
         >
           <img src={call} />
           <span className="text-sm font-medium text-[var(--gray-7)]">전화</span>
@@ -159,6 +179,7 @@ const DetailHeader = ({
         </div>
       </div>
 
+      {/* 문의하기 모달 */}
       <Modal
         isOpen={isContactModalOpen}
         hasCloseButton={true}
@@ -203,6 +224,49 @@ const DetailHeader = ({
           disabled={!contactContent}
         />
       </Modal>
+
+      {/* 공유하기 모달 */}
+      <Modal
+        isOpen={isShareModalOpen}
+        hasCloseButton={true}
+        onClose={() => setIsShareModalOpen(false)}
+      >
+        <div className="mb-4 flex items-center">
+          <img src={logo} className="h-[22px] w-[13px]" />
+          <div className="ml-3 flex flex-col">
+            <span className="font-semibold">{name}</span>
+            <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
+          </div>
+        </div>
+        <Button
+          value="링크 복사하기"
+          className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+          onClick={clipLink}
+        />
+      </Modal>
+
+      {/* 전화하기 모달 */}
+      <Modal
+        isOpen={isCallModalOpen}
+        hasCloseButton={true}
+        onClose={() => setIsCallModalOpen(false)}
+      >
+        <span className="mb-4 inline-block w-full text-center text-2xl font-bold">{phone}</span>
+        <Button
+          value="번호 복사하기"
+          className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+          onClick={copyPhoneNumber}
+        />
+      </Modal>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
