@@ -1,12 +1,13 @@
 import { cn } from '@/shared/utils/utils';
+import type { ButtonHTMLAttributes, HTMLAttributes } from 'react';
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   value?: string;
   onClick?: () => void;
   className?: string;
 }
 
-function Button({ value, onClick, className }: ButtonProps) {
+function Button({ value, onClick, className, ...rest }: ButtonProps) {
   return (
     <button
       className={cn(
@@ -14,6 +15,7 @@ function Button({ value, onClick, className }: ButtonProps) {
         className
       )}
       onClick={onClick}
+      {...rest}
     >
       {value || ''}
     </button>

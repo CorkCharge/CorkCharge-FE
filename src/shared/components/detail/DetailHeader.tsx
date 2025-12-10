@@ -1,10 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
-import Modal from './Modal';
-import Feedback from './Feedback';
-import Share from './Share';
+import Modal from '../common/Modal';
 
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
@@ -12,6 +9,8 @@ import call from '../../assets/detailPageImgs/call.svg';
 import bubble from '../../assets/detailPageImgs/bubble.svg';
 import share from '../../assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
+import { Input } from '../common/Input';
+import Button from '../common/Button';
 
 interface detailProps {
   resId: number;
@@ -40,133 +39,16 @@ const DetailHeader = ({
   const location = useLocation();
 
   const [isKeep, setIsKeep] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
+  const [contactContent, setContactContent] = useState('');
+  const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
 
-  const [openCallModal, setOpenCallModal] = useState<boolean>(false);
-  const handleCallModal = () => {
-    setOpenCallModal(true);
-  };
-  const [openKeepModal, setOpenKeepModal] = useState<boolean>(false);
-  const handleKeepStore = () => {
-    console.log('저장완료');
-    setOpenKeepModal(true);
-  };
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const handleDeleteStore = () => {
-    console.log('저장취소완료');
-    setOpenDeleteModal(true);
-  };
-  const [openFbModal, setOpenFbModal] = useState<boolean>(false);
-  const handleFeedback = () => {
-    console.log('건의하기창 띄우기');
-    setOpenFbModal(true);
-  };
-
-  //리뷰작성 후 돌아와서 모달창
-  const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
   // const location = useLocation();
-  useEffect(() => {
-    if (location.state?.openReviewModal) {
-      setOpenReviewModal(true);
-    }
 
+  useEffect(() => {
     // state 초기화 (새로고침 시 안 뜨게)
     navigate(`/detailInfo/${resId}`, { replace: true });
   }, [location.state]);
-
-  //건의하기 후 돌아와서 모달창
-  const [completeFb, setCompleteFb] = useState<boolean>(false);
-  useEffect(() => {
-    if (location.state?.completeFb) {
-      setOpenFbModal(false);
-      setCompleteFb(true);
-    }
-
-    // state 초기화 (새로고침 시 안 뜨게)
-    navigate(`/detailInfo/${resId}`, { replace: true });
-  }, [location.state]);
-
-  //전화번호 복사하기 기능
-  const handleCopyPhone = (phone: string) => {
-    try {
-      navigator.clipboard.writeText(phone);
-      setOpenCallModal(false);
-      alert('클립보드에 복사되었습니다: ' + phone);
-    } catch {
-      console.error('복사 실패');
-      // alert('클립보드 복사에 실패하였습니다.');
-    }
-  };
-
-  //링크 공유하기 기능
-  const [openShareModal, setOpenShareModal] = useState<boolean>(false);
-  const handleShare = () => {
-    console.log('공유하기 창 띄우기');
-    setOpenShareModal(true);
-  };
-
-  const baseURL = window.location.origin;
-  const pathURL = `${baseURL}/detailInfo/${resId}`;
-  const handleCopyLink = () => {
-    try {
-      // const pathURL = `http://localhost:5173/detailInfo/${resId};`;
-      console.log(pathURL);
-      navigator.clipboard.writeText(pathURL);
-      setOpenShareModal(false);
-      alert('링크가 클립보드에 복사되었습니다: ');
-    } catch {
-      console.error('복사 실패');
-      // alert('클립보드 복사에 실패하였습니다.');
-    }
-  };
-
-  //가게 저장하기
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
-  const keepStore = async () => {
-    try {
-      const res = await bookmarkRequest({
-        targetId: resId ?? 0,
-        targetType: 'RESTAURANT',
-      });
-      console.log('저장성공: ', res);
-    } catch (err) {
-      console.log('저장실패: ', err);
-    }
-  };
-
-  //가게 저장취소
-  const deleteStore = async () => {
-    try {
-      const res = await deleteRequest({
-        targetId: resId ?? 0,
-        targetType: 'RESTAURANT',
-      });
-      console.log('가게 저장 삭제성공: ', res);
-    } catch (err) {
-      console.log('가게 저장 삭제실패: ', err);
-    }
-  };
-
-  const [pending, setPending] = useState<boolean>(false);
-  const onBookmarkClick = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (pending) return;
-    setPending(true);
-    try {
-      if (isBookmarked) {
-        await deleteStore();
-        setIsBookmarked(false);
-        handleDeleteStore();
-      } else {
-        await keepStore();
-        setIsBookmarked(true);
-        handleKeepStore();
-      }
-    } catch (err) {
-      console.log('북마크 토글 실패:', err);
-    } finally {
-      setPending(false);
-    }
-  };
 
   const keepMarker = (
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -253,6 +135,7 @@ const DetailHeader = ({
         <button
           className="flex items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
+          onClick={() => setIsContactModalOpen(true)}
         >
           <img src={bubble} />
           <span className="text-sm font-medium text-[var(--gray-7)]">문의</span>
@@ -276,69 +159,50 @@ const DetailHeader = ({
         </div>
       </div>
 
-      {openCallModal && (
-        <Modal
-          mainContent={phone}
-          option1="번호 복사하기"
-          handleOpt1Click={() =>
-            // setOpenCallModal(false)
-            handleCopyPhone(phone)
-          }
+      <Modal
+        isOpen={isContactModalOpen}
+        hasCloseButton={true}
+        onClose={() => setIsContactModalOpen(false)}
+        className=""
+      >
+        <span className="inline-block w-full text-center text-2xl font-bold text-[var(--gray-8)]">
+          문의하기
+        </span>
+        <div className="my-4 flex justify-center gap-2">
+          <button
+            className={`rounded-[20px] px-4 py-2 text-sm font-medium ${contactOption ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)]'}`}
+            onClick={() => setContactOption(true)}
+          >
+            콜키지 정보 오류
+          </button>
+          <button
+            className={`rounded-[20px] px-4 py-2 text-sm font-medium ${!contactOption ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)]'}`}
+            onClick={() => setContactOption(false)}
+          >
+            가게 정보 오류
+          </button>
+        </div>
+        <div className="relative">
+          <textarea
+            className="mb-4 min-h-[192px] w-full resize-none rounded-br-3xl rounded-tl-3xl bg-[var(--gray-1)] p-4 pr-6 text-xs focus:outline-none"
+            placeholder="건의 내용을 입력해주세요"
+            value={contactContent}
+            onChange={(e) => setContactContent(e.target.value)}
+          ></textarea>
+          <button
+            className="absolute right-2 top-2 text-gray-500 hover:text-black"
+            onClick={() => setContactContent('')}
+          >
+            &times;
+          </button>
+        </div>
+
+        <Button
+          value="제출하기"
+          className="bg-[var(--primary)] text-white shadow-none disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
+          disabled={!contactContent}
         />
-      )}
-      {openKeepModal && (
-        <Modal
-          mainContent="저장완료"
-          subContent={`${name}(을)를 저장했습니다♥`}
-          // subContent="엔비햄버거를 저장x했습니다♥"
-          // info={['저장 수 100개가 되면', '신규 콜키지 우선순위로 등록됩니다.', '현재 저장 수: {']}
-          option1="확인"
-          option2="공유하기"
-          handleOpt1Click={() => setOpenKeepModal(false)}
-          //Todo: 저장 기능 추가하기
-          handleOpt2Click={() => setOpenKeepModal(false)}
-        />
-      )}
-      {openDeleteModal && (
-        <Modal
-          mainContent="저장취소"
-          subContent="저장을 취소했습니다"
-          option1="확인"
-          handleOpt1Click={() => setOpenDeleteModal(false)}
-        />
-      )}
-      {openReviewModal && (
-        <Modal
-          mainContent="작성완료"
-          subContent="소중한 리뷰 감사합니다 ♥"
-          option1="확인"
-          handleOpt1Click={() => setOpenReviewModal(false)}
-        />
-      )}
-      {openFbModal && (
-        <Feedback
-          restaurantId={resId}
-          mainContent="건의하기"
-          option="제출하기"
-          handleOptClick={() => setOpenFbModal(false)}
-        />
-      )}
-      {completeFb && (
-        <Modal
-          mainContent="건의완료"
-          subContent="소중한 의견 감사합니다♥"
-          option1="확인"
-          handleOpt1Click={() => setCompleteFb(false)}
-        />
-      )}
-      {openShareModal && (
-        <Share
-          copylink={pathURL}
-          restaurantName={name}
-          handleOpt1Click={() => handleCopyLink()}
-          handleOpt2Click={() => setOpenShareModal(false)}
-        />
-      )}
+      </Modal>
     </div>
   );
 };

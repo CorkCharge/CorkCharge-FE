@@ -44,10 +44,8 @@ const useRestaurantStore = create<RestaurantStore>((set) => ({
     phone: '0507-1404-1532',
     rating: 0.0,
     reviewCount: 2,
-    mainImageUrl:
-      'https://corkcharge-bucket.s3.ap-northeast-2.amazonaws.com/restaurant/%EB%9E%A8%EB%8B%88%EC%BF%A0%EC%95%BC_%EB%A7%A4%EC%9E%A5%EC%82%AC%EC%A7%84.png',
-    menuImageUrl:
-      'https://corkcharge-bucket.s3.ap-northeast-2.amazonaws.com/restaurant/%EB%9E%A8%EB%8B%88%EC%BF%A0%EC%95%BC_%EB%A9%94%EB%89%B4%EC%82%AC%EC%A7%84.png',
+    mainImageUrl: '',
+    menuImageUrl: '',
     corkagePrice: '병당 5000원',
     corkageOptions: ['잔 제공', '얼음 제공'],
     representMenu: '양갈비',

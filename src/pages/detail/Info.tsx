@@ -29,8 +29,7 @@ const Info = () => {
           rating: 4.2,
           scrap: true,
           scrapCount: 2,
-          mainImageUrl:
-            'https://corkcharge-bucket.s3.ap-northeast-2.amazonaws.com/restaurant/%EB%9E%A8%EB%8B%88%EC%BF%A0%EC%95%BC_%EB%A7%A4%EC%9E%A5%EC%82%AC%EC%A7%84.png',
+          mainImageUrl: '',
           menuImageUrl:
             'https://corkcharge-bucket.s3.ap-northeast-2.amazonaws.com/restaurant/%EB%9E%A8%EB%8B%88%EC%BF%A0%EC%95%BC_%EB%A9%94%EB%89%B4%EC%82%AC%EC%A7%84.png',
           corkagePrice: '병당 5000원',
