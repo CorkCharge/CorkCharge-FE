@@ -52,7 +52,7 @@ const Info = () => {
   }, [restaurantId, id]);
 
   return (
-    <div className="flex flex-col items-center bg-white">
+    <div className="flex flex-col items-center">
       <div className="w-full">
         {restaurant ? (
           <DetailHeader

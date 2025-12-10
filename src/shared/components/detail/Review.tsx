@@ -1,11 +1,13 @@
-import black_x from '../../assets/detailPageImgs/black_x.svg';
-import camera from '../../assets/detailPageImgs/camera.svg';
 import { useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { StarRate } from '../common/StarRate';
 import Header from '../common/Header';
-import { useNavigate } from 'react-router-dom';
 import apiClient from '@/shared/apis/apiClient';
+import useRestaurantStore from '@/shared/store/useRestaurantStore';
+import useMyReviewStore from '@/shared/store/useMyReviewStore';
+
+import camera from '../../assets/detailPageImgs/camera.svg';
 
 const Review = () => {
   const location = useLocation();
@@ -18,6 +20,9 @@ const Review = () => {
   const [selectedfile, setSelectedFile] = useState<File>();
 
   const fileSelector = useRef<HTMLInputElement>(null);
+
+  const writingReviewInfo = useMyReviewStore((state) => state.writingReviewInfo);
+  const restInfo = useRestaurantStore((state) => state.restInfo);
 
   const handleReview = () => {
     if (!content) return;
@@ -38,10 +43,6 @@ const Review = () => {
       .catch((e) => console.error(e));
   };
 
-  const handleCancel = () => {
-    setContent('');
-  };
-
   const handelImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -52,29 +53,23 @@ const Review = () => {
 
   return (
     <div className="flex flex-col items-center justify-center px-4">
-      {/* <div className="mt-6 text-[16px] font-bold">리뷰</div> */}
       <Header title="리뷰" type="back" backFn={() => navigate(-1)} className="w-full" />
       <div className="mb-12 mt-12 flex flex-col items-center gap-4">
         <div className="flex flex-col items-center text-[30px] font-bold">
-          <div>앤비햄버거에서의</div>
-          <div>콜키지는 어떠셨나요?</div>
+          <p>{`${restInfo.restaurantName}에서의`}</p>
+          <p>콜키지는 어떠셨나요?</p>
         </div>
         <div className="flex gap-2">
-          <StarRate rate={rating} />
+          <StarRate rate={writingReviewInfo.get(restInfo.restaurantId) ?? 0} />
         </div>
       </div>
-      <div className="relative flex h-[288px] w-full items-center justify-center rounded-br-[40px] rounded-tl-[40px] bg-[#FFFFFF] pl-6 pr-6 shadow-[0_2px_15px_rgba(0,0,0,0.05)]">
+      <div className="flex h-[288px] w-full items-center justify-center rounded-br-[40px] rounded-tl-[40px] bg-white px-6 shadow-[0_2px_15px_rgba(0,0,0,0.05)]">
         <textarea
           placeholder="리뷰를 입력해주세요"
-          className="mb-12 ml-2 mr-4 mt-16 h-[270px] w-[340px] resize-none bg-transparent text-[17px] text-[#9FA2AA] outline-none"
+          className="mb-12 ml-2 mr-4 mt-16 h-[270px] w-[340px] resize-none bg-transparent text-[17px] text-black outline-none placeholder:text-[var(--gray-5)]"
           rows={1}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-        />
-        <img
-          src={black_x}
-          onClick={handleCancel}
-          className="absolute right-3 top-6 cursor-pointer"
         />
       </div>
 

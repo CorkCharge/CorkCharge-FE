@@ -6,7 +6,7 @@ interface StarProps {
   rate: number;
   isEditable?: boolean;
   className?: string;
-  starRating?: (n: number) => void;
+  starRating?: (_: number) => void;
   spacing?: string;
   width?: string;
   height?: string;

@@ -1,11 +1,20 @@
+import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
+
 import { StarRate } from '../common/StarRate';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
+import useRestaurantStore from '@/shared/store/useRestaurantStore';
 
 import share from '@/shared/assets/detailPageImgs/share.svg';
 
 const ReviewInfo = () => {
+  const navigate = useNavigate();
+  const isRated = useRef(false); // 사용자가 별점을 주었는지 확인
+
   const selectedReviews = useMyReviewStore((state) => state.selectedReviews);
   const toggleReview = useMyReviewStore((state) => state.toggleReview);
+  const setReviewInfo = useMyReviewStore((state) => state.setReviewInfo);
+  const restinfo = useRestaurantStore((state) => state.restInfo);
 
   const renderReviews = () =>
     [...new Array(3)].map((_, idx) => (
@@ -47,7 +56,7 @@ const ReviewInfo = () => {
                 cx="16"
                 cy="16"
                 r="15"
-                fill={selectedReviews.has(idx) ? '#E75257' : 'none'}
+                fill={selectedReviews.has(idx) ? 'var(--primary)' : 'none'}
                 stroke={selectedReviews.has(idx) ? 'none' : 'var(--gray-3)'}
               />
               <path
@@ -70,15 +79,31 @@ const ReviewInfo = () => {
     ));
 
   const renderReviewImages = () =>
-    [...new Array(5)].map(() => (
-      <div className="aspect-square w-[40%] shrink-0 rounded-lg bg-black" />
+    [...new Array(5)].map((_, idx) => (
+      <div className="aspect-square w-[40%] shrink-0 rounded-lg bg-black" key={idx} />
     ));
+
+  const goToReview = () => {
+    if (!isRated.current) return;
+    navigate('/review');
+  };
 
   return (
     <div className="px-4">
+      {/* <p className="py-10 text-center text-lg font-medium text-[var(--gray-8)]">
+        저장된 리뷰가 없습니다.
+      </p> */}
+
       <div className="mb-3 flex h-11 items-center justify-center gap-5 rounded-br-full rounded-tl-full bg-[var(--gray-1)]">
-        <StarRate rate={0} isEditable={true} />
-        <div className="flex gap-1">
+        <StarRate
+          rate={0}
+          isEditable={true}
+          starRating={(rating) => {
+            isRated.current = true;
+            setReviewInfo(restinfo.restaurantId, rating);
+          }}
+        />
+        <div className="flex cursor-pointer gap-1" onClick={goToReview}>
           <span className="underline">리뷰쓰기</span>
           <span>🡭</span>
         </div>

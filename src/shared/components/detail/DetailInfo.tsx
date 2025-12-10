@@ -35,6 +35,12 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
     [...new Array(3)].map((_, idx) => <PairingArticle key={idx} {...restaurant} />);
 
   return <div className="flex flex-col items-center">{renderPairing()}</div>;
+
+  // return (
+  //   <p className="flex justify-center pb-4 font-semibold">
+  //     코르크차지가 금방 페어링을 추천해드릴게요
+  //   </p>
+  // );
 };
 
 export default DetailInfo;

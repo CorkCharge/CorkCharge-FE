@@ -33,7 +33,7 @@ import type { RestaurantInfo } from '../apis/restaurant/corkageApi';
 
 type RestaurantStore = {
   restInfo: RestaurantInfo;
-  setRestInfo: (newRest: RestaurantInfo) => void;
+  setRestInfo: (_: RestaurantInfo) => void;
 };
 
 const useRestaurantStore = create<RestaurantStore>((set) => ({
