@@ -138,7 +138,7 @@ const router = createBrowserRouter([
         element: <Filter />,
       },
       {
-        path: 'detailInfo/:id',
+        path: 'detail-info/:id',
         element: <Info />,
       },
       {

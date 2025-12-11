@@ -38,7 +38,7 @@ const Review = () => {
     apiClient
       .post(`/review/${restId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(() => {
-        navigate(`/detailInfo/${restId}`, { state: { openReviewModal: true } });
+        navigate(`/detail-info/${restId}`, { state: { openReviewModal: true } });
       })
       .catch((e) => console.error(e));
 

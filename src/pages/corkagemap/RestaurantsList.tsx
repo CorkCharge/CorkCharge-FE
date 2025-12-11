@@ -57,7 +57,7 @@ const RestaurantsList = () => {
       <div className="overflow-y-auto pb-[120px] pt-[48px]">
         {items.map((r) => (
           <RestaurantBox
-            onClick={() => navigate(`/detailInfo/${r.restaurantId}`)}
+            onClick={() => navigate(`/detail-info/${r.restaurantId}`)}
             resId={r.restaurantId}
             key={r.restaurantId}
             name={r.name}

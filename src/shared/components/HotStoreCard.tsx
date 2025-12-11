@@ -20,7 +20,7 @@ const HotStoreCard = ({ key, restaurantId, imgUrl, keep, name, local }: hotStore
   const goStore = () => {
     console.log('key: ' + key);
     console.log('가게 상세 정보 페이지 이동');
-    navigate(`/detailInfo/${restaurantId}`);
+    navigate(`/detail-info/${restaurantId}`);
   };
 
   return (

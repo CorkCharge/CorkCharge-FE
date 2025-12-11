@@ -30,7 +30,7 @@ const RestaurantBox = ({
   const pathUrl = useMemo(() => {
     // window 안전 체크 (필요 시)
     if (typeof window === 'undefined') return '';
-    return `${window.location.origin}/detailInfo/${resId}`;
+    return `${window.location.origin}/detail-info/${resId}`;
   }, [resId]);
 
   const handleShare = (e: React.MouseEvent<HTMLButtonElement>) => {

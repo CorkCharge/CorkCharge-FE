@@ -41,7 +41,7 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
 
   useEffect(() => {
     // state 초기화 (새로고침 시 안 뜨게)
-    navigate(`/detailInfo/${resId}`, { replace: true });
+    navigate(`/detail-info/${resId}`, { replace: true });
   }, [location.state]);
 
   const keepMarker = (

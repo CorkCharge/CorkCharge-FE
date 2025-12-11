@@ -63,7 +63,7 @@ const SearchMapResult = () => {
             corkagePrice={(r.corkagePrice ?? 0).toString()}
             corkageOptions={r.corkageOptions ?? []}
             imageUrl={r.mainImageUrl ?? ''}
-            onClick={() => navigate(`/detailInfo/${r.restaurantId}`)}
+            onClick={() => navigate(`/detail-info/${r.restaurantId}`)}
           />
         ))}
       </div>

@@ -38,7 +38,7 @@ const StoreCard = ({
   const goStore = () => {
     console.log('restaurantId: ' + key);
     console.log('가게 상세 정보 페이지 이동');
-    navigate(`/detailInfo/${restaurantId}`);
+    navigate(`/detail-info/${restaurantId}`);
   };
 
   const { pathname } = useLocation();
@@ -119,7 +119,7 @@ const StoreCard = ({
   };
 
   const baseURL = window.location.origin;
-  const pathURL = `${baseURL}/detailInfo/${restaurantId}`;
+  const pathURL = `${baseURL}/detail-info/${restaurantId}`;
   const handleCopyLink = () => {
     try {
       console.log(pathURL);
