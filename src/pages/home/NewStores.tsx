@@ -5,6 +5,8 @@ import Header from '@/shared/components/common/Header';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import Modal from '@/shared/components/common/Modal';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
 
 import star from '@/shared/assets/star.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
@@ -12,8 +14,6 @@ import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
-import GroupSelector from '@/shared/components/home/GroupSelector';
-import GroupList from '@/shared/components/home/GroupList';
 
 function NewStores() {
   const navigate = useNavigate();

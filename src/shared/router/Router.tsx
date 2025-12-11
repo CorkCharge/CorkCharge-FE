@@ -43,6 +43,7 @@ import ExamplePage from '@/pages/ExamplePage';
 import ExamplePage2 from '@/pages/ExamplePage2';
 import NotiPost from '../components/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
+import CorkageReview from '@/pages/home/CorkageReview';
 
 const router = createBrowserRouter([
   // {
@@ -216,6 +217,10 @@ const router = createBrowserRouter([
       {
         path: 'new-stores',
         element: <NewStores />,
+      },
+      {
+        path: 'corkage-review',
+        element: <CorkageReview />,
       },
       {
         path: 'example',

@@ -19,7 +19,7 @@ const HomeRegionFilter = () => {
   const applyFilter = () => {
     // toggleAddress()
     setSelectedDongNames(selectedDongs);
-    navigate('/new-stores');
+    navigate(-1);
   };
 
   const handleReset = () => {

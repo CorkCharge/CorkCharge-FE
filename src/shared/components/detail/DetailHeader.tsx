@@ -74,7 +74,6 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
   const copyPhoneNumber = () => {
     // 사용자 기기 종류 확인
     const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
-    console.log(isMobile);
 
     if (isMobile) {
       window.location.href = `tel:${phone}`;

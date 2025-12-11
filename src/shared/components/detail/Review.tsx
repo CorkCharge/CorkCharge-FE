@@ -19,7 +19,7 @@ const Review = () => {
   const [content, setContent] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
   const [selectedfile, setSelectedFile] = useState<File>();
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fileSelector = useRef<HTMLInputElement>(null);
 
