@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { createPortal } from 'react-dom';
 // SaveMarker icons (big)
 import SaveMarker1 from './savemarker/SaveMarker1.svg';
 import SaveMarker2 from './savemarker/SaveMarker2.svg';
@@ -73,7 +74,7 @@ const ConfirmationModal = ({
       break;
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/50">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
@@ -98,7 +99,8 @@ const ConfirmationModal = ({
           확인
         </button>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

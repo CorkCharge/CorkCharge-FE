@@ -39,9 +39,10 @@ type MyGroupProps = {
   count: number;
   onEdit: (id: number) => void; // 부모로부터 받은 편집 핸들러
   onDelete: (id: number) => void; // 부모로부터 받은 삭제 핸들러
+  onClick: () => void; // [추가] 그룹 클릭 시 실행할 함수
 };
 
-const MyGroup = ({ id, iconName, name, count, onEdit, onDelete }: MyGroupProps) => {
+const MyGroup = ({ id, iconName, name, count, onEdit, onDelete, onClick }: MyGroupProps) => {
   const IconSrc = smallMarkers[iconName];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -57,12 +58,16 @@ const MyGroup = ({ id, iconName, name, count, onEdit, onDelete }: MyGroupProps) 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleToggleMenu = () => {
+  const handleToggleMenu = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모(MyGroup)의 onClick이 실행되지 않도록 이벤트 전파 막기
     setIsMenuOpen((prev) => !prev);
   };
 
   return (
-    <div className="relative flex w-full items-center border-b border-[#DBDDE1] py-4">
+    <div
+      onClick={onClick} // 전체 영역 클릭 시 MyStore로 이동
+      className="relative flex w-full cursor-pointer items-center border-b border-[#DBDDE1] py-4"
+    >
       {IconSrc && <img src={IconSrc} alt={iconName} className="h-[23px] w-[23px]" />}
       <span className="ml-[12px] text-[14px] font-[500] text-[#35353F]">{name}</span>
       <span className="ml-[8px] text-[12px] font-[500] text-[#9FA2AA]">{count}</span>
@@ -79,10 +84,12 @@ const MyGroup = ({ id, iconName, name, count, onEdit, onDelete }: MyGroupProps) 
             className="absolute right-0 top-6 z-10 flex flex-col justify-center rounded-[8px] bg-[#F3F3F6] shadow-md"
             // 뷰포트 기준 393px -> 102px, 852px -> 60px 요청 반영
             style={{ width: '102px', height: '60px' }}
+            onClick={(e) => e.stopPropagation()} // 메뉴 내부 클릭 시에도 이동 방지
           >
             {/* 편집하기 버튼 */}
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation(); // 이동 방지
                 setIsMenuOpen(false);
                 onEdit(id);
               }}
@@ -94,7 +101,8 @@ const MyGroup = ({ id, iconName, name, count, onEdit, onDelete }: MyGroupProps) 
 
             {/* 삭제하기 버튼 */}
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation(); // 이동 방지
                 setIsMenuOpen(false);
                 onDelete(id);
               }}
