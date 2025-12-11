@@ -78,7 +78,7 @@ const router = createBrowserRouter([
         element: <HotStores />,
       },
       {
-        path: 'regionFilter',
+        path: 'region-filter',
         element: <RegionFilter />,
       },
       {
