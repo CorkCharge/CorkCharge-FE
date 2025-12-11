@@ -37,12 +37,6 @@ const RegionSelector = ({
     }
   };
 
-  //   const handleReset = () => {
-  //     setSelectedSido(null);
-  //     setSelectedSigungu(null);
-  //     setSelectedDongs([]);
-  //   };
-
   return (
     <div className="flex w-full flex-1 flex-col items-center overflow-y-auto pb-[120px]">
       <div

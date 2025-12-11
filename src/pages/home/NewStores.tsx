@@ -1,19 +1,42 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import Header from '@/shared/components/common/Header';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
+import Modal from '@/shared/components/common/Modal';
 
 import star from '@/shared/assets/star.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
 import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
+import logo from '@/shared/assets/images/logo.svg';
+import check from '@/shared/components/detail/assets/check.svg';
 
 function NewStores() {
   const navigate = useNavigate();
 
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
+  const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
+  const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
+
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
+
+  const handleShare = (name: string, id: number) => {
+    setModalStoreName(name);
+    setModalStoreId(id);
+    setIsShareModalOpen(true);
+  };
+
+  // 공유 클릭 시 주소 복사
+  const clipLink = () => {
+    navigator.clipboard.writeText(window.location.origin + `/detail-info/${modalStoreId}`);
+    setIsShareModalOpen(false);
+    setIsCopiedModalOpen(true);
+    setTimeout(() => setIsCopiedModalOpen(false), 1000);
+  };
 
   const renderNewStores = () =>
     [...Array(5)].map((_, idx) => (
@@ -41,7 +64,10 @@ function NewStores() {
               <img src={keep} className="size-6" />
             </div>
             <span className="text-sm font-medium text-[var(--gray-8)]">99+</span>
-            <div className="relative flex size-6 cursor-pointer rounded-full bg-white">
+            <div
+              className="relative flex size-6 cursor-pointer rounded-full bg-white"
+              onClick={() => handleShare('성수 누메르도스', 88)}
+            >
               <img
                 src={share}
                 className="absolute left-1/2 top-1/2 -translate-x-[55%] -translate-y-[40%]"
@@ -66,7 +92,11 @@ function NewStores() {
   return (
     <div className="relative px-4">
       <Header title="신규매장등록" type="back" backFn={() => navigate('/home')} />
-      <div className="mb-[200px] flex flex-col gap-6">{renderNewStores()}</div>
+      <div
+        className={`flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
+      >
+        {renderNewStores()}
+      </div>
       {selectedDongNames.length < 1 ? (
         <Button
           value="지역 검색"
@@ -89,6 +119,35 @@ function NewStores() {
             </span>
           </div>
           <div className="mt-6 flex flex-wrap gap-2">{renderDongs()}</div>
+        </div>
+      )}
+
+      {/* 공유하기 모달 */}
+      <Modal
+        isOpen={isShareModalOpen}
+        hasCloseButton={true}
+        onClose={() => setIsShareModalOpen(false)}
+      >
+        <div className="mb-4 flex items-center">
+          <img src={logo} className="h-[22px] w-[13px]" />
+          <div className="ml-3 flex flex-col">
+            <span className="font-semibold">{modalStoreName}</span>
+            <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
+          </div>
+        </div>
+        <Button
+          value="링크 복사하기"
+          className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+          onClick={clipLink}
+        />
+      </Modal>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
         </div>
       )}
     </div>
