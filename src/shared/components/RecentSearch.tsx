@@ -1,16 +1,13 @@
-// import React from 'react';
 import search from '../../shared/assets/searchBlack.svg';
 import transhCan from '@/shared/components/search/assets/trash-can.svg';
 
 interface recentSearchProps {
   text?: string;
-  // searchValue?: string;
-  setSearchValue?: (value: string) => void;
   directSearch?: (value: string) => void;
   handleRemove: () => void;
 }
 
-const RecentSearch = ({ text, setSearchValue, directSearch, handleRemove }: recentSearchProps) => {
+const RecentSearch = ({ text, directSearch, handleRemove }: recentSearchProps) => {
   const onclick = () => {
     directSearch?.(text || '');
   };

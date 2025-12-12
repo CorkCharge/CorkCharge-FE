@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
-import MyGroup from '@/pages/corkagemap/list/MyGroup';
+// import MyGroup from '@/pages/corkagemap/list/MyGroup';
+import GroupItem from './GroupItem';
 import EditGroup from '@/pages/corkagemap/list/EditGroup';
 import ConfirmationModal from '@/pages/corkagemap/list/ConfirmationModal';
 
@@ -14,6 +15,7 @@ type Group = {
   iconName: string;
   count: number;
   privacy: 'public' | 'private';
+  checked: boolean;
 };
 
 const GroupList = ({ onClose }: { onClose: () => void }) => {
@@ -37,28 +39,8 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
     setView('edit');
   };
 
-  // 2. 개별 그룹 "편집하기" 클릭 시 (MyGroup에서 호출)
-  const handleEditGroup = (id: number) => {
-    setEditingGroupId(id); // ID 설정 -> 편집 모드
-    setView('edit');
-  };
-
-  // 3. 개별 그룹 "삭제하기" 클릭 시 (MyGroup에서 호출)
-  const handleDeleteGroup = (id: number) => {
-    const targetGroup = myGroups.find((g) => g.id === id);
-    if (targetGroup) {
-      // 목록에서 제거
-      setMyGroups((prev) => prev.filter((g) => g.id !== id));
-
-      // 모달 띄우기 (삭제 모드)
-      setConfirmedGroup(targetGroup);
-      setModalMode('delete');
-      setShowConfirmModal(true);
-    }
-  };
-
   // 4. EditGroup 화면에서 "완료" 클릭 시 (생성 또는 수정 저장)
-  const handleSaveGroup = (data: Omit<Group, 'id' | 'count'>) => {
+  const handleSaveGroup = (data: Omit<Group, 'id' | 'count' | 'checked'>) => {
     if (editingGroupId) {
       // [수정 모드] 기존 그룹 업데이트
       setMyGroups((prev) =>
@@ -81,6 +63,7 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
         ...data,
         id: Date.now(),
         count: 0,
+        checked: false,
       };
       setMyGroups((prev) => [newGroup, ...prev]); // 맨 위에 추가
       setConfirmedGroup(newGroup);
@@ -92,7 +75,6 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
     setEditingGroupId(null); // 초기화
   };
 
-  // "그룹 편집" 화면에서 "X" 클릭 시
   const handleCancelEdit = () => {
     setView('list');
     setEditingGroupId(null);
@@ -104,7 +86,6 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
     setConfirmedGroup(null);
   };
 
-  // 현재 편집 중인 그룹 데이터 찾기 (EditGroup에 넘겨주기 위함)
   const editingGroupData = editingGroupId ? myGroups.find((g) => g.id === editingGroupId) : null;
 
   return (
@@ -132,14 +113,13 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
           {/* 저장된 그룹 목록 */}
           <div className="flex-1 overflow-y-auto">
             {myGroups.map((group) => (
-              <MyGroup
+              <GroupItem
                 key={group.id}
                 id={group.id}
                 iconName={group.iconName}
                 name={group.name}
                 count={group.count}
-                onEdit={handleEditGroup} // 편집 핸들러 전달
-                onDelete={handleDeleteGroup} // 삭제 핸들러 전달
+                checked={group.checked}
               />
             ))}
           </div>
