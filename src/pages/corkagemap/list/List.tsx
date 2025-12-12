@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import New from './plus.svg';
 import ToggleSwitch from './ToggleSwitch';
 import MyGroup from './MyGroup';
@@ -7,7 +8,7 @@ import ConfirmationModal from './ConfirmationModal';
 import { AnimatePresence } from 'framer-motion';
 
 // 그룹 데이터의 타입 정의
-type Group = {
+export type Group = {
   id: number;
   name: string;
   iconName: string;
@@ -15,11 +16,16 @@ type Group = {
   privacy: 'public' | 'private';
 };
 
-const List = () => {
+type ListProps = {
+  myGroups: Group[]; // 부모가 주는 데이터
+  setMyGroups: Dispatch<SetStateAction<Group[]>>; // 부모가 주는 수정 함수
+  onSelectGroup: (group: Group) => void; // 그룹 선택 시 부모에게 알림
+};
+
+const List = ({ myGroups, setMyGroups, onSelectGroup }: ListProps) => {
   // 'list' (목록 뷰) | 'edit' (편집 뷰)
   const [view, setView] = useState<'list' | 'edit'>('list');
-  // 저장된 그룹 목록
-  const [myGroups, setMyGroups] = useState<Group[]>([]);
+
   // 현재 편집 중인 그룹의 ID (null이면 새 그룹 생성 모드)
   const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
 
@@ -142,6 +148,7 @@ const List = () => {
                 count={group.count}
                 onEdit={handleEditGroup} // 편집 핸들러 전달
                 onDelete={handleDeleteGroup} // 삭제 핸들러 전달
+                onClick={() => onSelectGroup(group)} // [추가] 클릭 시 부모에게 해당 그룹 전달
               />
             ))}
           </div>

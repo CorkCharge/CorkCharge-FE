@@ -6,15 +6,39 @@ import BottomSheet from '@/shared/components/bottomsheet/BottomSheet';
 import save from './save.svg';
 import bttn from './filterImg.svg';
 import List from './list/List';
+import type { Group } from './list/List';
+import MyStore from './mystore/MyStore';
 const CorkageMap = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
+  // 바텀시트 내부 뷰 상태: 'list' | 'store'
+  const [sheetView, setSheetView] = useState<'list' | 'store'>('list');
+
+  // 선택된 그룹 정보 (MyStore에 전달하거나 나중에 사용)
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+
+  // List에 있던 상태를 부모인 여기로 끌어올림 (State Lifting)
+  // 이 컴포넌트는 바텀시트가 닫혀도 계속 살아있으므로 데이터가 유지됨
+  const [myGroups, setMyGroups] = useState<Group[]>([]);
+
   const handleSheetClose = () => {
     setIsSheetOpen(false);
     setIsActive(false); // <-- 버튼 활성화 상태도 함께 false로 변경
+    // [Option] 닫으면 다시 목록으로 초기화할지 여부.
+    // 보통 닫았다 다시 열면 목록이 뜨는게 자연스러우므로 초기화 추천ㅇㅇ
+    setTimeout(() => setSheetView('list'), 300);
   };
+
+  // List에서 그룹 클릭 시 호출될 함수
+  const handleGroupSelect = (group: Group) => {
+    setSelectedGroup(group); // 선택된 그룹 저장
+    setSheetView('store'); // 뷰를 상세(MyStore)로 변경
+  };
+
+  // MyStore 뷰일 때 topSnapVh는 19.8, List일 땐 17.8, 근데 이게 처음에 BottomSheet가 마운트될때 이미 17.8로 마운트되서 바뀌질 않음
+  const currentTopSnapVh = sheetView === 'store' ? 17.8 : 17.8;
 
   return (
     <main className="relative h-screen w-full overflow-hidden">
@@ -49,8 +73,16 @@ const CorkageMap = () => {
           <p className="text-[14px] font-medium">저장한 매장</p>
         </button>
       </div>
-      <BottomSheet isOpen={isSheetOpen} onClose={handleSheetClose} topSnapVh={17.8}>
-        <List />
+      <BottomSheet isOpen={isSheetOpen} onClose={handleSheetClose} topSnapVh={currentTopSnapVh}>
+        {sheetView === 'list' ? (
+          // myGroups 데이터와 setMyGroups 함수를 List에게 전달
+          <List myGroups={myGroups} setMyGroups={setMyGroups} onSelectGroup={handleGroupSelect} />
+        ) : (
+          <MyStore group={selectedGroup} />
+          // 만약 MyStore에 그룹 정보를 넘겨야 한다면:
+          // <MyStore group={selectedGroup} onBack={() => setSheetView('list')} />
+          // 같은 형태로 뒤로가기 기능도 추가 구현 가능
+        )}
       </BottomSheet>
     </main>
   );
