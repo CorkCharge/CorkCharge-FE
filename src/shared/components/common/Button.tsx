@@ -1,5 +1,5 @@
 import { cn } from '@/shared/utils/utils';
-import type { ButtonHTMLAttributes, HTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   value?: string;

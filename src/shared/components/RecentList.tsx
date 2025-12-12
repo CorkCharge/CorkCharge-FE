@@ -4,12 +4,12 @@ import RecentSearch from './RecentSearch';
 
 interface recentSearchProps {
   searchValue?: string;
-  setSearchValue?: (value: string) => void;
+  setSearchValue?: (_: string) => void;
 
-  directSearch?: (value: string) => void;
+  directSearch?: (_: string) => void;
 }
 
-const RecentList = ({ setSearchValue, directSearch }: recentSearchProps) => {
+const RecentList = ({ directSearch }: recentSearchProps) => {
   const [queryList, setQueryList] = useState(['모다미육', '만경상회', '재즈 라운지', '브네']);
 
   const rednerSearchQuery = () =>
@@ -18,7 +18,6 @@ const RecentList = ({ setSearchValue, directSearch }: recentSearchProps) => {
         key={idx}
         text={query}
         directSearch={directSearch}
-        setSearchValue={setSearchValue}
         handleRemove={() => setQueryList((prev) => prev.filter((x) => x !== query))}
       />
     ));
