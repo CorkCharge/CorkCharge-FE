@@ -1,4 +1,5 @@
-// import React from 'react'
+import { useState } from 'react';
+
 import RecentSearch from './RecentSearch';
 
 interface recentSearchProps {
@@ -9,33 +10,19 @@ interface recentSearchProps {
 }
 
 const RecentList = ({ setSearchValue, directSearch }: recentSearchProps) => {
-  return (
-    <div className="mt-4 flex flex-col items-center">
+  const [queryList, setQueryList] = useState(['모다미육', '만경상회', '재즈 라운지', '브네']);
+
+  const rednerSearchQuery = () =>
+    queryList.map((query, idx) => (
       <RecentSearch
-        text="모다미육"
-        // searchValue={searchValue}
+        key={idx}
+        text={query}
         directSearch={directSearch}
         setSearchValue={setSearchValue}
+        handleRemove={() => setQueryList((prev) => prev.filter((x) => x !== query))}
       />
-      <RecentSearch
-        text="만경상회"
-        // searchValue={searchValue}
-        directSearch={directSearch}
-        setSearchValue={setSearchValue}
-      />
-      <RecentSearch
-        text="재즈라운지"
-        directSearch={directSearch}
-        // searchValue={searchValue}
-        setSearchValue={setSearchValue}
-      />
-      <RecentSearch
-        text="브네"
-        directSearch={directSearch}
-        // searchValue={searchValue}
-        setSearchValue={setSearchValue}
-      />
-    </div>
-  );
+    ));
+
+  return <div className="mt-4 flex w-full flex-col items-center">{rednerSearchQuery()}</div>;
 };
 export default RecentList;

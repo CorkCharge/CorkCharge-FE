@@ -9,9 +9,9 @@ interface topBarProps {
 
 const MapSearchBar = ({ searchValue, setSearchValue, directSearch }: topBarProps) => {
   return (
-    <div className="flex h-[60px] items-center justify-center gap-4 pl-4 pr-4">
+    <div className="flex h-[60px] w-full items-center justify-center gap-4 pl-4">
       <img src={Cork} alt="Cork logo" />
-      <div className="flex h-[40px] w-[313px] items-center rounded-br-full rounded-tl-full bg-[#F3F3F6] pl-6 pr-6">
+      <div className="flex h-[40px] w-full items-center rounded-br-full rounded-tl-full bg-[var(--gray-1)] pl-6 pr-6">
         <input
           type="text"
           value={searchValue}
@@ -25,7 +25,7 @@ const MapSearchBar = ({ searchValue, setSearchValue, directSearch }: topBarProps
           onChange={(e) => {
             setSearchValue?.(e.target.value);
           }}
-          className="flex-1 bg-transparent text-gray-500 placeholder-gray-400 outline-none"
+          className="flex-1 bg-transparent text-black outline-none placeholder:text-[var(--gray-5)]"
         />
         <img
           src={Search}

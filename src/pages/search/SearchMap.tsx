@@ -1,11 +1,9 @@
-// import React from 'react'
-// import SearchedStore from '@/shared/components/search/SearchedStore';
-import TopBar from '../../shared/components/TopBar';
-// import RecommandList from '../../shared/components/RecommandList';
-import RecentList from '../../shared/components/RecentList';
 import { useState } from 'react';
-import MapSearchBar from '@/shared/components/search/MapSearchBar';
 import { useNavigate } from 'react-router-dom';
+
+import RecentList from '../../shared/components/RecentList';
+import MapSearchBar from '@/shared/components/search/MapSearchBar';
+import Header from '@/shared/components/common/Header';
 
 const SearchMap = () => {
   const [searchValue, setSearchValue] = useState<string>('');
@@ -18,19 +16,20 @@ const SearchMap = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <TopBar text="corkcharge" />
-      <MapSearchBar
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-        directSearch={directSearch}
-      />
-      {/* <RecommandList setSearchValue={setSearchValue} /> */}
-      <RecentList
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-        directSearch={directSearch}
-      />
+    <div className="px-4">
+      <Header title="corkchage" type="back" backFn={() => navigate('/home')} />
+      <div className="flex flex-col items-center">
+        <MapSearchBar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          directSearch={directSearch}
+        />
+        <RecentList
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          directSearch={directSearch}
+        />
+      </div>
     </div>
   );
 };
