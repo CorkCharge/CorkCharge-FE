@@ -87,12 +87,12 @@ const Review = () => {
 
       {!previewUrl && (
         <div
-          className="mb-4 mt-4 flex h-[48px] w-[361px] cursor-pointer items-center justify-center rounded-[10px] border border-[#90212A] bg-white"
+          className="mb-4 mt-4 flex h-[48px] w-4/5 cursor-pointer items-center justify-center rounded-[10px] border border-[#90212A] bg-white"
           onClick={() => fileSelector.current?.click()}
         >
           <div className="flex gap-2">
             <img src={camera} />
-            <div className="text-[16px] font-bold text-[#90212A]">사진 첨부하기</div>
+            <div className="text-[16px] font-bold text-[var(--primary)]">사진 첨부하기</div>
           </div>
         </div>
       )}
@@ -107,7 +107,7 @@ const Review = () => {
 
       <div
         onClick={handleReview}
-        className={`mb-4 mt-12 flex h-[48px] w-[361px] items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
+        className={`mb-4 mt-12 flex h-[48px] w-4/5 items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
       >
         <div className="flex gap-2">
           <div className={`text-[16px] font-bold ${content ? 'text-white' : 'text-[#35353F]'}`}>

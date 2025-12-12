@@ -35,7 +35,11 @@ function CorkageReview() {
 
   const renderReviews = () =>
     [...new Array(3)].map((_, idx) => (
-      <div className="relative rounded-2xl bg-[var(--gray-1)] p-4" key={idx}>
+      <div
+        className="relative cursor-pointer rounded-2xl bg-[var(--gray-1)] p-4"
+        key={idx}
+        onClick={() => navigate('/detail-info/88')}
+      >
         {/* 매장명 + 별점 */}
         <span className="text-xl font-bold text-[var(--gray-8)]">매장명</span>
         <div className="my-2 flex gap-1">
@@ -60,10 +64,7 @@ function CorkageReview() {
         <div className="absolute bottom-4 right-4 flex items-center gap-1">
           <div
             className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-            onClick={() => {
-              toggleReview(idx);
-              setIsGroupSelectorOpen(true);
-            }}
+            onClick={(e) => handleKeep(e, idx)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +102,15 @@ function CorkageReview() {
       </div>
     ));
 
-  const handleShare = async () => {
+  const handleKeep = (e: React.MouseEvent<HTMLDivElement>, idx: number) => {
+    e.stopPropagation();
+    toggleReview(idx);
+    setIsGroupSelectorOpen(true);
+  };
+
+  const handleShare = async (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
     const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
 
     if (navigator.share && isMobile) {
@@ -203,7 +212,7 @@ function CorkageReview() {
       {selectedDongNames.length < 1 ? (
         <Button
           value="지역 검색"
-          className="fixed left-1/2 mx-auto -translate-x-1/2 bg-[var(--primary)] text-white"
+          className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white"
           style={{
             maxWidth: 'calc(var(--app-width) * 0.8)',
             bottom: 'calc(var(--footer-h) + 15px)',

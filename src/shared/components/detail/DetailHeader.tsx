@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Modal from '../common/Modal';
 import Button from '../common/Button';
@@ -36,6 +36,9 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [isCallModalOpen, setIsCallModalOpen] = useState(false); // 전화하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
+  const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
+
+  const ref = useRef<HTMLDivElement>(null);
 
   // const location = useLocation();
 
@@ -61,6 +64,20 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
       />
     </svg>
   );
+
+  // 좌우 overflow 감지
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const checkOverflow = () => {
+      setIsOverflow(el.scrollWidth > el.clientWidth);
+    };
+    checkOverflow();
+
+    window.addEventListener('resize', checkOverflow);
+
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, []);
 
   // 공유 클릭 시 주소 복사
   const clipLink = () => {
@@ -127,16 +144,19 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
       </div>
 
       {/* 버튼 그룹 */}
-      <div className="mt-2 box-content flex h-9 w-full justify-center gap-2 px-4 pb-4">
+      <div
+        className={`mt-2 box-content flex h-9 gap-2 px-4 pb-4 ${isOverflow ? 'justify-start overflow-auto' : 'justify-center'}`}
+        ref={ref}
+      >
         <button
-          className="flex items-center justify-center gap-1 rounded-full px-4"
+          className="flex shrink-0 items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
         >
           <img src={smallGlass} className="size-6" />
           <span className="text-sm font-medium text-[var(--primary)]">해주세요</span>
         </button>
         <button
-          className="flex items-center justify-center gap-1 rounded-full px-4"
+          className="flex shrink-0 items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
           onClick={() => setIsShareModalOpen(true)}
         >
@@ -144,7 +164,7 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
           <span className="text-sm font-medium text-[var(--gray-7)]">공유</span>
         </button>
         <button
-          className="flex items-center justify-center gap-1 rounded-full px-4"
+          className="flex shrink-0 items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
           onClick={() => setIsCallModalOpen(true)}
         >
@@ -152,7 +172,7 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
           <span className="text-sm font-medium text-[var(--gray-7)]">전화</span>
         </button>
         <button
-          className="flex items-center justify-center gap-1 rounded-full px-4"
+          className="flex shrink-0 items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
           onClick={() => setIsContactModalOpen(true)}
         >
@@ -183,7 +203,6 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
         isOpen={isContactModalOpen}
         hasCloseButton={true}
         onClose={() => setIsContactModalOpen(false)}
-        className=""
       >
         <span className="inline-block w-full text-center text-2xl font-bold text-[var(--gray-8)]">
           문의하기

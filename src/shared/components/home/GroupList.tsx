@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
-// import MyGroup from '@/pages/corkagemap/list/MyGroup';
 import GroupItem from './GroupItem';
-import EditGroup from '@/pages/corkagemap/list/EditGroup';
+import CreateGroup from './CreateGroups';
 import ConfirmationModal from '@/pages/corkagemap/list/ConfirmationModal';
 
 import newSvg from '@/pages/corkagemap/list/plus.svg';
+import Button from '../common/Button';
 
 // 그룹 데이터의 타입 정의
 type Group = {
@@ -32,6 +32,8 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
   const [confirmedGroup, setConfirmedGroup] = useState<Group | null>(null);
   // 모달 모드: 'create' | 'edit' | 'delete'
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'delete'>('create');
+
+  const [checkCount, setCheckCount] = useState(0); // 선택한 그룹의 개수
 
   // "새 그룹 만들기" 클릭 시
   const handleCreateNew = () => {
@@ -120,15 +122,22 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
                 name={group.name}
                 count={group.count}
                 checked={group.checked}
+                checkCount={setCheckCount}
               />
             ))}
           </div>
+
+          <Button
+            value="저장"
+            className="bg-[var(--primary)] text-white shadow-none disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
+            disabled={checkCount === 0}
+          />
         </div>
       )}
 
       {/* 2. 그룹 편집 뷰 (생성/수정 공용) */}
       {view === 'edit' && (
-        <EditGroup
+        <CreateGroup
           initialData={editingGroupData} // 편집 시 기존 데이터 전달
           onSave={handleSaveGroup}
           onCancel={handleCancelEdit}

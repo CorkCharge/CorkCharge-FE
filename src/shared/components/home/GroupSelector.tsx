@@ -137,7 +137,7 @@ const GroupSelector = ({
         style={{
           y,
           x: '-50%',
-          height: `calc(100vh - ${topSnapVh}vh)`, // 최대 높이
+          height: `calc(100svh - ${topSnapVh}svh)`, // 최대 높이
           touchAction: 'none', // 모바일에서 페이지 스크롤 방지
         }}
         dragConstraints={{

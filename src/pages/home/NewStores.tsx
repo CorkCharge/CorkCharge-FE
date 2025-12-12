@@ -27,10 +27,16 @@ function NewStores() {
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
 
-  const handleShare = (name: string, id: number) => {
+  const handleShare = (e: React.MouseEvent<HTMLDivElement>, name: string, id: number) => {
+    e.stopPropagation();
     setModalStoreName(name);
     setModalStoreId(id);
     setIsShareModalOpen(true);
+  };
+
+  const handleKeep = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsGroupSelectorOpen(true);
   };
 
   // 공유 클릭 시 주소 복사
@@ -43,7 +49,7 @@ function NewStores() {
 
   const renderNewStores = () =>
     [...Array(5)].map((_, idx) => (
-      <div key={idx} className="flex flex-col gap-2">
+      <div key={idx} className="flex flex-col gap-2" onClick={() => navigate('/detail-info/88')}>
         <div>
           <div className="h-[172px] rounded-t-2xl bg-black" />
           <div className="flex h-11 items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
@@ -65,14 +71,14 @@ function NewStores() {
           <div className="absolute bottom-0 right-0 flex items-center gap-1">
             <div
               className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-              onClick={() => setIsGroupSelectorOpen(true)}
+              onClick={handleKeep}
             >
               <img src={keep} className="size-6" />
             </div>
             <span className="text-sm font-medium text-[var(--gray-8)]">99+</span>
             <div
               className="relative flex size-6 cursor-pointer rounded-full bg-white"
-              onClick={() => handleShare('성수 누메르도스', 88)}
+              onClick={(e) => handleShare(e, '성수 누메르도스', 88)}
             >
               <img
                 src={share}
@@ -107,7 +113,7 @@ function NewStores() {
         {selectedDongNames.length < 1 ? (
           <Button
             value="지역 검색"
-            className="fixed left-1/2 mx-auto -translate-x-1/2 bg-[var(--primary)] text-white"
+            className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white"
             style={{
               maxWidth: 'calc(var(--app-width) * 0.8)',
               bottom: 'calc(var(--footer-h) + 15px)',

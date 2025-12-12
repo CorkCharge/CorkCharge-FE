@@ -35,12 +35,20 @@ type MyGroupProps = {
   name: string;
   count: number;
   checked: boolean;
+  checkCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const GroupItem = ({ id, iconName, name, count, checked }: MyGroupProps) => {
+const GroupItem = ({ iconName, name, count, checked, checkCount }: MyGroupProps) => {
   const IconSrc = smallMarkers[iconName];
 
   const [isChecked, setIsChecked] = useState(checked);
+
+  const toggleCheck = () => {
+    if (isChecked === true) checkCount((prev) => prev - 1);
+    else checkCount((prev) => prev + 1);
+
+    setIsChecked((prev) => !prev);
+  };
 
   return (
     <div className="relative flex w-full items-center border-b border-[#DBDDE1] py-4">
@@ -56,7 +64,7 @@ const GroupItem = ({ id, iconName, name, count, checked }: MyGroupProps) => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="cursor-pointer"
-          onClick={() => setIsChecked((prev) => !prev)}
+          onClick={toggleCheck}
         >
           <rect
             x="0.5"

@@ -6,6 +6,7 @@ import useMyReviewStore from '@/shared/store/useMyReviewStore';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 
 import share from '@/shared/assets/detailPageImgs/share.svg';
+import arrow from '@/shared/assets/images/arrow-up-right.svg';
 
 const ReviewInfo = () => {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ const ReviewInfo = () => {
         />
         <div className="flex cursor-pointer gap-1" onClick={goToReview}>
           <span className="underline">리뷰쓰기</span>
-          <span>🡭</span>
+          <img src={arrow} />
         </div>
       </div>
 
