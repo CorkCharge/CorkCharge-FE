@@ -1,64 +1,83 @@
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-// import HandShake from './assets/handshake.svg';
-// import Logo from './assets/logo_symbol.svg';
-// import Arrow from './assets/right_arrow.svg';
-// import Bg from './assets/bg.svg';
-import Header from '@/shared/components/common/Header';
 
-import filterBtn from '@/pages/corkagemap/filterImg.svg';
-import search from '@/shared/assets/images/search.png';
+import shakeHand from '@/shared/assets/images/shakehand.png';
+import arrow from '@/shared/assets/left_arrow.svg';
 
-const Doit = () => {
-  const navigate = useNavigate();
-
-  // const handleClick = () => {
-  //   navigate('/doit/search');
-  // };
+function AboutServiceSection() {
   return (
-    <div>
-      <Header title="해주세요" type="back" backFn={() => navigate(-1)} className="mx-3" />
+    <>
+      <p>코르크 차지의 콜키지 추가 방식은 매장에 직접 방문하여</p>
+      <p>사장님과 함께 콜키지 비즈니스를 시작하는 방식입니다.</p>
+      <p>‘해주세요 리스트’에 등록된 매장은 우선적으로</p>
+      <p>콜키지 영업을 진행하게 됩니다.</p>
+    </>
+  );
+}
 
-      <div className="flex px-6">
-        <div className="flex h-10 w-4/5 items-center rounded-br-full rounded-tl-full bg-[var(--gray-1)] px-6">
-          <input
-            type="text"
-            className="w-[75%] bg-transparent text-sm font-medium focus:outline-none"
-          />
-          <img src={filterBtn} className="mr-3 size-6 cursor-pointer" />
-          <img src={search} className="size-4 cursor-pointer" />
-        </div>
-        <div>요청 많은 순</div>
+function HowToUseSection() {
+  const navigate = useNavigate();
+  return (
+    <>
+      <p>콜키지 서비스를 원하는 매장을 선택해주세요!</p>
+      <p>가게 클릭 시 해주세요가 요청됩니다.</p>
+
+      <button
+        className="mt-8 flex h-12 items-center gap-2 rounded-xl bg-[rgba(255,255,255,0.5)] px-5 font-semibold text-[var(--gray-8)]"
+        onClick={() => navigate('/doit-list')}
+      >
+        해주세요 하러가기 <img src={arrow} className="h-4 w-[10px] rotate-180" />
+      </button>
+    </>
+  );
+}
+
+const motionVariant = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function Doit() {
+  const [isService, setIsService] = useState(true); // true: 해주세요란?, false: 해주세요 사용법
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsService(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div
+      className="relative flex h-svh flex-col items-center justify-center px-4"
+      style={{
+        background:
+          'linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), radial-gradient(151% 149.45% at 9.19% 68.19%, #90212A 0%, #DCDBE8 70.67%), white',
+      }}
+    >
+      <img src={arrow} className="absolute left-4 top-0" />
+      <img src={shakeHand} className="size-[242px]" />
+      <div className="mt-[54px] flex flex-col">
+        <h3
+          className="text-center text-xl font-bold text-white"
+          onClick={() => setIsService((prev) => !prev)}
+        >
+          {isService ? '해주세요 서비스란' : '해주세요 사용법'}
+        </h3>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={isService ? 'aboutService' : 'howToUse'}
+            className="mt-2 flex h-40 flex-col items-center text-white"
+            variants={motionVariant}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            {isService ? <AboutServiceSection /> : <HowToUseSection />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
-    // <div className="relative flex min-h-screen flex-col items-center px-4">
-    //   <Header type="back" title="" className="w-full bg-transparent" backFn={() => navigate(-1)} />
-    //   <img
-    //     src={Bg}
-    //     alt="배경"
-    //     className="absolute left-0 top-0 z-[-1] h-full w-full object-cover"
-    //   />
-    //   <div className="mt-[21.126vh] flex flex-col items-center">
-    //     <img src={Logo} alt="로고" className="h-[77.265px] w-[52.727px]" />
-    //     <img src={HandShake} alt="악수로고" className="-mt-[16px] h-[98.318px] w-[176.607px]" />
-    //   </div>
-    //   <div className="mt-[5.98vh] text-[20px] font-[700] text-white">해주세요 서비스란?</div>
-    //   <div className="mt-[1.1737vh] flex flex-col items-center justify-center text-center text-[14px] font-[500] text-white">
-    //     코르크 차지의 콜키지 추가 방식은 매장에 직접 방문하여
-    //     <br />
-    //     사장님과 함께 콜키지 비즈니스를 시작하는 방식입니다.
-    //     <br />
-    //     ‘해주세요 리스트’에 등록된 매장은 우선적으로 <br />
-    //     콜키지 영업을 진행하게 됩니다.
-    //   </div>
-    //   <button
-    //     className="absolute bottom-[15.638vh] flex h-[48px] w-[186.6px] flex-row items-center justify-center gap-[10px] rounded-[12px] bg-white/50"
-    //     onClick={handleClick}
-    //   >
-    //     <p className="text-[17px] font-[600]">해주세요 하러가기</p>
-    //     <img src={Arrow} alt=">" className="mt-[2.2px] h-[16px] w-[9.6px]" />
-    //   </button>
-    // </div>
   );
-};
+}
 
 export default Doit;

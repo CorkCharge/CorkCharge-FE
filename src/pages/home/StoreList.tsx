@@ -23,6 +23,8 @@ import ReviewItem from '@/shared/components/home/ReviewItem';
 import StoresInfo from '@/shared/components/home/StoresInfo';
 
 const StoreList = () => {
+  const navigate = useNavigate();
+
   const [storeSelected, setStoreSelected] = useState<boolean>(true);
   //홈화면 가게 정보
   // const [corkages, setCorkage] = useState<Corkage[]>([]);
@@ -37,9 +39,8 @@ const StoreList = () => {
     setStoreSelected(false);
   };
 
-  const navigate = useNavigate();
   const handleRequest = () => {
-    // navigate('/doit');
+    navigate('/doit');
   };
   const handleNewStore = () => {
     navigate('/new-stores');

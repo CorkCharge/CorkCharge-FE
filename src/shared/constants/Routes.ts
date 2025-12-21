@@ -15,6 +15,7 @@ export const FOOTERHIDDENURL = [
   '/my/role',
   '/my/toc',
   '/corkagemap/filter',
+  '/doit',
 ];
 
 // 하단 네비게이션 숨김 page URL(prefix)
