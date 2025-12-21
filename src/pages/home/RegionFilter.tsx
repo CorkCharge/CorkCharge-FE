@@ -1,16 +1,17 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 import Header from '@/shared/components/common/Header';
-// import { SearchInput } from '@/shared/components/common/Input';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import RegionSelector from '@/shared/components/home/RegionSelector';
 
 const HomeRegionFilter = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const resetAddress = useRegionFilterStore((state) => state.resetAddress);
   const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
+  const setWhichPage = useRegionFilterStore((state) => state.setWhichPage);
 
   const [selectedSido, setSelectedSido] = useState<string | null>(null);
   const [selectedSigungu, setSelectedSigungu] = useState<string | null>(null);
@@ -18,6 +19,13 @@ const HomeRegionFilter = () => {
 
   const applyFilter = () => {
     // toggleAddress()
+    const from = location.state?.from;
+    if (from === undefined || from === null) {
+      alert('잘못된 경로 접근입니다');
+      return;
+    }
+
+    setWhichPage(from);
     setSelectedDongNames(selectedDongs);
     navigate(-1);
   };
@@ -32,7 +40,6 @@ const HomeRegionFilter = () => {
   return (
     <div className="px-4">
       <Header title="지역설정" type="back" backFn={() => navigate(-1)} />
-      {/* <SearchInput placeholder="지역명을 검색하세요" className="text-sm font-medium" /> */}
       <>
         <RegionSelector
           selectedSido={selectedSido}

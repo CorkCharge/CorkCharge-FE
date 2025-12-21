@@ -39,6 +39,8 @@ const motionVariant = {
 };
 
 function Doit() {
+  const navigate = useNavigate();
+
   const [isService, setIsService] = useState(true); // true: 해주세요란?, false: 해주세요 사용법
 
   useEffect(() => {
@@ -54,7 +56,11 @@ function Doit() {
           'linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), radial-gradient(151% 149.45% at 9.19% 68.19%, #90212A 0%, #DCDBE8 70.67%), white',
       }}
     >
-      <img src={arrow} className="absolute left-4 top-0" />
+      <img
+        src={arrow}
+        className="absolute left-4 top-0 cursor-pointer"
+        onClick={() => navigate('/home')}
+      />
       <img src={shakeHand} className="size-[242px]" />
       <div className="mt-[54px] flex flex-col">
         <h3
