@@ -158,10 +158,16 @@ function DoitRequest() {
             />
           </div>
           <div className="mt-5 flex gap-4 font-semibold">
-            <button className="h-12 flex-1 rounded-xl bg-[var(--gray-1)] text-[var(--gray-6)]">
+            <button
+              className="h-12 flex-1 rounded-xl bg-[var(--gray-1)] text-[var(--gray-6)]"
+              onClick={() => navigate(-1)}
+            >
               취소
             </button>
-            <button className="h-12 flex-1 rounded-xl bg-[var(--primary)] text-white">
+            <button
+              className="h-12 flex-1 rounded-xl bg-[var(--primary)] text-white"
+              onClick={() => navigate('/doit/complete')}
+            >
               등록하기
             </button>
           </div>
