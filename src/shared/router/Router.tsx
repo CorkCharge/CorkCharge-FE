@@ -45,6 +45,7 @@ import ExamplePage2 from '@/pages/ExamplePage2';
 import NotiPost from '../components/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
 import CorkageReview from '@/pages/home/CorkageReview';
+import DoitRequest from '@/pages/doit/DoitRequest';
 
 const router = createBrowserRouter([
   // {
@@ -88,8 +89,12 @@ const router = createBrowserRouter([
         element: <Doit />,
       },
       {
-        path: 'doit-list',
+        path: 'doit/list',
         element: <DoitList />,
+      },
+      {
+        path: 'doit/request',
+        element: <DoitRequest />,
       },
       {
         path: 'doit/search',

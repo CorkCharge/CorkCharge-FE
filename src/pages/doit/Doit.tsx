@@ -25,7 +25,7 @@ function HowToUseSection() {
 
       <button
         className="mt-8 flex h-12 items-center gap-2 rounded-xl bg-[rgba(255,255,255,0.5)] px-5 font-semibold text-[var(--gray-8)]"
-        onClick={() => navigate('/doit-list')}
+        onClick={() => navigate('/doit/list')}
       >
         해주세요 하러가기 <img src={arrow} className="h-4 w-[10px] rotate-180" />
       </button>
