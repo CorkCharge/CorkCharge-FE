@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 
 import TipArticle from '@/shared/components/TipArticle';
 import { fetchTipInfo, type TipInfo } from '@/shared/apis/tip/tipListApi';
-import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
+// import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
+import Modal from '@/shared/components/common/Modal';
 
 import whiteArrow from '../../shared/assets/TipImgs/whiteArrow.svg';
 import bookmarked from '@/shared/components/home/assets/bookmarked.svg';
 import keep from '@/shared/assets/keep.svg';
-import Modal from '@/shared/components/common/Modal';
 
 // tipArticle/:id 페이지
 const Tip = () => {
@@ -40,31 +40,31 @@ const Tip = () => {
 
   //tip 저장
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
-  const keepStore = async () => {
-    try {
-      const res = await bookmarkRequest({
-        targetId: tipId,
-        targetType: 'TIP',
-      });
-      console.log(res);
-      setIsOpen(true);
-    } catch (err) {
-      console.log('tip 저장실패: ', err);
-    }
-  };
+  // const keepStore = async () => {
+  //   try {
+  //     const res = await bookmarkRequest({
+  //       targetId: tipId,
+  //       targetType: 'TIP',
+  //     });
+  //     console.log(res);
+  //     setIsOpen(true);
+  //   } catch (err) {
+  //     console.log('tip 저장실패: ', err);
+  //   }
+  // };
 
   //tip 저장취소
-  const deleteStore = async () => {
-    try {
-      const res = await deleteRequest({
-        targetId: tipId ?? 0,
-        targetType: 'TIP',
-      });
-      console.log('tip 저장 삭제성공: ', res);
-    } catch (err) {
-      console.log('tip 저장 삭제실패: ', err);
-    }
-  };
+  // const deleteStore = async () => {
+  //   try {
+  //     const res = await deleteRequest({
+  //       targetId: tipId ?? 0,
+  //       targetType: 'TIP',
+  //     });
+  //     console.log('tip 저장 삭제성공: ', res);
+  //   } catch (err) {
+  //     console.log('tip 저장 삭제실패: ', err);
+  //   }
+  // };
 
   const [pending, setPending] = useState<boolean>(false);
   const onBookmarkClick = async (e: React.MouseEvent) => {
@@ -73,12 +73,13 @@ const Tip = () => {
     setPending(true);
     try {
       if (isBookmarked) {
-        await deleteStore();
+        // await deleteStore();
         setIsBookmarked(false);
       } else {
-        await keepStore(); //원래 이건데 왜 저장삭제 실패?
+        // await keepStore();
         // await deleteStore();
         setIsBookmarked(true);
+        setIsOpen(true);
       }
     } catch (err) {
       console.log('북마크 토글 실패:', err);

@@ -1,4 +1,5 @@
 import rawRegions from '@/shared/constants/regionssss.json';
+import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 
 type RegionData = Record<string, Record<string, string[]>>;
 const regions = rawRegions as RegionData;
@@ -12,7 +13,7 @@ interface RegionFilterProps {
   setSelectedDongs: (_: string[]) => void;
 }
 
-const RegionFilter = ({
+const RegionSelector = ({
   selectedSido,
   selectedSigungu,
   selectedDongs,
@@ -20,7 +21,13 @@ const RegionFilter = ({
   setSelectedSigungu,
   setSelectedDongs,
 }: RegionFilterProps) => {
+  const toggleAddress = useRegionFilterStore((state) => state.toggleAddress);
+
   const handleDongSelect = (dong: string) => {
+    if (!selectedSido || !selectedSigungu) return;
+
+    toggleAddress(selectedSido, selectedSigungu, dong);
+
     if (selectedDongs.includes(dong)) {
       setSelectedDongs(selectedDongs.filter((d) => d !== dong));
     } else {
@@ -129,4 +136,4 @@ const RegionFilter = ({
   );
 };
 
-export default RegionFilter;
+export default RegionSelector;

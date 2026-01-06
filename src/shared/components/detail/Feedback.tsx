@@ -51,7 +51,7 @@ const Feedback = ({ restaurantId, mainContent, option, handleOptClick }: feedbac
       console.log('corkErr: ' + corkErr);
       console.log('storeErr: ' + storeErr);
       uploadPost();
-      navigate(`/detailInfo/${restaurantId}`, { state: { completeFb: true } });
+      navigate(`/detail-info/${restaurantId}`, { state: { completeFb: true } });
     } else {
       console.log('제출실패');
       //콘솔 찍어 확인

@@ -1,45 +1,63 @@
 import { useNavigate } from 'react-router-dom';
-import HandShake from './assets/handshake.svg';
-import Logo from './assets/logo_symbol.svg';
-import Arrow from './assets/right_arrow.svg';
-import Bg from './assets/bg.svg';
+// import HandShake from './assets/handshake.svg';
+// import Logo from './assets/logo_symbol.svg';
+// import Arrow from './assets/right_arrow.svg';
+// import Bg from './assets/bg.svg';
 import Header from '@/shared/components/common/Header';
+
+import filterBtn from '@/pages/corkagemap/filterImg.svg';
+import search from '@/shared/assets/images/search.png';
 
 const Doit = () => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate('/doit/search');
-  };
+  // const handleClick = () => {
+  //   navigate('/doit/search');
+  // };
   return (
-    <div className="relative flex min-h-screen flex-col items-center px-4">
-      <Header type="back" title="" className="w-full bg-transparent" backFn={() => navigate(-1)} />
-      <img
-        src={Bg}
-        alt="배경"
-        className="absolute left-0 top-0 z-[-1] h-full w-full object-cover"
-      />
-      <div className="mt-[21.126vh] flex flex-col items-center">
-        <img src={Logo} alt="로고" className="h-[77.265px] w-[52.727px]" />
-        <img src={HandShake} alt="악수로고" className="-mt-[16px] h-[98.318px] w-[176.607px]" />
+    <div>
+      <Header title="해주세요" type="back" backFn={() => navigate(-1)} className="mx-3" />
+
+      <div className="flex px-6">
+        <div className="flex h-10 w-4/5 items-center rounded-br-full rounded-tl-full bg-[var(--gray-1)] px-6">
+          <input
+            type="text"
+            className="w-[75%] bg-transparent text-sm font-medium focus:outline-none"
+          />
+          <img src={filterBtn} className="mr-3 size-6 cursor-pointer" />
+          <img src={search} className="size-4 cursor-pointer" />
+        </div>
+        <div>요청 많은 순</div>
       </div>
-      <div className="mt-[5.98vh] text-[20px] font-[700] text-white">해주세요 서비스란?</div>
-      <div className="mt-[1.1737vh] flex flex-col items-center justify-center text-center text-[14px] font-[500] text-white">
-        코르크 차지의 콜키지 추가 방식은 매장에 직접 방문하여
-        <br />
-        사장님과 함께 콜키지 비즈니스를 시작하는 방식입니다.
-        <br />
-        ‘해주세요 리스트’에 등록된 매장은 우선적으로 <br />
-        콜키지 영업을 진행하게 됩니다.
-      </div>
-      <button
-        className="absolute bottom-[15.638vh] flex h-[48px] w-[186.6px] flex-row items-center justify-center gap-[10px] rounded-[12px] bg-white/50"
-        onClick={handleClick}
-      >
-        <p className="text-[17px] font-[600]">해주세요 하러가기</p>
-        <img src={Arrow} alt=">" className="mt-[2.2px] h-[16px] w-[9.6px]" />
-      </button>
     </div>
+    // <div className="relative flex min-h-screen flex-col items-center px-4">
+    //   <Header type="back" title="" className="w-full bg-transparent" backFn={() => navigate(-1)} />
+    //   <img
+    //     src={Bg}
+    //     alt="배경"
+    //     className="absolute left-0 top-0 z-[-1] h-full w-full object-cover"
+    //   />
+    //   <div className="mt-[21.126vh] flex flex-col items-center">
+    //     <img src={Logo} alt="로고" className="h-[77.265px] w-[52.727px]" />
+    //     <img src={HandShake} alt="악수로고" className="-mt-[16px] h-[98.318px] w-[176.607px]" />
+    //   </div>
+    //   <div className="mt-[5.98vh] text-[20px] font-[700] text-white">해주세요 서비스란?</div>
+    //   <div className="mt-[1.1737vh] flex flex-col items-center justify-center text-center text-[14px] font-[500] text-white">
+    //     코르크 차지의 콜키지 추가 방식은 매장에 직접 방문하여
+    //     <br />
+    //     사장님과 함께 콜키지 비즈니스를 시작하는 방식입니다.
+    //     <br />
+    //     ‘해주세요 리스트’에 등록된 매장은 우선적으로 <br />
+    //     콜키지 영업을 진행하게 됩니다.
+    //   </div>
+    //   <button
+    //     className="absolute bottom-[15.638vh] flex h-[48px] w-[186.6px] flex-row items-center justify-center gap-[10px] rounded-[12px] bg-white/50"
+    //     onClick={handleClick}
+    //   >
+    //     <p className="text-[17px] font-[600]">해주세요 하러가기</p>
+    //     <img src={Arrow} alt=">" className="mt-[2.2px] h-[16px] w-[9.6px]" />
+    //   </button>
+    // </div>
   );
 };
 

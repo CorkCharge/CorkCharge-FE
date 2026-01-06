@@ -107,7 +107,7 @@ const InfoModal = ({ storeName, restaurantId, onClose, corkageInfo }: InfoModalP
   // "확인하러 가기" 버튼 클릭 시 실행될 함수
   const handleConfirm = () => {
     console.log('확인하러가기 버튼 클릭!');
-    navigate(`/detailInfo/${restaurantId}`);
+    navigate(`/detail-info/${restaurantId}`);
     setIsCompleteModalOpen(false); // 확인 후 모달 닫기
     onClose(); // 기존 정보 모달도 닫기
   };

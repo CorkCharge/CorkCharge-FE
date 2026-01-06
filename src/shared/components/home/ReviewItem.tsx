@@ -5,7 +5,7 @@ import keep from '@/shared/assets/keep.svg';
 
 function ReviewItem() {
   return (
-    <div className="w-[172px] shrink-0 rounded-2xl bg-[var(--gray-1)]">
+    <div className="w-[172px] shrink-0 cursor-pointer rounded-2xl bg-[var(--gray-1)]">
       <div className="px-3 py-[10px]">
         <span className="text-sm font-bold">성수 루메르도스</span>
         <div className="flex items-center">

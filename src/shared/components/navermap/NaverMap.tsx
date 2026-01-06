@@ -186,7 +186,7 @@ const NaverMap = () => {
           });
 
           naver.maps.Event.addListener(marker, 'click', () => {
-            navigate(`/detailInfo/${item.restaurantId}`);
+            navigate(`/detail-info/${item.restaurantId}`);
           });
 
           markers.current.push(marker);

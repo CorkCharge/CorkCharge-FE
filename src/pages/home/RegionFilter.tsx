@@ -1,26 +1,66 @@
-// import React from 'react'
-import RegionSelector from '../../shared/components/RegionSelector';
-import TopBar from '../../shared/components/TopBar';
-import Search from '../../shared/assets/search.svg';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-//Todo: input box 컴포넌트 분리
-//Todo: 상단바 x버튼 추가
-const RegionFilter = () => {
+import Header from '@/shared/components/common/Header';
+// import { SearchInput } from '@/shared/components/common/Input';
+import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
+import RegionSelector from '@/shared/components/home/RegionSelector';
+
+const HomeRegionFilter = () => {
+  const navigate = useNavigate();
+
+  const resetAddress = useRegionFilterStore((state) => state.resetAddress);
+  const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
+
+  const [selectedSido, setSelectedSido] = useState<string | null>(null);
+  const [selectedSigungu, setSelectedSigungu] = useState<string | null>(null);
+  const [selectedDongs, setSelectedDongs] = useState<string[]>([]);
+
+  const applyFilter = () => {
+    // toggleAddress()
+    setSelectedDongNames(selectedDongs);
+    navigate(-1);
+  };
+
+  const handleReset = () => {
+    setSelectedSido(null);
+    setSelectedSigungu(null);
+    setSelectedDongs([]);
+    resetAddress();
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center">
-      <TopBar text="지역설정" />
-      <div className="flex h-[40px] w-[361px] items-center rounded-br-full rounded-tl-full bg-[#F3F3F6] pl-6 pr-6">
-        <input
-          type="text"
-          placeholder="지역명을 검색하세요"
-          //   onClick={onclick}
-          //   onChange={(e) => setSearchValue?.(e.target.value)}
-          className="flex-1 bg-transparent text-gray-500 placeholder-gray-400 outline-none"
+    <div className="px-4">
+      <Header title="지역설정" type="back" backFn={() => navigate(-1)} />
+      {/* <SearchInput placeholder="지역명을 검색하세요" className="text-sm font-medium" /> */}
+      <>
+        <RegionSelector
+          selectedSido={selectedSido}
+          setSelectedSido={setSelectedSido}
+          selectedSigungu={selectedSigungu}
+          setSelectedSigungu={setSelectedSigungu}
+          selectedDongs={selectedDongs}
+          setSelectedDongs={setSelectedDongs}
         />
-        <img src={Search} className="cursor-pointer"></img>
-      </div>
-      <RegionSelector />
+        <div
+          className="fixed bottom-[70px] left-1/2 z-10 flex w-full -translate-x-1/2 justify-center gap-3 px-4"
+          style={{ maxWidth: 'var(--app-width)' }}
+        >
+          <button
+            onClick={handleReset}
+            className="mr-2 h-12 flex-1 rounded-lg border bg-[var(--gray-1)] py-2 font-bold"
+          >
+            취소
+          </button>
+          <button
+            onClick={applyFilter}
+            className="h-12 flex-1 rounded-lg bg-[var(--primary)] py-2 font-bold text-white"
+          >
+            확인
+          </button>
+        </div>
+      </>
     </div>
   );
 };
-export default RegionFilter;
+export default HomeRegionFilter;

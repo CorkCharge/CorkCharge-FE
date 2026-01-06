@@ -5,8 +5,7 @@ import type { TipList } from '@/shared/apis/tip/tipListApi';
 const TipPreview = ({ tipId, title, tipCategory, imageUrl }: TipList) => {
   const navigate = useNavigate();
   const handleGoTip = () => {
-    console.log('해당 tipArticle로 이동');
-    navigate(`/tipArticle/${tipId}`);
+    navigate(`/tip-article/${tipId}`);
   };
 
   return (

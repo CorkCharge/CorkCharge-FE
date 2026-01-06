@@ -39,26 +39,11 @@ const StoreList = () => {
 
   const navigate = useNavigate();
   const handleRequest = () => {
-    console.log('해주세요창 이동');
-    navigate('/doit');
+    // navigate('/doit');
   };
-  const handleCorkStore = () => {
-    console.log('콜키지스토어창 이동');
-    navigate('/corkScore');
+  const handleNewStore = () => {
+    navigate('/new-stores');
   };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await fetchCorkageList();
-  //       console.log(res);
-  //       setCorkage(res);
-  //     } catch {
-  //       console.error('API  호출 실패');
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     const fetchTipData = async () => {
@@ -72,23 +57,6 @@ const StoreList = () => {
     fetchTipData();
   }, []);
 
-  // useEffect(() => {
-  //   let cancelled = false;
-  //   (async () => {
-  //     try {
-  //       const data = await fetchHomeRestaurant();
-  //       if (!cancelled) setSignature(data);
-  //       console.log('홈 화면 식당 정보 조회 성공');
-  //     } catch (e) {
-  //       console.error(e);
-  //       console.log('홈 화면 식당 정보 조회 실패');
-  //     }
-  //   })();
-  //   return () => {
-  //     cancelled = true;
-  //   };
-  // }, []);
-
   const filtered =
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
 
@@ -99,11 +67,16 @@ const StoreList = () => {
       {/* 검색창 */}
       <div className="flex w-full px-4" style={{ boxShadow: '0 4px 7px 0px rgba(0, 0, 0, 0.1)' }}>
         <TopBar searchDisabled={false} className="flex-1" />
-        <img src={bell} />
+        <img src={bell} className="cursor-pointer" onClick={() => navigate('/notification')} />
       </div>
 
       {/* 배너 */}
-      <OverLayImage src={bannerCover} className="mt-5 aspect-[2/1]" paddingX="16px">
+      <OverLayImage
+        src={bannerCover}
+        className="mt-5 aspect-[2/1] cursor-pointer"
+        paddingX="16px"
+        onClick={() => navigate('/tip-article/1')}
+      >
         <div className="absolute bottom-6 left-10 text-white">
           <p className="text-sm font-medium sm:text-base">페어링 큐레이션</p>
           <p className="font-bold sm:text-xl">회식 메뉴에 따라 달라지는 술 선택법</p>
@@ -121,7 +94,7 @@ const StoreList = () => {
             <span className="text-lg font-medium">해주세요</span>
           </button>
           <button
-            onClick={handleCorkStore}
+            onClick={handleNewStore}
             className="flex h-[80px] flex-1 items-center justify-center gap-2 rounded-[16px] bg-[var(--glass-soft)]"
           >
             <img src={newStore} className="h-[45px] w-[51px]"></img>
@@ -139,7 +112,11 @@ const StoreList = () => {
         <p className="mt-1 pl-5 text-sm text-[var(--gray-6)]">
           코르크차지만의 콜키지 리뷰를 확인해보세요
         </p>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px]" />
+        <img
+          src={arrow}
+          className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer"
+          onClick={() => navigate('/corkage-review')}
+        />
       </div>
 
       <div className="mt-2 flex w-full gap-2 overflow-x-scroll px-4">{renderReviewItem()}</div>

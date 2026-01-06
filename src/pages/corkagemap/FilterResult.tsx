@@ -37,7 +37,7 @@ const FilterResult = () => {
             key={r.name}
             storeName={r.name}
             address={r.address}
-            onClick={() => navigate(`/detailInfo/${r.restaurantId}`)}
+            onClick={() => navigate(`/detail-info/${r.restaurantId}`)}
           />
         ))}
       </div>

@@ -19,13 +19,23 @@ interface HeaderProps {
 }
 
 const NormalHeader = ({ title, className }: HeaderProps) => (
-  <header className={cn('flex h-[48px] items-center justify-center font-bold', className)}>
+  <header
+    className={cn(
+      'flex h-[48px] items-center justify-center font-bold text-[var(--gray-8)]',
+      className
+    )}
+  >
     {title}
   </header>
 );
 
 const BackHeader = ({ title, backFn = () => {}, className }: HeaderProps) => (
-  <header className={cn('relative flex h-[48px] items-center justify-center font-bold', className)}>
+  <header
+    className={cn(
+      'relative flex h-[48px] items-center justify-center font-bold text-[var(--gray-8)]',
+      className
+    )}
+  >
     <img src={arrow} className="absolute left-0 cursor-pointer" onClick={backFn} />
     <span>{title}</span>
   </header>
@@ -38,7 +48,12 @@ const AdditionalHeader = ({
   addiFn = () => {},
   className,
 }: HeaderProps) => (
-  <header className={cn('relative flex h-[48px] items-center justify-center font-bold', className)}>
+  <header
+    className={cn(
+      'relative flex h-[48px] items-center justify-center font-bold text-[var(--gray-8)]',
+      className
+    )}
+  >
     <img
       src={arrow}
       onClick={backFn}

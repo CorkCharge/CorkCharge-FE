@@ -27,7 +27,7 @@ const OptionMenu = ({ resId, resName }: OptionMenuProps) => {
   };
 
   const baseURL = window.location.origin;
-  const pathURL = `${baseURL}/detailInfo/${resId}`;
+  const pathURL = `${baseURL}/detail-info/${resId}`;
   const handleCopyLink = () => {
     try {
       console.log('url: ' + pathURL);

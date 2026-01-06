@@ -34,17 +34,17 @@ export interface RestaurantInfo {
   address: string; //"서울특별시 광진구 광나루로24길 22 (화양동)",
   phone: string; //"02 4449009",
   rating: number; //0.0,
-  reviewCount: number; //4,
+  reviewCount?: number; //4,
   mainImageUrl: string | null; //null,
   menuImageUrl: string | null; //null,
   corkagePrice: string; //"소주 병당: 3000원, 맥주 병당: 4000원",
   corkageOptions: string[];
-  representMenu: string|null; //null,
-  pairingAlcohol: string|null; //null,
+  representMenu: string | null; //null,
+  pairingAlcohol: string | null; //null,
   pairingDescription: string | null; //null,
   pairingImageUrl: string; //null,
   openingHours: string; //null,
-  reviews: reviewProps[];
+  reviews?: reviewProps[];
 
   // restaurantId: number; // 1,
   // name: string; // "엔비햄버거",

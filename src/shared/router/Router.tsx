@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom';
-// import Test from '../../pages/Test';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
@@ -10,7 +9,7 @@ import NotRegistered from '../../pages/doit/NotRegistered';
 import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
 import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
-import OnBoarding from '@/pages/onBoarding/OnBoarding';
+// import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
 import StoreCheck from '@/pages/add/StoreCheck';
 import SearchStore from '@/pages/add/SearchStore';
@@ -42,6 +41,9 @@ import { RootRedirect } from './RootRedirect';
 import Toc from '@/pages/myPage/Toc';
 import ExamplePage from '@/pages/ExamplePage';
 import ExamplePage2 from '@/pages/ExamplePage2';
+import NotiPost from '../components/notification/NotiPost';
+import NewStores from '@/pages/home/NewStores';
+import CorkageReview from '@/pages/home/CorkageReview';
 
 const router = createBrowserRouter([
   // {
@@ -77,7 +79,7 @@ const router = createBrowserRouter([
         element: <HotStores />,
       },
       {
-        path: 'regionFilter',
+        path: 'region-filter',
         element: <RegionFilter />,
       },
       {
@@ -104,10 +106,10 @@ const router = createBrowserRouter([
         path: 'doit/complete',
         element: <DoitComplete />,
       },
-      {
-        path: 'onboarding',
-        element: <OnBoarding />,
-      },
+      // {
+      //   path: 'onboarding',
+      //   element: <OnBoarding />,
+      // },
       {
         path: 'signin',
         element: <SignIn />,
@@ -137,7 +139,7 @@ const router = createBrowserRouter([
         element: <Filter />,
       },
       {
-        path: 'detailInfo/:id',
+        path: 'detail-info/:id',
         element: <Info />,
       },
       {
@@ -193,7 +195,11 @@ const router = createBrowserRouter([
         element: <Notification />,
       },
       {
-        path: 'tipArticle/:id',
+        path: 'notification/:id',
+        element: <NotiPost />,
+      },
+      {
+        path: 'tip-article/:id',
         element: <Tip />,
       },
       {
@@ -207,6 +213,14 @@ const router = createBrowserRouter([
       {
         path: 'reservate',
         element: <ReservateDrink />,
+      },
+      {
+        path: 'new-stores',
+        element: <NewStores />,
+      },
+      {
+        path: 'corkage-review',
+        element: <CorkageReview />,
       },
       {
         path: 'example',

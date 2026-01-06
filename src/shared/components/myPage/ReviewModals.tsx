@@ -17,7 +17,7 @@ interface ModalProps {
 
 export const ShareModal = ({ isOpen, onClose, restId }: ModalProps) => {
   const copyLink = async () => {
-    await navigator.clipboard.writeText(`${window.location.origin}/detailInfo/${restId}/`);
+    await navigator.clipboard.writeText(`${window.location.origin}/detail-info/${restId}/`);
     alert('후기가 복사되었습니다');
     onClose();
   };

@@ -1,11 +1,14 @@
-import black_x from '../../assets/detailPageImgs/black_x.svg';
-import camera from '../../assets/detailPageImgs/camera.svg';
 import { useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { StarRate } from '../common/StarRate';
 import Header from '../common/Header';
-import { useNavigate } from 'react-router-dom';
 import apiClient from '@/shared/apis/apiClient';
+import useRestaurantStore from '@/shared/store/useRestaurantStore';
+import useMyReviewStore from '@/shared/store/useMyReviewStore';
+import Modal from '../common/Modal';
+
+import camera from '../../assets/detailPageImgs/camera.svg';
 
 const Review = () => {
   const location = useLocation();
@@ -16,15 +19,17 @@ const Review = () => {
   const [content, setContent] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
   const [selectedfile, setSelectedFile] = useState<File>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fileSelector = useRef<HTMLInputElement>(null);
+
+  const writingReviewInfo = useMyReviewStore((state) => state.writingReviewInfo);
+  const restInfo = useRestaurantStore((state) => state.restInfo);
 
   const handleReview = () => {
     if (!content) return;
     const formData = new FormData();
     const payload = { content, rating };
-    // formData.append('content', content);
-    // formData.append('rating', rating);
     formData.append('request', JSON.stringify(payload));
     if (selectedfile) {
       formData.append('images', selectedfile);
@@ -33,13 +38,12 @@ const Review = () => {
     apiClient
       .post(`/review/${restId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(() => {
-        navigate(`/detailInfo/${restId}`, { state: { openReviewModal: true } });
+        navigate(`/detail-info/${restId}`, { state: { openReviewModal: true } });
       })
       .catch((e) => console.error(e));
-  };
 
-  const handleCancel = () => {
-    setContent('');
+    // api 통신 성공 시 호출
+    setIsModalOpen(true);
   };
 
   const handelImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,31 +54,30 @@ const Review = () => {
     }
   };
 
+  const reviewFinish = () => {
+    setIsModalOpen(false);
+    navigate(-1);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center px-4">
-      {/* <div className="mt-6 text-[16px] font-bold">리뷰</div> */}
       <Header title="리뷰" type="back" backFn={() => navigate(-1)} className="w-full" />
       <div className="mb-12 mt-12 flex flex-col items-center gap-4">
         <div className="flex flex-col items-center text-[30px] font-bold">
-          <div>앤비햄버거에서의</div>
-          <div>콜키지는 어떠셨나요?</div>
+          <p>{`${restInfo.restaurantName}에서의`}</p>
+          <p>콜키지는 어떠셨나요?</p>
         </div>
         <div className="flex gap-2">
-          <StarRate rate={rating} />
+          <StarRate rate={writingReviewInfo.get(restInfo.restaurantId) ?? 0} />
         </div>
       </div>
-      <div className="relative flex h-[288px] w-full items-center justify-center rounded-br-[40px] rounded-tl-[40px] bg-[#FFFFFF] pl-6 pr-6 shadow-[0_2px_15px_rgba(0,0,0,0.05)]">
+      <div className="flex h-[288px] w-full items-center justify-center rounded-br-[40px] rounded-tl-[40px] bg-white px-6 shadow-[0_2px_15px_rgba(0,0,0,0.05)]">
         <textarea
           placeholder="리뷰를 입력해주세요"
-          className="mb-12 ml-2 mr-4 mt-16 h-[270px] w-[340px] resize-none bg-transparent text-[17px] text-[#9FA2AA] outline-none"
+          className="mb-12 ml-2 mr-4 mt-16 h-[270px] w-[340px] resize-none bg-transparent text-[17px] text-black outline-none placeholder:text-[var(--gray-5)]"
           rows={1}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-        />
-        <img
-          src={black_x}
-          onClick={handleCancel}
-          className="absolute right-3 top-6 cursor-pointer"
         />
       </div>
 
@@ -84,12 +87,12 @@ const Review = () => {
 
       {!previewUrl && (
         <div
-          className="mb-4 mt-4 flex h-[48px] w-[361px] cursor-pointer items-center justify-center rounded-[10px] border border-[#90212A] bg-white"
+          className="mb-4 mt-4 flex h-[48px] w-4/5 cursor-pointer items-center justify-center rounded-[10px] border border-[#90212A] bg-white"
           onClick={() => fileSelector.current?.click()}
         >
           <div className="flex gap-2">
             <img src={camera} />
-            <div className="text-[16px] font-bold text-[#90212A]">사진 첨부하기</div>
+            <div className="text-[16px] font-bold text-[var(--primary)]">사진 첨부하기</div>
           </div>
         </div>
       )}
@@ -104,7 +107,7 @@ const Review = () => {
 
       <div
         onClick={handleReview}
-        className={`mb-4 mt-12 flex h-[48px] w-[361px] items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[#90212A]' : 'cursor-not-allowed bg-[#FFFFFF]'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
+        className={`mb-4 mt-12 flex h-[48px] w-4/5 items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
       >
         <div className="flex gap-2">
           <div className={`text-[16px] font-bold ${content ? 'text-white' : 'text-[#35353F]'}`}>
@@ -112,6 +115,19 @@ const Review = () => {
           </div>
         </div>
       </div>
+
+      <Modal isOpen={isModalOpen}>
+        <span className="inline-block w-full text-center text-2xl font-bold">작성완료</span>
+        <p className="mb-5 mt-1 text-center font-medium text-[var(--gray-8)]">
+          소중한 리뷰 감사합니다
+        </p>
+        <button
+          className="h-12 w-full rounded-xl bg-[var(--primary)] font-semibold text-white"
+          onClick={reviewFinish}
+        >
+          확인
+        </button>
+      </Modal>
     </div>
   );
 };

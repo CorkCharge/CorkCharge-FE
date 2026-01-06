@@ -41,7 +41,10 @@ const BottomButtonContainer = ({
   };
 
   return (
-    <div className="fixed bottom-[3.169%] z-10 flex w-full justify-center gap-[3.53%] pb-[50px]">
+    <div
+      className="fixed bottom-[3.169%] left-1/2 z-10 flex w-full -translate-x-1/2 justify-center gap-[3.53%] pb-[50px]"
+      style={{ maxWidth: 'var(--app-width)' }}
+    >
       <button
         onClick={() => {
           console.log('초기화 클릭');

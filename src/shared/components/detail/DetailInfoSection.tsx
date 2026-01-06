@@ -1,61 +1,39 @@
-// import React from 'react'
 import { useState } from 'react';
 import DetailInfo from './DetailInfo';
 import StoreInfo from './StoreInfo';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
-
-// restaurantId: number; //2,
-// restaurantName: string; //"가람성",
-// address: string; //"서울특별시 광진구 광나루로24길 22 (화양동)",
-// phone: string; //"02 4449009",
-// rating: number; //0.0,
-// reviewCount: number; //4,
-// mainImageUrl: string | null; //null,
-// menuImageUrl: string | null; //null,
-// representMenu: string; //null,
-// pairingAlcohol: string; //null,
-// pairingDescription: string; //null,
-// pairingImageUrl: string; //null,
-// openingHours: string; //null,
-// reviews: reviewProps[];
+import ReviewInfo from './ReviewInfo';
 
 const DetailInfoSection = (restaurantInfo: RestaurantInfo) => {
-  const [corkSelected, setCorkSelected] = useState<boolean>(true);
-  const [storeSelected, setStoreSelected] = useState<boolean>(false);
-  const handleCorkclick = () => {
-    console.log('레스토랑 정보', restaurantInfo);
-    setCorkSelected(true);
-    setStoreSelected(false);
-  };
-  const handleStoreclick = () => {
-    setStoreSelected(true);
-    setCorkSelected(false);
-  };
+  // 0: 페어링 정보, 1: 가게 정보, 2: 리뷰
+  const [corkSelect, setCorkSelect] = useState(0);
+
   return (
     <div className="w-full">
-      <div className="flex h-[40px] w-full items-center justify-center gap-14 border-b text-[14px]">
+      <div className="mb-5 flex h-10 w-full items-center justify-between gap-2 border-b border-[var(--gray-2)] px-6 text-sm">
         <button
-          onClick={handleCorkclick}
-          className={`border-b-1 h-full w-[120px] border-x-0 border-t-0 border-solid ${corkSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+          onClick={() => setCorkSelect(0)}
+          className={`h-full flex-1 border-x-0 border-b-[2px] border-t-0 border-solid font-medium ${corkSelect === 0 ? 'border-black text-black' : 'border-transparent text-[var(--gray-6)]'}`}
         >
-          콜키지 정보
+          페어링 정보
         </button>
         <button
-          onClick={handleStoreclick}
-          className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${storeSelected ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+          onClick={() => setCorkSelect(1)}
+          className={`h-full flex-1 border-x-0 border-b-[2px] border-t-0 border-solid font-medium ${corkSelect === 1 ? 'border-black text-black' : 'border-transparent text-[var(--gray-6)]'}`}
         >
           가게 정보
         </button>
+        <button
+          onClick={() => setCorkSelect(2)}
+          className={`h-full flex-1 border-x-0 border-b-[2px] border-t-0 border-solid font-medium ${corkSelect === 2 ? 'border-black text-black' : 'border-transparent text-[var(--gray-6)]'}`}
+        >
+          리뷰
+        </button>
       </div>
-      {corkSelected ? (
-        <>
-          <DetailInfo {...restaurantInfo} />
-        </>
-      ) : (
-        <>
-          <StoreInfo {...restaurantInfo} />
-        </>
-      )}
+
+      {corkSelect === 0 && <DetailInfo {...restaurantInfo} />}
+      {corkSelect === 1 && <StoreInfo {...restaurantInfo} />}
+      {corkSelect === 2 && <ReviewInfo />}
     </div>
   );
 };

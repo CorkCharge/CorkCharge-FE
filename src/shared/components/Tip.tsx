@@ -22,6 +22,7 @@ const Tip = ({ selected, setSelected }: TipProps) => {
     const checkOverflow = () => {
       setIsOverflow(el.scrollWidth > el.clientWidth);
     };
+    checkOverflow();
 
     window.addEventListener('resize', checkOverflow);
 
@@ -30,7 +31,7 @@ const Tip = ({ selected, setSelected }: TipProps) => {
 
   return (
     <div
-      className={`mt-4 flex w-full gap-1 ${isOverflow ? 'justify-start overflow-auto' : 'justify-center'}`}
+      className={`mt-4 flex gap-1 px-4 ${isOverflow ? 'justify-start overflow-auto' : 'justify-center'}`}
       ref={ref}
     >
       <button

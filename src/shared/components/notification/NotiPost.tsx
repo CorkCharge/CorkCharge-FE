@@ -1,13 +1,17 @@
+import { useNavigate } from 'react-router-dom';
+
 import Header from '@/shared/components/common/Header';
 
 import loudSpeaker from '@/shared/components/notification/images/loudspeaker.png';
 import whiteArrow from '@/shared/assets/arrow.svg';
-import Button from '../../common/Button';
+import Button from '../common/Button';
 
 function NotiPost() {
+  const navigate = useNavigate();
+
   return (
     <div>
-      <Header title="알림" type="back" className="mx-4" />
+      <Header title="알림" className="mx-4" />
 
       <div
         className="relative flex h-[72px] items-center gap-5 px-4"
@@ -38,7 +42,7 @@ function NotiPost() {
             타이틀타이틀타이틀타이틀타이틀
           </h1>
           <h2 className="text-xl font-medium text-[var(--gray-8)]">sub타이틀sub타이틀</h2>
-          <p className="mt-3">
+          <p className="my-3">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
             has been the industry's standard dummy text ever since the 1500s, when an unknown
             printer took a galley of type and scrambled it to make a type specimen book. It has
@@ -50,6 +54,7 @@ function NotiPost() {
           <Button
             value="닫기"
             className="fixed bottom-10 left-10 right-10 mx-auto w-[80%] max-w-[480px] text-[var(--gray-8)]"
+            onClick={() => navigate('/notification')}
           />
         </div>
       </div>

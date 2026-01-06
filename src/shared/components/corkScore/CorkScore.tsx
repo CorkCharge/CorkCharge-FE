@@ -35,7 +35,7 @@ const CorkScore = ({
     }
   }, [isBookmarked]);
 
-    const { pathname } = useLocation();
+  const { pathname } = useLocation();
   useEffect(() => {
     setIsBookmarked(pathname.startsWith('/keep'));
   }, [pathname]);
@@ -54,7 +54,7 @@ const CorkScore = ({
 
   const goStore = () => {
     console.log('가게 상세 정보 페이지 이동');
-    navigate(`/detailInfo/${restaurantId}`);
+    navigate(`/detail-info/${restaurantId}`);
   };
   const stop: React.MouseEventHandler = (e) => {
     e.stopPropagation();

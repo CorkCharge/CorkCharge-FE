@@ -4,7 +4,7 @@ import star from '@/shared/assets/star.svg';
 function StoresInfo() {
   const renderRecommendStore = () =>
     [...new Array(5)].map((_, idx) => (
-      <div key={idx} className="flex flex-col items-center gap-1">
+      <div key={idx} className="flex cursor-pointer flex-col items-center gap-1">
         {/* <img /> */}
         <div className="size-[115px] rounded-full bg-gray-300" />
         <span className="font-medium text-[var(--gray-8)]">건대 횟집</span>
@@ -13,7 +13,7 @@ function StoresInfo() {
 
   const renderNearStores = () =>
     [...new Array(5)].map((_, idx) => (
-      <div key={idx}>
+      <div key={idx} className="cursor-pointer">
         {/* <img /> */}
         <div className="size-[172px] rounded-t-2xl bg-black" />
         <div className="flex h-[44px] items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
@@ -32,7 +32,7 @@ function StoresInfo() {
 
   const renderDateStores = () =>
     [...new Array(5)].map((_, idx) => (
-      <div key={idx}>
+      <div key={idx} className="cursor-pointer">
         {/* <img /> */}
         <div className="size-[172px] rounded-t-2xl bg-black" />
         <div className="flex h-[44px] items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
@@ -54,14 +54,14 @@ function StoresInfo() {
       {/* 코르크차지 추천 매장 */}
       <div className="relative px-4">
         <span className="font-bold text-[var(--gray-8)]">코르크차지의 추천 매장</span>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px]" />
+        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
       </div>
       <div className="mt-2 flex gap-[10px] overflow-auto px-4">{renderRecommendStore()}</div>
 
       {/* 가까운 매장 */}
       <div className="relative mb-2 mt-3 px-4">
         <span className="font-bold text-[var(--gray-8)]">가까운 매장</span>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px]" />
+        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
       </div>
       <div className="mt-2 flex gap-[10px] overflow-auto px-4">{renderNearStores()}</div>
       <div className="mx-4 my-5 rounded-lg bg-[var(--glass)] p-4 font-bold text-[var(--gray-8)]">
@@ -71,7 +71,7 @@ function StoresInfo() {
       {/* 추천 데이터코스 */}
       <div className="relative px-4">
         <span className="font-bold text-[var(--gray-8)]">추천 데이트 코스</span>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px]" />
+        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
       </div>
       <div className="my-2 flex gap-[10px] overflow-auto px-4">{renderDateStores()}</div>
     </div>
