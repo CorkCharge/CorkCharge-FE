@@ -26,7 +26,7 @@ export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin', '/master', '/notifi
 export const FOOTERROUTER = {
   home: ['/home'],
   map: ['/corkagemap'],
-  book: ['/reservate'],
+  doit: ['/doit'],
   save: ['/keep'],
   mypage: ['/my'],
 };

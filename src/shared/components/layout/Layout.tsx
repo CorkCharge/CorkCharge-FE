@@ -16,7 +16,7 @@ const FooterSync = () => {
       setFooterProps(0);
     } else if (FOOTERROUTER.map.some((route) => location.pathname.startsWith(route))) {
       setFooterProps(1);
-    } else if (FOOTERROUTER.book.some((route) => location.pathname.startsWith(route))) {
+    } else if (FOOTERROUTER.doit.some((route) => location.pathname.startsWith(route))) {
       setFooterProps(2);
     } else if (FOOTERROUTER.save.some((route) => location.pathname.startsWith(route))) {
       setFooterProps(3);

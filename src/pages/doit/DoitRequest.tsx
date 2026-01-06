@@ -72,7 +72,7 @@ function DoitRequest() {
         <p className="mb-1 text-lg text-[var(--gray-8)]">선호하는 콜키지 유형</p>
         <div className="flex gap-2">
           <button
-            className={`h-12 rounded-xl px-8 py-3 font-semibold ${corkageType === '테이블당' ? 'bg-[var(--primary)] text-white' : 'bg-white text-[var(--primary)]'}`}
+            className={`h-12 flex-[2] rounded-xl py-3 font-semibold ${corkageType === '테이블당' ? 'bg-[var(--primary)] text-white' : 'bg-white text-[var(--primary)]'}`}
             onClick={() => setCorkageType('테이블당')}
             style={{
               boxShadow: '0 0 0.9px 0 rgba(66, 71, 76, 0.32), 0 4px 8px 0 rgba(66, 71, 76, 0.05)',
@@ -81,7 +81,7 @@ function DoitRequest() {
             테이블당
           </button>
           <button
-            className={`h-12 rounded-xl px-8 py-3 font-semibold ${corkageType === '인당' ? 'bg-[var(--primary)] text-white' : 'bg-white text-[var(--primary)]'}`}
+            className={`h-12 flex-1 rounded-xl py-3 font-semibold ${corkageType === '인당' ? 'bg-[var(--primary)] text-white' : 'bg-white text-[var(--primary)]'}`}
             onClick={() => setCorkageType('인당')}
             style={{
               boxShadow: '0 0 0.9px 0 rgba(66, 71, 76, 0.32), 0 4px 8px 0 rgba(66, 71, 76, 0.05)',
@@ -90,7 +90,7 @@ function DoitRequest() {
             인당
           </button>
           <button
-            className={`h-12 rounded-xl px-8 py-3 font-semibold ${corkageType === '병당' ? 'bg-[var(--primary)] text-white' : 'bg-white text-[var(--primary)]'}`}
+            className={`h-12 flex-1 rounded-xl py-3 font-semibold ${corkageType === '병당' ? 'bg-[var(--primary)] text-white' : 'bg-white text-[var(--primary)]'}`}
             onClick={() => setCorkageType('병당')}
             style={{
               boxShadow: '0 0 0.9px 0 rgba(66, 71, 76, 0.32), 0 4px 8px 0 rgba(66, 71, 76, 0.05)',

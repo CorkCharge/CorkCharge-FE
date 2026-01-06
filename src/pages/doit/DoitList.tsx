@@ -147,11 +147,11 @@ const DoitList = () => {
           {mapSvg}
         </div>
 
-        <div className="flex gap-1 pb-2 pl-8 pr-4">
-          <div className="flex h-10 flex-1 items-center rounded-br-full rounded-tl-full bg-[var(--gray-1)] px-6">
+        <div className="flex justify-center gap-1 px-5 pb-2">
+          <div className="flex h-10 min-w-0 flex-1 items-center rounded-br-full rounded-tl-full bg-[var(--gray-1)] px-6">
             <input
               type="text"
-              className="flex-1 bg-transparent text-sm font-medium focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent text-sm font-medium focus:outline-none"
             />
             <img src={search} className="size-4 cursor-pointer" />
           </div>
@@ -217,7 +217,10 @@ const DoitList = () => {
           >
             닫기
           </button>
-          <button className="flex-[7] rounded-xl bg-[var(--primary)] font-bold text-white">
+          <button
+            className="flex-[7] rounded-xl bg-[var(--primary)] font-bold text-white"
+            onClick={() => navigate('/doit/request')}
+          >
             원하는 비용 알려주기
           </button>
         </div>
