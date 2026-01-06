@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import Back from '../../shared/assets/left_arrow.svg';
-import Bg from './assets/bg.svg';
 import logo from './assets/logo_search.svg';
 import rightArrow from '../../shared/assets/right_arrow.svg';
 const DoitComplete = () => {
