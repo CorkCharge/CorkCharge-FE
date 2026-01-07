@@ -15,6 +15,8 @@ export const FOOTERHIDDENURL = [
   '/my/role',
   '/my/toc',
   '/corkagemap/filter',
+  '/doit',
+  '/doit/complete',
 ];
 
 // 하단 네비게이션 숨김 page URL(prefix)
@@ -24,7 +26,7 @@ export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin', '/master', '/notifi
 export const FOOTERROUTER = {
   home: ['/home'],
   map: ['/corkagemap'],
-  book: ['/reservate'],
+  doit: ['/doit'],
   save: ['/keep'],
   mypage: ['/my'],
 };

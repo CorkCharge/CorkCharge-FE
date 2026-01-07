@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 interface FooterPropsType {
   footerProps: number;
-  setFooterProps: (props: number) => void;
+  setFooterProps: (_: number) => void;
 }
 
 const useFooterPropsStore = create<FooterPropsType>((set) => ({

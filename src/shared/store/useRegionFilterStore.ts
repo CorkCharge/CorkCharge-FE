@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 
+type PageIdxType = -1 | 0 | 1 | 2;
 interface RegionFilterProps {
+  // -1: 초기값, 0: 신규매장, 1: 콜키지 리뷰, 2: 해주세요
+  whichPage: PageIdxType;
   filteredRegions: RegionTree;
   selectedDongNames: string[];
   deleteByDong: (_: string) => void;
@@ -8,6 +11,7 @@ interface RegionFilterProps {
   resetAddress: () => void;
   setSelectedDongNames: (_: string[]) => void;
   removeDongFromArray: (_: string) => void;
+  setWhichPage: (_: PageIdxType) => void;
 }
 
 interface RegionTree {
@@ -17,6 +21,8 @@ interface RegionTree {
 }
 
 const useRegionFilterStore = create<RegionFilterProps>((set, get) => ({
+  // 어느 페이지에서 선택한 주소인가
+  whichPage: -1,
   // 도 - 시 - 동 관리
   filteredRegions: {},
   // 동이름 배열
@@ -73,6 +79,8 @@ const useRegionFilterStore = create<RegionFilterProps>((set, get) => ({
   // selectedDongNames에서 요소(dong 이름) 제거
   removeDongFromArray: (dong: string) =>
     set((state) => ({ selectedDongNames: state.selectedDongNames.filter((x) => x !== dong) })),
+
+  setWhichPage: (pageIdx: PageIdxType) => set({ whichPage: pageIdx }),
 }));
 
 export default useRegionFilterStore;

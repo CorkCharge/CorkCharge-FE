@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Header from '@/shared/components/common/Header';
 import Button from '@/shared/components/common/Button';
@@ -26,6 +26,12 @@ function NewStores() {
 
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
+  const whichPage = useRegionFilterStore((state) => state.whichPage);
+  const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
+
+  useEffect(() => {
+    if (whichPage !== 0) setSelectedDongNames([]);
+  }, [whichPage, setSelectedDongNames]);
 
   const handleShare = (e: React.MouseEvent<HTMLDivElement>, name: string, id: number) => {
     e.stopPropagation();
@@ -118,7 +124,7 @@ function NewStores() {
               maxWidth: 'calc(var(--app-width) * 0.8)',
               bottom: 'calc(var(--footer-h) + 15px)',
             }}
-            onClick={() => navigate('/region-filter')}
+            onClick={() => navigate('/region-filter', { state: { from: 0 } })}
           />
         ) : (
           <div

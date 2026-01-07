@@ -2,7 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import Store from '../../pages/home/StoreList';
 import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
-import Doit from '../../pages/doit/Doit';
+import Doit from '@/pages/doit/Doit';
+import DoitList from '@/pages/doit/DoitList';
 import Search from '../../pages/doit/Search';
 import SearchMap from '@/pages/search/SearchMap';
 import NotRegistered from '../../pages/doit/NotRegistered';
@@ -44,6 +45,7 @@ import ExamplePage2 from '@/pages/ExamplePage2';
 import NotiPost from '../components/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
 import CorkageReview from '@/pages/home/CorkageReview';
+import DoitRequest from '@/pages/doit/DoitRequest';
 
 const router = createBrowserRouter([
   // {
@@ -85,6 +87,14 @@ const router = createBrowserRouter([
       {
         path: 'doit',
         element: <Doit />,
+      },
+      {
+        path: 'doit/list',
+        element: <DoitList />,
+      },
+      {
+        path: 'doit/request',
+        element: <DoitRequest />,
       },
       {
         path: 'doit/search',

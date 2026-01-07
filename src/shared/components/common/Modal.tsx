@@ -13,7 +13,12 @@ const Modal = ({ isOpen, onClose, children, hasCloseButton = false, className }:
 
   return (
     <div className={'fixed inset-0 z-50 flex items-center justify-center bg-black/50'}>
-      <div className={cn('relative min-w-[300px] rounded-xl bg-white p-6 shadow-lg', className)}>
+      <div
+        className={cn(
+          'relative min-w-[300px] rounded-bl-lg rounded-br-3xl rounded-tl-3xl rounded-tr-lg bg-white p-6 shadow-lg',
+          className
+        )}
+      >
         {hasCloseButton && (
           <button
             onClick={onClose}

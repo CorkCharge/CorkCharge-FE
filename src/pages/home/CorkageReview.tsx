@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import Header from '@/shared/components/common/Header';
@@ -32,6 +32,12 @@ function CorkageReview() {
   const toggleReview = useMyReviewStore((state) => state.toggleReview);
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
+  const whichPage = useRegionFilterStore((state) => state.whichPage);
+  const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
+
+  useEffect(() => {
+    if (whichPage !== 1) setSelectedDongNames([]);
+  }, [whichPage, setSelectedDongNames]);
 
   const renderReviews = () =>
     [...new Array(3)].map((_, idx) => (
@@ -217,7 +223,7 @@ function CorkageReview() {
             maxWidth: 'calc(var(--app-width) * 0.8)',
             bottom: 'calc(var(--footer-h) + 15px)',
           }}
-          onClick={() => navigate('/region-filter')}
+          onClick={() => navigate('/region-filter', { state: { from: 1 } })}
         />
       ) : (
         <div
