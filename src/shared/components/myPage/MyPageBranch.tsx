@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import useMyPageStore from '@/shared/store/useMyPageStore';
 import useFooterPropsStore from '@/shared/store/useFooterProps';
 import useAuthStore from '@/shared/store/useAuthStore';
-
 import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
+import { NaverLogIn } from '@/shared/apis/signIn/Naver';
 
 import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
@@ -14,7 +14,6 @@ import plus from '@/shared/assets/images/plus.png';
 import shakehand from '@/shared/assets/images/shakehand.png';
 import check from '@/shared/assets/images/cork-check.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
-import { NaverLogIn } from '@/shared/apis/signIn/Naver';
 
 const renderReviews = (reviews: Review[]) =>
   reviews.map((review, idx) => (
@@ -58,7 +57,7 @@ export const LoggedInMyPage = () => {
   const navigate = useNavigate();
 
   const { myProfile, setMyProfile } = useMyPageStore();
-  const { setFooterProps } = useFooterPropsStore();
+  const setFooterProps = useFooterPropsStore((s) => s.setFooterProps);
 
   useEffect(() => {
     if (myProfile.email) return;
@@ -92,25 +91,18 @@ export const LoggedInMyPage = () => {
     <>
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
         <div className="relative flex gap-[22px]">
-          <div
-            className={`flex size-16 ${myProfile?.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
-          >
-            {myProfile?.profile_image && (
-              <img src={myProfile.profile_image} className="size-full rounded-full" />
-            )}
-          </div>
           <div className="flex max-w-[60%] flex-col justify-center">
             <p className="it ems-center flex gap-1 text-xl font-bold">
-              {myProfile?.nickname}
+              <span>{myProfile?.nickname}님</span>
               {isMaster && <img src={logo} className="h-[21px]" />}
             </p>
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[#80818B]">
-              {myProfile?.email}
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[var(--gray-6)]">
+              {myProfile?.email.split('@')[0]}
             </p>
           </div>
           <img
             src={arrow}
-            className="absolute right-5 top-7 h-4 cursor-pointer"
+            className="absolute right-1 top-1/2 h-4 -translate-y-1/2 cursor-pointer"
             onClick={() => navigate('/my/modify')}
           />
         </div>

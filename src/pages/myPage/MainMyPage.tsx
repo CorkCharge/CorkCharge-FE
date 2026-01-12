@@ -22,19 +22,19 @@ function MainMyPage() {
 
       {isLogged ? <LoggedInMyPage /> : <GuestMyPage />}
 
-      <ControlLists>
+      {/* <ControlLists>
         <ControlItem onClick={() => navigate('/my/notification/setting')}>알림 설정</ControlItem>
         <ControlItem onClick={() => navigate('/my/toc')}>약관 및 개인정보 처리방침</ControlItem>
         <ControlItem onClick={() => navigate('/my/contact')}>문의하기</ControlItem>
-      </ControlLists>
+      </ControlLists> */}
 
       {isLogged && (
         <div className="mt-10 text-center">
           <span
             className="cursor-pointer font-medium text-[var(--gray-6)] underline underline-offset-2"
             onClick={() => {
-              logout();
               navigate('/home');
+              logout();
               setFooterProps(0);
             }}
           >

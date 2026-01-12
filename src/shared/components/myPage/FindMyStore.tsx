@@ -36,7 +36,7 @@ function FindMyStore({ onNext }: { onNext: () => void }) {
 
   const renderStore = () => {
     if (restaurants.length === 0 && !isFirstSearch.current) {
-      return <p className="mt-5 text-center">조건에 맞는 식당이 없습니다.</p>;
+      return <p className="mt-5 text-center">가게가 존재하지 않습니다.</p>;
     } else {
       return restaurants.map((rest, idx) => (
         <div

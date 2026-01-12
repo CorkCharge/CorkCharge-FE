@@ -15,10 +15,16 @@ function ChooseRole() {
   const [role, setRole] = useState(-1); // 손님: 0, 사장님: 1
   const { myProfile } = useMyPageStore();
 
-  const letsStart = () => {
+  const letsStart = async () => {
     if (role === 0) {
-      apiClient.put('/users/role', { role: 'USER' });
-      navigate('/home');
+      try {
+        await apiClient.put('/users/role', { role: 'USER' });
+        navigate('/my/role/complete');
+      } catch (e) {
+        console.error('유저 role 등록 실패: ' + e);
+      }
+
+      // navigate('/home');
     } else if (role === 1) {
       navigate('/master/signup');
     }
