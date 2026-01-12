@@ -7,6 +7,7 @@ import useAuthStore from '@/shared/store/useAuthStore';
 import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
 import { NaverLogIn } from '@/shared/apis/signIn/Naver';
+import { ControlLists, ControlItem } from './ControlList';
 
 import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
@@ -42,14 +43,15 @@ const ReviewArea = ({ reviews }: { reviews: Review[] }) => {
 
 const NoneReview = () => {
   return (
-    <>
-      <p className="mt-5">코르크 차지에</p>
+    <section className="mt-5 text-[var(--gray-8)]">
+      <p>코르크 차지에</p>
       <p>아직 아무도 남기지 않았어요.</p>
       <p>첫 리뷰, 지금 남겨보세요!</p>
-    </>
+    </section>
   );
 };
 
+// 로그인 사용자에게 보여줄 마이페이지
 export const LoggedInMyPage = () => {
   const { user } = useAuthStore();
   const isMaster = user?.role === 'OWNER';
@@ -107,18 +109,47 @@ export const LoggedInMyPage = () => {
           />
         </div>
 
-        {isMaster && <div className="-mx-4 mt-5 h-[1px] bg-[var(--gray-4)]"></div>}
-
         {isMaster && (
-          <div
-            className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
-            onClick={enrollCorkage}
-          >
-            <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
-              <img src={plus} className="size-[14px]" />
+          <>
+            <div className="-mx-4 mt-5 border-t border-[var(--gray-4)]" />
+
+            <div
+              className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
+              onClick={enrollCorkage}
+            >
+              <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
+                <img src={plus} className="size-[14px]" />
+              </div>
+              <p className="font-bold">콜키지 정보 등록하기</p>
             </div>
-            <p className="font-bold">콜키지 정보 등록하기</p>
-          </div>
+
+            <div className="-mx-4 mt-5 border-t border-[var(--gray-4)]" />
+            <div
+              className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
+              onClick={enrollCorkage}
+            >
+              <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--primary)]">
+                <svg
+                  className="ml-[2.5px]"
+                  width="16"
+                  height="22"
+                  viewBox="0 0 16 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.1685 0C13.2901 2.12174 13.2901 5.56717 11.1685 7.68891L3.84422 15.0135C1.72258 12.8917 1.72258 9.44632 3.84422 7.32458L11.1685 0Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M9.67725 10.9858C11.2337 12.5424 11.2337 15.0698 9.67725 16.6264L4.30391 21.9999C2.74745 20.4434 2.74745 17.916 4.30391 16.3594L9.67725 10.9858Z"
+                    fill="white"
+                  />
+                </svg>
+              </div>
+              <p className="font-bold">내 가게 확인하기</p>
+            </div>
+          </>
         )}
       </div>
 
@@ -154,10 +185,19 @@ export const LoggedInMyPage = () => {
       </div>
 
       <div className="-mx-4 h-2 bg-[var(--gray-1)]"></div>
+
+      <ControlLists>
+        <ControlItem onClick={() => navigate('/my/notification/setting')}>
+          해주세요 목록
+        </ControlItem>
+        <ControlItem onClick={() => navigate('/my/toc')}>약관 및 개인정보 처리방침</ControlItem>
+        <ControlItem onClick={() => navigate('/my/contact')}>문의하기</ControlItem>
+      </ControlLists>
     </>
   );
 };
 
+// 로그인 하지 않은 사용자에게 보여줄 페이지
 export const GuestMyPage = () => {
   return (
     <>
