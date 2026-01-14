@@ -8,13 +8,15 @@ import bttn from './filterImg.svg';
 import List from './list/List';
 import type { Group } from './list/List';
 import MyStore from './mystore/MyStore';
+import MultipinList from './multipinlist/MultipinList';
+
 const CorkageMap = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  // 바텀시트 내부 뷰 상태: 'list' | 'store'
-  const [sheetView, setSheetView] = useState<'list' | 'store'>('list');
+  //바텀시트 내부 뷰 상태: 'list' | 'store' 'multipin' 상태 추가 (클러스터 마커 클릭 시 보여줄 화면)
+  const [sheetView, setSheetView] = useState<'list' | 'store' | 'multipin'>('list');
 
   // 선택된 그룹 정보 (MyStore에 전달하거나 나중에 사용)
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
@@ -37,6 +39,16 @@ const CorkageMap = () => {
     setSheetView('store'); // 뷰를 상세(MyStore)로 변경
   };
 
+  // NaverMap에서 클러스터 마커 클릭 시 호출될 함수
+  const handleClusterClick = () => {
+    // 1. 바텀시트 뷰를 멀티핀 리스트로 변경
+    setSheetView('multipin');
+    // 2. 바텀시트 열기
+    setIsSheetOpen(true);
+    // 3. (옵션) 하단 '저장한 매장' 버튼 활성화 여부는 기획에 따라 결정 (여기선 false 유지 or true)
+    // setIsActive(true);
+  };
+
   // MyStore 뷰일 때 topSnapVh는 19.8, List일 땐 17.8, 근데 이게 처음에 BottomSheet가 마운트될때 이미 17.8로 마운트되서 바뀌질 않음
   const currentTopSnapVh = sheetView === 'store' ? 17.8 : 17.8;
 
@@ -44,7 +56,7 @@ const CorkageMap = () => {
     <main className="relative h-screen w-full overflow-hidden">
       {/* 지도: 화면 전체 덮기 */}
       <div className="absolute inset-0 z-0">
-        <NaverMap />
+        <NaverMap onClusterClick={handleClusterClick} />
       </div>
 
       {/* 상단 검색바 */}
@@ -74,14 +86,13 @@ const CorkageMap = () => {
         </button>
       </div>
       <BottomSheet isOpen={isSheetOpen} onClose={handleSheetClose} topSnapVh={currentTopSnapVh}>
-        {sheetView === 'list' ? (
-          // myGroups 데이터와 setMyGroups 함수를 List에게 전달
+        {sheetView === 'list' && (
           <List myGroups={myGroups} setMyGroups={setMyGroups} onSelectGroup={handleGroupSelect} />
-        ) : (
-          <MyStore group={selectedGroup} />
-          // 만약 MyStore에 그룹 정보를 넘겨야 한다면:
-          // <MyStore group={selectedGroup} onBack={() => setSheetView('list')} />
-          // 같은 형태로 뒤로가기 기능도 추가 구현 가능
+        )}
+        {sheetView === 'store' && <MyStore group={selectedGroup} />}
+        {sheetView === 'multipin' && (
+          // [추가] 클러스터 클릭 시 보여줄 멀티핀 리스트 컴포넌트
+          <MultipinList />
         )}
       </BottomSheet>
     </main>

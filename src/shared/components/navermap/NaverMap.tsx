@@ -4,11 +4,9 @@ import { getMapData } from '@/shared/apis/map/mapApi';
 import type { MapLevel, ClusterPoint, RestaurantPoint } from '@/shared/types/map';
 
 /* =========================
-   NEW: 유틸 함수 (동명 파싱/그룹핑)
+   유틸 함수 (동명 파싱/그룹핑)
    ========================= */
-// 주소의 마지막 괄호(...)에서 "동/읍/면/리"로 끝나는 토큰 추출
 const getDongFromAddress = (address: string): string | null => {
-  // 예: "서울특별시 광진구 자양로 199-1 (구의동)"
   if (!address) return null;
   const m = address.match(/\(([^)]+)\)\s*$/);
   if (m) {
@@ -65,19 +63,22 @@ const groupByDong = (points: ClusterPoint[]) => {
   }));
 };
 
-const NaverMap = () => {
-  // 지도를 담을 DOM 요소를 참조
+interface NaverMapProps {
+  onClusterClick?: () => void;
+}
+
+const NaverMap = ({ onClusterClick }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
-  // 생성된 네이버 맵 인스턴스를 저장, 불필요한 리렌더링을 막기 위해 ref를 사용
   const mapInstance = useRef<naver.maps.Map | null>(null);
-  // 현재 지도에 표시된 마커들을 저장
   const markers = useRef<naver.maps.Marker[]>([]);
   const navigate = useNavigate();
 
-  /**
-   * 줌 레벨에 따라 API 요청에 사용할 'level' 문자열을 반환
-   * @param zoom - 현재 지도의 줌 레벨
-   */
+  // 1. 선택된 마커 객체 저장 (스타일 복구용)
+  const selectedMarkerRef = useRef<naver.maps.Marker | null>(null);
+
+  // 2. 선택된 마커의 데이터 저장 (복구 시 원래 텍스트/사이즈 복원용)
+  const selectedMarkerDataRef = useRef<{ count: number; name: string; size: number } | null>(null);
+
   const getMapLevel = (zoom: number): MapLevel => {
     if (zoom >= 17) return 'restaurant';
     if (zoom >= 14) return 'dong';
@@ -86,13 +87,22 @@ const NaverMap = () => {
   };
 
   /**
-   * 클러스터 마커(원)의 HTML 문자열을 생성
-   * @param count - 클러스터에 포함된 매장 수
-   * @param label - (선택) 동 이름 라벨
+   * 클러스터 마커 HTML 생성
+   * isSelected가 true일 때 그라데이션 배경 적용
    */
-  const createClusterMarkerHtml = (count: number, label?: string): string => {
-    // 매장 수에 비례하여 원의 크기를 조절
+  const createClusterMarkerHtml = (
+    count: number,
+    label?: string,
+    isSelected: boolean = false
+  ): string => {
     const size = 35 + count * 1.5;
+
+    const activeBackground = `
+      background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), 
+                  radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%);
+    `;
+    const defaultBackground = `background-color: #90212A;`;
+
     return `
       <div style="
         display:flex;
@@ -101,7 +111,7 @@ const NaverMap = () => {
         justify-content:center;
         width:${size}px;
         height:${size}px;
-        background-color:#90212A;
+        ${isSelected ? activeBackground : defaultBackground}
         color:white;
         font-size:12px;
         font-weight:bold;
@@ -109,17 +119,13 @@ const NaverMap = () => {
         box-shadow:0 2px 4px rgba(0,0,0,0.2);
         transition:all 0.2s;
         padding:4px;
+        cursor: pointer;
       ">
         <div style="font-size:14px; line-height:1">${count}</div>
-        ${label ? `<div style="font-size:10px; margin-top:2px; white-space:nowrap">${label}</div>` : ''}
       </div>
     `;
   };
 
-  /**
-   * 개별 매장 마커(가격)의 HTML 문자열을 생성.
-   * @param price - 콜키지 가격 정보
-   */
   const createRestaurantMarkerHtml = (price: string): string => {
     return `
       <div style="
@@ -137,24 +143,20 @@ const NaverMap = () => {
     `;
   };
 
-  /**
-   * 이전에 생성된 모든 마커를 지도에서 제거
-   */
   const clearMarkers = () => {
     markers.current.forEach((marker) => marker.setMap(null));
     markers.current = [];
+    // 마커가 사라지면 선택 상태도 초기화
+    selectedMarkerRef.current = null;
+    selectedMarkerDataRef.current = null;
   };
 
-  /**
-   * 지도 상태(줌, 위치)가 변경될 때마다 API를 호출하여 마커를 다시 생성
-   */
   const fetchAndDrawMarkers = async () => {
     if (!mapInstance.current) return;
 
     const map = mapInstance.current;
     const rawBounds = map.getBounds();
 
-    // NEW: 타입 가드 + 숫자 전용 API 사용 (south/north/west/east)
     if (!(rawBounds instanceof naver.maps.LatLngBounds)) return;
 
     const zoom = map.getZoom();
@@ -170,10 +172,10 @@ const NaverMap = () => {
 
     try {
       const response = await getMapData(mapBounds);
-      clearMarkers(); // 기존 마커 제거
+      clearMarkers();
 
+      // 1. 개별 매장 레벨 (기존 유지)
       if (level === 'restaurant') {
-        // 개별 매장 마커 생성
         const restaurantData = response.data as RestaurantPoint[];
         restaurantData.forEach((item) => {
           const marker = new window.naver.maps.Marker({
@@ -181,64 +183,59 @@ const NaverMap = () => {
             map: map,
             icon: {
               content: createRestaurantMarkerHtml(item.price),
-              anchor: new window.naver.maps.Point(30, 15), // 마커의 기준점 조정
+              anchor: new window.naver.maps.Point(30, 15),
             },
           });
 
+          // 개별 매장은 클릭 시 상세 페이지 이동
           naver.maps.Event.addListener(marker, 'click', () => {
             navigate(`/detail-info/${item.restaurantId}`);
           });
 
           markers.current.push(marker);
         });
-      } else if (level === 'dong') {
-        // NEW: 동 단위로 그룹핑하여 동의 중심에 클러스터 마커 여러 개 생성
+      }
+      // 2. 동 단위 클러스터 (동일 로직 적용)
+      else if (level === 'dong') {
         const clusterData = response.data as ClusterPoint[];
-        console.log(clusterData.map((d) => d.restaurantId)); // 주소 배열 확인용
-
         const dongClusters = groupByDong(clusterData);
 
-        dongClusters.forEach(({ name, count, centerLat, centerLon, restaurantIds }) => {
+        dongClusters.forEach(({ name, count, centerLat, centerLon }) => {
           const size = 35 + count * 1.5;
+
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
             clickable: true,
+            title: name,
             icon: {
-              content: createClusterMarkerHtml(count), // 라벨: 동 이름
+              content: createClusterMarkerHtml(count, name, false),
               anchor: new window.naver.maps.Point(size / 2, size / 2),
             },
           });
 
-          // 선택: 클릭 시 해당 동으로 살짝 확대/이동
+          // [공통] 클릭 이벤트 핸들러
           naver.maps.Event.addListener(marker, 'click', () => {
-            console.log('dong marker clicked', { name, restaurantIds });
-            navigate('/corkagemap/list', {
-              state: { level: 'dong' as MapLevel, areaName: name, restaurantIds },
-            });
+            handleClusterMarkerClick(marker, { count, name, size });
           });
 
           markers.current.push(marker);
         });
-      } else {
-        // 기존: 시군구/시도는 전체 묶음 1개만
+      }
+      // 3. 시/도, 시/군/구 레벨 (동일 로직 적용)
+      else {
         const clusterData = response.data as ClusterPoint[];
+
         if (clusterData.length > 0) {
+          // 데이터들의 중심 좌표 계산
           const centerLat =
             clusterData.reduce((acc, cur) => acc + cur.latitude, 0) / clusterData.length;
           const centerLon =
             clusterData.reduce((acc, cur) => acc + cur.longitude, 0) / clusterData.length;
-          const ids = clusterData.map((d) => d.restaurantId);
-          const marker = new window.naver.maps.Marker({
-            position: new window.naver.maps.LatLng(centerLat, centerLon),
-            map: map,
-            icon: {
-              content: createClusterMarkerHtml(clusterData.length),
-              anchor: new window.naver.maps.Point(15, 15), // 마커의 기준점 조정
-            },
-          });
+          const count = clusterData.length;
+          const size = 35 + count * 1.5;
 
-          // 간단 파싱: 주소에서 시/도 or 구/군 이름 하나 뽑기 (첫 항목 기준)
+          // 지역 이름 추출 (라벨용)
           const sample = clusterData[0].address || '';
           const areaName =
             level === 'sigungu'
@@ -246,10 +243,20 @@ const NaverMap = () => {
               : (sample.match(/([가-힣]+(?:특별시|광역시|특별자치시|특별자치도|도))/)?.[1] ??
                 '선택 지역');
 
+          const marker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(centerLat, centerLon),
+            map: map,
+            clickable: true,
+            title: areaName,
+            icon: {
+              content: createClusterMarkerHtml(count, areaName, false),
+              anchor: new window.naver.maps.Point(15, 15), // 기본 앵커
+            },
+          });
+
+          // [공통] 클릭 이벤트 핸들러 (동 레벨과 동일하게 동작)
           naver.maps.Event.addListener(marker, 'click', () => {
-            navigate('/corkagemap/list', {
-              state: { level, areaName, restaurantIds: ids },
-            });
+            handleClusterMarkerClick(marker, { count, name: areaName, size });
           });
 
           markers.current.push(marker);
@@ -260,18 +267,57 @@ const NaverMap = () => {
     }
   };
 
-  // 컴포넌트가 처음 마운트될 때 지도를 초기화
+  /**
+   * [Refactor] 클러스터 마커 클릭 시 실행되는 공통 로직
+   * - 이전 마커 복구
+   * - 현재 마커 스타일 변경
+   * - 데이터 저장
+   * - 부모 이벤트 호출
+   */
+  const handleClusterMarkerClick = (
+    marker: naver.maps.Marker,
+    data: { count: number; name: string; size: number }
+  ) => {
+    // 1. 이전에 선택된 마커가 있다면 -> 저장해둔 데이터(Ref)를 이용해 원래대로 복구
+    if (selectedMarkerRef.current && selectedMarkerDataRef.current) {
+      const prevMarker = selectedMarkerRef.current;
+      const prevData = selectedMarkerDataRef.current;
+
+      // 현재 누른 것과 다른 마커라면 복구 실행
+      if (prevMarker !== marker) {
+        prevMarker.setIcon({
+          content: createClusterMarkerHtml(prevData.count, prevData.name, false),
+          anchor: new window.naver.maps.Point(prevData.size / 2, prevData.size / 2),
+        });
+      }
+    }
+
+    // 2. 현재 누른 마커 스타일 변경 (True)
+    marker.setIcon({
+      content: createClusterMarkerHtml(data.count, data.name, true),
+      anchor: new window.naver.maps.Point(data.size / 2, data.size / 2),
+    });
+
+    // 3. 현재 마커와 데이터를 Ref에 저장 (다음 클릭 때 복구용)
+    selectedMarkerRef.current = marker;
+    selectedMarkerDataRef.current = data;
+
+    // 4. 부모 컴포넌트(CorkageMap)에 알림 -> 바텀시트 오픈
+    if (onClusterClick) {
+      onClusterClick();
+    }
+  };
+
   useEffect(() => {
     if (!window.naver || !mapRef.current) return;
 
     const center = new window.naver.maps.LatLng(37.543654, 127.070138);
 
-    // 지도 인스턴스 생성
     const map = new window.naver.maps.Map(mapRef.current, {
       center: center,
-      zoom: 17, // 초기 줌 레벨을 'restaurant'으로 설정
-      minZoom: 8, // 최소 줌 레벨
-      maxZoom: 20, // 최대 줌 레벨
+      zoom: 17,
+      minZoom: 8,
+      maxZoom: 20,
       scaleControl: false,
       logoControl: false,
       mapDataControl: false,
@@ -281,22 +327,19 @@ const NaverMap = () => {
 
     mapInstance.current = map;
 
-    // 지도 로드 완료 후 첫 데이터 로딩
     naver.maps.Event.once(map, 'init', () => {
       fetchAndDrawMarkers();
     });
 
-    // 지도 드래그가 끝나거나 줌이 변경될 때마다 마커를 다시 그리도록 이벤트 리스너를 등록
     naver.maps.Event.addListener(map, 'dragend', fetchAndDrawMarkers);
     naver.maps.Event.addListener(map, 'zoom_changed', fetchAndDrawMarkers);
 
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
     return () => {
       if (map) {
         naver.maps.Event.clearInstanceListeners(map);
       }
     };
-  }, []); // 의존성 배열 추가
+  }, []);
 
   return <div ref={mapRef} id="map" className="h-[100vh] w-full" />;
 };
