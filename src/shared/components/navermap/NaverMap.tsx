@@ -64,7 +64,7 @@ const groupByDong = (points: ClusterPoint[]) => {
 };
 
 interface NaverMapProps {
-  onClusterClick?: () => void;
+  onClusterClick?: (name: string) => void;
 }
 
 const NaverMap = ({ onClusterClick }: NaverMapProps) => {
@@ -304,7 +304,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
 
     // 4. 부모 컴포넌트(CorkageMap)에 알림 -> 바텀시트 오픈
     if (onClusterClick) {
-      onClusterClick();
+      onClusterClick(data.name);
     }
   };
 
