@@ -55,8 +55,11 @@ const CorkageMap = () => {
     // setIsActive(true);
   };
 
+  const headerHeightPx = 96;
+  const headerVh =
+    typeof window !== 'undefined' ? (headerHeightPx / window.innerHeight) * 100 : 11.5;
   // MyStore 뷰일 때 topSnapVh는 19.8, List일 땐 17.8, 근데 이게 처음에 BottomSheet가 마운트될때 이미 17.8로 마운트되서 바뀌질 않음
-  const currentTopSnapVh = sheetView === 'store' ? 17.8 : 17.8;
+  const currentTopSnapVh = sheetView === 'multipin' ? headerVh : 17.8;
   // [편의용] 멀티핀 뷰인지 확인하는 변수
   const isMultipinView = sheetView === 'multipin';
 

@@ -67,9 +67,10 @@ const BottomSheet = ({
         HIDDEN: vhToPx(SNAP_POINTS.HIDDEN),
       });
     };
+    calculateSnapPx(); // 즉시 실행으로 반영
     window.addEventListener('resize', calculateSnapPx);
     return () => window.removeEventListener('resize', calculateSnapPx);
-  }, []);
+  }, [topSnapVh]);
 
   //배경 오버레이 투명도를 y값에 따라 실시간으로 변경
   const opacity = useTransform(y, [snapPx.TOP, snapPx.MID], [0.5, 0]);
