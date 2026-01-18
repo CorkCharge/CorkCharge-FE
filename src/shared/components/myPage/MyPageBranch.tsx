@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useMyPageStore from '@/shared/store/useMyPageStore';
-import useFooterPropsStore from '@/shared/store/useFooterProps';
 import useAuthStore from '@/shared/store/useAuthStore';
 import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
@@ -12,8 +11,6 @@ import { ControlLists, ControlItem } from './ControlList';
 import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
 import plus from '@/shared/assets/images/plus.png';
-import shakehand from '@/shared/assets/images/shakehand.png';
-import check from '@/shared/assets/images/cork-check.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
 
 const renderReviews = (reviews: Review[]) =>
@@ -59,7 +56,6 @@ export const LoggedInMyPage = () => {
   const navigate = useNavigate();
 
   const { myProfile, setMyProfile } = useMyPageStore();
-  const setFooterProps = useFooterPropsStore((s) => s.setFooterProps);
 
   useEffect(() => {
     if (myProfile.email) return;
@@ -71,11 +67,6 @@ export const LoggedInMyPage = () => {
       })
       .catch((e) => console.error(e));
   }, [myProfile.email, setMyProfile]);
-
-  const gotoReserVate = () => {
-    navigate('/reservate');
-    setFooterProps(2);
-  };
 
   const enrollCorkage = () => {
     apiClient
@@ -151,23 +142,6 @@ export const LoggedInMyPage = () => {
             </div>
           </>
         )}
-      </div>
-
-      <div className="flex h-20 w-full justify-center gap-3">
-        <div
-          className="flex h-full flex-1 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]"
-          onClick={() => navigate('/doit')}
-        >
-          <img src={shakehand} className="size-[66px]" />
-          <span className="font-medium">해주세요</span>
-        </div>
-        <div
-          className="flex h-full flex-1 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]"
-          onClick={gotoReserVate}
-        >
-          <img src={check} className="size-[36px]" />
-          <span className="font-medium">나의 예약</span>
-        </div>
       </div>
 
       <div className="relative mb-10 mt-10">
