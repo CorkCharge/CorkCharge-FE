@@ -21,14 +21,17 @@ export const getMapData = async (params: MapParams) => {
   return response.data;
 };
 
-export const getClusterList = async (restaurantIds: number[]): Promise<ClusterListResponse> => {
+export const getClusterList = async (
+  restaurantIds: number[],
+  sort?: string
+): Promise<ClusterListResponse> => {
   console.log('[getClusterList] request 요청형식', {
     url: '/restaurants/cluster/list',
-    body: { restaurantIds },
+    body: { restaurantIds, sort },
   });
   const response = await apiClient.post<ApiResponse<ClusterListResponse>>(
     '/restaurants/cluster/list',
-    { restaurantIds }
+    { restaurantIds, sort }
   );
   console.log('[getClusterList] response는 이렇게 옵니다', response.status, response.data);
   return response.data.data;
