@@ -3,7 +3,7 @@ import NotSave from './notsave.svg'; // 필요시 사용
 import Share from './share.svg';
 import Star from '../../assets/star.svg';
 import DummyFood from './dummyFood.svg';
-
+import { useNavigate } from 'react-router-dom';
 // [수정] API 데이터 타입에 맞춰 Props 인터페이스 정의
 interface StoreCardProps {
   resId: number;
@@ -16,7 +16,6 @@ interface StoreCardProps {
   corkageOptions: string[];
   imageUrls: string[];
   openingHours: string;
-  onClick: () => void; // 카드 클릭 시 상세 이동
 }
 
 const StoreCard = ({
@@ -29,7 +28,6 @@ const StoreCard = ({
   corkageOptions,
   imageUrls,
   openingHours,
-  onClick,
 }: StoreCardProps) => {
   // 이미지 로드 에러 시 처리를 위한 핸들러
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -42,9 +40,12 @@ const StoreCard = ({
     console.log(`${action} 버튼 클릭: ${resId}`);
     // 추후 스크랩/공유 로직 연결
   };
-
+  const navigate = useNavigate();
   return (
-    <div className="flex w-full flex-col bg-white" onClick={onClick}>
+    <div
+      className="flex w-full flex-col bg-white"
+      onClick={() => navigate(`/detail-info/${resId}`)}
+    >
       {/* 1. 상단 정보 영역 (이름, 아이콘) */}
       <div className="relative flex w-full items-start justify-between pl-[17px]">
         {/* 식당 이름 */}

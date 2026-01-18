@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getClusterList } from '@/shared/apis/map/mapApi';
 import StoreCardInMultiPinList from '../../../shared/components/storecard/StoreCardInMultiPinList';
 import V from '../mystore/v.svg';
@@ -16,7 +15,6 @@ const SORT_MAP: Record<string, string> = {
 };
 
 const MultipinList = ({ restaurantIds }: MultipinListProps) => {
-  const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState<ClusterRestaurant[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState('가격 낮은 순');
@@ -147,7 +145,6 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
               corkageOptions={r.corkageOptions}
               imageUrls={r.imageUrls}
               openingHours={r.openingHours}
-              onClick={() => navigate(`/detail-info/${r.restaurantId}`)}
             />
           ))
         ) : (
