@@ -16,6 +16,7 @@ const CorkageMap = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [selectedClusterIds, setSelectedClusterIds] = useState<number[]>([]);
 
   // 선택된 클러스터 지역명을 저장할 State
   const [selectedAreaName, setSelectedAreaName] = useState<string>('');
@@ -45,8 +46,9 @@ const CorkageMap = () => {
   };
 
   // NaverMap에서 클러스터 마커 클릭 시 호출될 함수
-  const handleClusterClick = (name: string) => {
+  const handleClusterClick = (name: string, ids: number[]) => {
     setSelectedAreaName(name); // 지역명 저장
+    setSelectedClusterIds(ids);
     // 1. 바텀시트 뷰를 멀티핀 리스트로 변경
     setSheetView('multipin');
     // 2. 바텀시트 열기
@@ -128,7 +130,7 @@ const CorkageMap = () => {
           <List myGroups={myGroups} setMyGroups={setMyGroups} onSelectGroup={handleGroupSelect} />
         )}
         {sheetView === 'store' && <MyStore group={selectedGroup} />}
-        {sheetView === 'multipin' && <MultipinList />}
+        {sheetView === 'multipin' && <MultipinList restaurantIds={selectedClusterIds} />}
       </BottomSheet>
     </main>
   );

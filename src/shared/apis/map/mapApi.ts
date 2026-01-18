@@ -4,7 +4,7 @@ import type {
   ClusterPoint,
   RestaurantPoint,
   MapParams,
-  ClusterListItem,
+  ClusterListResponse,
 } from '@/shared/types/map';
 
 /**
@@ -21,15 +21,15 @@ export const getMapData = async (params: MapParams) => {
   return response.data;
 };
 
-export const getClusterList = async (restaurantIds: number[]) => {
+export const getClusterList = async (restaurantIds: number[]): Promise<ClusterListResponse> => {
   console.log('[getClusterList] request 요청형식', {
     url: '/restaurants/cluster/list',
     body: { restaurantIds },
   });
-  const response = await apiClient.post<ApiResponse<ClusterListItem[]>>(
+  const response = await apiClient.post<ApiResponse<ClusterListResponse>>(
     '/restaurants/cluster/list',
     { restaurantIds }
   );
-  console.log('[getClusterList] response', response.status, response.data);
-  return response.data;
+  console.log('[getClusterList] response는 이렇게 옵니다', response.status, response.data);
+  return response.data.data;
 };

@@ -64,7 +64,7 @@ const groupByDong = (points: ClusterPoint[]) => {
 };
 
 interface NaverMapProps {
-  onClusterClick?: (name: string) => void;
+  onClusterClick?: (name: string, restaurantIds: number[]) => void;
 }
 
 const NaverMap = ({ onClusterClick }: NaverMapProps) => {
@@ -200,7 +200,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
         const clusterData = response.data as ClusterPoint[];
         const dongClusters = groupByDong(clusterData);
 
-        dongClusters.forEach(({ name, count, centerLat, centerLon }) => {
+        dongClusters.forEach(({ name, count, centerLat, centerLon, restaurantIds }) => {
           const size = 35 + count * 1.5;
 
           const marker = new window.naver.maps.Marker({
@@ -216,7 +216,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
 
           // [공통] 클릭 이벤트 핸들러
           naver.maps.Event.addListener(marker, 'click', () => {
-            handleClusterMarkerClick(marker, { count, name, size });
+            handleClusterMarkerClick(marker, { count, name, size }, restaurantIds);
           });
 
           markers.current.push(marker);
@@ -243,6 +243,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
               : (sample.match(/([가-힣]+(?:특별시|광역시|특별자치시|특별자치도|도))/)?.[1] ??
                 '선택 지역');
 
+          const restaurantIds = clusterData.map((d) => d.restaurantId);
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
@@ -256,7 +257,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
 
           // [공통] 클릭 이벤트 핸들러 (동 레벨과 동일하게 동작)
           naver.maps.Event.addListener(marker, 'click', () => {
-            handleClusterMarkerClick(marker, { count, name: areaName, size });
+            handleClusterMarkerClick(marker, { count, name: areaName, size }, restaurantIds);
           });
 
           markers.current.push(marker);
@@ -276,7 +277,8 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
    */
   const handleClusterMarkerClick = (
     marker: naver.maps.Marker,
-    data: { count: number; name: string; size: number }
+    data: { count: number; name: string; size: number },
+    restaurantIds: number[]
   ) => {
     // 1. 이전에 선택된 마커가 있다면 -> 저장해둔 데이터(Ref)를 이용해 원래대로 복구
     if (selectedMarkerRef.current && selectedMarkerDataRef.current) {
@@ -304,7 +306,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
 
     // 4. 부모 컴포넌트(CorkageMap)에 알림 -> 바텀시트 오픈
     if (onClusterClick) {
-      onClusterClick(data.name);
+      onClusterClick(data.name, restaurantIds);
     }
   };
 
