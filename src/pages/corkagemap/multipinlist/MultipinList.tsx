@@ -9,6 +9,11 @@ interface MultipinListProps {
   restaurantIds: number[];
 }
 const SORT_OPTIONS = ['가격 낮은 순', '리뷰 많은 순', '리뷰 높은 순'];
+const SORT_MAP: Record<string, string> = {
+  '가격 낮은 순': 'PRICE_ASC',
+  '리뷰 많은 순': 'REVIEW_COUNT_DESC',
+  '리뷰 높은 순': 'RATING_DESC',
+};
 
 const MultipinList = ({ restaurantIds }: MultipinListProps) => {
   const navigate = useNavigate();
@@ -31,10 +36,16 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
   }, []);
 
   const handleSortClick = (option: string) => {
+    // 1. 성능 최적화: 이미 선택된 옵션을 다시 누르면 아무것도 안 함 (리렌더링/API요청 방지)
+    if (selectedSort === option) {
+      setIsOpen(false);
+      return;
+    }
+
+    // 2. 상태 변경 -> 이 변경이 아래 useEffect를 트리거함
     setSelectedSort(option);
     setIsOpen(false);
-    // 추후 여기에 실제 정렬 로직(restaurants state 정렬) 추가 가능
-    console.log(`정렬 변경: ${option}`);
+    console.log(`정렬 변경: ${option} -> API Key: ${SORT_MAP[option]}`);
   };
 
   useEffect(() => {
@@ -42,10 +53,11 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
 
     const fetchList = async () => {
       try {
-        console.log('[API 요청 시작] 전달받은 IDs:', restaurantIds);
+        const sortKey = SORT_MAP[selectedSort];
+        console.log(`[API 요청 시작] IDs: ${restaurantIds.length}개, Sort: ${sortKey}`);
 
         // mapApi.ts에서 데이터 알맹이(ClusterListResponse)를 리턴하므로 바로 사용 가능
-        const data = await getClusterList(restaurantIds);
+        const data = await getClusterList(restaurantIds, sortKey);
         console.log('[API 응답 도착] 서버 데이터:', data);
         if (data && data.restaurants) {
           console.log('[State 설정] 목록 개수:', data.restaurants.length);
@@ -59,7 +71,7 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
     };
 
     fetchList();
-  }, [restaurantIds]);
+  }, [restaurantIds, selectedSort]);
 
   return (
     // [수정] 전체를 감싸는 하나의 부모 div 안에 내용을 배치합니다.
