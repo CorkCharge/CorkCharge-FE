@@ -151,29 +151,33 @@ const BottomSheet = ({
       <motion.div
         drag="y"
         onDragEnd={onDragEnd}
-        // [수정] animate, transition, variants 대신 style={{ y }} 사용
-        // y값이 motionValue이므로 드래그 시 실시간으로 반영됨
         style={{
           y,
-          height: `calc(100vh - ${topSnapVh}vh)`, // 최대 높이
-          touchAction: 'none', // 모바일에서 페이지 스크롤 방지
+          height: `calc(100vh - ${topSnapVh}vh)`,
+          touchAction: 'none',
         }}
-        // [수정] 드래그 경계를 최대(top)와 최소(bottom)로 설정
         dragConstraints={{
           top: snapPx.TOP,
           bottom: snapPx.MIN,
         }}
-        // [수정] 드래그 탄성을 0으로 설정하여 경계에서 튕기지 않게 함
         dragElastic={{ top: 0, bottom: 0 }}
-        className="fixed left-0 right-0 z-[101] flex w-full flex-col rounded-t-[20px] bg-white shadow-lg"
+        // [수정 1] currentSnap이 'TOP'일 때 rounded-none 적용, 아닐 땐 rounded-t-[20px]
+        // transition-all duration-300을 추가하여 부드럽게 변하도록 함
+        className={`fixed left-0 right-0 z-[101] flex w-full flex-col bg-white shadow-lg transition-[border-radius] duration-300 ${
+          currentSnap === 'TOP' ? 'rounded-none' : 'rounded-t-[20px]'
+        }`}
       >
-        {/* 드래그 핸들 (회색 바) */}
-        <div className="flex-shrink-0 cursor-grab py-4 active:cursor-grabbing">
+        {/* [수정 2] 드래그 핸들 숨김 처리 */}
+        {/* TOP일 때는 높이(h), 패딩(py), 투명도(opacity)를 0으로 만들어 숨김 */}
+        <div
+          className={`flex-shrink-0 cursor-grab transition-all duration-300 active:cursor-grabbing ${
+            currentSnap === 'TOP' ? 'pointer-events-none h-0 py-0 opacity-0' : 'py-4 opacity-100'
+          }`}
+        >
           <div className="mx-auto h-[5px] w-[66px] rounded-full bg-[#D9D9D9]" />
         </div>
 
         {/* 바텀시트 내용물 */}
-        {/* [수정] 스크롤 충돌 방지를 위해 overflow-y를 동적으로 제어 */}
         <div
           className="flex-1 px-6 pb-6"
           style={{
