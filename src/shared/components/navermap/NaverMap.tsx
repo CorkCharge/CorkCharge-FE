@@ -64,7 +64,7 @@ const groupByDong = (points: ClusterPoint[]) => {
 };
 
 interface NaverMapProps {
-  onClusterClick?: (name: string, restaurantIds: number[]) => void;
+  onClusterClick?: (_name: string, _restaurantIds: number[]) => void;
 }
 
 const NaverMap = ({ onClusterClick }: NaverMapProps) => {
@@ -90,11 +90,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
    * 클러스터 마커 HTML 생성
    * isSelected가 true일 때 그라데이션 배경 적용
    */
-  const createClusterMarkerHtml = (
-    count: number,
-    label?: string,
-    isSelected: boolean = false
-  ): string => {
+  const createClusterMarkerHtml = (count: number, isSelected: boolean = false): string => {
     const size = 35 + count * 1.5;
 
     const activeBackground = `
@@ -209,7 +205,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
             clickable: true,
             title: name,
             icon: {
-              content: createClusterMarkerHtml(count, name, false),
+              content: createClusterMarkerHtml(count, false),
               anchor: new window.naver.maps.Point(size / 2, size / 2),
             },
           });
@@ -250,8 +246,8 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
             clickable: true,
             title: areaName,
             icon: {
-              content: createClusterMarkerHtml(count, areaName, false),
-              anchor: new window.naver.maps.Point(15, 15), // 기본 앵커
+              content: createClusterMarkerHtml(count, false),
+              anchor: new window.naver.maps.Point(size / 2, size / 2), // 기본 앵커
             },
           });
 
@@ -288,7 +284,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
       // 현재 누른 것과 다른 마커라면 복구 실행
       if (prevMarker !== marker) {
         prevMarker.setIcon({
-          content: createClusterMarkerHtml(prevData.count, prevData.name, false),
+          content: createClusterMarkerHtml(prevData.count, false),
           anchor: new window.naver.maps.Point(prevData.size / 2, prevData.size / 2),
         });
       }
@@ -296,7 +292,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
 
     // 2. 현재 누른 마커 스타일 변경 (True)
     marker.setIcon({
-      content: createClusterMarkerHtml(data.count, data.name, true),
+      content: createClusterMarkerHtml(data.count, true),
       anchor: new window.naver.maps.Point(data.size / 2, data.size / 2),
     });
 
