@@ -56,7 +56,7 @@ export interface ClusterRestaurant {
   scrap: boolean;
   corkagePrice: string;
   corkageOptions: string[];
-  mainImageUrls: string[];
+  imageUrls: string[];
   openingHours: string;
 }
 

@@ -46,8 +46,8 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
           {restaurants.length}개의 매장
         </span>
         {/* 오른쪽: 드롭다운 */}
-        <div className="flex h-[40px] w-[89.2px] cursor-pointer items-center justify-center gap-[2px] rounded-[20px] bg-[#F3F3F6] px-[8px] py-[6px]">
-          <span className="text-[12px] font-[500] text-[#80818B]">리뷰많은순</span>
+        <div className="flex h-[40px] max-w-[100px] cursor-pointer items-center justify-center gap-[2px] rounded-[20px] bg-[#F3F3F6] px-[8px] py-[6px]">
+          <span className="text-[12px] font-[500] text-[#80818B]">가격 낮은 순</span>
           <img src={V} alt="dropdown" className="mt-[1px]" />
         </div>
       </div>
@@ -67,7 +67,7 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
               scrap={r.scrap}
               corkagePrice={r.corkagePrice}
               corkageOptions={r.corkageOptions}
-              mainImageUrls={r.mainImageUrls}
+              imageUrls={r.imageUrls}
               openingHours={r.openingHours}
               onClick={() => navigate(`/detail-info/${r.restaurantId}`)}
             />

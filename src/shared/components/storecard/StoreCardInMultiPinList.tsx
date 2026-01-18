@@ -14,7 +14,7 @@ interface StoreCardProps {
   scrap: boolean;
   corkagePrice: string;
   corkageOptions: string[];
-  mainImageUrls: string[];
+  imageUrls: string[];
   openingHours: string;
   onClick: () => void; // 카드 클릭 시 상세 이동
 }
@@ -27,7 +27,7 @@ const StoreCard = ({
   scrap,
   corkagePrice,
   corkageOptions,
-  mainImageUrls,
+  imageUrls,
   openingHours,
   onClick,
 }: StoreCardProps) => {
@@ -84,8 +84,8 @@ const StoreCard = ({
 
       {/* 3. 음식 이미지 리스트 => mainImageUrls */}
       <div className="mt-[9.5px] flex w-full gap-[5px] overflow-hidden pl-[17px]">
-        {mainImageUrls && mainImageUrls.length > 0 ? (
-          mainImageUrls
+        {imageUrls && imageUrls.length > 0 ? (
+          imageUrls
             .slice(0, 4)
             .map((url, index) => (
               <img
