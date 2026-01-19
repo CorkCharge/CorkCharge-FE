@@ -5,13 +5,12 @@ import Curation from '../../shared/components/Curation';
 import Tip from '../../shared/components/Tip';
 import TopBar from '../../shared/components/SearchBar';
 import { OverLayImage } from '@/shared/components/common/OverLayImage';
-// import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
-import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
-import type { Selected } from '@/shared/components/home/type';
-// import {
-//   fetchHomeRestaurant,
-//   type HomeRestaruantInfo,
-// } from '@/shared/apis/restaurant/homeRestaurantApi';
+import { fetchTipList, type TipData } from '@/shared/apis/tip/tipListApi';
+import type { Selected } from '@/shared/components/home/home.types';
+import ReviewItem from '@/shared/components/home/ReviewItem';
+import StoresInfo from '@/shared/components/home/StoresInfo';
+import type { ReviewResponse } from '@/shared/apis/review/review.type';
+import { fetchHomeReviews } from '@/shared/apis/review/review.api';
 
 import smallGlass from '../../shared/assets/smallGlass.svg';
 import bell from '@/shared/assets/bell.svg';
@@ -19,18 +18,14 @@ import bannerCover from '@/shared/components/home/assets/banner-cover.png';
 import newStore from '@/shared/components/home/assets/new-store.png';
 import stars from '@/shared/components/home/assets/stars.png';
 import arrow from '@/shared/assets/right_arrow.svg';
-import ReviewItem from '@/shared/components/home/ReviewItem';
-import StoresInfo from '@/shared/components/home/StoresInfo';
 
 const StoreList = () => {
   const navigate = useNavigate();
 
   const [storeSelected, setStoreSelected] = useState<boolean>(true);
-  //홈화면 가게 정보
-  // const [corkages, setCorkage] = useState<Corkage[]>([]);
-  // const [signature, setSignature] = useState<HomeRestaruantInfo>();
   const [selected, setSelected] = useState<Selected>('ALL');
-  const [tiplist, setTiplist] = useState<TipList[]>();
+  const [tiplist, setTiplist] = useState<TipData[]>([]);
+  const [reviewCards, setReviewCards] = useState<ReviewResponse[]>([]);
 
   const handleStoreclick = () => {
     setStoreSelected(true);
@@ -56,12 +51,18 @@ const StoreList = () => {
       }
     };
     fetchTipData();
+    getReviewCards();
   }, []);
 
-  const filtered =
-    selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
+  const getReviewCards = async () => {
+    const res = await fetchHomeReviews();
+    setReviewCards(res);
+  };
 
-  const renderReviewItem = () => [1, 2, 3, 4, 5, 6].map((_, idx) => <ReviewItem key={idx} />);
+  const filtered = selected === 'ALL' ? tiplist : tiplist.filter((t) => t.tipCategory === selected);
+
+  const renderReviewItem = () =>
+    reviewCards.map((review) => <ReviewItem key={review.reviewId} review={review} />);
 
   return (
     <div className="flex flex-col items-center bg-[rgba(255,255,255,0.8)]">

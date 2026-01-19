@@ -1,4 +1,5 @@
 import apiClient from '../apiClient';
+import type { TipData } from '../tip/tipListApi';
 
 export interface SavedTip {
   bookmarkId: number; //11,
@@ -13,12 +14,24 @@ export interface SavedTipResponse {
   success: boolean;
   code: number;
   message: string;
-  data: SavedTip[];
+  data: TipData[];
 }
 
-export const fetchSavedTip = async (): Promise<SavedTip[]> => {
+export const fetchSavedTip = async (): Promise<TipData[]> => {
   const response = await apiClient.get<SavedTipResponse>(`/bookmarks/tip`);
   console.log(response);
 
   return response.data.data;
+};
+
+// 리뷰, 팁, 매장 저장
+export const save = async (targetId: number, targetType: string) => {
+  const res = await apiClient.post('/bookmarks', { targetId, targetType });
+  return res.data;
+};
+
+// 리뷰 삭제
+export const deleteTip = async (targetId: number, targetType: string) => {
+  const res = await apiClient.delete('/bookmarks', { data: { targetId, targetType } });
+  return res;
 };

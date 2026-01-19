@@ -3,7 +3,7 @@ import PairingInfo from './PairingInfo';
 
 const PairingArticle = (restaurant: RestaurantInfo) => {
   return (
-    <div className="mx-4 mb-8 mt-4 h-auto rounded-b-lg shadow-2xl">
+    <div className="mb-8 mt-4 h-auto w-full rounded-b-lg shadow-2xl">
       <div className="flex h-[46px] items-center justify-center rounded-t-lg bg-gradient-to-r from-[#90212A]/65 to-[#DCDBE8] text-[18px] font-bold text-white">
         대표 메뉴 페어링
       </div>
