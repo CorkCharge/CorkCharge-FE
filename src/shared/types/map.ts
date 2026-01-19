@@ -46,12 +46,21 @@ export interface MapParams {
   lonMax: number;
 }
 
-export interface ClusterListItem {
+// [NEW] API 명세서의 'restaurants' 배열 안의 객체 구조
+export interface ClusterRestaurant {
   restaurantId: number;
-  name: string;
+  name: string; // JSON 명세에 따름
+  address: string;
   rating: number;
   reviewCount: number;
+  scrap: boolean;
   corkagePrice: string;
   corkageOptions: string[];
-  imageUrl: string | null;
+  imageUrls: string[];
+  openingHours: string;
+}
+
+// [NEW] getClusterList API의 'data' 필드 내부 구조
+export interface ClusterListResponse {
+  restaurants: ClusterRestaurant[];
 }

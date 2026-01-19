@@ -27,7 +27,6 @@ import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
 import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
-import RestaurantsList from '@/pages/corkagemap/RestaurantsList';
 import FilterResult from '@/pages/corkagemap/FilterResult';
 import Notification from '@/pages/notification/Notification';
 import Tip from '@/pages/home/Tip';
@@ -191,10 +190,6 @@ const router = createBrowserRouter([
       {
         path: 'my/toc',
         element: <Toc />,
-      },
-      {
-        path: 'corkagemap/list',
-        element: <RestaurantsList />,
       },
       {
         path: 'corkagemap/filter/result',
