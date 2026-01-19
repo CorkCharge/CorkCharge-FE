@@ -125,7 +125,12 @@ const CorkageMap = () => {
       )}
 
       {/* 바텀시트: 저장한 매장 or 멀티핀 리스트 */}
-      <BottomSheet isOpen={isSheetOpen} onClose={handleSheetClose} topSnapVh={currentTopSnapVh}>
+      <BottomSheet
+        isOpen={isSheetOpen}
+        onClose={handleSheetClose}
+        topSnapVh={currentTopSnapVh}
+        hideHandleOnTop={isMultipinView}
+      >
         {sheetView === 'list' && (
           <List myGroups={myGroups} setMyGroups={setMyGroups} onSelectGroup={handleGroupSelect} />
         )}

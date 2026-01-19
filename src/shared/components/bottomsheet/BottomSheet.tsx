@@ -30,6 +30,7 @@ interface BottomSheetProps {
   onClose: () => void;
   children: ReactNode;
   topSnapVh?: number; // 최대 높이(vh)를 prop으로 받기 (opt)
+  hideHandleOnTop?: boolean;
 }
 
 // vh를 px로 변환하는 헬퍼 함수
@@ -43,6 +44,7 @@ const BottomSheet = ({
   onClose,
   children,
   topSnapVh = SNAP_POINTS.DEFAULT_TOP,
+  hideHandleOnTop = false,
 }: BottomSheetProps) => {
   //y축 위치를 motionValue로 실시간 관리
   const y = useMotionValue(vhToPx(SNAP_POINTS.HIDDEN));
@@ -130,6 +132,8 @@ const BottomSheet = ({
       onClose(); // (useEffect[isOpen]이 y를 HIDDEN으로 애니메이션함)
     }
   };
+  // [계산] 현재 TOP 상태이고, hideHandleOnTop 옵션이 켜져있을 때만 숨김 처리
+  const shouldHideHandle = currentSnap === 'TOP' && hideHandleOnTop;
 
   return (
     <>
@@ -164,14 +168,16 @@ const BottomSheet = ({
         // [수정 1] currentSnap이 'TOP'일 때 rounded-none 적용, 아닐 땐 rounded-t-[20px]
         // transition-all duration-300을 추가하여 부드럽게 변하도록 함
         className={`fixed left-0 right-0 z-[101] flex w-full flex-col bg-white shadow-lg transition-[border-radius] duration-300 ${
-          currentSnap === 'TOP' ? 'rounded-none' : 'rounded-t-[20px]'
+          shouldHideHandle ? 'rounded-none' : 'rounded-t-[20px]'
         }`}
       >
         {/* [수정 2] 드래그 핸들 숨김 처리 */}
         {/* TOP일 때는 높이(h), 패딩(py), 투명도(opacity)를 0으로 만들어 숨김 */}
         <div
-          className={`flex-shrink-0 cursor-grab transition-all duration-300 active:cursor-grabbing ${
-            currentSnap === 'TOP' ? 'pointer-events-none h-0 py-0 opacity-0' : 'py-4 opacity-100'
+          className={`flex flex-shrink-0 items-center justify-center overflow-hidden transition-all duration-300 ease-in-out ${
+            shouldHideHandle
+              ? 'pointer-events-none h-0 opacity-0'
+              : 'h-[36px] cursor-grab opacity-100 active:cursor-grabbing'
           }`}
         >
           <div className="mx-auto h-[5px] w-[66px] rounded-full bg-[#D9D9D9]" />
