@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import type { TipList } from '@/shared/apis/tip/tipListApi';
+import TipDefaultImage from './TipDefaultImage';
 
 const TipPreview = ({ tipId, title, tipCategory, imageUrl }: TipList) => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const TipPreview = ({ tipId, title, tipCategory, imageUrl }: TipList) => {
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-transparent" />
         </>
       ) : (
-        <div className="h-full w-full bg-gray-500" />
+        <TipDefaultImage />
       )}
 
       <div className="absolute inset-x-0 bottom-0 z-[1] p-4">
