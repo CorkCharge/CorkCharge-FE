@@ -61,7 +61,8 @@ const StoreList = () => {
 
   const filtered = selected === 'ALL' ? tiplist : tiplist.filter((t) => t.tipCategory === selected);
 
-  const renderReviewItem = () => reviewCards.map((review) => <ReviewItem key={review.reviewId} />);
+  const renderReviewItem = () =>
+    reviewCards.map((review) => <ReviewItem key={review.reviewId} review={review} />);
 
   return (
     <div className="flex flex-col items-center bg-[rgba(255,255,255,0.8)]">

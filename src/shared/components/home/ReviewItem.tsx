@@ -1,40 +1,51 @@
+import type { ReviewResponse } from '@/shared/apis/review/review.type';
 import DefaultImage from '../common/DefaultImage';
 import { StarRate } from '../common/StarRate';
 
 import keep from '@/shared/assets/keep.svg';
 
-function ReviewItem() {
+function ReviewItem({ review }: { review: ReviewResponse }) {
   return (
     <div className="w-[172px] shrink-0 cursor-pointer rounded-2xl bg-[var(--gray-1)]">
       <div className="px-3 py-[10px]">
-        <span className="text-sm font-bold">성수 루메르도스</span>
+        <span className="text-sm font-bold">{review.restaurantName}</span>
         <div className="flex items-center">
-          <StarRate rate={4.2} spacing="3px" className="mr-1 h-[14px]" width="14" height="13" />
-          <span className="text-sm font-medium text-[var(--gray-8)]">4.2</span>
+          <StarRate
+            rate={review.rating}
+            spacing="3px"
+            className="mr-1 h-[14px]"
+            width="14"
+            height="13"
+          />
+          <span className="text-sm font-medium text-[var(--gray-8)]">{review.rating}</span>
         </div>
       </div>
 
-      <DefaultImage
-        hasLogo={true}
-        containerClassName="h-[172px]"
-        logoHeight="82px"
-        logoWidth="50px"
-        className="h-full"
-      />
+      {review.imageUrls.length === 0 ? (
+        <DefaultImage
+          hasLogo={true}
+          containerClassName="h-[172px]"
+          logoHeight="82px"
+          logoWidth="50px"
+          className="h-full"
+        />
+      ) : (
+        <img src={review.imageUrls[0]} className="size-[172px]" />
+      )}
 
       <div className="px-[9.5px] py-2">
         <div className="flex justify-between text-[10px] font-medium">
-          <span className="text-[var(--gray-8)]">니콜라 테슬라</span>
-          <span>2025.01.01</span>
+          <span className="text-[var(--gray-8)]">{review.writer}</span>
+          <span>{review.createdAt.split('T')[0].replaceAll('-', '.')}</span>
         </div>
-        <p className="mt-1 text-xs font-medium">
-          몰트향과 완벽하게 어우러지는 조화로운 페어링입니다.
-        </p>
+        <p className="mt-1 text-xs font-medium">{review.content}</p>
         <div className="mt-1 flex items-center">
           <div className="mr-1 flex size-4 items-center justify-center rounded-full bg-[#e75257]">
             <img src={keep} className="h-[7px] w-[7px]" />
           </div>
-          <span className="text-[9px] font-medium text-[var(--gray-8)]">99+</span>
+          <span className="text-[9px] font-medium text-[var(--gray-8)]">
+            {review.bookmarkCount > 99 ? '99+' : review.bookmarkCount}
+          </span>
           <div className="ml-1 flex size-4 items-center justify-center rounded-full bg-white">
             <svg
               width="9"
