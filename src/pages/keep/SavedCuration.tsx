@@ -1,6 +1,6 @@
 import type { SavedTip } from '@/shared/apis/bookmark/tipApi';
 import Tip from '@/shared/components/Tip';
-import type { Selected } from '@/shared/components/home/type';
+import type { Selected } from '@/shared/components/home/home.types';
 import Curation from '@/shared/components/Curation';
 import { useState } from 'react';
 

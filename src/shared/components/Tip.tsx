@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-import type { Selected, tipCategory } from '@/shared/components/home/type';
+import type { Selected, tipCategory } from '@/shared/components/home/home.types';
 import './tip.css';
 
 type TipProps = {
   selected: Selected;
-  setSelected: (v: Selected) => void;
+  setSelected: (_: Selected) => void;
 };
 
 const Tip = ({ selected, setSelected }: TipProps) => {

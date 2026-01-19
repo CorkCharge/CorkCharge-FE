@@ -22,3 +22,15 @@ export const fetchSavedTip = async (): Promise<SavedTip[]> => {
 
   return response.data.data;
 };
+
+// 리뷰, 팁, 매장 저장
+export const save = async (targetId: number, targetType: string) => {
+  const res = await apiClient.post('/bookmarks', { targetId, targetType });
+  return res.data;
+};
+
+// 리뷰 삭제
+export const deleteTip = async (targetId: number, targetType: string) => {
+  const res = await apiClient.delete('/bookmarks', { data: { targetId, targetType } });
+  return res;
+};

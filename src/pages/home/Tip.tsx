@@ -9,6 +9,7 @@ import Modal from '@/shared/components/common/Modal';
 import whiteArrow from '../../shared/assets/TipImgs/whiteArrow.svg';
 import bookmarked from '@/shared/components/home/assets/bookmarked.svg';
 import keep from '@/shared/assets/keep.svg';
+import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
 
 // tipArticle/:id 페이지
 const Tip = () => {
@@ -40,49 +41,24 @@ const Tip = () => {
 
   //tip 저장
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
-  // const keepStore = async () => {
-  //   try {
-  //     const res = await bookmarkRequest({
-  //       targetId: tipId,
-  //       targetType: 'TIP',
-  //     });
-  //     console.log(res);
-  //     setIsOpen(true);
-  //   } catch (err) {
-  //     console.log('tip 저장실패: ', err);
-  //   }
-  // };
-
-  //tip 저장취소
-  // const deleteStore = async () => {
-  //   try {
-  //     const res = await deleteRequest({
-  //       targetId: tipId ?? 0,
-  //       targetType: 'TIP',
-  //     });
-  //     console.log('tip 저장 삭제성공: ', res);
-  //   } catch (err) {
-  //     console.log('tip 저장 삭제실패: ', err);
-  //   }
-  // };
 
   const [pending, setPending] = useState<boolean>(false);
   const onBookmarkClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (pending) return;
+    if (pending || !tip) return;
     setPending(true);
     try {
-      if (isBookmarked) {
-        // await deleteStore();
+      if (!isBookmarked) {
+        const res = await save(tip.tipId, 'TIP');
+        console.log(res);
         setIsBookmarked(false);
       } else {
-        // await keepStore();
-        // await deleteStore();
+        await deleteTip(tip.tipId, 'TIP');
         setIsBookmarked(true);
         setIsOpen(true);
       }
     } catch (err) {
-      console.log('북마크 토글 실패:', err);
+      console.log('북마크 토글 실패: ', err);
     } finally {
       setPending(false);
     }
@@ -91,23 +67,14 @@ const Tip = () => {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="relative w-full">
-        {tip ? (
+        {tip && (
           <TipArticle
-            tipId={tip?.tipId ?? 1}
-            title={tip?.title ?? ''}
-            content={tip?.content ?? ''}
-            tipCategory={tip?.tipCategory ?? ''}
-            imageUrls={tip?.imageUrls ?? []}
-            createdAt={tip?.createdAt ?? ''}
-          />
-        ) : (
-          <TipArticle
-            tipId={1}
-            title="삼겹살과 페어링하기 좋은 주류 추천"
-            tipCategory="페어링 큐레이션"
-            content="기름지고 고소한 삼겹살, 그냥 먹어도 맛있지만 잘 어울리는 술과 함께라면 그 맛은 두 배가 되죠. “소주만 먹기엔 뭔가 아쉽다…” 하셨던 분들께, 오늘은 삼겹살과 찰떡같이 어울리는 주류 조합을 소개해드립니다. 고기 한 점에 술 한 잔, 그 조화가 완벽해지는 순간을 위해 고른 추천 리스트"
-            imageUrls={[]}
-            createdAt=""
+            tipId={tip.tipId}
+            title={tip.title}
+            content={tip.content}
+            tipCategory={tip.tipCategory}
+            imageUrls={tip.imageUrls}
+            createdAt={tip.createdAt}
           />
         )}
         <div className="absolute top-0 w-full">

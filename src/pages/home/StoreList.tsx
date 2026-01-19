@@ -6,8 +6,8 @@ import Tip from '../../shared/components/Tip';
 import TopBar from '../../shared/components/SearchBar';
 import { OverLayImage } from '@/shared/components/common/OverLayImage';
 // import { type Corkage, fetchCorkageList } from '@/shared/apis/restaurant/corkageApi';
-import { fetchTipList, type TipList } from '@/shared/apis/tip/tipListApi';
-import type { Selected } from '@/shared/components/home/type';
+import { fetchTipList, type TipData } from '@/shared/apis/tip/tipListApi';
+import type { Selected } from '@/shared/components/home/home.types';
 // import {
 //   fetchHomeRestaurant,
 //   type HomeRestaruantInfo,
@@ -30,7 +30,7 @@ const StoreList = () => {
   // const [corkages, setCorkage] = useState<Corkage[]>([]);
   // const [signature, setSignature] = useState<HomeRestaruantInfo>();
   const [selected, setSelected] = useState<Selected>('ALL');
-  const [tiplist, setTiplist] = useState<TipList[]>();
+  const [tiplist, setTiplist] = useState<TipData[]>([]);
 
   const handleStoreclick = () => {
     setStoreSelected(true);
@@ -58,8 +58,7 @@ const StoreList = () => {
     fetchTipData();
   }, []);
 
-  const filtered =
-    selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
+  const filtered = selected === 'ALL' ? tiplist : tiplist.filter((t) => t.tipCategory === selected);
 
   const renderReviewItem = () => [1, 2, 3, 4, 5, 6].map((_, idx) => <ReviewItem key={idx} />);
 
