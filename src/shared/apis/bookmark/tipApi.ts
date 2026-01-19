@@ -1,4 +1,5 @@
 import apiClient from '../apiClient';
+import type { TipData } from '../tip/tipListApi';
 
 export interface SavedTip {
   bookmarkId: number; //11,
@@ -13,10 +14,10 @@ export interface SavedTipResponse {
   success: boolean;
   code: number;
   message: string;
-  data: SavedTip[];
+  data: TipData[];
 }
 
-export const fetchSavedTip = async (): Promise<SavedTip[]> => {
+export const fetchSavedTip = async (): Promise<TipData[]> => {
   const response = await apiClient.get<SavedTipResponse>(`/bookmarks/tip`);
   console.log(response);
 

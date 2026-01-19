@@ -1,11 +1,12 @@
-import type { SavedTip } from '@/shared/apis/bookmark/tipApi';
+// import type { SavedTip } from '@/shared/apis/bookmark/tipApi';
 import Tip from '@/shared/components/Tip';
 import type { Selected } from '@/shared/components/home/home.types';
 import Curation from '@/shared/components/Curation';
 import { useState } from 'react';
+import type { TipData } from '@/shared/apis/tip/tipListApi';
 
 interface CurationProps {
-  tiplist?: SavedTip[];
+  tiplist?: TipData[];
 }
 
 //이것도 저장한 Tip 이어야할걸?

@@ -1,11 +1,11 @@
-// import React from 'react'
 import StoreCard from '@/shared/components/StoreCard';
 import Review from './Review';
 import { useCallback, useEffect, useState } from 'react';
 import TopBar from '@/shared/components/TopBar';
 import { fetchSavedRestaurant, type SavedResto } from '@/shared/apis/bookmark/restaurantApi';
-import { fetchSavedTip, type SavedTip } from '@/shared/apis/bookmark/tipApi';
+import { fetchSavedTip } from '@/shared/apis/bookmark/tipApi';
 import SavedCuration from './SavedCuration';
+import type { TipData } from '@/shared/apis/tip/tipListApi';
 
 const Keep = () => {
   const [review, setReview] = useState<boolean>(true);
@@ -59,7 +59,7 @@ const Keep = () => {
   }, []);
 
   //fetchTipData (저장된 tip만)
-  const [savedTips, SetSavedTips] = useState<SavedTip[]>();
+  const [savedTips, SetSavedTips] = useState<TipData[]>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,7 +123,7 @@ const Keep = () => {
         </>
       ) : (
         <>
-          <SavedCuration tiplist={savedTips} />
+          <SavedCuration tiplist={savedTips} />{' '}
         </>
       )}
     </div>
