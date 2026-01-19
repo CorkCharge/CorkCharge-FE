@@ -189,6 +189,21 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
     selectedRestaurantRef.current = { marker, price };
   }, []);
 
+  // [추가] 빈 공간 클릭 시 선택 해제 핸들러
+  const handleMapClick = useCallback(() => {
+    const prev = selectedRestaurantRef.current;
+
+    // 선택된 식당 마커가 있다면 -> 원래대로 복구
+    if (prev) {
+      prev.marker.setIcon({
+        content: createRestaurantMarkerHtml(prev.price, false),
+        anchor: new window.naver.maps.Point(30, 15),
+      });
+      prev.marker.setZIndex(100);
+      selectedRestaurantRef.current = null; // 상태 초기화
+    }
+  }, []);
+
   // [3] handleClusterMarkerClick를 먼저 정의하고 useCallback으로 감쌉니다.
   // (이 함수가 아래 fetchAndDrawMarkers에서 사용되기 때문입니다)
   const handleClusterMarkerClick = useCallback(
@@ -377,12 +392,16 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
       fetchAndDrawMarkers
     );
 
+    // [추가] 지도 빈 공간 클릭 리스너
+    const mapClickListener = naver.maps.Event.addListener(map, 'click', handleMapClick);
+
     // 3. Cleanup: 리스너 중복 방지
     return () => {
       naver.maps.Event.removeListener(dragEndListener);
       naver.maps.Event.removeListener(zoomChangedListener);
+      naver.maps.Event.removeListener(mapClickListener); // [추가] 해제
     };
-  }, [fetchAndDrawMarkers]);
+  }, [fetchAndDrawMarkers, handleMapClick]);
 
   return <div ref={mapRef} id="map" className="h-[100vh] w-full" />;
 };
