@@ -1,7 +1,8 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { getMapData } from '@/shared/apis/map/mapApi';
 import type { MapLevel, ClusterPoint, RestaurantPoint } from '@/shared/types/map';
+import Bottle from './bottle.svg';
 
 // [1] Ref에 사용할 데이터 타입 정의
 interface MarkerData {
@@ -95,7 +96,38 @@ const createClusterMarkerHtml = (count: number, isSelected: boolean = false): st
   `;
 };
 
-const createRestaurantMarkerHtml = (price: string): string => {
+const createRestaurantMarkerHtml = (price: string, isSelected: boolean = false): string => {
+  if (isSelected) {
+    // [선택됨] 물방울 + 병 + 가격
+    return `
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="
+          width: 72px; height: 72px;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          border: 2px solid #FFF;
+          background: radial-gradient(151% 149.45% at -10.81% 68.19%, #90212A 0%, #DCDBE8 70.67%);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 8px;
+          z-index: 1000;
+        ">
+          <img src="${Bottle}" style="width: 24px; height: 48px; transform: rotate(45deg);" alt="bottle" />
+        </div>
+        <div style="
+          padding: 8px 12px;
+          background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), 
+                      radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%);
+          color: white; font-size: 14px; font-weight: bold; border-radius: 20px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
+        ">
+          ${price}
+        </div>
+      </div>
+    `;
+  }
+
+  // [기본 상태] 단순 가격표
   return `
     <div style="
       padding: 12px; background-color: #90212A; color: white;
@@ -115,18 +147,47 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<naver.maps.Map | null>(null);
   const markers = useRef<naver.maps.Marker[]>([]);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   // [2] Ref에 타입 명시
   const selectedMarkerRef = useRef<naver.maps.Marker | null>(null);
   const selectedMarkerDataRef = useRef<MarkerData | null>(null);
+
+  // [추가] 개별 식당 마커용 Ref (선택된 마커와 가격만 저장)
+  const selectedRestaurantRef = useRef<{ marker: naver.maps.Marker; price: string } | null>(null);
 
   const clearMarkers = () => {
     markers.current.forEach((marker) => marker.setMap(null));
     markers.current = [];
     selectedMarkerRef.current = null;
     selectedMarkerDataRef.current = null;
+    selectedRestaurantRef.current = null;
   };
+
+  // [추가] 식당 마커 클릭 핸들러 (상태 관리 로직)
+  const handleRestaurantClick = useCallback((marker: naver.maps.Marker, price: string) => {
+    const prev = selectedRestaurantRef.current;
+
+    // 1. 이전에 선택된 게 있고, 지금 누른 게 아니라면 -> 원래대로 복구
+    if (prev && prev.marker !== marker) {
+      prev.marker.setIcon({
+        content: createRestaurantMarkerHtml(prev.price, false),
+        anchor: new window.naver.maps.Point(30, 15),
+      });
+      prev.marker.setZIndex(100);
+    }
+
+    // 2. 현재 누른 마커 -> 강조 스타일로 변경
+    marker.setIcon({
+      content: createRestaurantMarkerHtml(price, true),
+      // 물방울 꼬리가 지도 좌표에 맞도록 앵커 조정 (가로 72의 반, 세로 전체 + 마진)
+      anchor: new window.naver.maps.Point(36, 85),
+    });
+    marker.setZIndex(1000); // 맨 위로
+
+    // 3. 현재 상태 저장
+    selectedRestaurantRef.current = { marker, price };
+  }, []);
 
   // [3] handleClusterMarkerClick를 먼저 정의하고 useCallback으로 감쌉니다.
   // (이 함수가 아래 fetchAndDrawMarkers에서 사용되기 때문입니다)
@@ -199,8 +260,14 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
             },
           });
 
+          // [수정] 클릭 시 handleRestaurantClick 호출 (가격 정보만 넘김)
           naver.maps.Event.addListener(marker, 'click', () => {
-            navigate(`/detail-info/${item.restaurantId}`);
+            handleRestaurantClick(marker, item.price);
+            // navigate(`/detail-info/${item.restaurantId}`); // 필요하면 주석 해제
+          });
+
+          naver.maps.Event.addListener(marker, 'click', () => {
+            //navigate(`/detail-info/${item.restaurantId}`);
           });
 
           markers.current.push(marker);
@@ -271,7 +338,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
     } catch (error) {
       console.error('지도 데이터를 가져오는 데 실패했습니다:', error);
     }
-  }, [handleClusterMarkerClick, navigate]); // 의존성 추가
+  }, [handleClusterMarkerClick, handleRestaurantClick]); // 의존성 추가
 
   // Effect 1: 지도 초기화 (최초 1회)
   useEffect(() => {
