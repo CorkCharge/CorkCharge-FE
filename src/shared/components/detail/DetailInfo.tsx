@@ -34,7 +34,7 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
   const renderPairing = () =>
     [...new Array(3)].map((_, idx) => <PairingArticle key={idx} {...restaurant} />);
 
-  return <div className="flex flex-col items-center">{renderPairing()}</div>;
+  return <div className="flex flex-col items-center px-4">{renderPairing()}</div>;
 
   // return (
   //   <p className="flex justify-center pb-4 font-semibold">
