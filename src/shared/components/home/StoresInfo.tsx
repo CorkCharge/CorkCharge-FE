@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { fetchNearStore } from '@/shared/apis/restaurant/restaurant.api';
-import type { NearRestaurantResponse } from '@/shared/apis/restaurant/restaurant.type';
+import { fetchHomeStoreCard } from '@/shared/apis/restaurant/restaurant.api';
+import type { StoreCard } from '@/shared/apis/restaurant/restaurant.type';
 
 import arrow from '@/shared/assets/right_arrow.svg';
 import star from '@/shared/assets/star.svg';
@@ -20,17 +20,21 @@ const STORE_CATEGORY = [
 ];
 
 function StoresInfo() {
-  const [nearStores, setNearStores] = useState<NearRestaurantResponse[]>([]);
+  const [nearStores, setNearStores] = useState<StoreCard[]>([]);
+  const [hotStores, setHotStores] = useState<StoreCard[]>([]);
 
   useEffect(() => {
-    getNearStore();
+    // getNearStores();
+    // getHotStores();
+    getHomeStores();
   }, []);
 
-  const getNearStore = async () => {
+  // 홈화면 매장 가져오기
+  const getHomeStores = async () => {
     try {
-      const res = await fetchNearStore();
-      console.log(res);
-      setNearStores(res);
+      const res = await fetchHomeStoreCard();
+      setNearStores(res.nearbyCard);
+      setHotStores(res.recommendCard);
     } catch (e) {
       console.error('근처 매장 가져오기 실패: ' + e);
     }
@@ -45,8 +49,8 @@ function StoresInfo() {
     ));
 
   const renderNearStores = () =>
-    nearStores.map((store, idx) => (
-      <div key={idx} className="cursor-pointer">
+    nearStores.map((store) => (
+      <div key={store.restaurantId} className="cursor-pointer">
         {store.mainImageUrls ? (
           <img className="size-[172px] rounded-t-2xl" />
         ) : (
@@ -67,19 +71,22 @@ function StoresInfo() {
     ));
 
   const renderHotPlaceStores = () =>
-    [...new Array(5)].map((_, idx) => (
-      <div key={idx} className="cursor-pointer">
-        {/* <img /> */}
-        <div className="size-[172px] rounded-t-2xl bg-black" />
+    hotStores.map((store) => (
+      <div key={store.restaurantId} className="cursor-pointer">
+        {store.mainImageUrls ? (
+          <img className="size-[172px] rounded-t-2xl" />
+        ) : (
+          <div className="size-[172px] rounded-t-2xl bg-black" />
+        )}
         <div className="flex h-[44px] items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
-          병당 콜키지: 1병 1만원
+          {store.corkagePrice}
         </div>
         <div className="mt-2">
-          <span className="font-bold">성수 누메르도스</span>
+          <span className="font-bold">{store.restaurantName}</span>
           <div className="flex items-center">
             <img src={star} className="mr-1" />
-            <span>4.2</span>
-            <span className="ml-2 text-sm">리뷰 total 3,214</span>
+            <span>{store.rating}</span>
+            <span className="ml-2 text-sm">리뷰 total {store.reviewCount.toLocaleString()}</span>
           </div>
         </div>
       </div>
