@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NaverMap from '@/shared/components/navermap/NaverMap';
 import TopBarMap from '@/shared/components/topbar/TopBarMap';
@@ -11,6 +11,7 @@ import X from './list/X.svg';
 import type { Group } from './list/List';
 import MyStore from './mystore/MyStore';
 import MultipinList from './multipinlist/MultipinList';
+import Detail from './restaurant_detail/Detail';
 
 const CorkageMap = () => {
   const navigate = useNavigate();
@@ -22,7 +23,10 @@ const CorkageMap = () => {
   const [selectedAreaName, setSelectedAreaName] = useState<string>('');
 
   //바텀시트 내부 뷰 상태: 'list' | 'store' 'multipin' 상태 추가 (클러스터 마커 클릭 시 보여줄 화면)
-  const [sheetView, setSheetView] = useState<'list' | 'store' | 'multipin'>('list');
+  const [sheetView, setSheetView] = useState<'list' | 'store' | 'multipin' | 'detail'>('list');
+
+  // [추가] 선택된 개별 식당 ID 저장
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<number | null>(null);
 
   // 선택된 그룹 정보 (MyStore에 전달하거나 나중에 사용)
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
@@ -36,26 +40,32 @@ const CorkageMap = () => {
     setIsActive(false); // <-- 버튼 활성화 상태도 함께 false로 변경
     // [Option] 닫으면 다시 목록으로 초기화할지 여부.
     // 보통 닫았다 다시 열면 목록이 뜨는게 자연스러우므로 초기화 추천ㅇㅇ
-    setTimeout(() => setSheetView('list'), 300);
+    setTimeout(() => {
+      setSheetView('list');
+      setSelectedRestaurantId(null); // [추가] 닫을 때 ID 초기화
+    }, 300);
   };
+
+  // [추가] NaverMap에서 개별 식당 마커 클릭 시 호출될 함수
+  const handleRestaurantClick = useCallback((restaurantId: number) => {
+    setSelectedRestaurantId(restaurantId);
+    setSheetView('detail');
+    setIsSheetOpen(true);
+  }, []);
 
   // List에서 그룹 클릭 시 호출될 함수
-  const handleGroupSelect = (group: Group) => {
-    setSelectedGroup(group); // 선택된 그룹 저장
-    setSheetView('store'); // 뷰를 상세(MyStore)로 변경
-  };
+  const handleGroupSelect = useCallback((group: Group) => {
+    setSelectedGroup(group);
+    setSheetView('store');
+  }, []);
 
   // NaverMap에서 클러스터 마커 클릭 시 호출될 함수
-  const handleClusterClick = (name: string, ids: number[]) => {
-    setSelectedAreaName(name); // 지역명 저장
+  const handleClusterClick = useCallback((name: string, ids: number[]) => {
+    setSelectedAreaName(name);
     setSelectedClusterIds(ids);
-    // 1. 바텀시트 뷰를 멀티핀 리스트로 변경
     setSheetView('multipin');
-    // 2. 바텀시트 열기
     setIsSheetOpen(true);
-    // 3. (옵션) 하단 '저장한 매장' 버튼 활성화 여부는 기획에 따라 결정 (여기선 false 유지 or true)
-    // setIsActive(true);
-  };
+  }, []);
 
   const headerHeightPx = 96;
   const headerVh =
@@ -69,7 +79,7 @@ const CorkageMap = () => {
     <main className="relative h-screen w-full overflow-hidden">
       {/* 지도: 화면 전체 덮기 */}
       <div className="absolute inset-0 z-0">
-        <NaverMap onClusterClick={handleClusterClick} />
+        <NaverMap onClusterClick={handleClusterClick} onRestaurantClick={handleRestaurantClick} />
       </div>
 
       {/* 멀티핀 뷰가 아닐 때만 보여줌  (TopBarMap + 필터/저장 버튼) */}
@@ -136,6 +146,10 @@ const CorkageMap = () => {
         )}
         {sheetView === 'store' && <MyStore group={selectedGroup} />}
         {sheetView === 'multipin' && <MultipinList restaurantIds={selectedClusterIds} />}
+        {/* [추가] Detail 컴포넌트 렌더링 (ID 전달) */}
+        {sheetView === 'detail' && selectedRestaurantId && (
+          <Detail restaurantId={selectedRestaurantId} />
+        )}
       </BottomSheet>
     </main>
   );

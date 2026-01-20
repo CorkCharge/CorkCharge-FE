@@ -45,7 +45,6 @@ import NotiPost from '../components/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
 import CorkageReview from '@/pages/home/CorkageReview';
 import DoitRequest from '@/pages/doit/DoitRequest';
-import Detail from '@/pages/corkagemap/restaurant_detail/Detail';
 
 const router = createBrowserRouter([
   // {
@@ -235,10 +234,6 @@ const router = createBrowserRouter([
       {
         path: 'example2',
         element: <ExamplePage2 />,
-      },
-      {
-        path: 'prac/:id',
-        element: <Detail />,
       },
     ],
   },

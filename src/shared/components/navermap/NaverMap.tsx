@@ -141,9 +141,10 @@ const createRestaurantMarkerHtml = (price: string, isSelected: boolean = false):
 
 interface NaverMapProps {
   onClusterClick?: (_name: string, _restaurantIds: number[]) => void;
+  onRestaurantClick?: (_restaurantId: number) => void;
 }
 
-const NaverMap = ({ onClusterClick }: NaverMapProps) => {
+const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<naver.maps.Map | null>(null);
   const markers = useRef<naver.maps.Marker[]>([]);
@@ -279,10 +280,9 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
           naver.maps.Event.addListener(marker, 'click', () => {
             handleRestaurantClick(marker, item.price);
             // navigate(`/detail-info/${item.restaurantId}`); // 필요하면 주석 해제
-          });
-
-          naver.maps.Event.addListener(marker, 'click', () => {
-            //navigate(`/detail-info/${item.restaurantId}`);
+            if (onRestaurantClick) {
+              onRestaurantClick(item.restaurantId);
+            }
           });
 
           markers.current.push(marker);
@@ -353,7 +353,7 @@ const NaverMap = ({ onClusterClick }: NaverMapProps) => {
     } catch (error) {
       console.error('지도 데이터를 가져오는 데 실패했습니다:', error);
     }
-  }, [handleClusterMarkerClick, handleRestaurantClick]); // 의존성 추가
+  }, [handleClusterMarkerClick, handleRestaurantClick, onRestaurantClick]); // 의존성 추가
 
   // Effect 1: 지도 초기화 (최초 1회)
   useEffect(() => {
