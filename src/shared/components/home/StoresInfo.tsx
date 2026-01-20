@@ -1,3 +1,5 @@
+import { ClipLoader } from 'react-spinners';
+
 import type { StoreCard } from '@/shared/apis/restaurant/restaurant.type';
 
 import arrow from '@/shared/assets/right_arrow.svg';
@@ -19,9 +21,18 @@ const STORE_CATEGORY = [
 interface StoreInfoProps {
   nearStores: StoreCard[];
   hotStores: StoreCard[];
+  isLoading: boolean;
 }
 
-function StoresInfo({ nearStores, hotStores }: StoreInfoProps) {
+function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
+  // 데이터 패칭 중인 경우 spinner 표시
+  if (isLoading)
+    return (
+      <div className="flex w-full items-center justify-center py-5">
+        <ClipLoader color="var(--primary)" />
+      </div>
+    );
+
   const renderCategoryStore = () =>
     STORE_CATEGORY.map((category, idx) => (
       <div key={idx} className="flex cursor-pointer flex-col items-center gap-1">

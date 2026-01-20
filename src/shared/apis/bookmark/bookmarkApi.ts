@@ -33,3 +33,9 @@ export const deleteRequest = async (payload: BookmarkPayload): Promise<BookmarkR
   });
   return data;
 };
+
+// 내가 저장한 tip들 가져오기
+export const fetchMyTips = async () => {
+  const res = await apiClient.get('/bookmarks/tip');
+  return res.data.data;
+};

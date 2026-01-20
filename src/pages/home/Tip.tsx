@@ -3,65 +3,77 @@ import { useEffect, useState } from 'react';
 
 import TipArticle from '@/shared/components/TipArticle';
 import { fetchTipInfo, type TipInfo } from '@/shared/apis/tip/tipListApi';
-// import { bookmarkRequest, deleteRequest } from '@/shared/apis/bookmark/bookmarkApi';
 import Modal from '@/shared/components/common/Modal';
 
 import whiteArrow from '../../shared/assets/TipImgs/whiteArrow.svg';
 import bookmarked from '@/shared/components/home/assets/bookmarked.svg';
 import keep from '@/shared/assets/keep.svg';
 import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
+import useTipStore from '@/shared/store/useTipStore';
 
 // tipArticle/:id 페이지
 const Tip = () => {
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate('/home');
-  };
 
   const [tip, setTip] = useState<TipInfo>();
   const [isOpen, setIsOpen] = useState(false);
+  const [pending, setPending] = useState<boolean>(false);
+  //tip 저장
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+
   const { id } = useParams<{ id: string }>();
   const tipId = Number(id);
+
+  const selectedTips = useTipStore((state) => state.selectedTips);
 
   useEffect(() => {
     if (!id) {
       console.error('잘못된 tip id');
       return;
     }
-    (async () => {
-      try {
-        const res = await fetchTipInfo(tipId);
-        setTip(res);
-      } catch {
-        console.error('tip 가져오기 실패');
-      }
-    })();
-    return () => {};
+
+    getTipInfo();
   }, [tipId, id]);
 
-  //tip 저장
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  useEffect(() => {
+    if (selectedTips.includes(tipId)) {
+      setIsBookmarked(true);
+    }
+  }, []);
 
-  const [pending, setPending] = useState<boolean>(false);
   const onBookmarkClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (pending || !tip) return;
     setPending(true);
     try {
       if (!isBookmarked) {
-        const res = await save(tip.tipId, 'TIP');
-        console.log(res);
-        setIsBookmarked(false);
-      } else {
-        await deleteTip(tip.tipId, 'TIP');
+        console.log(isBookmarked);
+        await save(tip.tipId, 'TIP');
         setIsBookmarked(true);
         setIsOpen(true);
+      } else {
+        console.log(isBookmarked);
+        await deleteTip(tip.tipId, 'TIP');
+        setIsBookmarked(false);
       }
     } catch (err) {
       console.log('북마크 토글 실패: ', err);
     } finally {
       setPending(false);
     }
+  };
+
+  const getTipInfo = async () => {
+    try {
+      const res = await fetchTipInfo(tipId);
+      setTip(res);
+    } catch {
+      console.error('tip 가져오기 실패');
+    }
+  };
+
+  const handleClick = () => {
+    navigate('/home');
   };
 
   return (
