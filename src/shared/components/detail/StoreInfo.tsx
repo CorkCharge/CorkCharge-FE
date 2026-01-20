@@ -1,7 +1,6 @@
-// import React from 'react'
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 
-const StoreInfo = (restaurant: RestaurantInfo) => {
+const StoreInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   // const [showLocal, setShowLocal] = useState<boolean>(false);
   // const [showAllHours, setShowAllHours] = useState<boolean>(false);
   // const [showDirections, setShowDirections] = useState<boolean>(false);

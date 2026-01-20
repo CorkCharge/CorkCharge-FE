@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 
 import Modal from '../common/Modal';
 import Button from '../common/Button';
+import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
@@ -13,19 +14,8 @@ import arrow from '@/shared/assets/whiteArrow.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
 
-interface detailProps {
-  resId: number;
-  name: string;
-  rating: number;
-  adr: string;
-  alias?: string;
-  isOpen: boolean;
-  time: string;
-  phone: string;
-  mainImageUrl: string | null;
-}
-
-const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }: detailProps) => {
+// const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }: detailProps) => {
+const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,7 +34,7 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
 
   useEffect(() => {
     // state 초기화 (새로고침 시 안 뜨게)
-    navigate(`/detail-info/${resId}`, { replace: true });
+    navigate(`/detail-info/${restaurant.restaurantId}`, { replace: true });
   }, [location.state]);
 
   const keepMarker = (
@@ -93,19 +83,22 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
     const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
 
     if (isMobile) {
-      window.location.href = `tel:${phone}`;
+      window.location.href = `tel:${restaurant.phone}`;
     } else {
-      navigator.clipboard.writeText(phone);
+      navigator.clipboard.writeText(restaurant.phone);
       setIsShareModalOpen(false);
       setIsCopiedModalOpen(true);
       setTimeout(() => setIsCopiedModalOpen(false), 1000);
     }
   };
 
+  // 콜키지 옵션 렌더링
+  const renderOptions = () => restaurant.corkageOptions.map((option) => <p>{option}</p>);
+
   return (
     <div className="relative flex w-full flex-col">
-      {mainImageUrl ? (
-        <img src={mainImageUrl} className="h-[197px] w-full" />
+      {restaurant.mainImageUrl ? (
+        <img src={restaurant.mainImageUrl} className="h-[197px] w-full" />
       ) : (
         <div className="grid grid-cols-2 gap-[1px]">
           <div className="aspect-square bg-gray-300"></div>
@@ -125,15 +118,15 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
 
       {/* 가게 정보 */}
       <div className="relative px-4 pb-2 pt-2">
-        <div className="text-[24px] font-bold">{name}</div>
+        <div className="text-[24px] font-bold">{restaurant.restaurantName}</div>
         <div className="flex items-center">
           <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
           <img src={star} />
-          <span className="ml-1 font-medium">{rating}</span>
+          <span className="ml-1 font-medium">{restaurant.rating}</span>
         </div>
         <div className="mt-1 flex items-center gap-2 text-[14px]">
-          <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>
-          <span className="text-[#80818B]">영업시간 {time} 영업종료</span>
+          <span className="font-semibold">영업 중</span>
+          <span className="text-[var(--gray-6)]">영업시간 {restaurant.openingHours}</span>
         </div>
         <div
           className="absolute right-4 top-2 cursor-pointer"
@@ -186,16 +179,14 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
         <div className="mt-2 border-b-2 pb-1 font-bold">콜키지 정보</div>
         <div className="flex gap-12 border-b py-2">
           <div className="font-bold">비용</div>
-          <span>병당 1만원</span>
+          <span>{restaurant.corkagePrice}</span>
         </div>
-        <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
-          <div className="font-bold">기타</div>
-          <div>
-            <p>잔 제공</p>
-            <p>얼음 제공</p>
-            <p>리뷰 이벤트 : 한 병 무료</p>
+        {restaurant.corkageOptions.length > 0 && (
+          <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
+            <div className="font-bold">기타</div>
+            <div>{renderOptions()}</div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 문의하기 모달 */}
@@ -252,7 +243,7 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
         <div className="mb-4 flex items-center">
           <img src={logo} className="h-[22px] w-[13px]" />
           <div className="ml-3 flex flex-col">
-            <span className="font-semibold">{name}</span>
+            <span className="font-semibold">{restaurant.restaurantName}</span>
             <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
           </div>
         </div>
@@ -269,7 +260,9 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
         hasCloseButton={true}
         onClose={() => setIsCallModalOpen(false)}
       >
-        <span className="mb-4 inline-block w-full text-center text-2xl font-bold">{phone}</span>
+        <span className="mb-4 inline-block w-full text-center text-2xl font-bold">
+          {restaurant.phone}
+        </span>
         <Button
           value="번호 복사하기"
           className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"

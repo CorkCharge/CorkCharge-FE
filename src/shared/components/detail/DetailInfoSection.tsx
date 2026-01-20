@@ -3,8 +3,14 @@ import DetailInfo from './DetailInfo';
 import StoreInfo from './StoreInfo';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import ReviewInfo from './ReviewInfo';
+import type { StoreReviewResponse } from '@/shared/apis/review/review.type';
 
-const DetailInfoSection = (restaurantInfo: RestaurantInfo) => {
+interface DetailInfoSectionProps {
+  restaurant: RestaurantInfo;
+  reviews: StoreReviewResponse[];
+}
+
+const DetailInfoSection = ({ restaurant, reviews }: DetailInfoSectionProps) => {
   // 0: 페어링 정보, 1: 가게 정보, 2: 리뷰
   const [corkSelect, setCorkSelect] = useState(0);
 
@@ -31,9 +37,9 @@ const DetailInfoSection = (restaurantInfo: RestaurantInfo) => {
         </button>
       </div>
 
-      {corkSelect === 0 && <DetailInfo {...restaurantInfo} />}
-      {corkSelect === 1 && <StoreInfo {...restaurantInfo} />}
-      {corkSelect === 2 && <ReviewInfo />}
+      {corkSelect === 0 && <DetailInfo restaurant={restaurant} />}
+      {corkSelect === 1 && <StoreInfo restaurant={restaurant} />}
+      {corkSelect === 2 && <ReviewInfo reviews={reviews} storeName={restaurant.restaurantName} />}
     </div>
   );
 };
