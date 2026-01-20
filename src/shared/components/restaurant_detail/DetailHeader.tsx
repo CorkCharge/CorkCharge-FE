@@ -111,7 +111,7 @@ const DetailHeader = ({ name, rating, isOpen, time, phone, mainImageUrl }: detai
       />
 
       {/* 가게 정보 */}
-      <div className="felx-row relative flex pb-2 pt-2">
+      <div className="felx-row relative flex justify-between pb-2 pt-2">
         <div>
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
