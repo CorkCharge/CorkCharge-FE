@@ -5,7 +5,7 @@ import DetailHeader from '@/shared/components/restaurant_detail/DetailHeader';
 import DetailInfoSection from '@/shared/components/restaurant_detail/DetailInfoSection';
 // import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
-import useRestaurantStore from '@/shared/store/useRestaurantStore';
+//import useRestaurantStore from '@/shared/store/useRestaurantStore';
 
 interface DetailProps {
   restaurantId?: number;
@@ -15,7 +15,7 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
   const { id: paramId } = useParams<{ id: string }>();
   const targetId = propId || Number(paramId);
   const [restaurant, setRestaurant] = useState<RestaurantInfo>();
-  const setRestInfo = useRestaurantStore((state) => state.setRestInfo);
+  //const setRestInfo = useRestaurantStore((state) => state.setRestInfo);
 
   useEffect(() => {
     if (!targetId) {
@@ -25,10 +25,10 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
 
     (async () => {
       try {
-        // [수정 5] API 호출 시 targetId 사용
+        // API 호출 시 targetId 사용
         const res = await fetchRestaurant(targetId);
         setRestaurant(res);
-        setRestInfo(res);
+        //setRestInfo(res);
       } catch {
         console.error('API 호출 실패');
       }
