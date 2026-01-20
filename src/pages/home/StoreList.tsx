@@ -11,6 +11,8 @@ import ReviewItem from '@/shared/components/home/ReviewItem';
 import StoresInfo from '@/shared/components/home/StoresInfo';
 import type { ReviewResponse } from '@/shared/apis/review/review.type';
 import { fetchHomeReviews } from '@/shared/apis/review/review.api';
+import { fetchHomeStoreCard } from '@/shared/apis/restaurant/restaurant.api';
+import type { StoreCard } from '@/shared/apis/restaurant/restaurant.type';
 
 import smallGlass from '../../shared/assets/smallGlass.svg';
 import bell from '@/shared/assets/bell.svg';
@@ -27,6 +29,9 @@ const StoreList = () => {
   const [tiplist, setTiplist] = useState<TipData[]>([]);
   const [reviewCards, setReviewCards] = useState<ReviewResponse[]>([]);
 
+  const [nearStores, setNearStores] = useState<StoreCard[]>([]);
+  const [hotStores, setHotStores] = useState<StoreCard[]>([]);
+
   const handleStoreclick = () => {
     setStoreSelected(true);
   };
@@ -42,18 +47,33 @@ const StoreList = () => {
   };
 
   useEffect(() => {
-    const fetchTipData = async () => {
-      try {
-        const res = await fetchTipList();
-        setTiplist(res);
-      } catch {
-        console.error('Tip 가져오기 실패');
-      }
-    };
     fetchTipData();
     getReviewCards();
+    getHomeStores();
   }, []);
 
+  // 홈화면 tip 가져오기
+  const fetchTipData = async () => {
+    try {
+      const res = await fetchTipList();
+      setTiplist(res);
+    } catch (e) {
+      console.error('Tip 가져오기 실패: ' + e);
+    }
+  };
+
+  // 홈화면 매장 가져오기
+  const getHomeStores = async () => {
+    try {
+      const res = await fetchHomeStoreCard();
+      setNearStores(res.nearbyCard);
+      setHotStores(res.recommendCard);
+    } catch (e) {
+      console.error('근처 매장 가져오기 실패: ' + e);
+    }
+  };
+
+  // 홈화면 콜키지 리뷰 가져오기
   const getReviewCards = async () => {
     const res = await fetchHomeReviews();
     setReviewCards(res);
@@ -141,7 +161,7 @@ const StoreList = () => {
         </div>
 
         {storeSelected ? (
-          <StoresInfo />
+          <StoresInfo nearStores={nearStores} hotStores={hotStores} />
         ) : (
           <>
             <Tip selected={selected} setSelected={setSelected} />

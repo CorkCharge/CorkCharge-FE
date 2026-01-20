@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-
-import { fetchHomeStoreCard } from '@/shared/apis/restaurant/restaurant.api';
 import type { StoreCard } from '@/shared/apis/restaurant/restaurant.type';
 
 import arrow from '@/shared/assets/right_arrow.svg';
@@ -19,27 +16,12 @@ const STORE_CATEGORY = [
   { title: '육류, 고기', imgName: meat },
 ];
 
-function StoresInfo() {
-  const [nearStores, setNearStores] = useState<StoreCard[]>([]);
-  const [hotStores, setHotStores] = useState<StoreCard[]>([]);
+interface StoreInfoProps {
+  nearStores: StoreCard[];
+  hotStores: StoreCard[];
+}
 
-  useEffect(() => {
-    // getNearStores();
-    // getHotStores();
-    getHomeStores();
-  }, []);
-
-  // 홈화면 매장 가져오기
-  const getHomeStores = async () => {
-    try {
-      const res = await fetchHomeStoreCard();
-      setNearStores(res.nearbyCard);
-      setHotStores(res.recommendCard);
-    } catch (e) {
-      console.error('근처 매장 가져오기 실패: ' + e);
-    }
-  };
-
+function StoresInfo({ nearStores, hotStores }: StoreInfoProps) {
   const renderCategoryStore = () =>
     STORE_CATEGORY.map((category, idx) => (
       <div key={idx} className="flex cursor-pointer flex-col items-center gap-1">
@@ -94,7 +76,7 @@ function StoresInfo() {
 
   return (
     <div className="mt-4">
-      {/* 코르크차지 추천 매장 */}
+      {/* 카테고리별 추천 매장 */}
       <div className="relative px-4">
         <span className="font-bold text-[var(--gray-8)]">카테고리별 추천 매장</span>
         <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
@@ -111,7 +93,7 @@ function StoresInfo() {
         광고배너
       </div>
 
-      {/* 추천 데이터코스 */}
+      {/* 핫플 콜키지 매장 */}
       <div className="relative px-4">
         <span className="font-bold text-[var(--gray-8)]">핫플 콜키지 추천매장</span>
         <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />

@@ -1,11 +1,18 @@
-export interface ReviewResponse {
+interface BaseReviewResponse {
   reviewId: number;
-  restaurantId: number;
-  restaurantName: string;
   writer: string;
   content: string;
   rating: number;
   createdAt: string;
   imageUrls: string[];
+}
+
+export interface StoreReviewResponse extends BaseReviewResponse {
+  getBookmarkCount: number;
+}
+
+export interface ReviewResponse extends BaseReviewResponse {
+  restaurantId: number;
+  restaurantName: string;
   bookmarkCount: number;
 }

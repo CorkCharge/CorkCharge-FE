@@ -4,11 +4,17 @@ import { useRef } from 'react';
 import { StarRate } from '../common/StarRate';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
+import type { StoreReviewResponse } from '@/shared/apis/review/review.type';
 
 import share from '@/shared/assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/images/arrow-up-right.svg';
 
-const ReviewInfo = () => {
+interface ReviewInfoProps {
+  reviews: StoreReviewResponse[];
+  storeName: string;
+}
+
+const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
   const navigate = useNavigate();
   const isRated = useRef(false); // 사용자가 별점을 주었는지 확인
 
@@ -18,26 +24,23 @@ const ReviewInfo = () => {
   const restinfo = useRestaurantStore((state) => state.restInfo);
 
   const renderReviews = () =>
-    [...new Array(3)].map((_, idx) => (
+    reviews.map((review, idx) => (
       <div className="relative rounded-2xl bg-[var(--gray-1)] p-4" key={idx}>
         {/* 매장명 + 별점 */}
-        <span className="text-xl font-bold text-[var(--gray-8)]">매장명</span>
+        <span className="text-xl font-bold text-[var(--gray-8)]">{storeName}</span>
         <div className="my-2 flex gap-1">
-          <StarRate rate={4} />
-          <span className="font-medium">4</span>
+          <StarRate rate={review.rating} />
+          <span className="font-medium">{review.rating}</span>
         </div>
 
         {/* 리뷰 이미지 */}
-        <div className="flex gap-2 overflow-y-auto">{renderReviewImages()}</div>
+        <div className="flex gap-2 overflow-y-auto">{renderReviewImages(review)}</div>
 
         {/* 리뷰 */}
-        <p className="mb-2 font-medium">
-          너무 친절하셔서 무조건 다시와야 하는 곳입니다!!! 무조건 재방문너무너무 친절하셔서 무조건
-          다시와야 하는 곳입니다!!! 무조건 재방문너무
-        </p>
+        <p className="mb-2 font-medium">{review.content}</p>
         <div className="flex gap-2 text-[10px] font-medium">
-          <span>작성자</span>
-          <span>2025.12.09</span>
+          <span>{review.writer}</span>
+          <span>{review.createdAt.split('T')[0].replaceAll('-', '.')}</span>
         </div>
 
         {/* 좋아요 + 공유 */}
@@ -68,7 +71,9 @@ const ReviewInfo = () => {
               />
             </svg>
           </div>
-          <span className="text-[10px] font-medium text-[var(--gray-8)]">99+</span>
+          <span className="text-[10px] font-medium text-[var(--gray-8)]">
+            {review.getBookmarkCount > 99 ? '99+' : review.getBookmarkCount}
+          </span>
           <div className="relative flex size-6 cursor-pointer rounded-full bg-white">
             <img
               src={share}
@@ -79,9 +84,9 @@ const ReviewInfo = () => {
       </div>
     ));
 
-  const renderReviewImages = () =>
-    [...new Array(5)].map((_, idx) => (
-      <div className="aspect-square w-[40%] shrink-0 rounded-lg bg-black" key={idx} />
+  const renderReviewImages = (review: StoreReviewResponse) =>
+    review.imageUrls.map((url, idx) => (
+      <img className="aspect-square w-[40%] shrink-0 rounded-lg" src={url} key={idx} />
     ));
 
   const goToReview = () => {

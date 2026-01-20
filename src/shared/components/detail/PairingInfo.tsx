@@ -1,4 +1,5 @@
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
+
 import link from '@/shared/components/detail/assets/link.svg';
 
 const PairingInfo = (restaurant: RestaurantInfo) => {
