@@ -104,19 +104,6 @@ const DetailHeader = ({ name, rating, isOpen, time, phone, mainImageUrl }: detai
 
   return (
     <div className="relative flex w-full flex-col">
-      {mainImageUrl ? (
-        <img src={mainImageUrl} className="h-[197px] w-full" />
-      ) : (
-        <div className="grid grid-cols-2 gap-[1px]">
-          <div className="aspect-square bg-gray-300"></div>
-          <div className="grid grid-cols-2 gap-[1px]">
-            <div className="aspect-square bg-gray-300"></div>
-            <div className="aspect-square bg-gray-300"></div>
-            <div className="aspect-square bg-gray-300"></div>
-            <div className="aspect-square bg-gray-300"></div>
-          </div>
-        </div>
-      )}
       <img
         src={arrow}
         className="absolute left-3 top-2 h-4 w-[9px] cursor-pointer"
@@ -124,28 +111,39 @@ const DetailHeader = ({ name, rating, isOpen, time, phone, mainImageUrl }: detai
       />
 
       {/* 가게 정보 */}
-      <div className="relative px-4 pb-2 pt-2">
-        <div className="text-[24px] font-bold">{name}</div>
-        <div className="flex items-center">
-          <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
-          <img src={star} />
-          <span className="ml-1 font-medium">{rating}</span>
+      <div className="felx-row relative flex pb-2 pt-2">
+        <div>
+          <div className="flex flex-row gap-[8px]">
+            <div className="text-[24px] font-bold">{name}</div>
+            <div className="cursor-pointer" onClick={() => setIsKeep((prev) => !prev)}>
+              {keepMarker}
+            </div>
+          </div>
+          <div className="flex items-center">
+            <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
+            <img src={star} />
+            <span className="ml-1 font-medium">{rating}</span>
+          </div>
+          <div className="mt-1 flex items-center gap-2 text-[14px]">
+            <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>
+            <span className="text-[#80818B]">영업시간 {time} 영업종료</span>
+          </div>
         </div>
-        <div className="mt-1 flex items-center gap-2 text-[14px]">
-          <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>
-          <span className="text-[#80818B]">영업시간 {time} 영업종료</span>
-        </div>
-        <div
-          className="absolute right-4 top-2 cursor-pointer"
-          onClick={() => setIsKeep((prev) => !prev)}
-        >
-          {keepMarker}
+        <div>
+          {mainImageUrl ? (
+            <img src={mainImageUrl} className="h-[80px] w-full" />
+          ) : (
+            <div className="flex flex-row gap-[5px]">
+              <div className="h-[80px] w-[80px] bg-gray-300"></div>
+              <div className="h-[80px] w-[80px] bg-gray-300"></div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* 버튼 그룹 */}
       <div
-        className={`mt-2 box-content flex h-9 gap-2 px-4 pb-4 ${isOverflow ? 'justify-start overflow-auto' : 'justify-center'}`}
+        className={`mt-2 box-content flex h-9 gap-2 pb-4 ${isOverflow ? 'justify-start overflow-auto' : 'justify-center'}`}
         ref={ref}
       >
         <button

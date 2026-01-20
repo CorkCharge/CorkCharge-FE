@@ -31,6 +31,7 @@ interface BottomSheetProps {
   children: ReactNode;
   topSnapVh?: number; // 최대 높이(vh)를 prop으로 받기 (opt)
   hideHandleOnTop?: boolean;
+  onSnapToTop?: () => void;
 }
 
 // vh를 px로 변환하는 헬퍼 함수
@@ -45,6 +46,7 @@ const BottomSheet = ({
   children,
   topSnapVh = SNAP_POINTS.DEFAULT_TOP,
   hideHandleOnTop = false,
+  onSnapToTop,
 }: BottomSheetProps) => {
   //y축 위치를 motionValue로 실시간 관리
   const y = useMotionValue(vhToPx(SNAP_POINTS.HIDDEN));
@@ -108,6 +110,7 @@ const BottomSheet = ({
     if (velocity.y < -DRAG_VELOCITY_THRESHOLD) {
       animate(y, snapPx.TOP, { type: 'tween', duration: 0.3, ease: 'easeOut' });
       setCurrentSnap('TOP');
+      if (onSnapToTop) onSnapToTop();
       return;
     }
 
@@ -122,6 +125,7 @@ const BottomSheet = ({
     if (currentY < midPointTopMid) {
       animate(y, snapPx.TOP, { type: 'tween', duration: 0.3, ease: 'easeOut' });
       setCurrentSnap('TOP');
+      if (onSnapToTop) onSnapToTop();
     } else if (currentY < midPointMidMin) {
       animate(y, snapPx.MID, { type: 'tween', duration: 0.3, ease: 'easeOut' });
       setCurrentSnap('MID');

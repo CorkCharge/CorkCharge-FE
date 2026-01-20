@@ -71,9 +71,24 @@ const CorkageMap = () => {
   const headerVh =
     typeof window !== 'undefined' ? (headerHeightPx / window.innerHeight) * 100 : 11.5;
   // MyStore 뷰일 때 topSnapVh는 19.8, List일 땐 17.8, 근데 이게 처음에 BottomSheet가 마운트될때 이미 17.8로 마운트되서 바뀌질 않음
-  const currentTopSnapVh = sheetView === 'multipin' ? headerVh : 17.8;
+  const currentTopSnapVh =
+    sheetView === 'detail'
+      ? 0 // 화면 상단 5% 정도만 남기고 다 올림 (원하는 만큼 조절)
+      : sheetView === 'multipin'
+        ? headerVh
+        : 17.8;
   // [편의용] 멀티핀 뷰인지 확인하는 변수
   const isMultipinView = sheetView === 'multipin';
+
+  const handleSnapToTop = () => {
+    // Detail 뷰일 때만 페이지 이동
+    if (sheetView === 'detail' && selectedRestaurantId) {
+      // 약간의 지연을 주어 애니메이션이 끝난 후 이동하게 하면 더 자연스러울 수 있음
+      setTimeout(() => {
+        navigate(`/detail-info/${selectedRestaurantId}`);
+      }, 300);
+    }
+  };
 
   return (
     <main className="relative h-screen w-full overflow-hidden">
@@ -140,6 +155,7 @@ const CorkageMap = () => {
         onClose={handleSheetClose}
         topSnapVh={currentTopSnapVh}
         hideHandleOnTop={isMultipinView}
+        onSnapToTop={handleSnapToTop}
       >
         {sheetView === 'list' && (
           <List myGroups={myGroups} setMyGroups={setMyGroups} onSelectGroup={handleGroupSelect} />
