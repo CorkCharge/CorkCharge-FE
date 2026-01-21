@@ -23,9 +23,20 @@ interface detailProps {
   time: string;
   phone: string;
   mainImageUrl: string | null;
+  corkageOption: string[];
+  corkagePrice: string;
 }
 
-const DetailHeader = ({ name, rating, isOpen, time, phone, mainImageUrl }: detailProps) => {
+const DetailHeader = ({
+  name,
+  rating,
+  isOpen,
+  time,
+  phone,
+  mainImageUrl,
+  corkageOption,
+  corkagePrice,
+}: detailProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -184,16 +195,18 @@ const DetailHeader = ({ name, rating, isOpen, time, phone, mainImageUrl }: detai
         <div className="mt-2 border-b-2 pb-1 font-bold">콜키지 정보</div>
         <div className="flex gap-12 border-b py-2">
           <div className="font-bold">비용</div>
-          <span>병당 1만원</span>
+          <span>{corkagePrice}</span>
         </div>
-        <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
-          <div className="font-bold">기타</div>
-          <div>
-            <p>잔 제공</p>
-            <p>얼음 제공</p>
-            <p>리뷰 이벤트 : 한 병 무료</p>
+        {corkageOption.length > 0 && (
+          <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
+            <div className="font-bold">기타</div>
+            <div>
+              {corkageOption.map((option) => (
+                <p>{option}</p>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 문의하기 모달 */}
