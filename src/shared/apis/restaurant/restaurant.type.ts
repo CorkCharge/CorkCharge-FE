@@ -19,6 +19,11 @@ export interface StoreCard {
   corkagePrice: string;
   mainImageUrls: string;
 }
+
+export interface NewStoreResponse extends RestaurantResponse {
+  scrap: boolean;
+}
+
 // export interface HomeStoreResponse {
 //   nearbyCard: StoreCard;
 //   recommendCard: StoreCard;
