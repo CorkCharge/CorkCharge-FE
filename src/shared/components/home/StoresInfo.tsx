@@ -1,4 +1,5 @@
 import { ClipLoader } from 'react-spinners';
+import { useNavigate } from 'react-router-dom';
 
 import type { StoreCard } from '@/shared/apis/restaurant/restaurant.type';
 
@@ -25,6 +26,8 @@ interface StoreInfoProps {
 }
 
 function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
+  const navigate = useNavigate();
+
   // 데이터 패칭 중인 경우 spinner 표시
   if (isLoading)
     return (
@@ -43,9 +46,13 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
 
   const renderNearStores = () =>
     nearStores.map((store) => (
-      <div key={store.restaurantId} className="cursor-pointer">
+      <div
+        key={store.restaurantId}
+        className="cursor-pointer"
+        onClick={() => navigate(`/detail-info/${store.restaurantId}`)}
+      >
         {store.mainImageUrls ? (
-          <img className="size-[172px] rounded-t-2xl" />
+          <img src={store.mainImageUrls} className="size-[172px] rounded-t-2xl" />
         ) : (
           <div className="size-[172px] rounded-t-2xl bg-black" />
         )}
@@ -65,9 +72,13 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
 
   const renderHotPlaceStores = () =>
     hotStores.map((store) => (
-      <div key={store.restaurantId} className="cursor-pointer">
+      <div
+        key={store.restaurantId}
+        className="cursor-pointer"
+        onClick={() => navigate(`/detail-info/${store.restaurantId}`)}
+      >
         {store.mainImageUrls ? (
-          <img className="size-[172px] rounded-t-2xl" />
+          <img src={store.mainImageUrls} className="size-[172px] rounded-t-2xl" />
         ) : (
           <div className="size-[172px] rounded-t-2xl bg-black" />
         )}

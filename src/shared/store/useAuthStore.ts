@@ -9,7 +9,7 @@ import { devtools } from 'zustand/middleware';
 
 import useMyPageStore from './useMyPageStore';
 import apiClient from '../apis/apiClient';
-import useTipStore from './useTipStore';
+import useBookmarkStore from './useBookmarkStore';
 
 interface User {
   userId: number;
@@ -65,7 +65,7 @@ const useAuthStore = create<AuthState>()(
           sessionStorage.clear();
 
           // 모든 persist들 reset
-          useTipStore.getState().resetSelectedTips();
+          useBookmarkStore.getState().resetAllBookmarks();
         },
       }),
       { name: 'auth' }

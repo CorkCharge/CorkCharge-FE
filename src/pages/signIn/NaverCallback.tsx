@@ -4,16 +4,22 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import apiClient from '@/shared/apis/apiClient';
 import useAuthStore from '@/shared/store/useAuthStore';
-import { fetchMyTips } from '@/shared/apis/bookmark/bookmarkApi';
-import useTipStore from '@/shared/store/useTipStore';
-import { type MyTipsResponse } from '@/shared/apis/bookmark/bookmarks.type';
+import { fetchMyReviews, fetchMyStores, fetchMyTips } from '@/shared/apis/bookmark/bookmarkApi';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
+import {
+  type MyReviewResponse,
+  type MyStoreResponse,
+  type MyTipsResponse,
+} from '@/shared/apis/bookmark/bookmarks.type';
 
 function NaverCallback() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
 
   const { login } = useAuthStore();
-  const setSelectedTips = useTipStore((state) => state.setSelectedTips);
+  const setSelectedTips = useBookmarkStore((state) => state.setSelectedTips);
+  const setSelectedStores = useBookmarkStore((state) => state.setSelectedStores);
+  const setSelectedReviews = useBookmarkStore((state) => state.setSelectedReviews);
 
   useEffect(() => {
     loginProcess();
@@ -44,6 +50,22 @@ function NaverCallback() {
       setSelectedTips(tipsRes.map((res: MyTipsResponse) => res.tipId));
     } catch (e) {
       console.error('저장한 팁 가져오기 실패: ' + e);
+    }
+
+    // 내가 저장한 가게들 가져오기
+    try {
+      const storesRes = await fetchMyStores();
+      setSelectedStores(storesRes.map((res: MyStoreResponse) => res.restaurantId));
+    } catch (e) {
+      console.error('저장한 가게 가져오기 실패: ' + e);
+    }
+
+    // 내가 저장한 리뷰들 가져오기
+    try {
+      const reviewsRes = await fetchMyReviews();
+      setSelectedReviews(reviewsRes.map((res: MyReviewResponse) => res.reviewId));
+    } catch (e) {
+      console.error('저장한 리뷰 가져오기 실패: ' + e);
     }
 
     return true;

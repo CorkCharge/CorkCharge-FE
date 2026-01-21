@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
+import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
 
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
@@ -14,7 +16,6 @@ import arrow from '@/shared/assets/whiteArrow.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
 
-// const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }: detailProps) => {
 const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,8 +28,12 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const [isCallModalOpen, setIsCallModalOpen] = useState(false); // 전화하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
+  const [keepPending, setKeepPending] = useState(false); // bookmark 등록 중 여부
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
+  const toggleStore = useBookmarkStore((state) => state.toggleStore);
 
   // const location = useLocation();
 
@@ -36,6 +41,12 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
     // state 초기화 (새로고침 시 안 뜨게)
     navigate(`/detail-info/${restaurant.restaurantId}`, { replace: true });
   }, [location.state]);
+
+  useEffect(() => {
+    if (selectedStores.includes(restaurant.restaurantId)) {
+      setIsKeep(true);
+    }
+  }, [restaurant]);
 
   const keepMarker = (
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -95,6 +106,25 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   // 콜키지 옵션 렌더링
   const renderOptions = () => restaurant.corkageOptions.map((option) => <p>{option}</p>);
 
+  const handleKeepButton = async () => {
+    if (keepPending || !restaurant) return;
+    setKeepPending(true);
+    try {
+      if (!isKeep) {
+        await save(restaurant.restaurantId, 'RESTAURANT');
+        setIsKeep(true);
+      } else {
+        await deleteTip(restaurant.restaurantId, 'RESTAURANT');
+        setIsKeep(false);
+      }
+      toggleStore(restaurant.restaurantId);
+    } catch (e) {
+      console.error('가게 북마크 토글 실패: ' + e);
+    } finally {
+      setKeepPending(false);
+    }
+  };
+
   return (
     <div className="relative flex w-full flex-col">
       {restaurant.mainImageUrl ? (
@@ -128,10 +158,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           <span className="font-semibold">영업 중</span>
           <span className="text-[var(--gray-6)]">영업시간 {restaurant.openingHours}</span>
         </div>
-        <div
-          className="absolute right-4 top-2 cursor-pointer"
-          onClick={() => setIsKeep((prev) => !prev)}
-        >
+        <div className="absolute right-4 top-2 cursor-pointer" onClick={handleKeepButton}>
           {keepMarker}
         </div>
       </div>

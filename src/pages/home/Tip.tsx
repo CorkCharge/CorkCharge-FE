@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import TipArticle from '@/shared/components/TipArticle';
 import { fetchTipInfo, type TipInfo } from '@/shared/apis/tip/tipListApi';
 import Modal from '@/shared/components/common/Modal';
+import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
 
 import whiteArrow from '../../shared/assets/TipImgs/whiteArrow.svg';
 import bookmarked from '@/shared/components/home/assets/bookmarked.svg';
 import keep from '@/shared/assets/keep.svg';
-import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
-import useTipStore from '@/shared/store/useTipStore';
 
 // tipArticle/:id 페이지
 const Tip = () => {
@@ -24,7 +24,8 @@ const Tip = () => {
   const { id } = useParams<{ id: string }>();
   const tipId = Number(id);
 
-  const selectedTips = useTipStore((state) => state.selectedTips);
+  const selectedTips = useBookmarkStore((state) => state.selectedTips);
+  const toggleTip = useBookmarkStore((state) => state.toggleTip);
 
   useEffect(() => {
     if (!id) {
@@ -47,15 +48,14 @@ const Tip = () => {
     setPending(true);
     try {
       if (!isBookmarked) {
-        console.log(isBookmarked);
         await save(tip.tipId, 'TIP');
         setIsBookmarked(true);
         setIsOpen(true);
       } else {
-        console.log(isBookmarked);
         await deleteTip(tip.tipId, 'TIP');
         setIsBookmarked(false);
       }
+      toggleTip(tip.tipId);
     } catch (err) {
       console.log('북마크 토글 실패: ', err);
     } finally {
