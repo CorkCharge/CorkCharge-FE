@@ -1,6 +1,6 @@
 import { cn } from '@/shared/utils/utils';
 
-function TipDefaultImage({ className }: { className: string }) {
+function TipDefaultImage({ className }: { className?: string }) {
   return (
     <div className={cn('relative h-full w-full bg-[var(--primary)]', className)}>
       <svg
