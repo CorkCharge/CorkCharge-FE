@@ -45,9 +45,11 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
             rating={restaurant.rating}
             adr={restaurant.address}
             isOpen={true}
-            time="4:00"
+            time={restaurant.openingHours}
             phone={restaurant.phone}
             mainImageUrl={restaurant.mainImageUrl}
+            corkageOption={restaurant.corkageOptions}
+            corkagePrice={restaurant.corkagePrice}
           />
         ) : (
           <p className="flex min-h-[100svh] items-center justify-center bg-inherit">

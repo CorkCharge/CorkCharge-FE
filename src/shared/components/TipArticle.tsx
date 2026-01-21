@@ -1,4 +1,5 @@
 import type { TipInfo } from '../apis/tip/tipListApi';
+import TipDefaultImage from './home/TipDefaultImage';
 
 const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
   return (
@@ -7,7 +8,7 @@ const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
         {imageUrls.length > 0 ? (
           <img src={imageUrls[0]} className="aspect-square w-full rounded-b-2xl" />
         ) : (
-          <div className="aspect-square w-full rounded-b-2xl bg-gray-500" />
+          <TipDefaultImage className="aspect-square rounded-b-2xl" />
         )}
 
         <div className="absolute bottom-6">
@@ -20,9 +21,6 @@ const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
 
       {/* 상세 설명 */}
       <div className="mx-6">
-        {/* <div className="mb-8 w-[200px] whitespace-pre-line text-[24px] font-bold text-[#1E1E1E]">
-          서브타이틀
-        </div> */}
         <div className="whitespace-pre-line text-[16px] font-medium">{content}</div>
       </div>
     </>

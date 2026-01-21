@@ -32,6 +32,9 @@ const StoreList = () => {
   const [nearStores, setNearStores] = useState<StoreCard[]>([]);
   const [hotStores, setHotStores] = useState<StoreCard[]>([]);
 
+  // 근처 매장 & 핫플 매장 로딩
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleStoreclick = () => {
     setStoreSelected(true);
   };
@@ -65,11 +68,14 @@ const StoreList = () => {
   // 홈화면 매장 가져오기
   const getHomeStores = async () => {
     try {
+      setIsLoading(true);
       const res = await fetchHomeStoreCard();
       setNearStores(res.nearbyCard);
       setHotStores(res.recommendCard);
     } catch (e) {
       console.error('근처 매장 가져오기 실패: ' + e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -161,7 +167,7 @@ const StoreList = () => {
         </div>
 
         {storeSelected ? (
-          <StoresInfo nearStores={nearStores} hotStores={hotStores} />
+          <StoresInfo nearStores={nearStores} hotStores={hotStores} isLoading={isLoading} />
         ) : (
           <>
             <Tip selected={selected} setSelected={setSelected} />
