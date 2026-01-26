@@ -8,7 +8,8 @@ interface BaseReviewResponse {
 }
 
 export interface StoreReviewResponse extends BaseReviewResponse {
-  getBookmarkCount: number;
+  bookmarkCount: number;
+  scrap: boolean;
 }
 
 export interface ReviewResponse extends BaseReviewResponse {

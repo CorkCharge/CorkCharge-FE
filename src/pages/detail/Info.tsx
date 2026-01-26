@@ -8,6 +8,7 @@ import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/c
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 import { fetchStoreReviews } from '@/shared/apis/review/review.api';
 import { type StoreReviewResponse } from '@/shared/apis/review/review.type';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
 
 const Info = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ const Info = () => {
   const [fetchFail, setFetchFail] = useState(false);
 
   const setRestInfo = useRestaurantStore((state) => state.setRestInfo);
+  const setReviewCount = useBookmarkStore((state) => state.setReviewCount);
 
   useEffect(() => {
     if (!id) {
@@ -49,7 +51,15 @@ const Info = () => {
   // 가게 리뷰들 가져오기
   const getReviews = async () => {
     try {
-      const res = await fetchStoreReviews(restaurantId);
+      const res: StoreReviewResponse[] = await fetchStoreReviews(restaurantId);
+
+      // 북마크 카운트 store 저장
+      const bookmarkCounts = res.reduce<Record<number, number>>((acc, rev) => {
+        acc[rev.reviewId] = rev.bookmarkCount;
+        return acc;
+      }, {});
+      setReviewCount(bookmarkCounts);
+
       setReviews(res);
     } catch (e) {
       console.error('가게 리뷰 가져오기 실패: ' + e);

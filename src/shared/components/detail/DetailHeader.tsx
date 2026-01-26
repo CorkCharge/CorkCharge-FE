@@ -104,7 +104,8 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   };
 
   // 콜키지 옵션 렌더링
-  const renderOptions = () => restaurant.corkageOptions.map((option) => <p>{option}</p>);
+  const renderOptions = () =>
+    restaurant.corkageOptions.map((option, idx) => <p key={idx}>{option}</p>);
 
   const handleKeepButton = async () => {
     if (keepPending || !restaurant) return;
