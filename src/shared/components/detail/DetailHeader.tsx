@@ -15,6 +15,7 @@ import share from '../../assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
+import ContactModal from './ContactModal';
 
 const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const navigate = useNavigate();
@@ -22,11 +23,10 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
 
   const [isKeep, setIsKeep] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
-  const [contactContent, setContactContent] = useState('');
-  const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [isCallModalOpen, setIsCallModalOpen] = useState(false); // 전화하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
+  const [isContactCompleteModalOpen, setIsContactCompleteModalOpen] = useState(false);
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
   const [keepPending, setKeepPending] = useState(false); // bookmark 등록 중 여부
 
@@ -40,13 +40,13 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   useEffect(() => {
     // state 초기화 (새로고침 시 안 뜨게)
     navigate(`/detail-info/${restaurant.restaurantId}`, { replace: true });
-  }, [location.state]);
+  }, [location.state, navigate, restaurant.restaurantId]);
 
   useEffect(() => {
     if (selectedStores.includes(restaurant.restaurantId)) {
       setIsKeep(true);
     }
-  }, [restaurant]);
+  }, [restaurant, selectedStores]);
 
   const keepMarker = (
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -144,7 +144,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
       <img
         src={arrow}
         className="absolute left-3 top-2 h-4 w-[9px] cursor-pointer"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/home')}
       />
 
       {/* 가게 정보 */}
@@ -218,48 +218,25 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
       </div>
 
       {/* 문의하기 모달 */}
-      <Modal
-        isOpen={isContactModalOpen}
-        hasCloseButton={true}
-        onClose={() => setIsContactModalOpen(false)}
-      >
-        <span className="inline-block w-full text-center text-2xl font-bold text-[var(--gray-8)]">
-          문의하기
-        </span>
-        <div className="my-4 flex justify-center gap-2">
-          <button
-            className={`rounded-[20px] px-4 py-2 text-sm font-medium ${contactOption ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)]'}`}
-            onClick={() => setContactOption(true)}
-          >
-            콜키지 정보 오류
-          </button>
-          <button
-            className={`rounded-[20px] px-4 py-2 text-sm font-medium ${!contactOption ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)]'}`}
-            onClick={() => setContactOption(false)}
-          >
-            가게 정보 오류
-          </button>
-        </div>
-        <div className="relative">
-          <textarea
-            className="mb-4 min-h-[192px] w-full resize-none rounded-br-3xl rounded-tl-3xl bg-[var(--gray-1)] p-4 pr-6 text-xs focus:outline-none"
-            placeholder="건의 내용을 입력해주세요"
-            value={contactContent}
-            onChange={(e) => setContactContent(e.target.value)}
-          ></textarea>
-          <button
-            className="absolute right-2 top-2 text-gray-500 hover:text-black"
-            onClick={() => setContactContent('')}
-          >
-            &times;
-          </button>
-        </div>
+      <ContactModal
+        isContactModalOpen={isContactModalOpen}
+        setIsContactModalOpen={(isOpen) => setIsContactModalOpen(isOpen)}
+        restaurantName={restaurant.restaurantName}
+        completeModalOpen={(isOpen) => setIsContactCompleteModalOpen(isOpen)}
+      />
 
-        <Button
-          value="제출하기"
-          className="bg-[var(--primary)] text-white shadow-none disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
-          disabled={!contactContent}
-        />
+      {/* 문의하기 완료 모달 */}
+      <Modal isOpen={isContactCompleteModalOpen}>
+        <span className="inline-block w-full text-center text-2xl font-bold">작성완료</span>
+        <p className="mb-5 mt-1 text-center font-medium text-[var(--gray-8)]">
+          소중한 문의 감사합니다
+        </p>
+        <button
+          className="h-12 w-full rounded-xl bg-[var(--primary)] font-semibold text-white"
+          onClick={() => setIsContactCompleteModalOpen(false)}
+        >
+          확인
+        </button>
       </Modal>
 
       {/* 공유하기 모달 */}

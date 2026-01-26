@@ -10,6 +10,7 @@ import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
 
 import share from '@/shared/assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/images/arrow-up-right.svg';
+import check from './assets/check.svg';
 
 interface ReviewInfoProps {
   reviews: StoreReviewResponse[];
@@ -28,6 +29,7 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
   const reviewCount = useBookmarkStore((state) => state.reviewCount);
 
   const [isBookmarkPending, setIsBookmarkPending] = useState(false);
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
 
   const renderReviews = () => {
     if (reviews.length === 0) {
@@ -39,7 +41,11 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
     }
 
     return reviews.map((review) => (
-      <div className="relative rounded-2xl bg-[var(--gray-1)] p-4" key={review.reviewId}>
+      <div
+        className="relative rounded-2xl bg-[var(--gray-1)] p-4"
+        key={review.reviewId}
+        id={review.reviewId.toString()}
+      >
         {/* 매장명 + 별점 */}
         <span className="text-xl font-bold text-[var(--gray-8)]">{storeName}</span>
         <div className="my-2 flex gap-1">
@@ -90,7 +96,7 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
           </span>
           <div
             className="relative flex size-6 cursor-pointer rounded-full bg-white"
-            onClick={handleShare}
+            onClick={() => handleShare(review.reviewId)}
           >
             <img
               src={share}
@@ -112,7 +118,25 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
     navigate('/review');
   };
 
-  const handleShare = () => {};
+  const handleShare = async (id: number) => {
+    const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
+
+    try {
+      if (navigator.share && isMobile) {
+        await navigator.share({
+          title: '공유공유공유',
+          text: '정빈몬! 공유해줘!!!!!',
+          url: `${window.location.href}#${id}`,
+        });
+      } else {
+        await navigator.clipboard.writeText(`${window.location.href}#${id}`);
+        setIsCopiedModalOpen(true);
+        setTimeout(() => setIsCopiedModalOpen(false), 1000);
+      }
+    } catch (e) {
+      console.log('공유 중 에러 발생 : ' + e);
+    }
+  };
 
   const handleBookmark = async (id: number) => {
     if (isBookmarkPending) return;
@@ -150,6 +174,15 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
       </div>
 
       <div className="flex flex-col gap-3">{renderReviews()}</div>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

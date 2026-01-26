@@ -31,7 +31,7 @@ const Info = () => {
 
     getRestaurantInfo();
     getReviews();
-  }, [restaurantId, id]);
+  }, [id]);
 
   // 가게 정보 가져오기
   const getRestaurantInfo = async () => {
