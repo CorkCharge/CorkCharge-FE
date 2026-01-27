@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ClipLoader } from 'react-spinners';
 
 import Button from '@/shared/components/common/Button';
@@ -12,6 +12,7 @@ import { useDebounce } from '@/shared/hooks/useDebounce';
 import search from '@/shared/assets/images/search.png';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
 import { useDoitList } from '@/shared/assets/queries/useDoitList';
+import { firstRequest } from '@/shared/apis/helpRequest/helpRequest.api';
 
 const DoitList = () => {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ const DoitList = () => {
   const [isDoitModalOpen, setIsDoitModalOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(-1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAlreadyModalOpen, setIsAlreadyModalOpen] = useState(false);
+
+  const requiredStore = useRef<DoitStoreResponse>(null);
 
   const whichPage = useRegionFilterStore((state) => state.whichPage);
   const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
@@ -130,12 +134,13 @@ const DoitList = () => {
         </div>
       );
 
+    const handleSelect = (store: DoitStoreResponse) => {
+      setSelectedIdx(store.restaurantId);
+      requiredStore.current = store;
+    };
+
     return stores.map((store: DoitStoreResponse) => (
-      <div
-        key={store.restaurantId}
-        onClick={() => setSelectedIdx(store.restaurantId)}
-        className="cursor-pointer"
-      >
+      <div key={store.restaurantId} onClick={() => handleSelect(store)} className="cursor-pointer">
         {store.imageUrl ? (
           <img className="h-[172px] w-full rounded-t-2xl" src={store.imageUrl} />
         ) : (
@@ -180,6 +185,19 @@ const DoitList = () => {
     ));
   };
 
+  const handleRequest = async () => {
+    try {
+      const res = await firstRequest(selectedIdx);
+      if (res.code === 160000) {
+        setIsAlreadyModalOpen(true);
+      } else {
+        setIsDoitModalOpen(true);
+      }
+    } catch (e) {
+      console.error('해주세요 요청 실패: ' + e);
+    }
+  };
+
   return (
     <div>
       <div className="mb-4" style={{ boxShadow: '0 4px 7px 0px rgba(0,0,0,0.1)' }}>
@@ -219,7 +237,8 @@ const DoitList = () => {
               bottom: 'calc(var(--footer-h) + 15px)',
             }}
             disabled={selectedIdx === -1}
-            onClick={() => setIsDoitModalOpen(true)}
+            // onClick={() => setIsDoitModalOpen(true)}
+            onClick={handleRequest}
           />
         ) : (
           <div
@@ -236,6 +255,7 @@ const DoitList = () => {
           </div>
         ))}
 
+      {/* 1차 요청 완료 모달 */}
       <Modal isOpen={isDoitModalOpen}>
         <h3 className="mb-2 text-center text-xl font-bold text-[var(--gray-8)]">해주세요 완료</h3>
         <p className="text-center text-sm">
@@ -251,11 +271,34 @@ const DoitList = () => {
           </button>
           <button
             className="flex-[7] rounded-xl bg-[var(--primary)] font-bold text-white"
-            onClick={() => navigate('/doit/request')}
+            onClick={() =>
+              navigate('/doit/request', {
+                state: {
+                  storeId: requiredStore.current?.restaurantId,
+                  storeName: requiredStore.current?.name,
+                  address: requiredStore.current?.address,
+                },
+              })
+            }
           >
             원하는 비용 알려주기
           </button>
         </div>
+      </Modal>
+
+      {/* 이미 요청된 모달 */}
+      <Modal isOpen={isAlreadyModalOpen}>
+        <h3 className="text-center text-xl font-bold text-[var(--gray-8)]">
+          이미 완료된 해주세요입니다.
+        </h3>
+        <p className="mb-5 mt-2 text-center font-medium text-[var(--gray-8)]">
+          소중한 의견 감사합니다.
+        </p>
+        <Button
+          value="닫기"
+          className="bg-[var(--gray-1)] shadow-none"
+          onClick={() => setIsAlreadyModalOpen(false)}
+        />
       </Modal>
     </div>
   );
