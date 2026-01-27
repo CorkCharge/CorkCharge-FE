@@ -29,10 +29,12 @@ const Review = () => {
     }
   }, [writingReviewInfo, navigate, restInfo.restaurantId]);
 
+  const rating = writingReviewInfo.get(restInfo.restaurantId);
+  const restId = restInfo.restaurantId;
+  const canSubmit = Boolean(content && rating && restId);
+
   const handleReview = async () => {
-    const rating = writingReviewInfo.get(restInfo.restaurantId);
-    const restId = restInfo.restaurantId;
-    if (!content || !rating || !restId) return;
+    if (!canSubmit || rating === undefined) return;
 
     try {
       await writeReview(restInfo.restaurantId, content, rating, selectedfile);
@@ -118,7 +120,7 @@ const Review = () => {
 
       <div
         onClick={handleReview}
-        className={`mb-4 mt-12 flex h-[48px] w-4/5 items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
+        className={`mb-4 mt-12 flex h-[48px] w-4/5 items-center justify-center rounded-[10px] ${canSubmit ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
       >
         <div className="flex gap-2">
           <div className={`text-[16px] font-bold ${content ? 'text-white' : 'text-[#35353F]'}`}>

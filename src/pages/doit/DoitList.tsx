@@ -121,6 +121,8 @@ const DoitList = () => {
         </div>
       );
 
+    if (!stores) return null;
+
     if (stores && stores.length === 0)
       return (
         <div
@@ -186,6 +188,7 @@ const DoitList = () => {
   };
 
   const handleRequest = async () => {
+    if (selectedIdx < 0) return;
     try {
       const res = await firstRequest(selectedIdx);
       if (res.code === 160000) {

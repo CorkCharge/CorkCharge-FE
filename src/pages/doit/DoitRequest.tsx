@@ -58,14 +58,18 @@ function DoitRequest() {
 
   // 2차 해주세요 제출
   const handleSubmit = async () => {
+    if (!storeId) {
+      console.error('storeId가 없습니다.');
+      return;
+    }
     if (!firstPriority || !secondPriority) return;
+
     try {
       await secondRequest(storeId, corkageType, sliderVal, firstPriority, secondPriority, content);
+      navigate('/doit/complete');
     } catch (e) {
       console.error('2차 해주세요 요청 실패: ' + e);
     }
-
-    navigate('/doit/complete');
   };
 
   return (
