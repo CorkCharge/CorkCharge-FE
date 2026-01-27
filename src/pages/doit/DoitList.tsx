@@ -4,44 +4,85 @@ import { useState, useEffect } from 'react';
 import Button from '@/shared/components/common/Button';
 import Modal from '@/shared/components/common/Modal';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
+// import { fetchDoitList } from '@/shared/apis/helpRequest/helpRequest.api';
+import type { DoitStoreResponse } from '@/shared/apis/helpRequest/helpRequest.type';
+import Header from '@/shared/components/common/Header';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 
 import search from '@/shared/assets/images/search.png';
-import arrow from '@/shared/assets/left_arrow.svg';
-import downArrow from '@/shared/assets/selectArrow.svg';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
+import { useDoitList } from '@/shared/assets/queries/useDoitList';
 
 const DoitList = () => {
   const navigate = useNavigate();
 
   const [isDoitModalOpen, setIsDoitModalOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(-1);
+  // const [stores, setStores] = useState<DoitStoreResponse[]>([
+  //   {
+  //     restaurantId: 88,
+  //     name: '엔비햄버거',
+  //     address: '서울시 성동구 상수동 340-2',
+  //     requestCount: 333,
+  //     openingHoursText: '평일 17:00 - 24:00',
+  //     imageUrl:
+  //       'https://i.namu.wiki/i/tt4zDW-8C6dGK4lYxF8iFYpLDZplKS56kPiKWx7R_tQt710Cf8hZaWHoLaAW7EMFiqiW_PEhaCEHzEAhZ80ZxuMuAl7Ss72_oe4A6kpdYEWQr0-WRGlLYuxFU-YGifogKca3youCY-crkd96B2fl3Q.webp',
+  //   },
+  // ]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const whichPage = useRegionFilterStore((state) => state.whichPage);
   const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
+  const filteredRegions = useRegionFilterStore((state) => state.filteredRegions);
 
   useEffect(() => {
     if (whichPage !== 2) setSelectedDongNames([]);
   }, [whichPage, setSelectedDongNames]);
 
+  // useEffect(() => {
+  //   getStores();
+  // }, []);
+
+  // 검색어 디바운스
+  const debounceQuery = useDebounce(searchQuery, 500);
+
+  // 검색어 캐싱
+  const sido = Object.keys(filteredRegions)[0];
+  const sigungu = sido ? Object.keys(filteredRegions[sido] ?? {})[0] : undefined;
+  const dong = sigungu ? filteredRegions[sido][sigungu] : undefined;
+  const { data: stores } = useDoitList({ sido, sigungu, dong, keyword: debounceQuery });
+  // const getStores = async () => {
+  //   const doNames = Object.keys(filteredRegions)[0];
+  //   const siNames = Object.keys(filteredRegions[doNames])[0];
+  //   const guNames = filteredRegions[doNames][siNames];
+
+  //   try {
+  //     const res = await fetchDoitList(doNames, siNames, guNames, '');
+  //     console.log(res);
+  //     setStores(res);
+  //   } catch (e) {
+  //     console.error('해주세요 매장 가져오기 실패: ' + e);
+  //   }
+  // };
+
   // const handleClick = () => {
   //   navigate('/doit/search');
   // };
   const mapSvg = (
-    <svg
-      width="21"
-      height="20"
-      viewBox="0 0 21 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="cursor-pointer"
-      onClick={() => navigate('/region-filter', { state: { from: 2 } })}
-    >
-      <path
-        d="M0 18.5182V4.76239C0 4.42173 0.070673 4.12877 0.212019 3.88349C0.360096 3.63141 0.585577 3.4202 0.888462 3.24987L5.67404 0.470107C5.76154 0.415602 5.85577 0.364504 5.95673 0.316811C6.05769 0.262306 6.15192 0.214614 6.23943 0.173735V17.1078L1.99904 19.4277C1.68269 19.6049 1.4 19.6934 1.15096 19.6934C0.7875 19.6934 0.504808 19.5912 0.302884 19.3868C0.100962 19.1824 0 18.8929 0 18.5182ZM7.6226 16.9136V0C7.71683 0.0204394 7.81106 0.0510987 7.90529 0.0919777C8.00625 0.132857 8.10048 0.180548 8.18798 0.235053L13.1755 3.32141V20C13.1014 19.9796 13.024 19.9523 12.9432 19.9182C12.8692 19.8842 12.7919 19.8467 12.7111 19.8058L7.6226 16.9136ZM14.5485 19.9693V3.12724L19.001 0.623403C19.3173 0.446261 19.6 0.35769 19.8491 0.35769C20.2125 0.35769 20.4952 0.459888 20.6971 0.664282C20.899 0.868677 21 1.15823 21 1.53296V15.2989C21 15.6396 20.926 15.9359 20.7779 16.188C20.6365 16.4334 20.4144 16.6411 20.1116 16.8114L14.8515 19.8365C14.8043 19.8637 14.7538 19.8876 14.7 19.908C14.6529 19.9353 14.6024 19.9557 14.5485 19.9693Z"
-        fill={selectedDongNames.length > 0 ? 'var(--primary)' : 'var(--gray-6)'}
-      />
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g opacity="0.5">
+        <path
+          d="M0 12.9627V3.33367C0 3.09521 0.0471154 2.89014 0.141346 2.71844C0.240064 2.54198 0.390385 2.39414 0.592308 2.27491L3.78269 0.329075C3.84103 0.290922 3.90385 0.255153 3.97115 0.221768C4.03846 0.183614 4.10128 0.15023 4.15962 0.121615V11.9755L1.33269 13.5994C1.12179 13.7234 0.933333 13.7854 0.767309 13.7854C0.525 13.7854 0.336539 13.7138 0.201923 13.5708C0.067308 13.4277 0 13.225 0 12.9627ZM5.08173 11.8395V0C5.14455 0.0143076 5.20737 0.0357691 5.27019 0.0643844C5.3375 0.0929996 5.40032 0.126384 5.45866 0.164537L8.78367 2.32498V14C8.73428 13.9857 8.6827 13.9666 8.62883 13.9427C8.57949 13.9189 8.52791 13.8927 8.47404 13.8641L5.08173 11.8395ZM9.69903 13.9785V2.18907L12.6673 0.436382C12.8782 0.312383 13.0667 0.250383 13.2327 0.250383C13.475 0.250383 13.6635 0.321921 13.7981 0.464997C13.9327 0.608074 14 0.810762 14 1.07307V10.7093C14 10.9477 13.9507 11.1551 13.8519 11.3316C13.7577 11.5033 13.6096 11.6488 13.4077 11.768L9.90097 13.8855C9.86956 13.9046 9.8359 13.9213 9.8 13.9356C9.76858 13.9547 9.73493 13.969 9.69903 13.9785Z"
+          fill="#35353F"
+        />
+        <path
+          d="M0 12.9627V3.33367C0 3.09521 0.0471154 2.89014 0.141346 2.71844C0.240064 2.54198 0.390385 2.39414 0.592308 2.27491L3.78269 0.329075C3.84103 0.290922 3.90385 0.255153 3.97115 0.221768C4.03846 0.183614 4.10128 0.15023 4.15962 0.121615V11.9755L1.33269 13.5994C1.12179 13.7234 0.933333 13.7854 0.767309 13.7854C0.525 13.7854 0.336539 13.7138 0.201923 13.5708C0.067308 13.4277 0 13.225 0 12.9627ZM5.08173 11.8395V0C5.14455 0.0143076 5.20737 0.0357691 5.27019 0.0643844C5.3375 0.0929996 5.40032 0.126384 5.45866 0.164537L8.78367 2.32498V14C8.73428 13.9857 8.6827 13.9666 8.62883 13.9427C8.57949 13.9189 8.52791 13.8927 8.47404 13.8641L5.08173 11.8395ZM9.69903 13.9785V2.18907L12.6673 0.436382C12.8782 0.312383 13.0667 0.250383 13.2327 0.250383C13.475 0.250383 13.6635 0.321921 13.7981 0.464997C13.9327 0.608074 14 0.810762 14 1.07307V10.7093C14 10.9477 13.9507 11.1551 13.8519 11.3316C13.7577 11.5033 13.6096 11.6488 13.4077 11.768L9.90097 13.8855C9.86956 13.9046 9.8359 13.9213 9.8 13.9356C9.76858 13.9547 9.73493 13.969 9.69903 13.9785Z"
+          fill="black"
+          fillOpacity="0.2"
+        />
+      </g>
     </svg>
   );
 
@@ -96,22 +137,30 @@ const DoitList = () => {
     ));
 
   const renderStores = () =>
-    [...Array(5)].map((_, idx) => (
-      <div key={idx} onClick={() => setSelectedIdx(idx)} className="cursor-pointer">
-        <div className="h-[172px] w-full rounded-t-2xl bg-black" />
+    stores?.map((store: DoitStoreResponse) => (
+      <div
+        key={store.restaurantId}
+        onClick={() => setSelectedIdx(store.restaurantId)}
+        className="cursor-pointer"
+      >
+        {store.imageUrl ? (
+          <img className="h-[172px] w-full rounded-t-2xl" src={store.imageUrl} />
+        ) : (
+          <div className="h-[172px] w-full rounded-t-2xl bg-black" />
+        )}
         <div
           className="relative flex h-[44px] items-center rounded-b-2xl pl-6"
           style={{
             background:
-              selectedIdx === idx
+              selectedIdx === store.restaurantId
                 ? 'linear-gradient(0deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.3) 100%), radial-gradient(191.49% 164.27% at -1.8% 31%, #90212A 32.79%, #DCDBE8 65%)'
                 : 'var(--glass)',
           }}
         >
           <div className="flex gap-3">
-            {getLogo(selectedIdx === idx)}
+            {getLogo(selectedIdx === store.restaurantId)}
             <span
-              className={`text-sm font-bold ${selectedIdx === idx ? 'text-white' : 'text-[var(--gray-8)]'}`}
+              className={`text-sm font-bold ${selectedIdx === store.restaurantId ? 'text-white' : 'text-[var(--gray-8)]'}`}
             >
               해주세요
             </span>
@@ -119,52 +168,48 @@ const DoitList = () => {
 
           <div className="absolute right-4 flex cursor-pointer items-center gap-1">
             <span
-              className={`text-sm font-medium ${selectedIdx === idx ? 'text-white' : 'text-[var(--gray-8)]'}`}
+              className={`text-sm font-medium ${selectedIdx === store.restaurantId ? 'text-white' : 'text-[var(--gray-8)]'}`}
             >
-              999+
+              {store.requestCount > 999 ? '999+' : store.requestCount}
             </span>
-            {getRightArrow(selectedIdx === idx)}
+            {getRightArrow(selectedIdx === store.restaurantId)}
           </div>
         </div>
 
         <div className="mt-1 text-[var(--gray-8)]">
-          <span className="text-lg font-bold">성수 누메르도스</span>
+          <span className="text-lg font-bold">{store.name}</span>
           <div className="font-medium">
-            <span>1.2km</span>
-            <span>서울시 성동구 상수동 340-2</span>
+            <span>{store.address}</span>
           </div>
-          <span className="font-medium">평일 17:00~24:00</span>
+          <span className="font-medium">{store.openingHoursText}</span>
         </div>
       </div>
     ));
 
   return (
     <div>
-      <header className="mb-4" style={{ boxShadow: '0 4px 7px 0px rgba(0,0,0,0.1)' }}>
-        <div className="flex h-[48px] items-center justify-between px-4 font-bold text-[var(--gray-8)]">
-          <img src={arrow} className="cursor-pointer" onClick={() => navigate('/home')} />
-          <span>해주세요</span>
-          {mapSvg}
-        </div>
+      <div className="mb-4" style={{ boxShadow: '0 4px 7px 0px rgba(0,0,0,0.1)' }}>
+        <Header title="해주세요" type="back" backFn={() => navigate('/home')} />
 
         <div className="flex justify-center gap-1 px-5 pb-2">
           <div className="flex h-10 min-w-0 flex-1 items-center rounded-br-full rounded-tl-full bg-[var(--gray-1)] px-6">
             <input
               type="text"
               className="min-w-0 flex-1 bg-transparent text-sm font-medium focus:outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <img src={search} className="size-4 cursor-pointer" />
           </div>
-          <div className="relative flex h-full shrink-0 items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]">
-            <span className="py-1 text-center text-xs">요청 많은 순</span>
-            <img
-              src={downArrow}
-              className="ml-2 cursor-pointer"
-              // onClick={() => setIsDrop((prev) => !prev)}
-            />
+          <div
+            className="relative flex h-full shrink-0 cursor-pointer items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]"
+            onClick={() => navigate('/region-filter', { state: { from: 2 } })}
+          >
+            {mapSvg}
+            <span className="ml-1 py-1 text-center text-xs">지역필터</span>
           </div>
         </div>
-      </header>
+      </div>
 
       <div className="mb-[80px] flex flex-col gap-4 px-4">{renderStores()}</div>
 
