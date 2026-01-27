@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { ClipLoader } from 'react-spinners';
 
 import Button from '@/shared/components/common/Button';
 import Modal from '@/shared/components/common/Modal';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
-// import { fetchDoitList } from '@/shared/apis/helpRequest/helpRequest.api';
 import type { DoitStoreResponse } from '@/shared/apis/helpRequest/helpRequest.type';
 import Header from '@/shared/components/common/Header';
 import { useDebounce } from '@/shared/hooks/useDebounce';
@@ -18,17 +18,6 @@ const DoitList = () => {
 
   const [isDoitModalOpen, setIsDoitModalOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(-1);
-  // const [stores, setStores] = useState<DoitStoreResponse[]>([
-  //   {
-  //     restaurantId: 88,
-  //     name: '엔비햄버거',
-  //     address: '서울시 성동구 상수동 340-2',
-  //     requestCount: 333,
-  //     openingHoursText: '평일 17:00 - 24:00',
-  //     imageUrl:
-  //       'https://i.namu.wiki/i/tt4zDW-8C6dGK4lYxF8iFYpLDZplKS56kPiKWx7R_tQt710Cf8hZaWHoLaAW7EMFiqiW_PEhaCEHzEAhZ80ZxuMuAl7Ss72_oe4A6kpdYEWQr0-WRGlLYuxFU-YGifogKca3youCY-crkd96B2fl3Q.webp',
-  //   },
-  // ]);
   const [searchQuery, setSearchQuery] = useState('');
 
   const whichPage = useRegionFilterStore((state) => state.whichPage);
@@ -41,10 +30,6 @@ const DoitList = () => {
     if (whichPage !== 2) setSelectedDongNames([]);
   }, [whichPage, setSelectedDongNames]);
 
-  // useEffect(() => {
-  //   getStores();
-  // }, []);
-
   // 검색어 디바운스
   const debounceQuery = useDebounce(searchQuery, 500);
 
@@ -52,24 +37,12 @@ const DoitList = () => {
   const sido = Object.keys(filteredRegions)[0];
   const sigungu = sido ? Object.keys(filteredRegions[sido] ?? {})[0] : undefined;
   const dong = sigungu ? filteredRegions[sido][sigungu] : undefined;
-  const { data: stores } = useDoitList({ sido, sigungu, dong, keyword: debounceQuery });
-  // const getStores = async () => {
-  //   const doNames = Object.keys(filteredRegions)[0];
-  //   const siNames = Object.keys(filteredRegions[doNames])[0];
-  //   const guNames = filteredRegions[doNames][siNames];
+  const {
+    data: stores,
+    isLoading,
+    isFetching,
+  } = useDoitList({ sido, sigungu, dong, keyword: debounceQuery });
 
-  //   try {
-  //     const res = await fetchDoitList(doNames, siNames, guNames, '');
-  //     console.log(res);
-  //     setStores(res);
-  //   } catch (e) {
-  //     console.error('해주세요 매장 가져오기 실패: ' + e);
-  //   }
-  // };
-
-  // const handleClick = () => {
-  //   navigate('/doit/search');
-  // };
   const mapSvg = (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g opacity="0.5">
@@ -136,8 +109,28 @@ const DoitList = () => {
       </div>
     ));
 
-  const renderStores = () =>
-    stores?.map((store: DoitStoreResponse) => (
+  const renderStores = () => {
+    if (isLoading || isFetching)
+      return (
+        <div className="text-center">
+          <ClipLoader color="var(--primary)" />
+        </div>
+      );
+
+    if (stores && stores.length === 0)
+      return (
+        <div
+          className="relative flex items-center justify-center text-lg font-medium text-[var(--gray-8)]"
+          style={{ height: 'calc(100svh - 16px - 96px - var(--footer-h))' }}
+        >
+          <p>매장정보가 존재하지 않습니다.</p>
+          <p className="absolute bottom-0 text-[10px] text-[var(--gray-4)]">
+            해주세요 서비스 신청은 매장 상세정보탭에서도 진행할 수 있습니다.
+          </p>
+        </div>
+      );
+
+    return stores.map((store: DoitStoreResponse) => (
       <div
         key={store.restaurantId}
         onClick={() => setSelectedIdx(store.restaurantId)}
@@ -185,6 +178,7 @@ const DoitList = () => {
         </div>
       </div>
     ));
+  };
 
   return (
     <div>
@@ -211,43 +205,36 @@ const DoitList = () => {
         </div>
       </div>
 
-      <div className="mb-[80px] flex flex-col gap-4 px-4">{renderStores()}</div>
+      <div className={`flex flex-col gap-4 px-4 ${stores?.length > 0 && 'mb-[80px]'}`}>
+        {renderStores()}
+      </div>
 
-      {/* <div
-        className="relative flex items-center justify-center text-lg font-medium text-[var(--gray-8)]"
-        style={{ height: 'calc(100svh - 16px - 96px - var(--footer-h))' }}
-      >
-        <p>매장정보가 존재하지 않습니다.</p>
-        <p className="absolute bottom-0 text-[10px] text-[var(--gray-4)]">
-          해주세요 서비스 신청은 매장 상세정보탭에서도 진행할 수 있습니다.
-        </p>
-      </div> */}
-
-      {selectedDongNames.length < 1 ? (
-        <Button
-          value="해주세요"
-          className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
-          style={{
-            maxWidth: 'calc(var(--app-width) * 0.8)',
-            bottom: 'calc(var(--footer-h) + 15px)',
-          }}
-          disabled={selectedIdx === -1}
-          onClick={() => setIsDoitModalOpen(true)}
-        />
-      ) : (
-        <div
-          className="fixed left-1/2 h-[150px] w-full -translate-x-1/2 bg-white px-4 py-2"
-          style={{ maxWidth: 'var(--app-width)', bottom: 'var(--footer-h)' }}
-        >
-          <div className="flex items-center gap-2">
-            <img src={filterImg} className="size-6" />
-            <span className="text-xs font-semibold">
-              <span className="text-[var(--primary)]">{selectedDongNames.length}</span>/10
-            </span>
+      {stores?.length > 0 &&
+        (selectedDongNames.length < 1 ? (
+          <Button
+            value="해주세요"
+            className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
+            style={{
+              maxWidth: 'calc(var(--app-width) * 0.8)',
+              bottom: 'calc(var(--footer-h) + 15px)',
+            }}
+            disabled={selectedIdx === -1}
+            onClick={() => setIsDoitModalOpen(true)}
+          />
+        ) : (
+          <div
+            className="fixed left-1/2 h-[150px] w-full -translate-x-1/2 bg-white px-4 py-2"
+            style={{ maxWidth: 'var(--app-width)', bottom: 'var(--footer-h)' }}
+          >
+            <div className="flex items-center gap-2">
+              <img src={filterImg} className="size-6" />
+              <span className="text-xs font-semibold">
+                <span className="text-[var(--primary)]">{selectedDongNames.length}</span>/10
+              </span>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-2">{renderDongs()}</div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-2">{renderDongs()}</div>
-        </div>
-      )}
+        ))}
 
       <Modal isOpen={isDoitModalOpen}>
         <h3 className="mb-2 text-center text-xl font-bold text-[var(--gray-8)]">해주세요 완료</h3>
