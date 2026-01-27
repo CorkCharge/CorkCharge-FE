@@ -37,7 +37,6 @@ const Review = () => {
     try {
       await writeReview(restInfo.restaurantId, content, rating, selectedfile);
       setIsModalOpen(true);
-      navigate(`/detail-info/${restInfo.restaurantId}`, { state: { openReviewModal: true } });
     } catch (e) {
       console.error('리뷰 작성 실패: ' + e);
       alert('리뷰 작성 중 오류가 발생하였습니다. 다시 시도해주세요');
@@ -54,7 +53,7 @@ const Review = () => {
 
   const reviewFinish = () => {
     setIsModalOpen(false);
-    navigate(-1);
+    navigate(`/detail-info/${restInfo.restaurantId}`);
   };
 
   const cancelImage = () => {

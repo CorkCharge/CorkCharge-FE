@@ -50,17 +50,11 @@ const useBookmarkStore = create<TipStoreState>()(
               : [...state.selectedStores, storeId],
           })),
 
-        // review를 토글
-        // toggleReview: (reviewId) =>
-        //   set((state) => ({
-        //     selectedReviews: state.selectedReviews.includes(reviewId)
-        //       ? state.selectedReviews.filter((x) => x !== reviewId)
-        //       : [...state.selectedReviews, reviewId],
-        //   })),
         toggleReview: (reviewId) =>
           set((state) => {
             const isBookmarked = state.selectedReviews.includes(reviewId);
             const currentCount = state.reviewCount[reviewId] ?? 0;
+            const newCount = isBookmarked ? Math.max(0, currentCount - 1) : currentCount + 1;
 
             return {
               selectedReviews: isBookmarked
@@ -68,7 +62,7 @@ const useBookmarkStore = create<TipStoreState>()(
                 : [...state.selectedReviews, reviewId],
               reviewCount: {
                 ...state.reviewCount,
-                [reviewId]: currentCount + (isBookmarked ? -1 : 1),
+                [reviewId]: newCount,
               },
             };
           }),

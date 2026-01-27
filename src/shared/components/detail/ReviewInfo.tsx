@@ -92,7 +92,7 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
             </svg>
           </div>
           <span className="text-[10px] font-medium text-[var(--gray-8)]">
-            {reviewCount[review.reviewId] > 99 ? '99+' : reviewCount[review.reviewId]}
+            {(reviewCount[review.reviewId] ?? 0) > 99 ? '99+' : (reviewCount[review.reviewId] ?? 0)}
           </span>
           <div
             className="relative flex size-6 cursor-pointer rounded-full bg-white"
@@ -124,8 +124,8 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
     try {
       if (navigator.share && isMobile) {
         await navigator.share({
-          title: '공유공유공유',
-          text: '정빈몬! 공유해줘!!!!!',
+          title: storeName,
+          text: `${storeName} 리뷰를 확인해보세요!`,
           url: `${window.location.href}#${id}`,
         });
       } else {
