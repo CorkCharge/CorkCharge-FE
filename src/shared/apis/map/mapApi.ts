@@ -21,9 +21,10 @@ export const getMapData = async (params: MapParams) => {
   // 이 로그가 실제 서버로 전송되는 JSON 형태입니다.
   console.log('[API] 서버로 전송되는 최종 Body:', cleanedData);
   // API 응답 데이터의 타입은 MapRestaurantData 배열이 될 수 있습니다.
-  const response = await apiClient.post<ApiResponse<MapRestaurantData[]>>('/restaurants/map', {
-    cleanedData,
-  });
+  const response = await apiClient.post<ApiResponse<MapRestaurantData[]>>(
+    '/restaurants/map',
+    cleanedData
+  );
   console.log('[API] 서버 응답 데이터 (Response):', response.data);
   return response.data;
 };
