@@ -11,7 +11,7 @@ import { useDebounce } from '@/shared/hooks/useDebounce';
 
 import search from '@/shared/assets/images/search.png';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
-import { useDoitList } from '@/shared/assets/queries/useDoitList';
+import { useDoitList } from '@/shared/queries/useDoitList';
 import { firstRequest } from '@/shared/apis/helpRequest/helpRequest.api';
 
 const DoitList = () => {
