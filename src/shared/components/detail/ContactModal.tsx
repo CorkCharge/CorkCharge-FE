@@ -19,17 +19,23 @@ function ContactModal({
 }: ContactModalProps) {
   const [contactContent, setContactContent] = useState('');
   const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
+  const [isPending, setIspending] = useState(false);
 
   // 문의하기 생성
   const postSuggestion = async () => {
+    if (isPending) return;
     const option = contactOption ? 'CORKAGE_ERROR' : 'RESTAURANT_INFORMATION_ERROR';
 
+    setIspending(true);
     try {
       await writeSuggestion(`${restaurantName} 관련 문의`, contactContent, option);
+      setContactContent('');
       setIsContactModalOpen(false);
       completeModalOpen(true);
     } catch (e) {
       console.error('문의하기 생성 중 오류 발생: ' + e);
+    } finally {
+      setIspending(true);
     }
   };
 
