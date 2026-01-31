@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-
-type PageIdxType = -1 | 0 | 1 | 2;
+/**
+ * witchPage: 지역 검색을 요청한 페이지의 index
+ * -1: 초기값, 0: 신규매장, 1: 콜키지 리뷰,
+ *  2: 해주세요, 3: 카테고리 매장
+ */
 interface RegionFilterProps {
-  // -1: 초기값, 0: 신규매장, 1: 콜키지 리뷰, 2: 해주세요
-  whichPage: PageIdxType;
+  whichPage: number;
   filteredRegions: RegionTree;
   selectedDongNames: string[];
   deleteByDong: (_: string) => void;
@@ -12,7 +14,7 @@ interface RegionFilterProps {
   resetAddress: () => void;
   setSelectedDongNames: (_: string[]) => void;
   removeDongFromArray: (_: string) => void;
-  setWhichPage: (_: PageIdxType) => void;
+  setWhichPage: (_: number) => void;
 }
 
 interface RegionTree {
@@ -79,7 +81,7 @@ const useRegionFilterStore = create<RegionFilterProps>()(
         }),
 
       //filteredRegion 초기화
-      resetAddress: () => set({ filteredRegions: {} }),
+      resetAddress: () => set({ filteredRegions: {}, selectedDongNames: [] }),
 
       // selectedDongNames에 배열 연결
       setSelectedDongNames: (nameArr: string[]) => set({ selectedDongNames: nameArr }),
@@ -104,7 +106,7 @@ const useRegionFilterStore = create<RegionFilterProps>()(
           };
         }),
 
-      setWhichPage: (pageIdx: PageIdxType) => set({ whichPage: pageIdx }),
+      setWhichPage: (pageIdx: number) => set({ whichPage: pageIdx }),
     }),
     { name: 'temp' }
   )

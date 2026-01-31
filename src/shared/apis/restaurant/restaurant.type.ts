@@ -20,7 +20,7 @@ export interface StoreCard {
   mainImageUrls: string;
 }
 
-export interface NewStoreResponse extends RestaurantResponse {
+export interface RestaurantScrapResponse extends RestaurantResponse {
   scrap: boolean;
 }
 

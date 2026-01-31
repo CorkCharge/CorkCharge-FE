@@ -15,7 +15,7 @@ import filterImg from '@/pages/corkagemap/filterImg.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
 import { fetchNewStore } from '@/shared/apis/restaurant/restaurant.api';
-import type { NewStoreResponse } from '@/shared/apis/restaurant/restaurant.type';
+import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
 
 function NewStores() {
   const navigate = useNavigate();
@@ -25,16 +25,16 @@ function NewStores() {
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
-  const [newStores, setNewStores] = useState<NewStoreResponse[]>([]);
+  const [newStores, setNewStores] = useState<RestaurantScrapResponse[]>([]);
 
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
   const whichPage = useRegionFilterStore((state) => state.whichPage);
-  const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
+  const resetAddress = useRegionFilterStore((state) => state.resetAddress);
 
   useEffect(() => {
-    if (whichPage !== 0) setSelectedDongNames([]);
-  }, [whichPage, setSelectedDongNames]);
+    if (whichPage !== 0) resetAddress();
+  }, [whichPage, resetAddress]);
 
   useEffect(() => {
     getNewStores();

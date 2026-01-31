@@ -1,4 +1,5 @@
 import apiClient from '../apiClient';
+import type { RestaurantScrapResponse } from './restaurant.type';
 
 // 가까운 매장 가져오기 - type
 
@@ -7,14 +8,27 @@ const getCurrentPosition = (): Promise<GeolocationPosition> =>
   new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
 
 // 카테고리별 매장 호출
-export const fetchCategoryStore = async (category: string) => {
+export const fetchCategoryStores = async ({
+  category,
+  sido,
+  sigungu,
+  dongList,
+}: {
+  category: string;
+  sido?: string;
+  sigungu?: string;
+  dongList?: string[];
+}): Promise<RestaurantScrapResponse[]> => {
   const pos = await getCurrentPosition();
   const res = await apiClient.post('/restaurants/category', {
     category,
     lat: pos.coords.latitude,
     lon: pos.coords.longitude,
+    sido,
+    sigungu,
+    dongList,
   });
-  return res.data;
+  return res.data.data;
 };
 
 // 홈화면 가까운 매장 및 핫한 매장 가져오기

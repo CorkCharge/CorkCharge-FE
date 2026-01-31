@@ -16,7 +16,7 @@ const STORE_CATEGORY = [
   { title: '회', imgName: rawFish },
   { title: '이탈리안', imgName: italian },
   { title: '초밥', imgName: sushi },
-  { title: '육류, 고기', imgName: meat },
+  { title: '육류,고기', imgName: meat },
 ];
 
 interface StoreInfoProps {
@@ -38,7 +38,11 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
 
   const renderCategoryStore = () =>
     STORE_CATEGORY.map((category, idx) => (
-      <div key={idx} className="flex cursor-pointer flex-col items-center gap-1">
+      <div
+        key={idx}
+        className="flex cursor-pointer flex-col items-center gap-1"
+        onClick={() => navigate('/category-stores', { state: { title: category.title } })}
+      >
         <img src={category.imgName} className="size-[115px] rounded-full" />
         <span className="font-medium text-[var(--gray-8)]">{category.title}</span>
       </div>
@@ -101,7 +105,6 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
       {/* 카테고리별 추천 매장 */}
       <div className="relative px-4">
         <span className="font-bold text-[var(--gray-8)]">카테고리별 추천 매장</span>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
       </div>
       <div className="mt-2 flex gap-[10px] overflow-auto px-4">{renderCategoryStore()}</div>
 

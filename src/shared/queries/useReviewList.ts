@@ -18,7 +18,7 @@ export const useReviewList = ({
   const dongKey = sortedDong?.join(',');
   return useQuery({
     queryKey: ['reviewList', { keyword, sido, sigungu, dongKey, isSortByBookmark }],
-    queryFn: () => fetchCorkageReviews(),
+    queryFn: () => fetchCorkageReviews(keyword, sido, sigungu, sortedDong, isSortByBookmark),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
   });
