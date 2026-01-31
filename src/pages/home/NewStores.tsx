@@ -42,7 +42,7 @@ function NewStores() {
 
   const getNewStores = async () => {
     try {
-      const res = await fetchNewStore();
+      const res = await fetchNewStore({});
       setNewStores(res);
     } catch (e) {
       console.error('신규 매장 조회 실패: ' + e);
@@ -95,7 +95,7 @@ function NewStores() {
           <span className="font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
-            <span className="mr-2">{store.rating}</span>
+            <span className="mr-2">{store.rating.toFixed(1)}</span>
             <span>리뷰 total {store.reviewCount}</span>
           </div>
           <div className="absolute bottom-0 right-0 flex items-center gap-1">

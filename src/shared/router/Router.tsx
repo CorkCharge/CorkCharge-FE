@@ -45,6 +45,7 @@ import NotiPost from '../components/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
 import CorkageReview from '@/pages/home/CorkageReview';
 import DoitRequest from '@/pages/doit/DoitRequest';
+import CategoryStores from '@/pages/home/CategoryStores';
 
 const router = createBrowserRouter([
   // {
@@ -222,6 +223,10 @@ const router = createBrowserRouter([
       {
         path: 'new-stores',
         element: <NewStores />,
+      },
+      {
+        path: 'category-stores',
+        element: <CategoryStores />,
       },
       {
         path: 'corkage-review',
