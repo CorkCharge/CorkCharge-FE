@@ -111,7 +111,11 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
       {/* 가까운 매장 */}
       <div className="relative mb-2 mt-3 px-4">
         <span className="font-bold text-[var(--gray-8)]">가까운 매장</span>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
+        <img
+          src={arrow}
+          className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer"
+          onClick={() => navigate('/nearby-stores')}
+        />
       </div>
       <div className="mt-2 flex gap-[10px] overflow-auto px-4">{renderNearStores()}</div>
       <div className="mx-4 my-5 rounded-lg bg-[var(--glass)] p-4 font-bold text-[var(--gray-8)]">
@@ -121,7 +125,11 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
       {/* 핫플 콜키지 매장 */}
       <div className="relative px-4">
         <span className="font-bold text-[var(--gray-8)]">핫플 콜키지 추천매장</span>
-        <img src={arrow} className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer" />
+        <img
+          src={arrow}
+          className="absolute right-5 top-1 h-[17px] w-[10px] cursor-pointer"
+          onClick={() => navigate('/hot-stores')}
+        />
       </div>
       <div className="my-2 flex gap-[10px] overflow-auto px-4">{renderHotPlaceStores()}</div>
     </div>

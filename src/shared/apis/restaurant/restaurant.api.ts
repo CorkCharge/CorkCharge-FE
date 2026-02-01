@@ -53,7 +53,7 @@ export const fetchNearStores = async () => {
 };
 
 // 핫플 콜키지 매장 호출
-export const fetchHotStore = async () => {
+export const fetchHotStores = async () => {
   const res = await apiClient.get('/restaurants/recommand');
   return res.data.data;
 };

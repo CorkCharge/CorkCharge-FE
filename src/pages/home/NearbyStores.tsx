@@ -21,7 +21,7 @@ function NearbyStores() {
   const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
-  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
+  //   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const [stores, setStores] = useState<RestaurantScrapResponse[]>([]);
 
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
@@ -48,7 +48,7 @@ function NearbyStores() {
 
   const handleKeep = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    setIsGroupSelectorOpen(true);
+    // setIsGroupSelectorOpen(true);
   };
 
   // 공유 클릭 시 주소 복사

@@ -1,102 +1,156 @@
-import type { Restaurant } from '@/shared/apis/restaurant/filterRegion';
-import { useState } from 'react';
-import HotStoreList from '../../shared/components/HotStoreList';
-import TopBar from '../../shared/components/TopBar';
-import RegionSearchBar from '../../shared/components/corkScore/RegionSearchBar';
-import BottomButtonContainer from '../../shared/components/filter/BottomButtonContainer';
-import RegionFilter from '../../shared/components/filter/RegionFilter';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-const HotStores = () => {
-  // 지역 필터 상태
-  const [showRegionFilter, setShowRegionFilter] = useState(false);
-  const [selectedSido, setSelectedSido] = useState<string | null>(null);
-  const [selectedSigungu, setSelectedSigungu] = useState<string | null>(null);
-  const [selectedDongs, setSelectedDongs] = useState<string[]>([]);
+import Header from '@/shared/components/common/Header';
+import Button from '@/shared/components/common/Button';
+import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
+import Modal from '@/shared/components/common/Modal';
+import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
+import { fetchHotStores } from '@/shared/apis/restaurant/restaurant.api';
 
-  // 필터 상태 추가
-  const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([]);
-  const [isFiltered, setIsFiltered] = useState(false);
+import star from '@/shared/assets/star.svg';
+import share from '@/shared/assets/detailPageImgs/share.svg';
+import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
+import logo from '@/shared/assets/images/logo.svg';
+import check from '@/shared/components/detail/assets/check.svg';
 
-  // 지역 필터 적용 함수
-  const handleApplyRegionFilter = async (data: Restaurant[]) => {
-    console.log('HotStores에서 받은 데이터:', data);
-    if (data && Array.isArray(data)) {
-      console.log('데이터 길이:', data.length);
-      setFilteredRestaurants(data);
-      setIsFiltered(true);
-      setShowRegionFilter(false);
-    } else {
-      console.error('유효하지 않은 데이터:', data);
+function HotStores() {
+  const navigate = useNavigate();
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
+  const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
+  const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
+  //   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
+  const [stores, setStores] = useState<RestaurantScrapResponse[]>([]);
+
+  const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
+
+  useEffect(() => {
+    getNearbyStores();
+  }, []);
+
+  const getNearbyStores = async () => {
+    try {
+      const res = await fetchHotStores();
+      setStores(res);
+    } catch (e) {
+      console.error('핫한 매장 가져오기 실패: ' + e);
     }
   };
 
-  // 필터 초기화 함수
-  const handleResetFilter = () => {
-    setFilteredRestaurants([]);
-    setIsFiltered(false);
+  const handleShare = (e: React.MouseEvent<HTMLDivElement>, name: string, id: number) => {
+    e.stopPropagation();
+    setModalStoreName(name);
+    setModalStoreId(id);
+    setIsShareModalOpen(true);
   };
 
-  const handleReset = () => {
-    // setShowRegionFilter(false);
-
-    setSelectedSido(null);
-    setSelectedSigungu(null);
-    setSelectedDongs([]);
-    setFilteredRestaurants([]);
-    setIsFiltered(false);
+  const handleKeep = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    // setIsGroupSelectorOpen(true);
   };
+
+  // 공유 클릭 시 주소 복사
+  const clipLink = () => {
+    navigator.clipboard.writeText(window.location.origin + `/detail-info/${modalStoreId}`);
+    setIsShareModalOpen(false);
+    setIsCopiedModalOpen(true);
+    setTimeout(() => setIsCopiedModalOpen(false), 1000);
+  };
+
+  const renderHotStores = () =>
+    stores?.map((store) => (
+      <div
+        key={store.restaurantId}
+        className="flex cursor-pointer flex-col gap-2"
+        onClick={() => navigate(`/detail-info/${store.restaurantId}`)}
+      >
+        <div>
+          {store.mainImageUrls ? (
+            <img src={store.mainImageUrls} className="h-[172px] w-full rounded-t-2xl" />
+          ) : (
+            <div className="h-[172px] rounded-t-2xl bg-black" />
+          )}
+          <div className="flex h-11 items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
+            {store.corkagePrice}
+          </div>
+        </div>
+        <div className="relative">
+          <span className="text-lg font-bold">{store.restaurantName}</span>
+          <p className="flex gap-1 font-medium">
+            <span>{store.distance}km</span>
+            <span>{store.address}</span>
+          </p>
+          <span className="font-medium">{store.openingHours}</span>
+          <div className="mt-1 flex font-medium text-[var(--gray-8)]">
+            <img src={star} className="mr-1" />
+            <span className="mr-2">{store.rating.toFixed(1)}</span>
+            <span>리뷰 total {store.reviewCount}</span>
+          </div>
+          <div className="absolute bottom-0 right-0 flex items-center gap-1">
+            <div
+              className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
+              onClick={handleKeep}
+            >
+              <img src={keep} className="size-6" />
+            </div>
+            <span className="text-sm font-medium text-[var(--gray-8)]">99+</span>
+            <div
+              className="relative flex size-6 cursor-pointer rounded-full bg-white"
+              onClick={(e) => handleShare(e, store.restaurantName, store.restaurantId)}
+            >
+              <img
+                src={share}
+                className="absolute left-1/2 top-1/2 -translate-x-[55%] -translate-y-[40%]"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
 
   return (
-    <div className="flex flex-col items-center">
-      <TopBar text="지금 핫한 매장" />
+    <>
+      <div className="relative px-4">
+        <Header title="핫플 콜키지 추천 매장" type="back" backFn={() => navigate('/home')} />
+        <div
+          className={`flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
+        >
+          {renderHotStores()}
+        </div>
 
-      {/* 지역 필터가 활성화된 경우 */}
-      {showRegionFilter ? (
-        <>
-          <RegionFilter
-            selectedSido={selectedSido}
-            selectedSigungu={selectedSigungu}
-            selectedDongs={selectedDongs}
-            setSelectedSido={setSelectedSido}
-            setSelectedSigungu={setSelectedSigungu}
-            setSelectedDongs={setSelectedDongs}
-          />
-          <BottomButtonContainer
-            filterType="hot"
-            selectedSido={selectedSido}
-            selectedSigungu={selectedSigungu}
-            selectedDongs={selectedDongs}
-            handleReset={handleReset}
-            onApply={handleApplyRegionFilter}
-          />
-        </>
-      ) : (
-        <>
-          {/* 필터링된 데이터가 있으면 필터 결과를, 없으면 기본 리스트를 표시 */}
-          {isFiltered ? (
-            <div className="flex w-full flex-col items-center">
-              {/* 필터 결과 헤더 */}
-              <div className="flex w-[393px] items-center justify-between px-5 py-3">
-                <span className="text-sm text-gray-600">
-                  필터 결과 ({filteredRestaurants.length}개)
-                </span>
-                <button onClick={handleResetFilter} className="text-sm text-blue-500 underline">
-                  필터 초기화
-                </button>
-              </div>
-
-              {/* HotStoreList를 사용해서 필터된 결과 표시 */}
-              <HotStoreList filteredData={filteredRestaurants} />
+        {/* 공유하기 모달 */}
+        <Modal
+          isOpen={isShareModalOpen}
+          hasCloseButton={true}
+          onClose={() => setIsShareModalOpen(false)}
+        >
+          <div className="mb-4 flex items-center">
+            <img src={logo} className="h-[22px] w-[13px]" />
+            <div className="ml-3 flex flex-col">
+              <span className="font-semibold">{modalStoreName}</span>
+              <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
             </div>
-          ) : (
-            <HotStoreList />
-          )}
+          </div>
+          <Button
+            value="링크 복사하기"
+            className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+            onClick={clipLink}
+          />
+        </Modal>
 
-          <RegionSearchBar onClick={() => setShowRegionFilter(true)} />
-        </>
-      )}
-    </div>
+        {/* 복사완료 모달 */}
+        {isCopiedModalOpen && (
+          <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+            <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+              <img src={check} />
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
-};
+}
 
 export default HotStores;

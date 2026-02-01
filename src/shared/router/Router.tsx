@@ -78,7 +78,7 @@ const router = createBrowserRouter([
         element: <SearchMapResult />,
       },
       {
-        path: 'hotStores',
+        path: 'hot-stores',
         element: <HotStores />,
       },
       {
