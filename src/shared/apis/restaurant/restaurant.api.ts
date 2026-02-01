@@ -43,7 +43,7 @@ export const fetchHomeStoreCard = async () => {
 };
 
 // 가까운 매장 호출
-export const fetchNearStore = async () => {
+export const fetchNearStores = async () => {
   const pos = await getCurrentPosition();
   const res = await apiClient.post('/restaurants/nearby', {
     lat: pos.coords.latitude,

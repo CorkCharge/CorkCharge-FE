@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware';
 /**
  * witchPage: 지역 검색을 요청한 페이지의 index
  * -1: 초기값, 0: 신규매장, 1: 콜키지 리뷰,
- *  2: 해주세요, 3: 카테고리 매장
+ *  2: 해주세요, 3.x: 카테고리 매장
  */
 interface RegionFilterProps {
   whichPage: number;
