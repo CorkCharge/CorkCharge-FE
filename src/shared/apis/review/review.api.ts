@@ -12,3 +12,20 @@ export const fetchStoreReviews = async (id: number) => {
 
   return res.data.data;
 };
+
+// 가게 리뷰 작성
+export const writeReview = async (id: number, content: string, rating: number, image?: File) => {
+  const formData = new FormData();
+
+  formData.append(
+    'request',
+    new Blob([JSON.stringify({ content, rating })], { type: 'application/json' })
+  );
+
+  // images.forEach((image) => {
+  //   formData.append('images', image);
+  // });
+  if (image) formData.append('images', image);
+
+  await apiClient.post(`/reviews/${id}`, formData);
+};

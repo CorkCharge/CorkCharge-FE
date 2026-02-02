@@ -43,3 +43,14 @@ export const fetchHotStore = async () => {
   const res = await apiClient.get('/restaurants/recommand');
   return res.data.data;
 };
+
+// 신규등록 매장 조회
+export const fetchNewStore = async () => {
+  const pos = await getCurrentPosition();
+  const res = await apiClient.post('/restaurants/new', {
+    lat: pos.coords.latitude,
+    lon: pos.coords.longitude,
+  });
+
+  return res.data.data;
+};

@@ -1,19 +1,16 @@
-import { useState, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { StarRate } from '../common/StarRate';
 import Header from '../common/Header';
-import apiClient from '@/shared/apis/apiClient';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
 import Modal from '../common/Modal';
 
 import camera from '../../assets/detailPageImgs/camera.svg';
+import { writeReview } from '@/shared/apis/review/review.api';
 
 const Review = () => {
-  const location = useLocation();
-  const { rating, restId } = location.state || 1;
-
   const navigate = useNavigate();
 
   const [content, setContent] = useState('');
@@ -26,24 +23,26 @@ const Review = () => {
   const writingReviewInfo = useMyReviewStore((state) => state.writingReviewInfo);
   const restInfo = useRestaurantStore((state) => state.restInfo);
 
-  const handleReview = () => {
-    if (!content) return;
-    const formData = new FormData();
-    const payload = { content, rating };
-    formData.append('request', JSON.stringify(payload));
-    if (selectedfile) {
-      formData.append('images', selectedfile);
+  useEffect(() => {
+    if (!writingReviewInfo.get(restInfo.restaurantId)) {
+      navigate(-1);
     }
+  }, [writingReviewInfo, navigate, restInfo.restaurantId]);
 
-    apiClient
-      .post(`/review/${restId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-      .then(() => {
-        navigate(`/detail-info/${restId}`, { state: { openReviewModal: true } });
-      })
-      .catch((e) => console.error(e));
+  const rating = writingReviewInfo.get(restInfo.restaurantId);
+  const restId = restInfo.restaurantId;
+  const canSubmit = Boolean(content && rating && restId);
 
-    // api 통신 성공 시 호출
-    setIsModalOpen(true);
+  const handleReview = async () => {
+    if (!canSubmit || rating === undefined) return;
+
+    try {
+      await writeReview(restInfo.restaurantId, content, rating, selectedfile);
+      setIsModalOpen(true);
+    } catch (e) {
+      console.error('리뷰 작성 실패: ' + e);
+      alert('리뷰 작성 중 오류가 발생하였습니다. 다시 시도해주세요');
+    }
   };
 
   const handelImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +55,12 @@ const Review = () => {
 
   const reviewFinish = () => {
     setIsModalOpen(false);
-    navigate(-1);
+    navigate(`/detail-info/${restInfo.restaurantId}`);
+  };
+
+  const cancelImage = () => {
+    setSelectedFile(undefined);
+    setPreviewUrl('');
   };
 
   return (
@@ -81,8 +85,16 @@ const Review = () => {
         />
       </div>
 
-      <div className="mt-5 flex justify-center">
+      <div className="mt-5 flex flex-col items-center">
         <img src={previewUrl} className="w-[80%] max-w-[500px]" />
+        {selectedfile && (
+          <span
+            className="cursor-pointer text-sm text-[var(--gray-6)] underline"
+            onClick={cancelImage}
+          >
+            이미지 등록 취소
+          </span>
+        )}
       </div>
 
       {!previewUrl && (
@@ -107,7 +119,7 @@ const Review = () => {
 
       <div
         onClick={handleReview}
-        className={`mb-4 mt-12 flex h-[48px] w-4/5 items-center justify-center rounded-[10px] ${content ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
+        className={`mb-4 mt-12 flex h-[48px] w-4/5 items-center justify-center rounded-[10px] ${canSubmit ? 'cursor-pointer bg-[var(--primary)]' : 'cursor-not-allowed bg-white'} shadow-[0_2px_18px_rgba(0,0,0,0.1)]`}
       >
         <div className="flex gap-2">
           <div className={`text-[16px] font-bold ${content ? 'text-white' : 'text-[#35353F]'}`}>

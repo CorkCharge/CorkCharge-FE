@@ -122,7 +122,6 @@ const StoreCard = ({
   const pathURL = `${baseURL}/detail-info/${restaurantId}`;
   const handleCopyLink = () => {
     try {
-      console.log(pathURL);
       navigator.clipboard.writeText(pathURL);
       setOpenShareModal(false);
       alert('링크가 클립보드에 복사되었습니다: ');
