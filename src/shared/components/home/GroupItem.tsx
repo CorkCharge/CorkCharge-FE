@@ -35,17 +35,16 @@ type MyGroupProps = {
   name: string;
   count: number;
   checked: boolean;
-  checkCount: React.Dispatch<React.SetStateAction<number>>;
+  onSelect: (_: number) => void;
 };
 
-const GroupItem = ({ iconName, name, count, checked, checkCount }: MyGroupProps) => {
+const GroupItem = ({ id, iconName, name, count, checked, onSelect }: MyGroupProps) => {
   const IconSrc = smallMarkers[iconName];
 
   const [isChecked, setIsChecked] = useState(checked);
 
   const toggleCheck = () => {
-    if (isChecked === true) checkCount((prev) => prev - 1);
-    else checkCount((prev) => prev + 1);
+    onSelect(id);
 
     setIsChecked((prev) => !prev);
   };

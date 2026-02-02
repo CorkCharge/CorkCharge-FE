@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
 import GroupItem from './GroupItem';
@@ -35,12 +35,30 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
   const [confirmedGroup, setConfirmedGroup] = useState<Group | null>(null);
   // 모달 모드: 'create' | 'edit' | 'delete'
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'delete'>('create');
-
-  const [checkCount, setCheckCount] = useState(0); // 선택한 그룹의 개수
+  const [changedIds, setChangedIds] = useState<number[]>([]); // 사용자가 선택한 id들을 저장
 
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
 
   const { data: myGroups } = useGetGroupList();
+
+  const initialSelectedGroupIds = useMemo(
+    () => myGroups?.map((group) => group.groupId) ?? [],
+    [myGroups]
+  );
+
+  // 기존에 사용자가 선택한 id배열을 복제
+  useEffect(() => {
+    setChangedIds(initialSelectedGroupIds);
+  }, [initialSelectedGroupIds]);
+
+  // 초기 상태랑 비교해서 그룹 선택의 변화 유무
+  const isChanged = () => {
+    if (changedIds.length !== initialSelectedGroupIds.length) return true;
+
+    const setIds = new Set(initialSelectedGroupIds);
+
+    return changedIds.some((id) => !setIds.has(id));
+  };
 
   // "새 그룹 만들기" 클릭 시
   const handleCreateNew = () => {
@@ -90,6 +108,10 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
     ? myGroups?.find((g) => g.groupId === editingGroupId)
     : null;
 
+  const toggleSelect = (id: number) => {
+    setChangedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
   return (
     <div className="relative h-full w-full">
       {/* 1. 리스트 뷰 */}
@@ -122,7 +144,7 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
                 name={group.name}
                 count={group.storeCount}
                 checked={group.groupId in selectedStores}
-                checkCount={setCheckCount}
+                onSelect={(id) => toggleSelect(id)}
               />
             ))}
           </div>
@@ -130,7 +152,7 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
           <Button
             value="저장"
             className="bg-[var(--primary)] text-white shadow-none disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
-            disabled={checkCount === 0}
+            disabled={!isChanged()}
           />
         </div>
       )}
