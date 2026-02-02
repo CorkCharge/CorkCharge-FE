@@ -30,10 +30,19 @@ const markerList = [
   SaveMarker12,
 ];
 
+// type GroupData = {
+//   name: string;
+//   iconName: string;
+//   privacy: 'public' | 'private';
+// };
 type GroupData = {
+  groupId: number;
   name: string;
-  iconName: string;
-  privacy: 'public' | 'private';
+  color: string;
+  visibility: 'PUBLIC' | 'PRIVATE';
+  storeCount: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type EditGroupProps = {
@@ -52,8 +61,8 @@ const CreateGroup = ({ initialData, onSave, onCancel }: EditGroupProps) => {
   useEffect(() => {
     if (initialData) {
       setGroupName(initialData.name);
-      setSelectedIcon(initialData.iconName);
-      setPrivacy(initialData.privacy);
+      setSelectedIcon('');
+      setPrivacy('private');
     }
   }, [initialData]);
 
@@ -66,7 +75,7 @@ const CreateGroup = ({ initialData, onSave, onCancel }: EditGroupProps) => {
       alert('그룹명과 마커를 선택해주세요.');
       return;
     }
-    onSave({ name: groupName, iconName: selectedIcon, privacy });
+    // onSave({ name: groupName });
   };
 
   return (

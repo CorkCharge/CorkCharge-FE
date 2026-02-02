@@ -4,25 +4,28 @@ import { AnimatePresence } from 'framer-motion';
 import GroupItem from './GroupItem';
 import CreateGroup from './CreateGroups';
 import ConfirmationModal from '@/pages/corkagemap/list/ConfirmationModal';
+import Button from '../common/Button';
+import { useGetGroupList } from '@/shared/queries/useGetGroupList';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
 
 import newSvg from '@/pages/corkagemap/list/plus.svg';
-import Button from '../common/Button';
 
 // 그룹 데이터의 타입 정의
 type Group = {
-  id: number;
+  groupId: number;
   name: string;
-  iconName: string;
-  count: number;
-  privacy: 'public' | 'private';
-  checked: boolean;
+  color: string;
+  visibility: 'PUBLIC' | 'PRIVATE';
+  storeCount: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 const GroupList = ({ onClose }: { onClose: () => void }) => {
   // 'list' (목록 뷰) | 'edit' (편집 뷰)
   const [view, setView] = useState<'list' | 'edit'>('list');
   // 저장된 그룹 목록
-  const [myGroups, setMyGroups] = useState<Group[]>([]);
+  // const [myGroups, setMyGroups] = useState<Group[]>([]);
   // 현재 편집 중인 그룹의 ID (null이면 새 그룹 생성 모드)
   const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
 
@@ -35,6 +38,10 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
 
   const [checkCount, setCheckCount] = useState(0); // 선택한 그룹의 개수
 
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
+
+  const { data: myGroups } = useGetGroupList();
+
   // "새 그룹 만들기" 클릭 시
   const handleCreateNew = () => {
     setEditingGroupId(null); // ID가 없으면 생성 모드
@@ -42,32 +49,23 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
   };
 
   // 4. EditGroup 화면에서 "완료" 클릭 시 (생성 또는 수정 저장)
-  const handleSaveGroup = (data: Omit<Group, 'id' | 'count' | 'checked'>) => {
+  const handleSaveGroup = (data: Group) => {
     if (editingGroupId) {
-      // [수정 모드] 기존 그룹 업데이트
-      setMyGroups((prev) =>
-        prev.map((group) =>
-          group.id === editingGroupId
-            ? { ...group, ...data } // 기존 데이터 덮어쓰기
-            : group
-        )
-      );
-
+      // 기존 그룹 업데이트
+      // setMyGroups((prev) =>
+      //   prev.map((group) => (group.id === editingGroupId ? { ...group, ...data } : group))
+      // );
       // 수정 완료된 그룹 찾아서 모달 데이터 설정
-      const updatedGroup = myGroups.find((g) => g.id === editingGroupId);
+      const updatedGroup = myGroups?.find((g) => g.groupId === editingGroupId);
       const newGroupInfo = { ...updatedGroup, ...data } as Group;
-
       setConfirmedGroup(newGroupInfo);
       setModalMode('edit');
     } else {
       // [생성 모드] 새 그룹 추가
       const newGroup: Group = {
         ...data,
-        id: Date.now(),
-        count: 0,
-        checked: false,
       };
-      setMyGroups((prev) => [newGroup, ...prev]); // 맨 위에 추가
+      // setMyGroups((prev) => [newGroup, ...prev]);
       setConfirmedGroup(newGroup);
       setModalMode('create');
     }
@@ -88,7 +86,9 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
     setConfirmedGroup(null);
   };
 
-  const editingGroupData = editingGroupId ? myGroups.find((g) => g.id === editingGroupId) : null;
+  const editingGroupData = editingGroupId
+    ? myGroups?.find((g) => g.groupId === editingGroupId)
+    : null;
 
   return (
     <div className="relative h-full w-full">
@@ -114,14 +114,14 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
 
           {/* 저장된 그룹 목록 */}
           <div className="flex-1 overflow-y-auto">
-            {myGroups.map((group) => (
+            {myGroups?.map((group) => (
               <GroupItem
-                key={group.id}
-                id={group.id}
-                iconName={group.iconName}
+                key={group.groupId}
+                id={group.groupId}
+                iconName={group.color}
                 name={group.name}
-                count={group.count}
-                checked={group.checked}
+                count={group.storeCount}
+                checked={group.groupId in selectedStores}
                 checkCount={setCheckCount}
               />
             ))}
@@ -149,7 +149,7 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
         {showConfirmModal && confirmedGroup && (
           <ConfirmationModal
             groupName={confirmedGroup.name}
-            iconName={confirmedGroup.iconName}
+            iconName={''}
             mode={modalMode} // create | edit | delete 전달
             onClose={handleCloseConfirmModal}
           />

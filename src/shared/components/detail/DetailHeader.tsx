@@ -6,6 +6,9 @@ import Button from '../common/Button';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
 import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
+import ContactModal from './ContactModal';
 
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
@@ -15,7 +18,6 @@ import share from '../../assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
-import ContactModal from './ContactModal';
 
 const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const navigate = useNavigate();
@@ -29,11 +31,12 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const [isContactCompleteModalOpen, setIsContactCompleteModalOpen] = useState(false);
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
   const [keepPending, setKeepPending] = useState(false); // bookmark 등록 중 여부
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
 
   const ref = useRef<HTMLDivElement>(null);
 
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
-  const toggleStore = useBookmarkStore((state) => state.toggleStore);
+  // const toggleStore = useBookmarkStore((state) => state.toggleStore);
 
   // const location = useLocation();
 
@@ -43,7 +46,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   }, [location.state, navigate, restaurant.restaurantId]);
 
   useEffect(() => {
-    if (selectedStores.includes(restaurant.restaurantId)) {
+    if (restaurant.restaurantId in selectedStores) {
       setIsKeep(true);
     }
   }, [restaurant, selectedStores]);
@@ -109,21 +112,23 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
 
   const handleKeepButton = async () => {
     if (keepPending || !restaurant) return;
-    setKeepPending(true);
-    try {
-      if (!isKeep) {
-        await save(restaurant.restaurantId, 'RESTAURANT');
-        setIsKeep(true);
-      } else {
-        await deleteTip(restaurant.restaurantId, 'RESTAURANT');
-        setIsKeep(false);
-      }
-      toggleStore(restaurant.restaurantId);
-    } catch (e) {
-      console.error('가게 북마크 토글 실패: ' + e);
-    } finally {
-      setKeepPending(false);
-    }
+    // setKeepPending(true);
+
+    // try {
+    //   if (!isKeep) {
+    //     await save(restaurant.restaurantId, 'RESTAURANT');
+    //     setIsKeep(true);
+    //   } else {
+    //     await deleteTip(restaurant.restaurantId, 'RESTAURANT');
+    //     setIsKeep(false);
+    //   }
+    // } catch (e) {
+    //   console.error('가게 북마크 토글 실패: ' + e);
+    // } finally {
+    //   setKeepPending(false);
+    // }
+
+    setIsGroupSelectorOpen(true);
   };
 
   return (
@@ -283,6 +288,15 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           </div>
         </div>
       )}
+
+      {/* 그룹 셀렉터 */}
+      <GroupSelector
+        isOpen={isGroupSelectorOpen}
+        topSnapVh={17.8}
+        onClose={() => setIsGroupSelectorOpen(false)}
+      >
+        <GroupList onClose={() => setIsGroupSelectorOpen(false)} />
+      </GroupSelector>
     </div>
   );
 };

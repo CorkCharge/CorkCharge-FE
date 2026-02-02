@@ -60,7 +60,7 @@ function CorkageReview() {
   });
 
   const renderReviews = () =>
-    reviews?.map((review, idx) => (
+    reviews?.map((review) => (
       <div
         className="relative cursor-pointer rounded-2xl bg-[var(--gray-1)] p-4"
         key={review.reviewId}
@@ -89,7 +89,7 @@ function CorkageReview() {
         <div className="absolute bottom-4 right-4 flex items-center gap-1">
           <div
             className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-            onClick={(e) => handleKeep(e, idx)}
+            onClick={(e) => handleKeep(e, review.reviewId)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,9 +129,9 @@ function CorkageReview() {
       </div>
     ));
 
-  const handleKeep = (e: React.MouseEvent<HTMLDivElement>, idx: number) => {
+  const handleKeep = (e: React.MouseEvent<HTMLDivElement>, id: number) => {
     e.stopPropagation();
-    toggleReview(idx);
+    toggleReview(id);
     setIsGroupSelectorOpen(true);
   };
 
@@ -246,7 +246,7 @@ function CorkageReview() {
       {/* 지역 설정 버튼 or 필터 영역 */}
       {selectedDongNames.length < 1 ? (
         <Button
-          value="지역 검색"
+          value="지역 설정"
           className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white"
           style={{
             maxWidth: 'calc(var(--app-width) * 0.8)',
