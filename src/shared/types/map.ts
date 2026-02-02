@@ -8,26 +8,13 @@ export interface ApiResponse<T> {
   data: T;
 }
 
-/**
- * 클러스터링 레벨('dong', 'sigungu', 'sido')에서 API가 반환하는 데이터 포인트의 타입입니다.
- * 개별 매장의 위치 정보를 담고 있습니다.
- */
-export interface ClusterPoint {
+export interface MapRestaurantData {
   restaurantId: number;
-  latitude: number;
-  longitude: number;
+  restaurantName: string;
   address: string;
-}
-
-/**
- * 개별 매장 레벨('restaurant')에서 API가 반환하는 데이터 포인트의 타입입니다.
- * 콜키지 가격 정보를 포함합니다.
- */
-export interface RestaurantPoint {
-  restaurantId: number;
-  latitude: number;
-  longitude: number;
-  price: string;
+  corkagePrice: string;
+  lat: number;
+  lon: number;
 }
 
 /**
@@ -39,14 +26,28 @@ export type MapLevel = 'restaurant' | 'dong' | 'sigungu' | 'sido';
  * 지도 데이터 API 요청 시 사용되는 쿼리 파라미터의 타입입니다.
  */
 export interface MapParams {
-  level: MapLevel;
   latMin: number;
   latMax: number;
   lonMin: number;
   lonMax: number;
+  // 선택적 필터링 파라미터들 (필요시 추가)
+  keyword?: string;
+  sido?: string;
+  sigungu?: string;
+  dongList?: string[];
+  minScore?: number;
+  maxScore?: number;
+  minBottlePrice?: number;
+  maxBottlePrice?: number;
+  minPersonPrice?: number;
+  maxPersonPrice?: number;
+  minTablePrice?: number;
+  maxTablePrice?: number;
+  optionTypes?: string[];
+  corkageTypes?: string[];
 }
 
-// [NEW] API 명세서의 'restaurants' 배열 안의 객체 구조
+// [Legacy] 클러스터 리스트 조회용 (기존 유지)
 export interface ClusterRestaurant {
   restaurantId: number;
   name: string; // JSON 명세에 따름
