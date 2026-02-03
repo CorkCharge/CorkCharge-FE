@@ -9,6 +9,8 @@ import { useGetGroupList } from '@/shared/queries/useGetGroupList';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
 
 import newSvg from '@/pages/corkagemap/list/plus.svg';
+import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
+import { createBookmark, editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
 
 // 그룹 데이터의 타입 정의
 type Group = {
@@ -21,7 +23,13 @@ type Group = {
   updatedAt: string;
 };
 
-const GroupList = ({ onClose }: { onClose: () => void }) => {
+const GroupList = ({
+  onClose,
+  restaurant,
+}: {
+  onClose: () => void;
+  restaurant: RestaurantInfo;
+}) => {
   // 'list' (목록 뷰) | 'edit' (편집 뷰)
   const [view, setView] = useState<'list' | 'edit'>('list');
   // 저장된 그룹 목록
@@ -38,18 +46,23 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
   const [changedIds, setChangedIds] = useState<number[]>([]); // 사용자가 선택한 id들을 저장
 
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
+  const updateSelectedStores = useBookmarkStore((state) => state.updateSelectedStores);
 
   const { data: myGroups } = useGetGroupList();
 
   const initialSelectedGroupIds = useMemo(
-    () => myGroups?.map((group) => group.groupId) ?? [],
-    [myGroups]
+    () => selectedStores[restaurant?.restaurantId] ?? [],
+    [selectedStores, restaurant?.restaurantId]
   );
 
   // 기존에 사용자가 선택한 id배열을 복제
   useEffect(() => {
     setChangedIds(initialSelectedGroupIds);
+    console.log(initialSelectedGroupIds);
   }, [initialSelectedGroupIds]);
+  useEffect(() => {
+    console.log(changedIds);
+  }, [changedIds]);
 
   // 초기 상태랑 비교해서 그룹 선택의 변화 유무
   const isChanged = () => {
@@ -104,12 +117,32 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
     setConfirmedGroup(null);
   };
 
-  const editingGroupData = editingGroupId
-    ? myGroups?.find((g) => g.groupId === editingGroupId)
-    : null;
-
   const toggleSelect = (id: number) => {
     setChangedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
+  const handleSave = async () => {
+    if (!restaurant) return;
+
+    try {
+      // 매장을 처음 저장하는 경우
+      if (initialSelectedGroupIds.length === 0) {
+        await createBookmark({
+          targetId: restaurant.restaurantId,
+          targetType: 'RESTAURANT',
+          groupIds: changedIds,
+        });
+      }
+      // 매장 저장 정보를 수정할 때
+      else {
+        await editBookmarkGroup({ restaurantId: restaurant.restaurantId, groupIds: changedIds });
+      }
+
+      updateSelectedStores(restaurant.restaurantId, changedIds);
+      onClose();
+    } catch (e) {
+      console.error('매장 저장하기 실패: ' + e);
+    }
   };
 
   return (
@@ -119,7 +152,7 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
         <div className="flex h-full w-full flex-col pt-2">
           {/* 헤더 */}
           <div className="relative flex flex-row items-center justify-center">
-            <h1 className="text-xl font-bold text-[var(--gray-8)]">성수 누메르도스</h1>
+            <h1 className="text-xl font-bold text-[var(--gray-8)]">{restaurant?.restaurantName}</h1>
             <span className="absolute right-0 cursor-pointer" onClick={onClose}>
               ✕
             </span>
@@ -143,7 +176,7 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
                 iconName={group.color}
                 name={group.name}
                 count={group.storeCount}
-                checked={group.groupId in selectedStores}
+                checked={initialSelectedGroupIds.includes(group.groupId)}
                 onSelect={(id) => toggleSelect(id)}
               />
             ))}
@@ -153,17 +186,14 @@ const GroupList = ({ onClose }: { onClose: () => void }) => {
             value="저장"
             className="bg-[var(--primary)] text-white shadow-none disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
             disabled={!isChanged()}
+            onClick={handleSave}
           />
         </div>
       )}
 
       {/* 2. 그룹 편집 뷰 (생성/수정 공용) */}
       {view === 'edit' && (
-        <CreateGroup
-          initialData={editingGroupData} // 편집 시 기존 데이터 전달
-          onSave={handleSaveGroup}
-          onCancel={handleCancelEdit}
-        />
+        <CreateGroup onCancel={handleCancelEdit} onComplete={() => setView('list')} />
       )}
 
       {/* 3. 확인 모달 */}

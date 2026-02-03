@@ -36,7 +36,7 @@ const useBookmarkStore = create<BookmarkStoreState>()(
         selectedTips: [1, 2, 3],
         // selectedStores: [1],
         selectedReviews: [1],
-        selectedStores: { 1: [1] },
+        selectedStores: { 1: [1, 2] },
 
         // 저장하기 count
         reviewCount: {},
@@ -82,7 +82,8 @@ const useBookmarkStore = create<BookmarkStoreState>()(
         updateSelectedStores: (rId, gIdArray) =>
           set((state) => {
             const newInfo = { ...state.selectedStores };
-            newInfo[rId] = gIdArray;
+            if (gIdArray.length === 0) delete newInfo[rId];
+            else newInfo[rId] = gIdArray;
             return { selectedStores: newInfo };
           }),
 

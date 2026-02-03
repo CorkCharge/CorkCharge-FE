@@ -295,7 +295,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
         topSnapVh={17.8}
         onClose={() => setIsGroupSelectorOpen(false)}
       >
-        <GroupList onClose={() => setIsGroupSelectorOpen(false)} />
+        <GroupList onClose={() => setIsGroupSelectorOpen(false)} restaurant={restaurant} />
       </GroupSelector>
     </div>
   );

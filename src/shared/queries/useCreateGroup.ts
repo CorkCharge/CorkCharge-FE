@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createBookmarkGroup } from '../apis/bookmark/bookmark.api';
+import type { CreateGroupRequest } from '../apis/bookmark/bookmarks.type';
 
 export const useCreateGroup = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createBookmarkGroup,
+    mutationFn: (data: CreateGroupRequest) => createBookmarkGroup(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['group'] });
     },
