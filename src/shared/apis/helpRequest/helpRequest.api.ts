@@ -14,16 +14,20 @@ const priorityMapping: Record<Priority, PriorityRequest> = {
 };
 
 // 해주세요 리스트 가져오기
-export const fetchDoitList = async () =>
-  // sido?: string,
-  // sigungu?: string,
-  // dong?: string[],
-  // keyword?: string
-  {
-    // const res = await apiClient.post('/request/restaurants', { sido, sigungu, dong, keyword });
-    const res = await apiClient.get('/request/restaurants');
-    return res.data.data.restaurants;
-  };
+export const fetchDoitList = async ({
+  sido,
+  sigungu,
+  dong,
+  keyword,
+}: {
+  sido?: string;
+  sigungu?: string;
+  dong?: string[];
+  keyword?: string;
+}) => {
+  const res = await apiClient.post('/request/restaurants', { sido, sigungu, dong, keyword });
+  return res.data.data.restaurants;
+};
 
 // 1차 해주세요 요청
 export const firstRequest = async (restId: number) => {

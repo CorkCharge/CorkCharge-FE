@@ -5,12 +5,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/shared/components/common/Header';
 import { SearchInput } from '@/shared/components/common/Input';
 import { StarRate } from '@/shared/components/common/StarRate';
-import useMyReviewStore from '@/shared/store/useMyReviewStore';
 import Modal from '@/shared/components/common/Modal';
 import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
+import { useDebounce } from '@/shared/hooks/useDebounce';
+import { useReviewList } from '@/shared/queries/useReviewList';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
 
 import arrow from '@/shared/assets/selectArrow.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
@@ -27,43 +29,60 @@ function CorkageReview() {
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const selectedReviews = useMyReviewStore((state) => state.selectedReviews);
-  const toggleReview = useMyReviewStore((state) => state.toggleReview);
+  const selectedReviews = useBookmarkStore((state) => state.selectedReviews);
+  const toggleReview = useBookmarkStore((state) => state.toggleReview);
+  const reviewCount = useBookmarkStore((state) => state.reviewCount);
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
   const whichPage = useRegionFilterStore((state) => state.whichPage);
-  const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
+  const resetAddress = useRegionFilterStore((state) => state.resetAddress);
+  const filteredRegions = useRegionFilterStore((state) => state.filteredRegions);
 
   useEffect(() => {
-    if (whichPage !== 1) setSelectedDongNames([]);
-  }, [whichPage, setSelectedDongNames]);
+    if (whichPage !== 1) resetAddress();
+  }, [whichPage, resetAddress]);
+
+  // 검색어 디바운스
+  const debounceQuery = useDebounce(searchQuery, 500);
+
+  // 검색어 캐싱
+  const sido = Object.keys(filteredRegions)[0];
+  const sigungu = sido ? Object.keys(filteredRegions[sido] ?? {})[0] : undefined;
+  const dong = sigungu ? filteredRegions[sido][sigungu] : undefined;
+  const { data: reviews } = useReviewList({
+    keyword: debounceQuery,
+    sido,
+    sigungu,
+    dongList: dong,
+    isSortByBookmark: isRecent,
+  });
 
   const renderReviews = () =>
-    [...new Array(3)].map((_, idx) => (
+    reviews?.map((review, idx) => (
       <div
         className="relative cursor-pointer rounded-2xl bg-[var(--gray-1)] p-4"
-        key={idx}
+        key={review.reviewId}
         onClick={() => navigate('/detail-info/88')}
       >
         {/* 매장명 + 별점 */}
-        <span className="text-xl font-bold text-[var(--gray-8)]">매장명</span>
+        <span className="text-xl font-bold text-[var(--gray-8)]">{review.restaurantName}</span>
         <div className="my-2 flex gap-1">
-          <StarRate rate={4} />
+          <StarRate rate={review.rating} />
           <span className="font-medium">4</span>
         </div>
 
         {/* 리뷰 이미지 */}
-        <div className="mb-1 flex gap-2 overflow-y-auto">{renderReviewImages()}</div>
+        <div className="mb-1 flex gap-2 overflow-y-auto">
+          {renderReviewImages(review.imageUrls)}
+        </div>
 
-        {/* 리뷰 */}
-        <p className="mb-2 font-medium">
-          너무 친절하셔서 무조건 다시와야 하는 곳입니다!!! 무조건 재방문너무너무 친절하셔서 무조건
-          다시와야 하는 곳입니다!!! 무조건 재방문너무
-        </p>
+        {/* 리뷰 작성 정보 */}
+        <p className="mb-2 font-medium">{review.content}</p>
         <div className="flex gap-2 text-[10px] font-medium">
-          <span>작성자</span>
-          <span>2025.12.09</span>
+          <span>{review.writer}</span>
+          <span>{review.createdAt.split('T')[0].replaceAll('-', '.')}</span>
         </div>
 
         {/* 좋아요 + 공유 */}
@@ -83,21 +102,23 @@ function CorkageReview() {
                 cx="16"
                 cy="16"
                 r="15"
-                fill={selectedReviews.has(idx) ? 'var(--primary)' : 'none'}
-                stroke={selectedReviews.has(idx) ? 'none' : 'var(--gray-3)'}
+                fill={selectedReviews.includes(review.reviewId) ? 'var(--primary)' : 'none'}
+                stroke={selectedReviews.includes(review.reviewId) ? 'none' : 'var(--gray-3)'}
               />
               <path
                 d="M10.7239 23.6525C10.4143 23.6525 10.1728 23.5764 9.99935 23.4242C9.82596 23.272 9.73926 23.058 9.73926 22.7821V10.3959C9.73926 9.71567 9.9591 9.20434 10.3988 8.86186C10.8385 8.51939 11.4949 8.34814 12.3681 8.34814H19.6322C20.5054 8.34814 21.1618 8.51939 21.6015 8.86186C22.0412 9.20434 22.261 9.71567 22.261 10.3959V22.7821C22.261 23.058 22.1744 23.272 22.0009 23.4242C21.8276 23.5764 21.586 23.6525 21.2763 23.6525C21.0473 23.6525 20.8336 23.5931 20.6355 23.4742C20.4435 23.3553 20.1369 23.1412 19.7158 22.832L16.0837 20.0851C16.028 20.0375 15.9723 20.0375 15.9165 20.0851L12.2845 22.832C11.8634 23.1459 11.5537 23.36 11.3556 23.4742C11.1574 23.5931 10.9468 23.6525 10.7239 23.6525Z"
                 fill="white"
-                stroke={selectedReviews.has(idx) ? 'none' : 'var(--gray-7)'}
+                stroke={selectedReviews.includes(review.reviewId) ? 'none' : 'var(--gray-7)'}
                 strokeWidth={1.5}
               />
             </svg>
           </div>
-          <span className="text-[10px] font-medium text-[var(--gray-8)]">99+</span>
+          <span className="text-[10px] font-medium text-[var(--gray-8)]">
+            {(reviewCount[review.reviewId] ?? 0) > 99 ? '99+' : (reviewCount[review.reviewId] ?? 0)}
+          </span>
           <div
             className="relative flex size-6 cursor-pointer rounded-full bg-white"
-            onClick={handleShare}
+            onClick={(e) => handleShare(e, review.restaurantName, review.reviewId)}
           >
             <img
               src={share}
@@ -114,7 +135,11 @@ function CorkageReview() {
     setIsGroupSelectorOpen(true);
   };
 
-  const handleShare = async (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleShare = async (
+    e: React.MouseEvent<HTMLDivElement>,
+    storeName: string,
+    storeId: number
+  ) => {
     e.stopPropagation();
 
     const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -122,23 +147,23 @@ function CorkageReview() {
     if (navigator.share && isMobile) {
       try {
         await navigator.share({
-          title: '공유공유공유',
-          text: '정빈몬! 공유해줘!!!!!',
-          url: window.location.origin + `/detail-info/${modalStoreId}`,
+          title: storeName,
+          text: `${storeName} 리뷰를 확인해보세요!`,
+          url: `${window.location.href}#${storeId}`,
         });
       } catch (err) {
         console.log('공유 중 에러 발생 : ' + err);
       }
     } else {
-      setModalStoreId(88);
-      setModalStoreName('램니쿠야');
+      setModalStoreId(storeId);
+      setModalStoreName(storeName);
       setIsShareModalOpen(true);
     }
   };
 
-  const renderReviewImages = () =>
-    [...new Array(5)].map((_, idx) => (
-      <div className="aspect-square w-[40%] shrink-0 rounded-lg bg-black" key={idx} />
+  const renderReviewImages = (imgUrls: string[]) =>
+    imgUrls.map((url, idx) => (
+      <img className="aspect-square w-[40%] shrink-0 rounded-lg" key={idx} src={url} />
     ));
 
   // 공유 클릭 시 주소 복사
@@ -152,7 +177,7 @@ function CorkageReview() {
   const renderDongs = () =>
     selectedDongNames.map((dong: string, idx: number) => (
       <div
-        className="flex h-[32px] items-center gap-1 rounded-lg bg-[#90214626] px-2 py-1 text-[12px] font-semibold text-[#90212A]"
+        className="flex h-8 items-center gap-1 rounded-lg bg-[#90214626] px-2 py-1 text-[12px] font-semibold text-[var(--primary)]"
         key={idx}
       >
         <span>{dong}</span>
@@ -164,8 +189,12 @@ function CorkageReview() {
     <div className="px-4">
       <Header title="콜키지 리뷰" type="back" backFn={() => navigate('/home')} />
       <div className="flex h-10">
-        <SearchInput className="h-full flex-1 text-sm font-medium" />
-        <div className="relative flex h-full items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]">
+        <SearchInput
+          className="h-full flex-1 text-sm font-medium"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <div className="relative z-[2] flex h-full items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]">
           <span className="w-[52px] text-center">{isRecent ? '최신순' : '저장수순'}</span>
           <img
             src={arrow}

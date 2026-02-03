@@ -45,6 +45,8 @@ import NotiPost from '../components/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
 import CorkageReview from '@/pages/home/CorkageReview';
 import DoitRequest from '@/pages/doit/DoitRequest';
+import CategoryStores from '@/pages/home/CategoryStores';
+import NearbyStores from '@/pages/home/NearbyStores';
 
 const router = createBrowserRouter([
   // {
@@ -76,7 +78,7 @@ const router = createBrowserRouter([
         element: <SearchMapResult />,
       },
       {
-        path: 'hotStores',
+        path: 'hot-stores',
         element: <HotStores />,
       },
       {
@@ -222,6 +224,14 @@ const router = createBrowserRouter([
       {
         path: 'new-stores',
         element: <NewStores />,
+      },
+      {
+        path: 'category-stores',
+        element: <CategoryStores />,
+      },
+      {
+        path: 'nearby-stores',
+        element: <NearbyStores />,
       },
       {
         path: 'corkage-review',

@@ -16,4 +16,5 @@ export interface ReviewResponse extends BaseReviewResponse {
   restaurantId: number;
   restaurantName: string;
   bookmarkCount: number;
+  scrap: boolean;
 }
