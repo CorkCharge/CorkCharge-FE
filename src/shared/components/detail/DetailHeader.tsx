@@ -5,7 +5,6 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
-import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
 import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
 import ContactModal from './ContactModal';
@@ -30,15 +29,11 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isContactCompleteModalOpen, setIsContactCompleteModalOpen] = useState(false);
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
-  const [keepPending, setKeepPending] = useState(false); // bookmark 등록 중 여부
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
 
   const ref = useRef<HTMLDivElement>(null);
 
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
-  // const toggleStore = useBookmarkStore((state) => state.toggleStore);
-
-  // const location = useLocation();
 
   useEffect(() => {
     // state 초기화 (새로고침 시 안 뜨게)
@@ -110,27 +105,6 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const renderOptions = () =>
     restaurant.corkageOptions.map((option, idx) => <p key={idx}>{option}</p>);
 
-  const handleKeepButton = async () => {
-    if (keepPending || !restaurant) return;
-    // setKeepPending(true);
-
-    // try {
-    //   if (!isKeep) {
-    //     await save(restaurant.restaurantId, 'RESTAURANT');
-    //     setIsKeep(true);
-    //   } else {
-    //     await deleteTip(restaurant.restaurantId, 'RESTAURANT');
-    //     setIsKeep(false);
-    //   }
-    // } catch (e) {
-    //   console.error('가게 북마크 토글 실패: ' + e);
-    // } finally {
-    //   setKeepPending(false);
-    // }
-
-    setIsGroupSelectorOpen(true);
-  };
-
   return (
     <div className="relative flex w-full flex-col">
       {restaurant.mainImageUrl ? (
@@ -164,7 +138,10 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           <span className="font-semibold">영업 중</span>
           <span className="text-[var(--gray-6)]">영업시간 {restaurant.openingHours}</span>
         </div>
-        <div className="absolute right-4 top-2 cursor-pointer" onClick={handleKeepButton}>
+        <div
+          className="absolute right-4 top-2 cursor-pointer"
+          onClick={() => setIsGroupSelectorOpen(true)}
+        >
           {keepMarker}
         </div>
       </div>
@@ -295,7 +272,11 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
         topSnapVh={17.8}
         onClose={() => setIsGroupSelectorOpen(false)}
       >
-        <GroupList onClose={() => setIsGroupSelectorOpen(false)} restaurant={restaurant} />
+        <GroupList
+          onClose={() => setIsGroupSelectorOpen(false)}
+          restaurantId={restaurant.restaurantId}
+          restaurantName={restaurant.restaurantName}
+        />
       </GroupSelector>
     </div>
   );

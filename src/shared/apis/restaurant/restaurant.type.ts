@@ -9,6 +9,7 @@ export interface RestaurantResponse {
   distance: number; // km 기준
   mainImageUrls: string;
   openingHours: string;
+  bookmarkCount: number;
 }
 
 export interface StoreCard {

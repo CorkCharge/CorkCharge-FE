@@ -26,6 +26,7 @@ function NewStores() {
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const [newStores, setNewStores] = useState<RestaurantScrapResponse[]>([]);
+  const [selectedStore, setSelectedStore] = useState<RestaurantScrapResponse>();
 
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
@@ -56,8 +57,9 @@ function NewStores() {
     setIsShareModalOpen(true);
   };
 
-  const handleKeep = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleKeep = (e: React.MouseEvent<HTMLDivElement>, store: RestaurantScrapResponse) => {
     e.stopPropagation();
+    setSelectedStore(store);
     setIsGroupSelectorOpen(true);
   };
 
@@ -101,11 +103,13 @@ function NewStores() {
           <div className="absolute bottom-0 right-0 flex items-center gap-1">
             <div
               className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-              onClick={handleKeep}
+              onClick={(e) => handleKeep(e, store)}
             >
               <img src={keep} className="size-6" />
             </div>
-            <span className="text-sm font-medium text-[var(--gray-8)]">99+</span>
+            <span className="text-sm font-medium text-[var(--gray-8)]">
+              {store.bookmarkCount > 99 ? '99+' : store.bookmarkCount}
+            </span>
             <div
               className="relative flex size-6 cursor-pointer rounded-full bg-white"
               onClick={(e) => handleShare(e, store.restaurantName, store.restaurantId)}
@@ -199,7 +203,11 @@ function NewStores() {
         topSnapVh={17.8}
         onClose={() => setIsGroupSelectorOpen(false)}
       >
-        <GroupList onClose={() => setIsGroupSelectorOpen(false)} />
+        <GroupList
+          onClose={() => setIsGroupSelectorOpen(false)}
+          restaurantName={selectedStore?.restaurantName ?? ''}
+          restaurantId={selectedStore?.restaurantId ?? 1}
+        />
       </GroupSelector>
     </>
   );

@@ -18,7 +18,6 @@ interface BookmarkStoreState {
   reviewCount: BookmarkCount;
 
   toggleTip: (_: number) => void;
-  addOrRemoveStore: () => void;
   toggleReview: (_: number) => void;
   setSelectedTips: (_: number[]) => void;
   updateSelectedStores: (_rId: number, _gIds: number[]) => void;
@@ -48,15 +47,6 @@ const useBookmarkStore = create<BookmarkStoreState>()(
               ? state.selectedTips.filter((x) => x !== tipId)
               : [...state.selectedTips, tipId],
           })),
-
-        // store를 토글
-        // toggleStore: (storeId) =>
-        //   set((state) => ({
-        //     selectedStores: state.selectedStores.includes(storeId)
-        //       ? state.selectedStores.filter((x) => x !== storeId)
-        //       : [...state.selectedStores, storeId],
-        //   })),
-        addOrRemoveStore: () => {},
 
         toggleReview: (reviewId) =>
           set((state) => {

@@ -7,10 +7,9 @@ import ConfirmationModal from '@/pages/corkagemap/list/ConfirmationModal';
 import Button from '../common/Button';
 import { useGetGroupList } from '@/shared/queries/useGetGroupList';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
+import { createBookmark, editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
 
 import newSvg from '@/pages/corkagemap/list/plus.svg';
-import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
-import { createBookmark, editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
 
 // 그룹 데이터의 타입 정의
 type Group = {
@@ -25,24 +24,21 @@ type Group = {
 
 const GroupList = ({
   onClose,
-  restaurant,
+  restaurantName,
+  restaurantId,
 }: {
   onClose: () => void;
-  restaurant: RestaurantInfo;
+  restaurantName: string;
+  restaurantId: number;
 }) => {
   // 'list' (목록 뷰) | 'edit' (편집 뷰)
   const [view, setView] = useState<'list' | 'edit'>('list');
-  // 저장된 그룹 목록
-  // const [myGroups, setMyGroups] = useState<Group[]>([]);
-  // 현재 편집 중인 그룹의 ID (null이면 새 그룹 생성 모드)
-  const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
 
   // 편집이 완료되었을 때 뜰 확인 모달
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   // 방금 편집/생성한 그룹 정보 (모달에 띄울 용도)
   const [confirmedGroup, setConfirmedGroup] = useState<Group | null>(null);
   // 모달 모드: 'create' | 'edit' | 'delete'
-  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'delete'>('create');
   const [changedIds, setChangedIds] = useState<number[]>([]); // 사용자가 선택한 id들을 저장
 
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
@@ -51,18 +47,14 @@ const GroupList = ({
   const { data: myGroups } = useGetGroupList();
 
   const initialSelectedGroupIds = useMemo(
-    () => selectedStores[restaurant?.restaurantId] ?? [],
-    [selectedStores, restaurant?.restaurantId]
+    () => selectedStores[restaurantId] ?? [],
+    [selectedStores, restaurantId]
   );
 
   // 기존에 사용자가 선택한 id배열을 복제
   useEffect(() => {
     setChangedIds(initialSelectedGroupIds);
-    console.log(initialSelectedGroupIds);
   }, [initialSelectedGroupIds]);
-  useEffect(() => {
-    console.log(changedIds);
-  }, [changedIds]);
 
   // 초기 상태랑 비교해서 그룹 선택의 변화 유무
   const isChanged = () => {
@@ -75,40 +67,11 @@ const GroupList = ({
 
   // "새 그룹 만들기" 클릭 시
   const handleCreateNew = () => {
-    setEditingGroupId(null); // ID가 없으면 생성 모드
     setView('edit');
-  };
-
-  // 4. EditGroup 화면에서 "완료" 클릭 시 (생성 또는 수정 저장)
-  const handleSaveGroup = (data: Group) => {
-    if (editingGroupId) {
-      // 기존 그룹 업데이트
-      // setMyGroups((prev) =>
-      //   prev.map((group) => (group.id === editingGroupId ? { ...group, ...data } : group))
-      // );
-      // 수정 완료된 그룹 찾아서 모달 데이터 설정
-      const updatedGroup = myGroups?.find((g) => g.groupId === editingGroupId);
-      const newGroupInfo = { ...updatedGroup, ...data } as Group;
-      setConfirmedGroup(newGroupInfo);
-      setModalMode('edit');
-    } else {
-      // [생성 모드] 새 그룹 추가
-      const newGroup: Group = {
-        ...data,
-      };
-      // setMyGroups((prev) => [newGroup, ...prev]);
-      setConfirmedGroup(newGroup);
-      setModalMode('create');
-    }
-
-    setView('list');
-    setShowConfirmModal(true);
-    setEditingGroupId(null); // 초기화
   };
 
   const handleCancelEdit = () => {
     setView('list');
-    setEditingGroupId(null);
   };
 
   // 확인 모달 닫기
@@ -122,23 +85,23 @@ const GroupList = ({
   };
 
   const handleSave = async () => {
-    if (!restaurant) return;
+    if (!restaurantId) return;
 
     try {
       // 매장을 처음 저장하는 경우
       if (initialSelectedGroupIds.length === 0) {
         await createBookmark({
-          targetId: restaurant.restaurantId,
+          targetId: restaurantId,
           targetType: 'RESTAURANT',
           groupIds: changedIds,
         });
       }
       // 매장 저장 정보를 수정할 때
       else {
-        await editBookmarkGroup({ restaurantId: restaurant.restaurantId, groupIds: changedIds });
+        await editBookmarkGroup({ restaurantId, groupIds: changedIds });
       }
 
-      updateSelectedStores(restaurant.restaurantId, changedIds);
+      updateSelectedStores(restaurantId, changedIds);
       onClose();
     } catch (e) {
       console.error('매장 저장하기 실패: ' + e);
@@ -152,7 +115,7 @@ const GroupList = ({
         <div className="flex h-full w-full flex-col pt-2">
           {/* 헤더 */}
           <div className="relative flex flex-row items-center justify-center">
-            <h1 className="text-xl font-bold text-[var(--gray-8)]">{restaurant?.restaurantName}</h1>
+            <h1 className="text-xl font-bold text-[var(--gray-8)]">{restaurantName}</h1>
             <span className="absolute right-0 cursor-pointer" onClick={onClose}>
               ✕
             </span>
@@ -202,7 +165,7 @@ const GroupList = ({
           <ConfirmationModal
             groupName={confirmedGroup.name}
             iconName={''}
-            mode={modalMode} // create | edit | delete 전달
+            mode={'create'} // create | edit | delete 전달
             onClose={handleCloseConfirmModal}
           />
         )}
