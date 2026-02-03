@@ -132,7 +132,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
         <div className="flex items-center">
           <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
           <img src={star} />
-          <span className="ml-1 font-medium">{restaurant.rating.toFixed(1)}</span>
+          <span className="ml-1 font-medium">{restaurant.rating?.toFixed(1) ?? 0}</span>
         </div>
         <div className="mt-1 flex items-center gap-2 text-[14px]">
           <span className="font-semibold">영업 중</span>

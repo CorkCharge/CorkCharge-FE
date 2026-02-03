@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { getMapData } from '@/shared/apis/map/mapApi';
-import type { MapLevel, ClusterPoint, RestaurantPoint } from '@/shared/types/map';
+import type { MapLevel, MapRestaurantData } from '@/shared/types/map';
 import Bottle from './bottle.svg';
 
 // [1] Ref에 사용할 데이터 타입 정의
@@ -38,7 +38,7 @@ type DongBucket = {
   ids: number[];
 };
 
-const groupByDong = (points: ClusterPoint[]) => {
+const groupByDong = (points: MapRestaurantData[]) => {
   const map = new Map<string, DongBucket>();
   for (const p of points) {
     const parsed = getDongFromAddress(p.address);
@@ -46,15 +46,15 @@ const groupByDong = (points: ClusterPoint[]) => {
     const b = map.get(dong);
     if (b) {
       b.count += 1;
-      b.sumLat += p.latitude;
-      b.sumLon += p.longitude;
+      b.sumLat += p.lat;
+      b.sumLon += p.lon;
       b.ids.push(p.restaurantId);
     } else {
       map.set(dong, {
         name: dong,
         count: 1,
-        sumLat: p.latitude,
-        sumLon: p.longitude,
+        sumLat: p.lat,
+        sumLon: p.lon,
         ids: [p.restaurantId],
       });
     }
@@ -242,7 +242,6 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
   // handleClusterMarkerClick이 갱신되면 얘도 갱신되어야 이벤트 리스너가 최신 함수를 바라봅니다.
   const fetchAndDrawMarkers = useCallback(async () => {
     if (!mapInstance.current) return;
-
     const map = mapInstance.current;
     const rawBounds = map.getBounds();
 
@@ -251,34 +250,35 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
     const zoom = map.getZoom();
     const level = getMapLevel(zoom);
 
-    const mapBounds = {
-      level,
+    const mapParams = {
       latMin: rawBounds.south(),
       latMax: rawBounds.north(),
       lonMin: rawBounds.west(),
       lonMax: rawBounds.east(),
     };
 
+    console.log('[NaverMap] UI에서 생성한 요청 데이터:', mapParams);
+
     try {
-      const response = await getMapData(mapBounds);
+      const response = await getMapData(mapParams);
       clearMarkers();
 
       // 1. 개별 매장
       if (level === 'restaurant') {
-        const restaurantData = response.data as RestaurantPoint[];
+        const restaurantData = response.data as MapRestaurantData[];
         restaurantData.forEach((item) => {
           const marker = new window.naver.maps.Marker({
-            position: new window.naver.maps.LatLng(item.latitude, item.longitude),
+            position: new window.naver.maps.LatLng(item.lat, item.lon),
             map: map,
             icon: {
-              content: createRestaurantMarkerHtml(item.price),
+              content: createRestaurantMarkerHtml(item.corkagePrice),
               anchor: new window.naver.maps.Point(30, 15),
             },
           });
 
           // [수정] 클릭 시 handleRestaurantClick 호출 (가격 정보만 넘김)
           naver.maps.Event.addListener(marker, 'click', () => {
-            handleRestaurantClick(marker, item.price);
+            handleRestaurantClick(marker, item.corkagePrice);
             // navigate(`/detail-info/${item.restaurantId}`); // 필요하면 주석 해제
             if (onRestaurantClick) {
               onRestaurantClick(item.restaurantId);
@@ -290,7 +290,7 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
       }
       // 2. 동 단위
       else if (level === 'dong') {
-        const clusterData = response.data as ClusterPoint[];
+        const clusterData = response.data as MapRestaurantData[];
         const dongClusters = groupByDong(clusterData);
 
         dongClusters.forEach(({ name, count, centerLat, centerLon, restaurantIds }) => {
@@ -315,23 +315,23 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
       }
       // 3. 시/군/구
       else {
-        const clusterData = response.data as ClusterPoint[];
-        if (clusterData.length > 0) {
+        const restaurantData = response.data as MapRestaurantData[];
+        if (restaurantData.length > 0) {
           const centerLat =
-            clusterData.reduce((acc, cur) => acc + cur.latitude, 0) / clusterData.length;
+            restaurantData.reduce((acc, cur) => acc + cur.lat, 0) / restaurantData.length;
           const centerLon =
-            clusterData.reduce((acc, cur) => acc + cur.longitude, 0) / clusterData.length;
-          const count = clusterData.length;
+            restaurantData.reduce((acc, cur) => acc + cur.lon, 0) / restaurantData.length;
+          const count = restaurantData.length;
           const size = 35 + count * 1.5;
 
-          const sample = clusterData[0].address || '';
+          const sample = restaurantData[0].address || '';
           const areaName =
             level === 'sigungu'
               ? (sample.match(/([가-힣A-Za-z0-9]+(?:구|군|시))/)?.[1] ?? '선택 지역')
               : (sample.match(/([가-힣]+(?:특별시|광역시|특별자치시|특별자치도|도))/)?.[1] ??
                 '선택 지역');
 
-          const restaurantIds = clusterData.map((d) => d.restaurantId);
+          const restaurantIds = restaurantData.map((d) => d.restaurantId);
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
