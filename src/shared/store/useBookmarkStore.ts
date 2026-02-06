@@ -87,7 +87,7 @@ const useBookmarkStore = create<BookmarkStoreState>()(
         resetAllBookmarks: () =>
           set({
             selectedTips: [],
-            selectedStores: [],
+            selectedStores: {},
             selectedReviews: [],
             reviewCount: {},
           }),

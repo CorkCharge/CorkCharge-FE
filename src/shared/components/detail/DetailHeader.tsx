@@ -41,9 +41,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   }, [location.state, navigate, restaurant.restaurantId]);
 
   useEffect(() => {
-    if (restaurant.restaurantId in selectedStores) {
-      setIsKeep(true);
-    }
+    setIsKeep(restaurant.restaurantId in selectedStores);
   }, [restaurant, selectedStores]);
 
   const keepMarker = (

@@ -202,17 +202,19 @@ function CategoryStores() {
           </div>
         )}
       </div>
-      <GroupSelector
-        isOpen={isGroupSelectorOpen}
-        topSnapVh={17.8}
-        onClose={() => setIsGroupSelectorOpen(false)}
-      >
-        <GroupList
+      {selectedStore && (
+        <GroupSelector
+          isOpen={isGroupSelectorOpen}
+          topSnapVh={17.8}
           onClose={() => setIsGroupSelectorOpen(false)}
-          restaurantName={selectedStore?.restaurantName ?? ''}
-          restaurantId={selectedStore?.restaurantId ?? 1}
-        />
-      </GroupSelector>
+        >
+          <GroupList
+            onClose={() => setIsGroupSelectorOpen(false)}
+            restaurantName={selectedStore.restaurantName}
+            restaurantId={selectedStore.restaurantId}
+          />
+        </GroupSelector>
+      )}
     </>
   );
 }

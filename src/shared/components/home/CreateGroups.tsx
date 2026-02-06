@@ -51,8 +51,12 @@ const CreateGroup = ({ onComplete, onCancel }: EditGroupProps) => {
       return;
     }
 
-    mutation.mutate({ name: groupName, color: selectedIcon, visibility: privacy });
-    onComplete();
+    try {
+      await mutation.mutateAsync({ name: groupName, color: selectedIcon, visibility: privacy });
+      onComplete();
+    } catch (e) {
+      console.error('그룹 생성 실패: ' + e);
+    }
   };
 
   return (
