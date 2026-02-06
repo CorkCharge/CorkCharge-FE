@@ -79,3 +79,16 @@ export const fetchNewStore = async ({
 
   return res.data.data;
 };
+
+// 홈화면 매장 검색
+export const restaurantSearch = async ({
+  keyword,
+  sort = 'PRICE_ASC',
+}: {
+  keyword: string;
+  sort?: 'PRICE_ASC' | 'REVIEW_COUNT_DESC' | 'RATING_DESC';
+}) => {
+  const res = await apiClient.post('/restaurants/search', { keyword, sort });
+
+  return res.data.data;
+};

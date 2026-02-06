@@ -25,6 +25,20 @@ export interface RestaurantScrapResponse extends RestaurantResponse {
   scrap: boolean;
 }
 
+export interface RestaurantSearchResponse {
+  restaurantId: number;
+  name: string;
+  rating: number;
+  reviewCount: number;
+  openingHours: string;
+  corkagePrice: string;
+  corkageOptions: string[];
+  imageUrls: string[];
+  scrap: false;
+  latitude: number;
+  longitude: number;
+}
+
 // export interface HomeStoreResponse {
 //   nearbyCard: StoreCard;
 //   recommendCard: StoreCard;
