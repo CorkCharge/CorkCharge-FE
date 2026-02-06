@@ -25,6 +25,7 @@ function DoitRequest() {
   const [firstPriority, setFirstPriority] = useState<Priority>();
   const [secondPriority, setSecondPriority] = useState<Priority>();
   const [content, setContent] = useState('');
+  const [isComposing, setIsComposing] = useState(false); // textarea 입력 시에 300자 이후의 한글입력 감지
 
   const renderPriorityButtons = (
     pri: Priority,
@@ -70,6 +71,16 @@ function DoitRequest() {
     } catch (e) {
       console.error('2차 해주세요 요청 실패: ' + e);
     }
+  };
+
+  const writeRequest = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (isComposing) {
+      setContent(value);
+      return;
+    }
+
+    setContent(value.slice(0, 300));
   };
 
   return (
@@ -192,10 +203,17 @@ function DoitRequest() {
             <textarea
               className="min-h-[230px] w-full resize-none bg-transparent placeholder:text-[var(--gray-5)] focus:outline-none"
               placeholder="원하는 콜키지 가격이나 옵션을 작성해주세요"
+              maxLength={300}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={(e) => {
+                setIsComposing(false);
+                setContent(e.currentTarget.value.slice(0, 300));
+              }}
+              onChange={(e) => writeRequest(e)}
             />
           </div>
+          <span className="inline-block w-full text-right text-xs text-[var(--gray-6)]">{`${content.length}/300`}</span>
           <div className="mt-5 flex gap-4 font-semibold">
             <button
               className="h-12 flex-1 rounded-xl bg-[var(--gray-1)] text-[var(--gray-6)]"
