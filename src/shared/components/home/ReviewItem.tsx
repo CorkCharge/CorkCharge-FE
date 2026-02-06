@@ -1,10 +1,16 @@
+import { useNavigate } from 'react-router-dom';
+
 import type { ReviewResponse } from '@/shared/apis/review/review.type';
 import DefaultImage from '../common/DefaultImage';
 import { StarRate } from '../common/StarRate';
 
 function ReviewItem({ review }: { review: ReviewResponse }) {
+  const navigate = useNavigate();
   return (
-    <div className="w-[172px] shrink-0 cursor-pointer rounded-2xl bg-[var(--gray-1)]">
+    <div
+      className="w-[172px] shrink-0 cursor-pointer rounded-2xl bg-[var(--gray-1)]"
+      onClick={() => navigate(`/detail-info/${review.restaurantId}`)}
+    >
       <div className="px-3 py-[10px]">
         <span className="text-sm font-bold">{review.restaurantName}</span>
         <div className="flex items-center">

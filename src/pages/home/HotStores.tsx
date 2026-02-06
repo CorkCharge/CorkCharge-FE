@@ -13,6 +13,8 @@ import share from '@/shared/assets/detailPageImgs/share.svg';
 import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
 
 function HotStores() {
   const navigate = useNavigate();
@@ -21,8 +23,9 @@ function HotStores() {
   const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
-  //   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const [stores, setStores] = useState<RestaurantScrapResponse[]>([]);
+  const [selectedStore, setSelectedStore] = useState<RestaurantScrapResponse>();
 
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
 
@@ -46,9 +49,10 @@ function HotStores() {
     setIsShareModalOpen(true);
   };
 
-  const handleKeep = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleKeep = (e: React.MouseEvent<HTMLDivElement>, store: RestaurantScrapResponse) => {
     e.stopPropagation();
-    // setIsGroupSelectorOpen(true);
+    setSelectedStore(store);
+    setIsGroupSelectorOpen(true);
   };
 
   // 공유 클릭 시 주소 복사
@@ -91,11 +95,13 @@ function HotStores() {
           <div className="absolute bottom-0 right-0 flex items-center gap-1">
             <div
               className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-              onClick={handleKeep}
+              onClick={(e) => handleKeep(e, store)}
             >
               <img src={keep} className="size-6" />
             </div>
-            <span className="text-sm font-medium text-[var(--gray-8)]">99+</span>
+            <span className="text-sm font-medium text-[var(--gray-8)]">
+              {store.bookmarkCount > 99 ? '99+' : store.bookmarkCount}
+            </span>
             <div
               className="relative flex size-6 cursor-pointer rounded-full bg-white"
               onClick={(e) => handleShare(e, store.restaurantName, store.restaurantId)}
@@ -147,6 +153,21 @@ function HotStores() {
               <img src={check} />
             </div>
           </div>
+        )}
+
+        {/* 그룹 선택기 */}
+        {selectedStore && (
+          <GroupSelector
+            isOpen={isGroupSelectorOpen}
+            topSnapVh={17.8}
+            onClose={() => setIsGroupSelectorOpen(false)}
+          >
+            <GroupList
+              onClose={() => setIsGroupSelectorOpen(false)}
+              restaurantName={selectedStore.restaurantName}
+              restaurantId={selectedStore.restaurantId}
+            />
+          </GroupSelector>
         )}
       </div>
     </>

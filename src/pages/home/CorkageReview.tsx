@@ -6,8 +6,6 @@ import Header from '@/shared/components/common/Header';
 import { SearchInput } from '@/shared/components/common/Input';
 import { StarRate } from '@/shared/components/common/StarRate';
 import Modal from '@/shared/components/common/Modal';
-import GroupSelector from '@/shared/components/home/GroupSelector';
-import GroupList from '@/shared/components/home/GroupList';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import { useDebounce } from '@/shared/hooks/useDebounce';
@@ -19,6 +17,7 @@ import share from '@/shared/assets/detailPageImgs/share.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
+import { createBookmark, deleteBookmark } from '@/shared/apis/bookmark/bookmark.api';
 
 function CorkageReview() {
   const navigate = useNavigate();
@@ -28,8 +27,8 @@ function CorkageReview() {
   const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
-  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const [searchQuery, setSearchQuery] = useState('');
+  const [isPending, setIsPending] = useState(false);
 
   const selectedReviews = useBookmarkStore((state) => state.selectedReviews);
   const toggleReview = useBookmarkStore((state) => state.toggleReview);
@@ -60,11 +59,11 @@ function CorkageReview() {
   });
 
   const renderReviews = () =>
-    reviews?.map((review, idx) => (
+    reviews?.map((review) => (
       <div
         className="relative cursor-pointer rounded-2xl bg-[var(--gray-1)] p-4"
         key={review.reviewId}
-        onClick={() => navigate('/detail-info/88')}
+        onClick={() => navigate(`/detail-info/${review.restaurantId}`)}
       >
         {/* 매장명 + 별점 */}
         <span className="text-xl font-bold text-[var(--gray-8)]">{review.restaurantName}</span>
@@ -89,7 +88,7 @@ function CorkageReview() {
         <div className="absolute bottom-4 right-4 flex items-center gap-1">
           <div
             className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-            onClick={(e) => handleKeep(e, idx)}
+            onClick={(e) => handleKeep(e, review.reviewId)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,10 +128,27 @@ function CorkageReview() {
       </div>
     ));
 
-  const handleKeep = (e: React.MouseEvent<HTMLDivElement>, idx: number) => {
+  const handleKeep = async (e: React.MouseEvent<HTMLDivElement>, id: number) => {
     e.stopPropagation();
-    toggleReview(idx);
-    setIsGroupSelectorOpen(true);
+
+    if (isPending) return;
+    setIsPending(true);
+
+    try {
+      if (selectedReviews.includes(id)) {
+        await deleteBookmark({ targetId: id, targetType: 'REVIEW' });
+      } else {
+        await createBookmark({ targetId: id, targetType: 'REVIEW' });
+      }
+
+      toggleReview(id);
+    } catch (e) {
+      console.error('리뷰 저장/삭제 실패: ' + e);
+    } finally {
+      setIsPending(false);
+    }
+
+    // setIsGroupSelectorOpen(true);
   };
 
   const handleShare = async (
@@ -246,7 +262,7 @@ function CorkageReview() {
       {/* 지역 설정 버튼 or 필터 영역 */}
       {selectedDongNames.length < 1 ? (
         <Button
-          value="지역 검색"
+          value="지역 설정"
           className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white"
           style={{
             maxWidth: 'calc(var(--app-width) * 0.8)',
@@ -297,13 +313,6 @@ function CorkageReview() {
           </div>
         </div>
       )}
-      <GroupSelector
-        isOpen={isGroupSelectorOpen}
-        topSnapVh={17.8}
-        onClose={() => setIsGroupSelectorOpen(false)}
-      >
-        <GroupList onClose={() => setIsGroupSelectorOpen(false)} />
-      </GroupSelector>
     </div>
   );
 }
