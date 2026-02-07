@@ -10,7 +10,7 @@ const DetailInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const hash = useRef<string>('-1');
 
   useEffect(() => {
-    hash.current = location.hash; // '#5'
+    hash.current = location.hash;
 
     // 해시가 있으면 해당 id로 스크롤
     if (hash.current) {
