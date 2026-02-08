@@ -60,14 +60,14 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
         ) : (
           <div className="size-[172px] rounded-t-2xl bg-black" />
         )}
-        <div className="flex h-[44px] items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
+        <span className="block h-[44px] w-[172px] truncate rounded-b-2xl bg-[var(--glass)] px-4 text-center text-sm font-bold leading-[44px] text-[var(--gray-8)]">
           {store.corkagePrice}
-        </div>
+        </span>
         <div className="mt-2">
           <span className="font-bold">{store.restaurantName}</span>
           <div className="flex items-center">
             <img src={star} className="mr-1" />
-            <span>{store.rating.toFixed(1)}</span>
+            <span>{store.rating?.toFixed(1) ?? 0}</span>
             <span className="ml-2 text-sm">리뷰 total {store.reviewCount.toLocaleString()}</span>
           </div>
         </div>
@@ -86,9 +86,9 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
         ) : (
           <div className="size-[172px] rounded-t-2xl bg-black" />
         )}
-        <div className="flex h-[44px] items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
+        <span className="block h-[44px] w-[172px] truncate rounded-b-2xl bg-[var(--glass)] px-4 text-center text-sm font-bold leading-[44px] text-[var(--gray-8)]">
           {store.corkagePrice}
-        </div>
+        </span>
         <div className="mt-2">
           <span className="font-bold">{store.restaurantName}</span>
           <div className="flex items-center">
