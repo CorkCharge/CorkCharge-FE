@@ -37,10 +37,8 @@ const Tip = () => {
   }, [tipId, id]);
 
   useEffect(() => {
-    if (selectedTips.includes(tipId)) {
-      setIsBookmarked(true);
-    }
-  }, []);
+    setIsBookmarked(selectedTips.includes(tipId));
+  }, [selectedTips, tipId]);
 
   const onBookmarkClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -91,12 +89,8 @@ const Tip = () => {
         )}
         <div className="absolute top-0 w-full">
           <div className="flex h-[48px] w-full items-center justify-between pl-4 pr-4">
-            <img
-              src={whiteArrow}
-              onClick={handleClick}
-              className="h-[20px] w-[12px] cursor-pointer"
-            />
-            <div className="text-[16px] font-bold text-[#FFFFFF]">corkcharge TIP</div>
+            <img src={whiteArrow} onClick={handleClick} className="h-5 w-3 cursor-pointer" />
+            <div className="font-bold text-white">corkcharge TIP</div>
             <img
               src={isBookmarked ? keep : bookmarked}
               onClick={onBookmarkClick}

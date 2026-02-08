@@ -202,11 +202,15 @@ const DoitList = () => {
   };
 
   return (
-    <div>
-      <div className="mb-4" style={{ boxShadow: '0 4px 7px 0px rgba(0,0,0,0.1)' }}>
+    <>
+      {/* 헤더 영역 */}
+      <div
+        className="fixed w-full max-w-[var(--app-width)] bg-white px-4"
+        style={{ boxShadow: '0 4px 7px 0px rgba(0,0,0,0.1)' }}
+      >
         <Header title="해주세요" type="back" backFn={() => navigate('/home')} />
 
-        <div className="flex justify-center gap-1 px-5 pb-2">
+        <div className="flex justify-center gap-1 pb-2">
           <div className="flex h-10 min-w-0 flex-1 items-center rounded-br-full rounded-tl-full bg-[var(--gray-1)] px-6">
             <input
               type="text"
@@ -226,10 +230,12 @@ const DoitList = () => {
         </div>
       </div>
 
-      <div className={`flex flex-col gap-4 px-4 ${stores?.length > 0 && 'mb-[80px]'}`}>
+      {/* 가게 리스트 */}
+      <div className={`mt-28 flex flex-col gap-4 px-4 ${stores?.length > 0 && 'mb-[80px]'}`}>
         {renderStores()}
       </div>
 
+      {/* 지역 설정 및 버튼 영역 */}
       {stores?.length > 0 &&
         (selectedDongNames.length < 1 ? (
           <Button
@@ -240,7 +246,6 @@ const DoitList = () => {
               bottom: 'calc(var(--footer-h) + 15px)',
             }}
             disabled={selectedIdx === -1}
-            // onClick={() => setIsDoitModalOpen(true)}
             onClick={handleRequest}
           />
         ) : (
@@ -303,7 +308,7 @@ const DoitList = () => {
           onClick={() => setIsAlreadyModalOpen(false)}
         />
       </Modal>
-    </div>
+    </>
   );
 };
 

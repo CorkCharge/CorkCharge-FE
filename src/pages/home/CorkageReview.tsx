@@ -11,13 +11,13 @@ import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import { useReviewList } from '@/shared/queries/useReviewList';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
+import { createBookmark, deleteBookmark } from '@/shared/apis/bookmark/bookmark.api';
 
 import arrow from '@/shared/assets/selectArrow.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
-import { createBookmark, deleteBookmark } from '@/shared/apis/bookmark/bookmark.api';
 
 function CorkageReview() {
   const navigate = useNavigate();
@@ -203,58 +203,63 @@ function CorkageReview() {
 
   return (
     <div className="px-4">
-      <Header title="콜키지 리뷰" type="back" backFn={() => navigate('/home')} />
-      <div className="flex h-10">
-        <SearchInput
-          className="h-full flex-1 text-sm font-medium"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <div className="relative z-[2] flex h-full items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]">
-          <span className="w-[52px] text-center">{isRecent ? '최신순' : '저장수순'}</span>
-          <img
-            src={arrow}
-            className="ml-2 cursor-pointer"
-            onClick={() => setIsDrop((prev) => !prev)}
+      <section
+        className="fixed top-0 z-[10] w-full bg-white pb-4"
+        style={{ maxWidth: 'calc(var(--app-width) - 32px)', width: 'calc(100% - 32px)' }}
+      >
+        <Header title="콜키지 리뷰" type="back" backFn={() => navigate('/home')} />
+        <div className="flex h-10">
+          <SearchInput
+            className="h-full flex-1 text-sm font-medium"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <AnimatePresence>
-            {isDrop && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className={`absolute right-0 top-[130%] rounded-2xl bg-white px-3 py-2 shadow-lg ${isDrop ? '' : 'hidden'}`}
-              >
-                <ul className="whitespace-nowrap text-center text-sm font-medium">
-                  <li
-                    className={`cursor-pointer border-b px-2 py-1 ${isRecent ? 'text-[var(--primary)]' : 'text-[var(--gray-5)]'}`}
-                    onClick={() => {
-                      setIsRecent(true);
-                      setIsDrop(false);
-                    }}
-                  >
-                    최신순
-                  </li>
-                  <li
-                    className={`cursor-pointer px-2 py-1 ${!isRecent ? 'text-[var(--primary)]' : 'text-[var(--gray-5)]'}`}
-                    onClick={() => {
-                      setIsRecent(false);
-                      setIsDrop(false);
-                    }}
-                  >
-                    저장수순
-                  </li>
-                </ul>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div className="relative z-[2] flex h-full items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]">
+            <span className="w-[52px] text-center">{isRecent ? '최신순' : '저장수순'}</span>
+            <img
+              src={arrow}
+              className="ml-2 cursor-pointer"
+              onClick={() => setIsDrop((prev) => !prev)}
+            />
+            <AnimatePresence>
+              {isDrop && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className={`absolute right-0 top-[130%] rounded-2xl bg-white px-3 py-2 shadow-lg ${isDrop ? '' : 'hidden'}`}
+                >
+                  <ul className="whitespace-nowrap text-center text-sm font-medium">
+                    <li
+                      className={`cursor-pointer border-b px-2 py-1 ${isRecent ? 'text-[var(--primary)]' : 'text-[var(--gray-5)]'}`}
+                      onClick={() => {
+                        setIsRecent(true);
+                        setIsDrop(false);
+                      }}
+                    >
+                      최신순
+                    </li>
+                    <li
+                      className={`cursor-pointer px-2 py-1 ${!isRecent ? 'text-[var(--primary)]' : 'text-[var(--gray-5)]'}`}
+                      onClick={() => {
+                        setIsRecent(false);
+                        setIsDrop(false);
+                      }}
+                    >
+                      저장수순
+                    </li>
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* 리뷰 영역 */}
       <div
-        className={`${selectedDongNames.length > 0 ? 'mb-[160px]' : 'mb-[80px]'} mt-4 flex flex-col gap-4`}
+        className={`pt-[104px] ${selectedDongNames.length > 0 ? 'mb-[160px]' : 'mb-[80px]'} flex flex-col gap-4`}
       >
         {renderReviews()}
       </div>

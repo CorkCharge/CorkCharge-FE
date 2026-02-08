@@ -93,7 +93,7 @@ function StoresInfo({ nearStores, hotStores, isLoading }: StoreInfoProps) {
           <span className="font-bold">{store.restaurantName}</span>
           <div className="flex items-center">
             <img src={star} className="mr-1" />
-            <span>{store.rating.toFixed(1)}</span>
+            <span>{store.rating?.toFixed(1) ?? 0}</span>
             <span className="ml-2 text-sm">리뷰 total {store.reviewCount.toLocaleString()}</span>
           </div>
         </div>

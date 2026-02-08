@@ -45,7 +45,7 @@ const MainLayout = () => {
 
   return (
     <div className="flex h-svh flex-col">
-      <div className="flex-1 overflow-auto" ref={scrollRef}>
+      <div className="flex-1 overflow-auto bg-white" ref={scrollRef}>
         <Outlet />
       </div>
       <FooterSync />

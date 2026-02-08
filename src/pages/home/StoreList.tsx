@@ -93,7 +93,10 @@ const StoreList = () => {
   return (
     <div className="flex flex-col items-center bg-[rgba(255,255,255,0.8)]">
       {/* 검색창 */}
-      <div className="flex w-full px-4" style={{ boxShadow: '0 4px 7px 0px rgba(0, 0, 0, 0.1)' }}>
+      <div
+        className="fixed top-0 z-[10] flex w-full max-w-[var(--app-width)] bg-white px-4"
+        style={{ boxShadow: '0 4px 7px 0px rgba(0, 0, 0, 0.1)' }}
+      >
         <TopBar searchDisabled={false} className="flex-1" />
         <img src={bell} className="cursor-pointer" onClick={() => navigate('/notification')} />
       </div>
@@ -101,7 +104,7 @@ const StoreList = () => {
       {/* 배너 */}
       <OverLayImage
         src={bannerCover}
-        className="mt-5 aspect-[2/1] cursor-pointer"
+        className="mt-[76px] aspect-[2/1] cursor-pointer"
         paddingX="16px"
         onClick={() => navigate('/tip-article/1')}
       >

@@ -37,6 +37,7 @@ function NaverCallback() {
       console.error('로그인 실패 : ' + e);
       alert('로그인에 실패하였습니다. 잠시 후 다시 시도해주세요');
       navigate('/signin');
+      return;
     }
 
     // 내가 저장한 팁들 가져오기
