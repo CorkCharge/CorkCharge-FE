@@ -132,9 +132,14 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           <img src={star} />
           <span className="ml-1 font-medium">{restaurant.rating?.toFixed(1) ?? 0}</span>
         </div>
-        <div className="mt-1 flex items-center gap-2 text-sm">
+        <div className="mt-1 flex gap-2 text-sm">
           <span className="text-nowrap font-semibold">영업 중</span>
-          <span className="text-[var(--gray-6)]">영업시간 {restaurant.openingHours}</span>
+          <span className="text-[var(--gray-6)]">
+            {' '}
+            {restaurant.openingHours.split(',').map((hour) => (
+              <p>{hour}</p>
+            ))}
+          </span>
         </div>
         <div
           className="absolute right-4 top-2 cursor-pointer"
