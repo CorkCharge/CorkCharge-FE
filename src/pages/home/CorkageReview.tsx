@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import Header from '@/shared/components/common/Header';
 import { SearchInput } from '@/shared/components/common/Input';
-import { StarRate, StarWithStroke } from '@/shared/components/common/StarRate';
+import { StarWithStroke } from '@/shared/components/common/StarRate';
 import Modal from '@/shared/components/common/Modal';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
