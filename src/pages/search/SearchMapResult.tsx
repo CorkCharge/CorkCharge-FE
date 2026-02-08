@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Header from '@/shared/components/corkagemap/list/Header';
+
 import RestaurantBox from '@/shared/components/corkagemap/list/RestaurantBox';
 import { restaurantSearch } from '@/shared/apis/restaurant/restaurant.api';
 import type { RestaurantSearchResponse } from '@/shared/apis/restaurant/restaurant.type';
+
+import Back from '@/shared/assets/left_arrow.svg';
 
 const SearchMapResult = () => {
   const [searchParams] = useSearchParams();
@@ -49,14 +51,25 @@ const SearchMapResult = () => {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center">
-      <Header
-        title={keyword}
-        className="max-w-[var(--app-width)]"
+      <div
         style={{ boxShadow: '0 4px 7px 0px rgba(0, 0, 0, 0.1)' }}
-      />
+        className="fixed flex h-[48px] w-full max-w-[var(--app-width)] flex-row place-content-between items-center bg-white"
+      >
+        <div className="flex flex-row gap-[10px]">
+          <img
+            src={Back}
+            alt="왼쪽 화살표"
+            className="ml-[13px] h-[20.34px] w-[11.46px] cursor-pointer"
+            onClick={() => navigate(-1)}
+          />
+          <p className="font-500 text-[16px]">{keyword}</p>
+        </div>
+      </div>
       <div className="w-full overflow-y-auto pb-[120px] pt-[48px]">
         {loading && <p>검색 중...</p>}
-        {!loading && items.length === 0 && <p>검색 결과가 없습니다.</p>}
+        {!loading && items.length === 0 && (
+          <p className="flex h-[100px] items-center justify-center">검색 결과가 없습니다.</p>
+        )}
         {items.map((r) => (
           <RestaurantBox
             key={r.restaurantId}
