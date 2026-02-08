@@ -80,7 +80,7 @@ const SearchMapResult = () => {
             reviewCount={r.reviewCount ?? 0}
             corkagePrice={(r.corkagePrice ?? 0).toString()}
             corkageOptions={r.corkageOptions ?? []}
-            imageUrl={r.imageUrls[0] ?? ''}
+            imageUrl={r.imageUrls?.[0] ?? ''}
             onClick={() => navigate(`/detail-info/${r.restaurantId}`)}
           />
         ))}

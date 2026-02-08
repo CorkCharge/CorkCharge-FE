@@ -231,7 +231,7 @@ const DoitList = () => {
       </div>
 
       {/* 가게 리스트 */}
-      <div className={`mt-28 flex flex-col gap-4 px-4 ${stores?.length > 0 && 'mb-[80px]'}`}>
+      <div className={`mt-28 flex flex-col gap-4 px-4 ${stores?.length > 0 ? 'mb-[80px]' : ''}`}>
         {renderStores()}
       </div>
 

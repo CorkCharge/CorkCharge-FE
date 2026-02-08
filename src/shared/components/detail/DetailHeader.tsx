@@ -135,10 +135,9 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
         <div className="mt-1 flex gap-2 text-sm">
           <span className="text-nowrap font-semibold">영업 중</span>
           <span className="text-[var(--gray-6)]">
-            {' '}
-            {restaurant.openingHours.split(',').map((hour) => (
-              <p>{hour}</p>
-            ))}
+            {restaurant.openingHours
+              ? restaurant.openingHours.split(',').map((hour, idx) => <p key={idx}>{hour}</p>)
+              : '운영시간 정보 없음'}
           </span>
         </div>
         <div

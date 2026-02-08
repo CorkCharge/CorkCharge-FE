@@ -88,7 +88,7 @@ const CreateGroup = ({ onComplete, onCancel }: EditGroupProps) => {
       </div>
 
       {/* 마커 선택 그리드 */}
-      <div className="mx-4 mt-6 grid w-fit w-full grid-cols-4 place-items-center justify-center gap-x-[30px] gap-y-[18px]">
+      <div className="mx-4 mt-6 grid w-full grid-cols-4 place-items-center justify-center gap-x-[30px] gap-y-[18px]">
         {markerList.map((Icon, i) => {
           const name = `SaveMarker${i + 1}`;
           const selected = selectedIcon === name;

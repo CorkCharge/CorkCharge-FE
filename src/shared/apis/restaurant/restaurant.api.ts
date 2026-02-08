@@ -1,8 +1,6 @@
 import apiClient from '../apiClient';
 import type { RestaurantScrapResponse } from './restaurant.type';
 
-// 가까운 매장 가져오기 - type
-
 // 위치 가져오기
 const getCurrentPosition = (): Promise<GeolocationPosition> =>
   new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
