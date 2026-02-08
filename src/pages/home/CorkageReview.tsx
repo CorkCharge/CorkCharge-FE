@@ -147,8 +147,6 @@ function CorkageReview() {
     } finally {
       setIsPending(false);
     }
-
-    // setIsGroupSelectorOpen(true);
   };
 
   const handleShare = async (

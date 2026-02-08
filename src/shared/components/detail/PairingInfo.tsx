@@ -15,7 +15,7 @@ const PairingInfo = (restaurant: RestaurantInfo) => {
             {restaurant.menuImageUrl && (
               <img src={restaurant.menuImageUrl} className="h-full w-full object-cover" />
             )}
-            <span className="absolute bottom-4 left-4 text-[24px] font-bold text-white">
+            <span className="absolute bottom-4 left-4 right-4 break-keep text-[24px] font-bold text-white">
               {restaurant.representMenu}
             </span>
           </div>
@@ -27,7 +27,7 @@ const PairingInfo = (restaurant: RestaurantInfo) => {
             {restaurant.pairingImageUrl && (
               <img src={restaurant.pairingImageUrl} className="h-full w-full object-cover" />
             )}
-            <span className="absolute bottom-4 left-4 text-[24px] font-bold text-white">
+            <span className="absolute bottom-4 left-4 right-4 break-keep text-[24px] font-bold text-white">
               {restaurant.pairingAlcohol}
             </span>
           </div>
