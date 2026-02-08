@@ -24,23 +24,6 @@ const SearchMapResult = () => {
         // 1. 검색으로 기본 매장 리스트 가져오기
         const res = await restaurantSearch({ keyword });
         setItems(res.restaurants);
-
-        // const detailed = await Promise.all(
-        //   res.map(async (r) => {
-        //     try {
-        //       const detail = await fetchRestaurant(r.restaurantId);
-        //       return { ...r, ...detail } as RestaurantInfo;
-        //     } catch (err) {
-        //       console.error(`상세 호출 실패 (id: ${r.restaurantId})`, err);
-        //       return undefined; // 실패 시 undefined
-        //     }
-        //   })
-        // );
-
-        // if (detailed) {
-        //   // undefined 제거
-        //   setItems(detailed.filter((r): r is RestaurantInfo => r !== undefined));
-        // }
       } catch (e) {
         console.error('매장 검색 실패:', e);
       } finally {
@@ -67,7 +50,7 @@ const SearchMapResult = () => {
       </div>
       <div className="w-full overflow-y-auto pb-[120px] pt-[48px]">
         {loading && <p>검색 중...</p>}
-        {!loading && items.length === 0 && (
+        {!loading && keyword && items.length === 0 && (
           <p className="flex h-[100px] items-center justify-center">검색 결과가 없습니다.</p>
         )}
         {items.map((r) => (
