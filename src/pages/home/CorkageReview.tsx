@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import Header from '@/shared/components/common/Header';
 import { SearchInput } from '@/shared/components/common/Input';
-import { StarRate } from '@/shared/components/common/StarRate';
+import { StarRate, StarWithStroke } from '@/shared/components/common/StarRate';
 import Modal from '@/shared/components/common/Modal';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
@@ -68,8 +68,8 @@ function CorkageReview() {
         {/* 매장명 + 별점 */}
         <span className="text-xl font-bold text-[var(--gray-8)]">{review.restaurantName}</span>
         <div className="my-2 flex gap-1">
-          <StarRate rate={review.rating} />
-          <span className="font-medium">4</span>
+          <StarWithStroke rate={review.rating} />
+          <span className="font-medium">{review.rating}</span>
         </div>
 
         {/* 리뷰 이미지 */}
@@ -212,13 +212,12 @@ function CorkageReview() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <div className="relative z-[2] flex h-full items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]">
+          <div
+            className="relative z-[2] flex h-full cursor-pointer items-center rounded-full bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]"
+            onClick={() => setIsDrop((prev) => !prev)}
+          >
             <span className="w-[52px] text-center">{isRecent ? '최신순' : '저장수순'}</span>
-            <img
-              src={arrow}
-              className="ml-2 cursor-pointer"
-              onClick={() => setIsDrop((prev) => !prev)}
-            />
+            <img src={arrow} className="ml-2" />
             <AnimatePresence>
               {isDrop && (
                 <motion.div
