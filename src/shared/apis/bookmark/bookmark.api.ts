@@ -1,95 +1,16 @@
 import apiClient from '../apiClient';
-
-interface ApiResponse {
-  success: boolean;
-  code: number;
-  message: string;
-}
-
-interface BookmarkRequest {
-  targetId: number;
-  targetType: 'REVIEW' | 'TIP' | 'RESTAURANT';
-  groupIds?: number[];
-}
-
-interface CancelBookmarkRequest {
-  targetId: number;
-  targetType: 'REVIEW' | 'TIP';
-}
-
-interface EditGroupRequest {
-  restaurantId: number;
-  groupIds: number[];
-}
-
-interface ReviewBookmarkListResponse extends ApiResponse {
-  data: {
-    bookmarkId: number;
-    reviewId: number;
-    restaurantName: string;
-    bookmarkCount: number;
-    reviewImageUrl: string;
-    rating: number;
-    content: string;
-    userName: string;
-    createdAt: string;
-  }[];
-}
-
-interface TipBookmarkListResponse extends ApiResponse {
-  data: {
-    bookmarkId: number;
-    tipId: number;
-    title: string;
-    tipCategory: string;
-    imageUrl: string;
-    createdAt: string;
-  }[];
-}
-
-interface CreateGroupRequest {
-  name: string;
-  color: string;
-  visibility: 'PUBLIC' | 'PRIVATE';
-}
-
-interface UpdateGroupRequest {
-  name: string;
-  color: string;
-  visibility: 'PUBLIC' | 'PRIVATE';
-}
-
-interface GroupListResponse extends ApiResponse {
-  data: {
-    totalGroupCount: number;
-    groups: {
-      groupId: number;
-      name: string;
-      color: string;
-      visibility: 'PUBLIC' | 'PRIVATE';
-      storeCount: number;
-      createdAt: string;
-      updatedAt: string;
-    }[];
-  };
-}
-
-interface GroupDetailResponse extends ApiResponse {
-  data: {
-    groupName: string;
-    totalCount: number;
-    restaurants: {
-      restaurantId: number;
-      name: string;
-      rating: number;
-      reviewCount: number;
-      openingHoursText: string;
-      imageUrls: string[];
-      corkagePrice: string;
-      corkageOption: string;
-    }[];
-  };
-}
+import type {
+  ApiResponse,
+  BookmarkRequest,
+  CancelBookmarkRequest,
+  EditGroupRequest,
+  ReviewBookmarkListResponse,
+  TipBookmarkListResponse,
+  CreateGroupRequest,
+  UpdateGroupRequest,
+  GroupListResponse,
+  GroupDetailResponse,
+} from './bookmarks.type';
 
 // 저장하기(리뷰/팁/매장) (2차)
 export const createBookmark = async (data: BookmarkRequest): Promise<ApiResponse> => {

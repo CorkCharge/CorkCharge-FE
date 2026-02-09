@@ -6,7 +6,7 @@ import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import Modal from '@/shared/components/common/Modal';
 import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
-import { fetchHotStores } from '@/shared/apis/restaurant/restaurant.api';
+import { fetchNearStores } from '@/shared/apis/restaurant/restaurant.api';
 
 import star from '@/shared/assets/star.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
@@ -16,7 +16,7 @@ import check from '@/shared/components/detail/assets/check.svg';
 import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
 
-function HotStores() {
+function NearbyStores() {
   const navigate = useNavigate();
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
@@ -35,10 +35,10 @@ function HotStores() {
 
   const getNearbyStores = async () => {
     try {
-      const res = await fetchHotStores();
+      const res = await fetchNearStores();
       setStores(res);
     } catch (e) {
-      console.error('핫한 매장 가져오기 실패: ' + e);
+      console.error('가까운 매장 가져오기 실패: ' + e);
     }
   };
 
@@ -63,7 +63,7 @@ function HotStores() {
     setTimeout(() => setIsCopiedModalOpen(false), 1000);
   };
 
-  const renderHotStores = () =>
+  const renderNearStores = () =>
     stores?.map((store) => (
       <div
         key={store.restaurantId}
@@ -119,11 +119,11 @@ function HotStores() {
   return (
     <>
       <div className="relative px-4">
-        <Header title="핫플 콜키지 추천 매장" type="back" backFn={() => navigate('/home')} />
+        <Header title="가까운 매장" type="back" backFn={() => navigate('/home')} />
         <div
           className={`flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
         >
-          {renderHotStores()}
+          {renderNearStores()}
         </div>
 
         {/* 공유하기 모달 */}
@@ -154,24 +154,22 @@ function HotStores() {
             </div>
           </div>
         )}
-
-        {/* 그룹 선택기 */}
-        {selectedStore && (
-          <GroupSelector
-            isOpen={isGroupSelectorOpen}
-            topSnapVh={17.8}
-            onClose={() => setIsGroupSelectorOpen(false)}
-          >
-            <GroupList
-              onClose={() => setIsGroupSelectorOpen(false)}
-              restaurantName={selectedStore.restaurantName}
-              restaurantId={selectedStore.restaurantId}
-            />
-          </GroupSelector>
-        )}
       </div>
+
+      {/* 그룹 선택기 */}
+      <GroupSelector
+        isOpen={isGroupSelectorOpen}
+        topSnapVh={17.8}
+        onClose={() => setIsGroupSelectorOpen(false)}
+      >
+        <GroupList
+          onClose={() => setIsGroupSelectorOpen(false)}
+          restaurantName={selectedStore?.restaurantName ?? ''}
+          restaurantId={selectedStore?.restaurantId ?? 1}
+        />
+      </GroupSelector>
     </>
   );
 }
 
-export default HotStores;
+export default NearbyStores;

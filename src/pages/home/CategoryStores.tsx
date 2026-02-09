@@ -1,46 +1,56 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import Header from '@/shared/components/common/Header';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import Modal from '@/shared/components/common/Modal';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
+import { useCategoryStores } from '@/shared/queries/useCategoryStores';
 import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
-import { fetchHotStores } from '@/shared/apis/restaurant/restaurant.api';
 
 import star from '@/shared/assets/star.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
 import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
+import filterImg from '@/pages/corkagemap/filterImg.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
-import GroupSelector from '@/shared/components/home/GroupSelector';
-import GroupList from '@/shared/components/home/GroupList';
 
-function HotStores() {
+// 타이틀 별 region-filter에서의 페이지 번호 매칭
+const FROM_TITLE_MAPPER: Record<string, number> = {
+  중국요리: 3.1,
+  회: 3.2,
+  이탈리안: 3.3,
+  초밥: 3.4,
+  '육류,고기': 3.5,
+};
+
+function CategoryStores() {
   const navigate = useNavigate();
+  const title = useLocation().state?.title ?? '이탈리안';
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
-  const [stores, setStores] = useState<RestaurantScrapResponse[]>([]);
   const [selectedStore, setSelectedStore] = useState<RestaurantScrapResponse>();
 
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
+  const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
+  const whichPage = useRegionFilterStore((state) => state.whichPage);
+  const filteredRegions = useRegionFilterStore((state) => state.filteredRegions);
+  const resetAddress = useRegionFilterStore((state) => state.resetAddress);
 
   useEffect(() => {
-    getNearbyStores();
-  }, []);
+    if (whichPage !== FROM_TITLE_MAPPER[title]) resetAddress();
+  }, [resetAddress, title, whichPage]);
 
-  const getNearbyStores = async () => {
-    try {
-      const res = await fetchHotStores();
-      setStores(res);
-    } catch (e) {
-      console.error('핫한 매장 가져오기 실패: ' + e);
-    }
-  };
+  const sido = Object.keys(filteredRegions)[0];
+  const sigungu = sido ? Object.keys(filteredRegions[sido])[0] : undefined;
+  const dong = sigungu ? filteredRegions[sido][sigungu] : undefined;
+  const { data: stores } = useCategoryStores({ category: title, sido, sigungu, dong });
 
   const handleShare = (e: React.MouseEvent<HTMLDivElement>, name: string, id: number) => {
     e.stopPropagation();
@@ -63,7 +73,7 @@ function HotStores() {
     setTimeout(() => setIsCopiedModalOpen(false), 1000);
   };
 
-  const renderHotStores = () =>
+  const renderStores = () =>
     stores?.map((store) => (
       <div
         key={store.restaurantId}
@@ -116,15 +126,52 @@ function HotStores() {
       </div>
     ));
 
+  const renderDongs = () =>
+    selectedDongNames.map((dong: string, idx: number) => (
+      <div
+        className="flex h-[32px] items-center gap-1 rounded-lg bg-[#90214626] px-2 py-1 text-[12px] font-semibold text-[#90212A]"
+        key={idx}
+      >
+        <span>{dong}</span>
+        <button onClick={() => removeDongFromArray(dong)}>✕</button>
+      </div>
+    ));
+
   return (
     <>
       <div className="relative px-4">
-        <Header title="핫플 콜키지 추천 매장" type="back" backFn={() => navigate('/home')} />
+        <Header title={title} type="back" backFn={() => navigate('/home')} />
         <div
           className={`flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
         >
-          {renderHotStores()}
+          {renderStores()}
         </div>
+        {selectedDongNames.length < 1 ? (
+          <Button
+            value="지역 검색"
+            className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white"
+            style={{
+              maxWidth: 'calc(var(--app-width) * 0.8)',
+              bottom: 'calc(var(--footer-h) + 15px)',
+            }}
+            onClick={() =>
+              navigate('/region-filter', { state: { from: FROM_TITLE_MAPPER[title] } })
+            }
+          />
+        ) : (
+          <div
+            className="fixed left-1/2 h-[150px] w-full -translate-x-1/2 bg-white px-4 py-2"
+            style={{ maxWidth: 'var(--app-width)', bottom: 'var(--footer-h)' }}
+          >
+            <div className="flex items-center gap-2">
+              <img src={filterImg} className="size-6" />
+              <span className="text-xs font-semibold">
+                <span className="text-[var(--primary)]">{selectedDongNames.length}</span>/10
+              </span>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-2">{renderDongs()}</div>
+          </div>
+        )}
 
         {/* 공유하기 모달 */}
         <Modal
@@ -154,24 +201,22 @@ function HotStores() {
             </div>
           </div>
         )}
-
-        {/* 그룹 선택기 */}
-        {selectedStore && (
-          <GroupSelector
-            isOpen={isGroupSelectorOpen}
-            topSnapVh={17.8}
-            onClose={() => setIsGroupSelectorOpen(false)}
-          >
-            <GroupList
-              onClose={() => setIsGroupSelectorOpen(false)}
-              restaurantName={selectedStore.restaurantName}
-              restaurantId={selectedStore.restaurantId}
-            />
-          </GroupSelector>
-        )}
       </div>
+      {selectedStore && (
+        <GroupSelector
+          isOpen={isGroupSelectorOpen}
+          topSnapVh={17.8}
+          onClose={() => setIsGroupSelectorOpen(false)}
+        >
+          <GroupList
+            onClose={() => setIsGroupSelectorOpen(false)}
+            restaurantName={selectedStore.restaurantName}
+            restaurantId={selectedStore.restaurantId}
+          />
+        </GroupSelector>
+      )}
     </>
   );
 }
 
-export default HotStores;
+export default CategoryStores;

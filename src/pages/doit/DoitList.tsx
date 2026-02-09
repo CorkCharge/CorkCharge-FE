@@ -25,14 +25,14 @@ const DoitList = () => {
   const requiredStore = useRef<DoitStoreResponse>(null);
 
   const whichPage = useRegionFilterStore((state) => state.whichPage);
-  const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
   const filteredRegions = useRegionFilterStore((state) => state.filteredRegions);
+  const resetAddress = useRegionFilterStore((state) => state.resetAddress);
 
   useEffect(() => {
-    if (whichPage !== 2) setSelectedDongNames([]);
-  }, [whichPage, setSelectedDongNames]);
+    if (whichPage !== 2) resetAddress();
+  }, [whichPage, resetAddress]);
 
   // 검색어 디바운스
   const debounceQuery = useDebounce(searchQuery, 500);
