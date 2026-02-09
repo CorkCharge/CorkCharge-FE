@@ -1,14 +1,20 @@
-import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useCallback } from 'react';
+//import { useNavigate } from 'react-router-dom';
 import { getMapData } from '@/shared/apis/map/mapApi';
-import type { MapLevel, ClusterPoint, RestaurantPoint } from '@/shared/types/map';
+import type { MapLevel, MapRestaurantData } from '@/shared/types/map';
+import Bottle from './bottle.svg';
+
+// [1] Ref에 사용할 데이터 타입 정의
+interface MarkerData {
+  count: number;
+  name: string;
+  size: number;
+}
 
 /* =========================
-   NEW: 유틸 함수 (동명 파싱/그룹핑)
+   유틸 함수 (컴포넌트 외부)
    ========================= */
-// 주소의 마지막 괄호(...)에서 "동/읍/면/리"로 끝나는 토큰 추출
 const getDongFromAddress = (address: string): string | null => {
-  // 예: "서울특별시 광진구 자양로 199-1 (구의동)"
   if (!address) return null;
   const m = address.match(/\(([^)]+)\)\s*$/);
   if (m) {
@@ -16,14 +22,11 @@ const getDongFromAddress = (address: string): string | null => {
     const cand = innerTokens.find((t) => /(동|읍|면|리)$/.test(t));
     if (cand) return cand;
   }
-
   const parts = address.split(/\s+/).reverse();
   const cand2 = parts.find((t) => /(동|읍|면|리)$/.test(t));
   if (cand2) return cand2;
-
   const cand3 = parts.find((t) => /(구|군|시)$/.test(t));
   if (cand3) return cand3;
-
   return null;
 };
 
@@ -35,7 +38,7 @@ type DongBucket = {
   ids: number[];
 };
 
-const groupByDong = (points: ClusterPoint[]) => {
+const groupByDong = (points: MapRestaurantData[]) => {
   const map = new Map<string, DongBucket>();
   for (const p of points) {
     const parsed = getDongFromAddress(p.address);
@@ -43,15 +46,15 @@ const groupByDong = (points: ClusterPoint[]) => {
     const b = map.get(dong);
     if (b) {
       b.count += 1;
-      b.sumLat += p.latitude;
-      b.sumLon += p.longitude;
+      b.sumLat += p.lat;
+      b.sumLon += p.lon;
       b.ids.push(p.restaurantId);
     } else {
       map.set(dong, {
         name: dong,
         count: 1,
-        sumLat: p.latitude,
-        sumLon: p.longitude,
+        sumLat: p.lat,
+        sumLon: p.lon,
         ids: [p.restaurantId],
       });
     }
@@ -65,137 +68,229 @@ const groupByDong = (points: ClusterPoint[]) => {
   }));
 };
 
-const NaverMap = () => {
-  // 지도를 담을 DOM 요소를 참조
+const getMapLevel = (zoom: number): MapLevel => {
+  if (zoom >= 17) return 'restaurant';
+  if (zoom >= 14) return 'dong';
+  if (zoom >= 11) return 'sigungu';
+  return 'sido';
+};
+
+const createClusterMarkerHtml = (count: number, isSelected: boolean = false): string => {
+  const size = 35 + count * 1.5;
+  const activeBackground = `
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), 
+                radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%);
+  `;
+  const defaultBackground = `background-color: #90212A;`;
+
+  return `
+    <div style="
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      width:${size}px; height:${size}px;
+      ${isSelected ? activeBackground : defaultBackground}
+      color:white; font-size:12px; font-weight:bold; border-radius:50%;
+      box-shadow:0 2px 4px rgba(0,0,0,0.2); transition:all 0.2s; padding:4px; cursor: pointer;
+    ">
+      <div style="font-size:14px; line-height:1">${count}</div>
+    </div>
+  `;
+};
+
+const createRestaurantMarkerHtml = (price: string, isSelected: boolean = false): string => {
+  if (isSelected) {
+    // [선택됨] 물방울 + 병 + 가격
+    return `
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="
+          width: 72px; height: 72px;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          border: 2px solid #FFF;
+          background: radial-gradient(151% 149.45% at -10.81% 68.19%, #90212A 0%, #DCDBE8 70.67%);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 8px;
+          z-index: 1000;
+        ">
+          <img src="${Bottle}" style="width: 24px; height: 48px; transform: rotate(45deg);" alt="bottle" />
+        </div>
+        <div style="
+          padding: 8px 12px;
+          background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), 
+                      radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%);
+          color: white; font-size: 14px; font-weight: bold; border-radius: 20px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
+        ">
+          ${price}
+        </div>
+      </div>
+    `;
+  }
+
+  // [기본 상태] 단순 가격표
+  return `
+    <div style="
+      padding: 12px; background-color: #90212A; color: white;
+      font-size: 14px; font-weight: bold; border-radius: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
+    ">
+      ${price}
+    </div>
+  `;
+};
+
+interface NaverMapProps {
+  onClusterClick?: (_name: string, _restaurantIds: number[]) => void;
+  onRestaurantClick?: (_restaurantId: number) => void;
+}
+
+const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
-  // 생성된 네이버 맵 인스턴스를 저장, 불필요한 리렌더링을 막기 위해 ref를 사용
   const mapInstance = useRef<naver.maps.Map | null>(null);
-  // 현재 지도에 표시된 마커들을 저장
   const markers = useRef<naver.maps.Marker[]>([]);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
-  /**
-   * 줌 레벨에 따라 API 요청에 사용할 'level' 문자열을 반환
-   * @param zoom - 현재 지도의 줌 레벨
-   */
-  const getMapLevel = (zoom: number): MapLevel => {
-    if (zoom >= 17) return 'restaurant';
-    if (zoom >= 14) return 'dong';
-    if (zoom >= 11) return 'sigungu';
-    return 'sido';
-  };
+  // [2] Ref에 타입 명시
+  const selectedMarkerRef = useRef<naver.maps.Marker | null>(null);
+  const selectedMarkerDataRef = useRef<MarkerData | null>(null);
 
-  /**
-   * 클러스터 마커(원)의 HTML 문자열을 생성
-   * @param count - 클러스터에 포함된 매장 수
-   * @param label - (선택) 동 이름 라벨
-   */
-  const createClusterMarkerHtml = (count: number, label?: string): string => {
-    // 매장 수에 비례하여 원의 크기를 조절
-    const size = 35 + count * 1.5;
-    return `
-      <div style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        width:${size}px;
-        height:${size}px;
-        background-color:#90212A;
-        color:white;
-        font-size:12px;
-        font-weight:bold;
-        border-radius:50%;
-        box-shadow:0 2px 4px rgba(0,0,0,0.2);
-        transition:all 0.2s;
-        padding:4px;
-      ">
-        <div style="font-size:14px; line-height:1">${count}</div>
-        ${label ? `<div style="font-size:10px; margin-top:2px; white-space:nowrap">${label}</div>` : ''}
-      </div>
-    `;
-  };
+  // [추가] 개별 식당 마커용 Ref (선택된 마커와 가격만 저장)
+  const selectedRestaurantRef = useRef<{ marker: naver.maps.Marker; price: string } | null>(null);
 
-  /**
-   * 개별 매장 마커(가격)의 HTML 문자열을 생성.
-   * @param price - 콜키지 가격 정보
-   */
-  const createRestaurantMarkerHtml = (price: string): string => {
-    return `
-      <div style="
-        padding: 12px;
-        background-color: #90212A;
-        color: white;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        white-space: nowrap;
-      ">
-        ${price}
-      </div>
-    `;
-  };
-
-  /**
-   * 이전에 생성된 모든 마커를 지도에서 제거
-   */
   const clearMarkers = () => {
     markers.current.forEach((marker) => marker.setMap(null));
     markers.current = [];
+    selectedMarkerRef.current = null;
+    selectedMarkerDataRef.current = null;
+    selectedRestaurantRef.current = null;
   };
 
-  /**
-   * 지도 상태(줌, 위치)가 변경될 때마다 API를 호출하여 마커를 다시 생성
-   */
-  const fetchAndDrawMarkers = async () => {
-    if (!mapInstance.current) return;
+  // [추가] 식당 마커 클릭 핸들러 (상태 관리 로직)
+  const handleRestaurantClick = useCallback((marker: naver.maps.Marker, price: string) => {
+    const prev = selectedRestaurantRef.current;
 
+    // 1. 이전에 선택된 게 있고, 지금 누른 게 아니라면 -> 원래대로 복구
+    if (prev && prev.marker !== marker) {
+      prev.marker.setIcon({
+        content: createRestaurantMarkerHtml(prev.price, false),
+        anchor: new window.naver.maps.Point(30, 15),
+      });
+      prev.marker.setZIndex(100);
+    }
+
+    // 2. 현재 누른 마커 -> 강조 스타일로 변경
+    marker.setIcon({
+      content: createRestaurantMarkerHtml(price, true),
+      // 물방울 꼬리가 지도 좌표에 맞도록 앵커 조정 (가로 72의 반, 세로 전체 + 마진)
+      anchor: new window.naver.maps.Point(36, 85),
+    });
+    marker.setZIndex(1000); // 맨 위로
+
+    // 3. 현재 상태 저장
+    selectedRestaurantRef.current = { marker, price };
+  }, []);
+
+  // [추가] 빈 공간 클릭 시 선택 해제 핸들러
+  const handleMapClick = useCallback(() => {
+    const prev = selectedRestaurantRef.current;
+
+    // 선택된 식당 마커가 있다면 -> 원래대로 복구
+    if (prev) {
+      prev.marker.setIcon({
+        content: createRestaurantMarkerHtml(prev.price, false),
+        anchor: new window.naver.maps.Point(30, 15),
+      });
+      prev.marker.setZIndex(100);
+      selectedRestaurantRef.current = null; // 상태 초기화
+    }
+  }, []);
+
+  // [3] handleClusterMarkerClick를 먼저 정의하고 useCallback으로 감쌉니다.
+  // (이 함수가 아래 fetchAndDrawMarkers에서 사용되기 때문입니다)
+  const handleClusterMarkerClick = useCallback(
+    (marker: naver.maps.Marker, data: MarkerData, restaurantIds: number[]) => {
+      // 1. 이전 마커 복구
+      const prevMarker = selectedMarkerRef.current;
+      const prevData = selectedMarkerDataRef.current;
+
+      if (prevMarker && prevData && prevMarker !== marker) {
+        prevMarker.setIcon({
+          content: createClusterMarkerHtml(prevData.count, false),
+          anchor: new window.naver.maps.Point(prevData.size / 2, prevData.size / 2),
+        });
+      }
+
+      // 2. 현재 마커 변경
+      marker.setIcon({
+        content: createClusterMarkerHtml(data.count, true),
+        anchor: new window.naver.maps.Point(data.size / 2, data.size / 2),
+      });
+
+      // 3. 저장
+      selectedMarkerRef.current = marker;
+      selectedMarkerDataRef.current = data;
+
+      // 4. 부모 알림
+      if (onClusterClick) {
+        onClusterClick(data.name, restaurantIds);
+      }
+    },
+    [onClusterClick] // onClusterClick이 바뀌면 이 함수도 갱신됨 (Stale Closure 방지)
+  );
+
+  // [4] fetchAndDrawMarkers도 useCallback으로 감쌉니다.
+  // handleClusterMarkerClick이 갱신되면 얘도 갱신되어야 이벤트 리스너가 최신 함수를 바라봅니다.
+  const fetchAndDrawMarkers = useCallback(async () => {
+    if (!mapInstance.current) return;
     const map = mapInstance.current;
     const rawBounds = map.getBounds();
 
-    // NEW: 타입 가드 + 숫자 전용 API 사용 (south/north/west/east)
     if (!(rawBounds instanceof naver.maps.LatLngBounds)) return;
 
     const zoom = map.getZoom();
     const level = getMapLevel(zoom);
 
-    const mapBounds = {
-      level,
+    const mapParams = {
       latMin: rawBounds.south(),
       latMax: rawBounds.north(),
       lonMin: rawBounds.west(),
       lonMax: rawBounds.east(),
     };
 
-    try {
-      const response = await getMapData(mapBounds);
-      clearMarkers(); // 기존 마커 제거
+    console.log('[NaverMap] UI에서 생성한 요청 데이터:', mapParams);
 
+    try {
+      const response = await getMapData(mapParams);
+      clearMarkers();
+
+      // 1. 개별 매장
       if (level === 'restaurant') {
-        // 개별 매장 마커 생성
-        const restaurantData = response.data as RestaurantPoint[];
+        const restaurantData = response.data as MapRestaurantData[];
         restaurantData.forEach((item) => {
           const marker = new window.naver.maps.Marker({
-            position: new window.naver.maps.LatLng(item.latitude, item.longitude),
+            position: new window.naver.maps.LatLng(item.lat, item.lon),
             map: map,
             icon: {
-              content: createRestaurantMarkerHtml(item.price),
-              anchor: new window.naver.maps.Point(30, 15), // 마커의 기준점 조정
+              content: createRestaurantMarkerHtml(item.corkagePrice),
+              anchor: new window.naver.maps.Point(30, 15),
             },
           });
 
+          // [수정] 클릭 시 handleRestaurantClick 호출 (가격 정보만 넘김)
           naver.maps.Event.addListener(marker, 'click', () => {
-            navigate(`/detail-info/${item.restaurantId}`);
+            handleRestaurantClick(marker, item.corkagePrice);
+            // navigate(`/detail-info/${item.restaurantId}`); // 필요하면 주석 해제
+            if (onRestaurantClick) {
+              onRestaurantClick(item.restaurantId);
+            }
           });
 
           markers.current.push(marker);
         });
-      } else if (level === 'dong') {
-        // NEW: 동 단위로 그룹핑하여 동의 중심에 클러스터 마커 여러 개 생성
-        const clusterData = response.data as ClusterPoint[];
-        console.log(clusterData.map((d) => d.restaurantId)); // 주소 배열 확인용
-
+      }
+      // 2. 동 단위
+      else if (level === 'dong') {
+        const clusterData = response.data as MapRestaurantData[];
         const dongClusters = groupByDong(clusterData);
 
         dongClusters.forEach(({ name, count, centerLat, centerLon, restaurantIds }) => {
@@ -204,52 +299,52 @@ const NaverMap = () => {
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
             clickable: true,
+            title: name,
             icon: {
-              content: createClusterMarkerHtml(count), // 라벨: 동 이름
+              content: createClusterMarkerHtml(count, false),
               anchor: new window.naver.maps.Point(size / 2, size / 2),
             },
           });
 
-          // 선택: 클릭 시 해당 동으로 살짝 확대/이동
           naver.maps.Event.addListener(marker, 'click', () => {
-            console.log('dong marker clicked', { name, restaurantIds });
-            navigate('/corkagemap/list', {
-              state: { level: 'dong' as MapLevel, areaName: name, restaurantIds },
-            });
+            handleClusterMarkerClick(marker, { count, name, size }, restaurantIds);
           });
 
           markers.current.push(marker);
         });
-      } else {
-        // 기존: 시군구/시도는 전체 묶음 1개만
-        const clusterData = response.data as ClusterPoint[];
-        if (clusterData.length > 0) {
+      }
+      // 3. 시/군/구
+      else {
+        const restaurantData = response.data as MapRestaurantData[];
+        if (restaurantData.length > 0) {
           const centerLat =
-            clusterData.reduce((acc, cur) => acc + cur.latitude, 0) / clusterData.length;
+            restaurantData.reduce((acc, cur) => acc + cur.lat, 0) / restaurantData.length;
           const centerLon =
-            clusterData.reduce((acc, cur) => acc + cur.longitude, 0) / clusterData.length;
-          const ids = clusterData.map((d) => d.restaurantId);
-          const marker = new window.naver.maps.Marker({
-            position: new window.naver.maps.LatLng(centerLat, centerLon),
-            map: map,
-            icon: {
-              content: createClusterMarkerHtml(clusterData.length),
-              anchor: new window.naver.maps.Point(15, 15), // 마커의 기준점 조정
-            },
-          });
+            restaurantData.reduce((acc, cur) => acc + cur.lon, 0) / restaurantData.length;
+          const count = restaurantData.length;
+          const size = 35 + count * 1.5;
 
-          // 간단 파싱: 주소에서 시/도 or 구/군 이름 하나 뽑기 (첫 항목 기준)
-          const sample = clusterData[0].address || '';
+          const sample = restaurantData[0].address || '';
           const areaName =
             level === 'sigungu'
               ? (sample.match(/([가-힣A-Za-z0-9]+(?:구|군|시))/)?.[1] ?? '선택 지역')
               : (sample.match(/([가-힣]+(?:특별시|광역시|특별자치시|특별자치도|도))/)?.[1] ??
                 '선택 지역');
 
+          const restaurantIds = restaurantData.map((d) => d.restaurantId);
+          const marker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(centerLat, centerLon),
+            map: map,
+            clickable: true,
+            title: areaName,
+            icon: {
+              content: createClusterMarkerHtml(count, false),
+              anchor: new window.naver.maps.Point(size / 2, size / 2),
+            },
+          });
+
           naver.maps.Event.addListener(marker, 'click', () => {
-            navigate('/corkagemap/list', {
-              state: { level, areaName, restaurantIds: ids },
-            });
+            handleClusterMarkerClick(marker, { count, name: areaName, size }, restaurantIds);
           });
 
           markers.current.push(marker);
@@ -258,20 +353,18 @@ const NaverMap = () => {
     } catch (error) {
       console.error('지도 데이터를 가져오는 데 실패했습니다:', error);
     }
-  };
+  }, [handleClusterMarkerClick, handleRestaurantClick, onRestaurantClick]); // 의존성 추가
 
-  // 컴포넌트가 처음 마운트될 때 지도를 초기화
+  // Effect 1: 지도 초기화 (최초 1회)
   useEffect(() => {
-    if (!window.naver || !mapRef.current) return;
+    if (!window.naver || !mapRef.current || mapInstance.current) return;
 
     const center = new window.naver.maps.LatLng(37.543654, 127.070138);
-
-    // 지도 인스턴스 생성
     const map = new window.naver.maps.Map(mapRef.current, {
       center: center,
-      zoom: 17, // 초기 줌 레벨을 'restaurant'으로 설정
-      minZoom: 8, // 최소 줌 레벨
-      maxZoom: 20, // 최대 줌 레벨
+      zoom: 17,
+      minZoom: 8,
+      maxZoom: 20,
       scaleControl: false,
       logoControl: false,
       mapDataControl: false,
@@ -280,23 +373,35 @@ const NaverMap = () => {
     });
 
     mapInstance.current = map;
+  }, []);
 
-    // 지도 로드 완료 후 첫 데이터 로딩
-    naver.maps.Event.once(map, 'init', () => {
-      fetchAndDrawMarkers();
-    });
+  // Effect 2: 이벤트 리스너 등록 및 데이터 Fetch
+  // fetchAndDrawMarkers가 변경될 때(=부모 props가 바뀌었을 때) 실행됨
+  useEffect(() => {
+    const map = mapInstance.current;
+    if (!map) return;
 
-    // 지도 드래그가 끝나거나 줌이 변경될 때마다 마커를 다시 그리도록 이벤트 리스너를 등록
-    naver.maps.Event.addListener(map, 'dragend', fetchAndDrawMarkers);
-    naver.maps.Event.addListener(map, 'zoom_changed', fetchAndDrawMarkers);
+    // 1. 데이터 즉시 로드
+    fetchAndDrawMarkers();
 
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
+    // 2. 리스너 등록
+    const dragEndListener = naver.maps.Event.addListener(map, 'dragend', fetchAndDrawMarkers);
+    const zoomChangedListener = naver.maps.Event.addListener(
+      map,
+      'zoom_changed',
+      fetchAndDrawMarkers
+    );
+
+    // [추가] 지도 빈 공간 클릭 리스너
+    const mapClickListener = naver.maps.Event.addListener(map, 'click', handleMapClick);
+
+    // 3. Cleanup: 리스너 중복 방지
     return () => {
-      if (map) {
-        naver.maps.Event.clearInstanceListeners(map);
-      }
+      naver.maps.Event.removeListener(dragEndListener);
+      naver.maps.Event.removeListener(zoomChangedListener);
+      naver.maps.Event.removeListener(mapClickListener); // [추가] 해제
     };
-  }, []); // 의존성 배열 추가
+  }, [fetchAndDrawMarkers, handleMapClick]);
 
   return <div ref={mapRef} id="map" className="h-[100vh] w-full" />;
 };

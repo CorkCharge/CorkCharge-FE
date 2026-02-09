@@ -44,27 +44,7 @@ export interface RestaurantInfo {
   pairingDescription: string | null; //null,
   pairingImageUrl: string; //null,
   openingHours: string; //null,
-  reviews?: reviewProps[];
-
-  // restaurantId: number; // 1,
-  // name: string; // "엔비햄버거",
-  // address: string; // "서울시 성동구 상수동 340-2",
-  // latitude: number;
-  // longitude: number;
-  // phone: string;
-  // bizType: string;
-  // hasCorkage: boolean;
-  // rating: number;
-  // bookmarkCount: number;
-  // images: {
-  //   imageUrl: string | null;
-  //   type: string;
-  // };
-  // corkageInfo: corkageInfoProps;
-  // reviews: {
-  //   totalCount: number;
-  //   reviewList: review[];
-  // };
+  // reviews?: reviewProps[];
 }
 
 export interface reviewProps {

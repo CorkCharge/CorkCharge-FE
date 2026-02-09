@@ -3,6 +3,11 @@ import { useState, useEffect, useRef } from 'react';
 
 import Modal from '../common/Modal';
 import Button from '../common/Button';
+import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
+import ContactModal from './ContactModal';
 
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
@@ -13,39 +18,31 @@ import arrow from '@/shared/assets/whiteArrow.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
 
-interface detailProps {
-  resId: number;
-  name: string;
-  rating: number;
-  adr: string;
-  alias?: string;
-  isOpen: boolean;
-  time: string;
-  phone: string;
-  mainImageUrl: string | null;
-}
-
-const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }: detailProps) => {
+const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isKeep, setIsKeep] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
-  const [contactContent, setContactContent] = useState('');
-  const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [isCallModalOpen, setIsCallModalOpen] = useState(false); // 전화하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
+  const [isContactCompleteModalOpen, setIsContactCompleteModalOpen] = useState(false);
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
 
   const ref = useRef<HTMLDivElement>(null);
 
-  // const location = useLocation();
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
 
   useEffect(() => {
     // state 초기화 (새로고침 시 안 뜨게)
-    navigate(`/detail-info/${resId}`, { replace: true });
-  }, [location.state]);
+    navigate(`/detail-info/${restaurant.restaurantId}`, { replace: true });
+  }, [location.state, navigate, restaurant.restaurantId]);
+
+  useEffect(() => {
+    setIsKeep(restaurant.restaurantId in selectedStores);
+  }, [restaurant, selectedStores]);
 
   const keepMarker = (
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -93,19 +90,23 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
     const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
 
     if (isMobile) {
-      window.location.href = `tel:${phone}`;
+      window.location.href = `tel:${restaurant.phone}`;
     } else {
-      navigator.clipboard.writeText(phone);
+      navigator.clipboard.writeText(restaurant.phone);
       setIsShareModalOpen(false);
       setIsCopiedModalOpen(true);
       setTimeout(() => setIsCopiedModalOpen(false), 1000);
     }
   };
 
+  // 콜키지 옵션 렌더링
+  const renderOptions = () =>
+    restaurant.corkageOptions.map((option, idx) => <p key={idx}>{option}</p>);
+
   return (
     <div className="relative flex w-full flex-col">
-      {mainImageUrl ? (
-        <img src={mainImageUrl} className="h-[197px] w-full" />
+      {restaurant.mainImageUrl ? (
+        <img src={restaurant.mainImageUrl} className="h-[197px] w-full" />
       ) : (
         <div className="grid grid-cols-2 gap-[1px]">
           <div className="aspect-square bg-gray-300"></div>
@@ -120,24 +121,24 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
       <img
         src={arrow}
         className="absolute left-3 top-2 h-4 w-[9px] cursor-pointer"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/home')}
       />
 
       {/* 가게 정보 */}
       <div className="relative px-4 pb-2 pt-2">
-        <div className="text-[24px] font-bold">{name}</div>
+        <div className="text-[24px] font-bold">{restaurant.restaurantName}</div>
         <div className="flex items-center">
           <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
           <img src={star} />
-          <span className="ml-1 font-medium">{rating}</span>
+          <span className="ml-1 font-medium">{restaurant.rating?.toFixed(1) ?? 0}</span>
         </div>
         <div className="mt-1 flex items-center gap-2 text-[14px]">
-          <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>
-          <span className="text-[#80818B]">영업시간 {time} 영업종료</span>
+          <span className="font-semibold">영업 중</span>
+          <span className="text-[var(--gray-6)]">영업시간 {restaurant.openingHours}</span>
         </div>
         <div
           className="absolute right-4 top-2 cursor-pointer"
-          onClick={() => setIsKeep((prev) => !prev)}
+          onClick={() => setIsGroupSelectorOpen(true)}
         >
           {keepMarker}
         </div>
@@ -186,61 +187,36 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
         <div className="mt-2 border-b-2 pb-1 font-bold">콜키지 정보</div>
         <div className="flex gap-12 border-b py-2">
           <div className="font-bold">비용</div>
-          <span>병당 1만원</span>
+          <span>{restaurant.corkagePrice}</span>
         </div>
-        <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
-          <div className="font-bold">기타</div>
-          <div>
-            <p>잔 제공</p>
-            <p>얼음 제공</p>
-            <p>리뷰 이벤트 : 한 병 무료</p>
+        {restaurant.corkageOptions.length > 0 && (
+          <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
+            <div className="font-bold">기타</div>
+            <div>{renderOptions()}</div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 문의하기 모달 */}
-      <Modal
-        isOpen={isContactModalOpen}
-        hasCloseButton={true}
-        onClose={() => setIsContactModalOpen(false)}
-      >
-        <span className="inline-block w-full text-center text-2xl font-bold text-[var(--gray-8)]">
-          문의하기
-        </span>
-        <div className="my-4 flex justify-center gap-2">
-          <button
-            className={`rounded-[20px] px-4 py-2 text-sm font-medium ${contactOption ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)]'}`}
-            onClick={() => setContactOption(true)}
-          >
-            콜키지 정보 오류
-          </button>
-          <button
-            className={`rounded-[20px] px-4 py-2 text-sm font-medium ${!contactOption ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)]'}`}
-            onClick={() => setContactOption(false)}
-          >
-            가게 정보 오류
-          </button>
-        </div>
-        <div className="relative">
-          <textarea
-            className="mb-4 min-h-[192px] w-full resize-none rounded-br-3xl rounded-tl-3xl bg-[var(--gray-1)] p-4 pr-6 text-xs focus:outline-none"
-            placeholder="건의 내용을 입력해주세요"
-            value={contactContent}
-            onChange={(e) => setContactContent(e.target.value)}
-          ></textarea>
-          <button
-            className="absolute right-2 top-2 text-gray-500 hover:text-black"
-            onClick={() => setContactContent('')}
-          >
-            &times;
-          </button>
-        </div>
+      <ContactModal
+        isContactModalOpen={isContactModalOpen}
+        setIsContactModalOpen={(isOpen) => setIsContactModalOpen(isOpen)}
+        restaurantName={restaurant.restaurantName}
+        completeModalOpen={(isOpen) => setIsContactCompleteModalOpen(isOpen)}
+      />
 
-        <Button
-          value="제출하기"
-          className="bg-[var(--primary)] text-white shadow-none disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-6)]"
-          disabled={!contactContent}
-        />
+      {/* 문의하기 완료 모달 */}
+      <Modal isOpen={isContactCompleteModalOpen}>
+        <span className="inline-block w-full text-center text-2xl font-bold">작성완료</span>
+        <p className="mb-5 mt-1 text-center font-medium text-[var(--gray-8)]">
+          소중한 문의 감사합니다
+        </p>
+        <button
+          className="h-12 w-full rounded-xl bg-[var(--primary)] font-semibold text-white"
+          onClick={() => setIsContactCompleteModalOpen(false)}
+        >
+          확인
+        </button>
       </Modal>
 
       {/* 공유하기 모달 */}
@@ -252,7 +228,7 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
         <div className="mb-4 flex items-center">
           <img src={logo} className="h-[22px] w-[13px]" />
           <div className="ml-3 flex flex-col">
-            <span className="font-semibold">{name}</span>
+            <span className="font-semibold">{restaurant.restaurantName}</span>
             <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
           </div>
         </div>
@@ -269,7 +245,9 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
         hasCloseButton={true}
         onClose={() => setIsCallModalOpen(false)}
       >
-        <span className="mb-4 inline-block w-full text-center text-2xl font-bold">{phone}</span>
+        <span className="mb-4 inline-block w-full text-center text-2xl font-bold">
+          {restaurant.phone}
+        </span>
         <Button
           value="번호 복사하기"
           className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
@@ -285,6 +263,19 @@ const DetailHeader = ({ resId, name, rating, isOpen, time, phone, mainImageUrl }
           </div>
         </div>
       )}
+
+      {/* 그룹 셀렉터 */}
+      <GroupSelector
+        isOpen={isGroupSelectorOpen}
+        topSnapVh={17.8}
+        onClose={() => setIsGroupSelectorOpen(false)}
+      >
+        <GroupList
+          onClose={() => setIsGroupSelectorOpen(false)}
+          restaurantId={restaurant.restaurantId}
+          restaurantName={restaurant.restaurantName}
+        />
+      </GroupSelector>
     </div>
   );
 };

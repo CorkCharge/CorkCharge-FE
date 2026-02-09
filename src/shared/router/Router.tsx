@@ -27,7 +27,6 @@ import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
 import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
-import RestaurantsList from '@/pages/corkagemap/RestaurantsList';
 import FilterResult from '@/pages/corkagemap/FilterResult';
 import Notification from '@/pages/notification/Notification';
 import Tip from '@/pages/home/Tip';
@@ -46,6 +45,8 @@ import NotiPost from '../components/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
 import CorkageReview from '@/pages/home/CorkageReview';
 import DoitRequest from '@/pages/doit/DoitRequest';
+import CategoryStores from '@/pages/home/CategoryStores';
+import NearbyStores from '@/pages/home/NearbyStores';
 import RoleSelectionComplete from '@/pages/myPage/RoleSelectionComplete';
 
 const router = createBrowserRouter([
@@ -78,7 +79,7 @@ const router = createBrowserRouter([
         element: <SearchMapResult />,
       },
       {
-        path: 'hotStores',
+        path: 'hot-stores',
         element: <HotStores />,
       },
       {
@@ -198,10 +199,6 @@ const router = createBrowserRouter([
         element: <Toc />,
       },
       {
-        path: 'corkagemap/list',
-        element: <RestaurantsList />,
-      },
-      {
         path: 'corkagemap/filter/result',
         element: <FilterResult />,
       },
@@ -232,6 +229,14 @@ const router = createBrowserRouter([
       {
         path: 'new-stores',
         element: <NewStores />,
+      },
+      {
+        path: 'category-stores',
+        element: <CategoryStores />,
+      },
+      {
+        path: 'nearby-stores',
+        element: <NearbyStores />,
       },
       {
         path: 'corkage-review',

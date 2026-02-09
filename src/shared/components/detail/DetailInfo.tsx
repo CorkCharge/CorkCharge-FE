@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
 import PairingArticle from './PairingArticle';
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 
-const DetailInfo = (restaurant: RestaurantInfo) => {
+const DetailInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const hash = useRef<string>('-1');
@@ -31,16 +31,20 @@ const DetailInfo = (restaurant: RestaurantInfo) => {
       scrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
     }
   }, [location.pathname, location.hash, hash]);
-  const renderPairing = () =>
-    [...new Array(3)].map((_, idx) => <PairingArticle key={idx} {...restaurant} />);
 
-  return <div className="flex flex-col items-center">{renderPairing()}</div>;
-
-  // return (
-  //   <p className="flex justify-center pb-4 font-semibold">
-  //     코르크차지가 금방 페어링을 추천해드릴게요
-  //   </p>
-  // );
+  return (
+    <>
+      {restaurant.pairingAlcohol ? (
+        <div className="flex justify-center px-4">
+          <PairingArticle {...restaurant} />
+        </div>
+      ) : (
+        <p className="flex justify-center pb-4 font-semibold">
+          코르크차지가 금방 페어링을 추천해드릴게요
+        </p>
+      )}
+    </>
+  );
 };
 
 export default DetailInfo;

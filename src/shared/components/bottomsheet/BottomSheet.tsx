@@ -30,6 +30,8 @@ interface BottomSheetProps {
   onClose: () => void;
   children: ReactNode;
   topSnapVh?: number; // 최대 높이(vh)를 prop으로 받기 (opt)
+  hideHandleOnTop?: boolean;
+  onSnapToTop?: () => void;
 }
 
 // vh를 px로 변환하는 헬퍼 함수
@@ -43,6 +45,8 @@ const BottomSheet = ({
   onClose,
   children,
   topSnapVh = SNAP_POINTS.DEFAULT_TOP,
+  hideHandleOnTop = false,
+  onSnapToTop,
 }: BottomSheetProps) => {
   //y축 위치를 motionValue로 실시간 관리
   const y = useMotionValue(vhToPx(SNAP_POINTS.HIDDEN));
@@ -67,9 +71,10 @@ const BottomSheet = ({
         HIDDEN: vhToPx(SNAP_POINTS.HIDDEN),
       });
     };
+    calculateSnapPx(); // 즉시 실행으로 반영
     window.addEventListener('resize', calculateSnapPx);
     return () => window.removeEventListener('resize', calculateSnapPx);
-  }, []);
+  }, [topSnapVh]);
 
   //배경 오버레이 투명도를 y값에 따라 실시간으로 변경
   const opacity = useTransform(y, [snapPx.TOP, snapPx.MID], [0.5, 0]);
@@ -105,6 +110,7 @@ const BottomSheet = ({
     if (velocity.y < -DRAG_VELOCITY_THRESHOLD) {
       animate(y, snapPx.TOP, { type: 'tween', duration: 0.3, ease: 'easeOut' });
       setCurrentSnap('TOP');
+      if (onSnapToTop) onSnapToTop();
       return;
     }
 
@@ -119,6 +125,7 @@ const BottomSheet = ({
     if (currentY < midPointTopMid) {
       animate(y, snapPx.TOP, { type: 'tween', duration: 0.3, ease: 'easeOut' });
       setCurrentSnap('TOP');
+      if (onSnapToTop) onSnapToTop();
     } else if (currentY < midPointMidMin) {
       animate(y, snapPx.MID, { type: 'tween', duration: 0.3, ease: 'easeOut' });
       setCurrentSnap('MID');
@@ -129,6 +136,8 @@ const BottomSheet = ({
       onClose(); // (useEffect[isOpen]이 y를 HIDDEN으로 애니메이션함)
     }
   };
+  // [계산] 현재 TOP 상태이고, hideHandleOnTop 옵션이 켜져있을 때만 숨김 처리
+  const shouldHideHandle = currentSnap === 'TOP' && hideHandleOnTop;
 
   return (
     <>
@@ -150,29 +159,35 @@ const BottomSheet = ({
       <motion.div
         drag="y"
         onDragEnd={onDragEnd}
-        // [수정] animate, transition, variants 대신 style={{ y }} 사용
-        // y값이 motionValue이므로 드래그 시 실시간으로 반영됨
         style={{
           y,
-          height: `calc(100vh - ${topSnapVh}vh)`, // 최대 높이
-          touchAction: 'none', // 모바일에서 페이지 스크롤 방지
+          height: `calc(100vh - ${topSnapVh}vh)`,
+          touchAction: 'none',
         }}
-        // [수정] 드래그 경계를 최대(top)와 최소(bottom)로 설정
         dragConstraints={{
           top: snapPx.TOP,
           bottom: snapPx.MIN,
         }}
-        // [수정] 드래그 탄성을 0으로 설정하여 경계에서 튕기지 않게 함
         dragElastic={{ top: 0, bottom: 0 }}
-        className="fixed left-0 right-0 z-[101] flex w-full flex-col rounded-t-[20px] bg-white shadow-lg"
+        // [수정 1] currentSnap이 'TOP'일 때 rounded-none 적용, 아닐 땐 rounded-t-[20px]
+        // transition-all duration-300을 추가하여 부드럽게 변하도록 함
+        className={`fixed left-0 right-0 z-[101] flex w-full flex-col bg-white shadow-lg transition-[border-radius] duration-300 ${
+          shouldHideHandle ? 'rounded-none' : 'rounded-t-[20px]'
+        }`}
       >
-        {/* 드래그 핸들 (회색 바) */}
-        <div className="flex-shrink-0 cursor-grab py-4 active:cursor-grabbing">
+        {/* [수정 2] 드래그 핸들 숨김 처리 */}
+        {/* TOP일 때는 높이(h), 패딩(py), 투명도(opacity)를 0으로 만들어 숨김 */}
+        <div
+          className={`flex flex-shrink-0 items-center justify-center overflow-hidden transition-all duration-300 ease-in-out ${
+            shouldHideHandle
+              ? 'pointer-events-none h-0 opacity-0'
+              : 'h-[36px] cursor-grab opacity-100 active:cursor-grabbing'
+          }`}
+        >
           <div className="mx-auto h-[5px] w-[66px] rounded-full bg-[#D9D9D9]" />
         </div>
 
         {/* 바텀시트 내용물 */}
-        {/* [수정] 스크롤 충돌 방지를 위해 overflow-y를 동적으로 제어 */}
         <div
           className="flex-1 px-6 pb-6"
           style={{

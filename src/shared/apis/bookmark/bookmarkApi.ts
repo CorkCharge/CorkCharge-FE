@@ -33,3 +33,21 @@ export const deleteRequest = async (payload: BookmarkPayload): Promise<BookmarkR
   });
   return data;
 };
+
+// 내가 저장한 tip들 가져오기
+export const fetchMyTips = async () => {
+  const res = await apiClient.get('/bookmarks/tip');
+  return res.data.data;
+};
+
+// 내가 저장한 store들 가져오기
+export const fetchMyStores = async () => {
+  const res = await apiClient.get('/bookmarks/restaurant');
+  return res.data.data;
+};
+
+// 내가 저장한 review들 가져오기
+export const fetchMyReviews = async () => {
+  const res = await apiClient.get('/bookmarks/review');
+  return res.data.data;
+};

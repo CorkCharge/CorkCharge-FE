@@ -9,6 +9,7 @@ import { devtools } from 'zustand/middleware';
 
 import useMyPageStore from './useMyPageStore';
 import apiClient from '../apis/apiClient';
+import useBookmarkStore from './useBookmarkStore';
 
 interface User {
   userId: number;
@@ -24,7 +25,7 @@ interface StoredUser {
 
 interface AuthState {
   user: StoredUser | null;
-  login: (userInfo: User) => boolean;
+  login: (_: User) => boolean;
   logout: () => void;
 }
 
@@ -62,6 +63,9 @@ const useAuthStore = create<AuthState>()(
         logout: () => {
           set({ user: null });
           sessionStorage.clear();
+
+          // 모든 persist들 reset
+          useBookmarkStore.getState().resetAllBookmarks();
         },
       }),
       { name: 'auth' }

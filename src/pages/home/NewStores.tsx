@@ -14,6 +14,8 @@ import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
+import { fetchNewStore } from '@/shared/apis/restaurant/restaurant.api';
+import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
 
 function NewStores() {
   const navigate = useNavigate();
@@ -23,15 +25,30 @@ function NewStores() {
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
+  const [newStores, setNewStores] = useState<RestaurantScrapResponse[]>([]);
+  const [selectedStore, setSelectedStore] = useState<RestaurantScrapResponse>();
 
   const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
   const whichPage = useRegionFilterStore((state) => state.whichPage);
-  const setSelectedDongNames = useRegionFilterStore((state) => state.setSelectedDongNames);
+  const resetAddress = useRegionFilterStore((state) => state.resetAddress);
 
   useEffect(() => {
-    if (whichPage !== 0) setSelectedDongNames([]);
-  }, [whichPage, setSelectedDongNames]);
+    if (whichPage !== 0) resetAddress();
+  }, [whichPage, resetAddress]);
+
+  useEffect(() => {
+    getNewStores();
+  }, []);
+
+  const getNewStores = async () => {
+    try {
+      const res = await fetchNewStore({});
+      setNewStores(res);
+    } catch (e) {
+      console.error('신규 매장 조회 실패: ' + e);
+    }
+  };
 
   const handleShare = (e: React.MouseEvent<HTMLDivElement>, name: string, id: number) => {
     e.stopPropagation();
@@ -40,8 +57,9 @@ function NewStores() {
     setIsShareModalOpen(true);
   };
 
-  const handleKeep = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleKeep = (e: React.MouseEvent<HTMLDivElement>, store: RestaurantScrapResponse) => {
     e.stopPropagation();
+    setSelectedStore(store);
     setIsGroupSelectorOpen(true);
   };
 
@@ -54,37 +72,47 @@ function NewStores() {
   };
 
   const renderNewStores = () =>
-    [...Array(5)].map((_, idx) => (
-      <div key={idx} className="flex flex-col gap-2" onClick={() => navigate('/detail-info/88')}>
+    newStores.map((store) => (
+      <div
+        key={store.restaurantId}
+        className="flex cursor-pointer flex-col gap-2"
+        onClick={() => navigate(`/detail-info/${store.restaurantId}`)}
+      >
         <div>
-          <div className="h-[172px] rounded-t-2xl bg-black" />
+          {store.mainImageUrls ? (
+            <img src={store.mainImageUrls} className="h-[172px] w-full rounded-t-2xl" />
+          ) : (
+            <div className="h-[172px] rounded-t-2xl bg-black" />
+          )}
           <div className="flex h-11 items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
-            병당 콜키지: 1병 1만원
+            {store.corkagePrice}
           </div>
         </div>
         <div className="relative">
-          <span className="text-lg font-bold">성수 누메르도스</span>
+          <span className="text-lg font-bold">{store.restaurantName}</span>
           <p className="flex gap-1 font-medium">
-            <span>1.2km</span>
-            <span>서울시 성동구 상수동 340-2</span>
+            <span>{store.distance}km</span>
+            <span>{store.address}</span>
           </p>
-          <span className="font-medium">평일 17:00 ~ 24:00</span>
+          <span className="font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
-            <span className="mr-2">4.2</span>
-            <span>리뷰 total 3,124</span>
+            <span className="mr-2">{store.rating.toFixed(1)}</span>
+            <span>리뷰 total {store.reviewCount}</span>
           </div>
           <div className="absolute bottom-0 right-0 flex items-center gap-1">
             <div
               className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-              onClick={handleKeep}
+              onClick={(e) => handleKeep(e, store)}
             >
               <img src={keep} className="size-6" />
             </div>
-            <span className="text-sm font-medium text-[var(--gray-8)]">99+</span>
+            <span className="text-sm font-medium text-[var(--gray-8)]">
+              {store.bookmarkCount > 99 ? '99+' : store.bookmarkCount}
+            </span>
             <div
               className="relative flex size-6 cursor-pointer rounded-full bg-white"
-              onClick={(e) => handleShare(e, '성수 누메르도스', 88)}
+              onClick={(e) => handleShare(e, store.restaurantName, store.restaurantId)}
             >
               <img
                 src={share}
@@ -175,7 +203,11 @@ function NewStores() {
         topSnapVh={17.8}
         onClose={() => setIsGroupSelectorOpen(false)}
       >
-        <GroupList onClose={() => setIsGroupSelectorOpen(false)} />
+        <GroupList
+          onClose={() => setIsGroupSelectorOpen(false)}
+          restaurantName={selectedStore?.restaurantName ?? ''}
+          restaurantId={selectedStore?.restaurantId ?? 1}
+        />
       </GroupSelector>
     </>
   );
