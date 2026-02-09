@@ -126,7 +126,7 @@ function DoitRequest() {
 
       {/* 콜키지 요청 본문 */}
       <div className="rounded-bl-lg rounded-br-3xl rounded-tl-3xl rounded-tr-lg bg-white p-4">
-        <p className="mb-1 text-lg text-[var(--gray-8)]">선호하는 콜키지 유형</p>
+        <p className="mb-1 text-lg font-medium text-[var(--gray-8)]">선호하는 콜키지 유형</p>
         <div className="flex gap-2">
           <button
             className={`h-12 flex-[2] rounded-xl py-3 font-semibold ${corkageType === '테이블당' ? 'bg-[var(--primary)] text-white' : 'bg-white text-[var(--primary)]'}`}

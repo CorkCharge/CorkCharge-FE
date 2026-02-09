@@ -48,6 +48,7 @@ import CategoryStores from '@/pages/home/CategoryStores';
 import NearbyStores from '@/pages/home/NearbyStores';
 import RoleSelectionComplete from '@/pages/myPage/RoleSelectionComplete';
 import RequestList from '@/pages/myPage/RequestList';
+import MyRequest from '@/pages/myPage/MyRequest';
 
 const router = createBrowserRouter([
   // {
@@ -193,6 +194,10 @@ const router = createBrowserRouter([
       {
         path: 'my/request-list',
         element: <RequestList />,
+      },
+      {
+        path: 'my/request/:id',
+        element: <MyRequest />,
       },
       {
         path: 'my/toc',

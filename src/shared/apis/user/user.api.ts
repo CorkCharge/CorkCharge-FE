@@ -34,3 +34,9 @@ export const getMyRequestList = async () => {
   const res = await apiClient.get('/users/helprequests');
   return res.data.data.helprequests;
 };
+
+// 나의 해주세요 상세 조회
+export const getMyRequestDetail = async (id: number) => {
+  const res = await apiClient.get(`/users/helprequests/${id}`);
+  return res.data;
+};
