@@ -5,7 +5,7 @@ import GroupItem from './GroupItem';
 import CreateGroup from './CreateGroups';
 import ConfirmationModal from '@/pages/corkagemap/list/ConfirmationModal';
 import Button from '../common/Button';
-import { useGetGroupList } from '@/shared/queries/useGetGroupList';
+import { useGetGroupList } from '@/shared/queries/bookmark/useGetGroupList';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
 import { createBookmark, editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
 

@@ -14,7 +14,7 @@ import SaveMarker9 from '@/pages/corkagemap/list/savemarker/SaveMarker9.svg';
 import SaveMarker10 from '@/pages/corkagemap/list/savemarker/SaveMarker10.svg';
 import SaveMarker11 from '@/pages/corkagemap/list/savemarker/SaveMarker11.svg';
 import SaveMarker12 from '@/pages/corkagemap/list/savemarker/SaveMarker12.svg';
-import { useCreateGroup } from '@/shared/queries/useCreateGroup';
+import { useCreateGroup } from '@/shared/queries/bookmark/useCreateGroup';
 
 const markerList = [
   SaveMarker1,

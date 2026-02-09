@@ -6,7 +6,7 @@ import apiClient from '@/shared/apis/apiClient';
 import useAuthStore from '@/shared/store/useAuthStore';
 import { fetchMyReviews, fetchMyTips } from '@/shared/apis/bookmark/bookmarkApi';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
-import { type MyReviewResponse, type MyTipsResponse } from '@/shared/apis/bookmark/bookmarks.type';
+import { type MyReviewResponse, type MyTipsResponse } from '@/shared/apis/bookmark/bookmark.type';
 import { getBookmarkGroupDetail, getBookmarkGroups } from '@/shared/apis/bookmark/bookmark.api';
 
 function NaverCallback() {

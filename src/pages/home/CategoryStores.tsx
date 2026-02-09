@@ -7,7 +7,7 @@ import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import Modal from '@/shared/components/common/Modal';
 import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
-import { useCategoryStores } from '@/shared/queries/useCategoryStores';
+import { useCategoryStores } from '@/shared/queries/restaurant/useCategoryStores';
 import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
 
 import star from '@/shared/assets/star.svg';

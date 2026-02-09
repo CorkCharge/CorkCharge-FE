@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
 import Header from '@/shared/components/common/Header';
+import { useNotificationList } from '@/shared/queries/notification/useNotificationList';
+import { NOTI_TYPE_MAPPING } from '@/shared/apis/notification/notification.type';
 
 import loudSpeaker from '@/shared/components/notification/images/loudspeaker.png';
 import whiteArrow from '@/shared/assets/arrow.svg';
@@ -9,22 +11,31 @@ import grayArrow from '@/shared/assets/right_arrow.svg';
 function Notification() {
   const navigate = useNavigate();
 
-  const gotoPost = () => {
-    navigate('/notification/1');
+  const { data: notifications } = useNotificationList();
+
+  const gotoPost = (id: number) => {
+    navigate(`/notification/${id}`);
   };
 
   const renderNotiPosts = () =>
-    [...new Array(5)].map(() => (
+    notifications?.map((notification) => (
       <div
         className="relative flex cursor-pointer items-center gap-5 border-b border-[var(--gray-3)] p-4"
-        onClick={gotoPost}
+        onClick={() => gotoPost(notification.notificationId)}
+        key={notification.notificationId}
       >
         <span className="rounded-[20px] bg-[var(--gray-2)] px-4 py-2 text-sm font-medium">
-          EVENT
+          {NOTI_TYPE_MAPPING[notification.type]}
         </span>
         <div className="flex flex-col justify-center font-medium">
-          <p className="text-[var(--gray-8)]">후기 남기고 커피받자</p>
-          <span className="text-[10px] text-[var(--gray-4)]">2025년 05월 17일</span>
+          <p className="text-[var(--gray-8)]">{notification.title}</p>
+          <span className="text-[10px] text-[var(--gray-4)]">
+            {new Date(notification.createdAt).toLocaleDateString('ko-KR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </span>
         </div>
         <img src={grayArrow} className="absolute right-4 top-1/2 h-4 w-[9px] -translate-y-1/2" />
       </div>

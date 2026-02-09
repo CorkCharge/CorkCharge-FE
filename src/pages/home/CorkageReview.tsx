@@ -9,7 +9,7 @@ import Modal from '@/shared/components/common/Modal';
 import Button from '@/shared/components/common/Button';
 import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import { useDebounce } from '@/shared/hooks/useDebounce';
-import { useReviewList } from '@/shared/queries/useReviewList';
+import { useReviewList } from '@/shared/queries/review/useReviewList';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
 import { createBookmark, deleteBookmark } from '@/shared/apis/bookmark/bookmark.api';
 
