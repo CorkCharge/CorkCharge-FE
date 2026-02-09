@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react';
 import V from './v.svg';
 import StoreCardInSave from '../../../shared/components/storecard/StoreCardInSave'; // 경로 확인 필요
+import { getBookmarkGroupDetail } from '@/shared/apis/bookmark/bookmark.api';
+import type { Group } from '../list/List';
 
 // 1. 사용할 마커 이미지들 import (경로 확인 필요)
 import SaveMarker1 from '../list/savemarker/SaveMarker1.svg';
@@ -14,8 +17,6 @@ import SaveMarker9 from '../list/savemarker/SaveMarker9.svg';
 import SaveMarker10 from '../list/savemarker/SaveMarker10.svg';
 import SaveMarker11 from '../list/savemarker/SaveMarker11.svg';
 import SaveMarker12 from '../list/savemarker/SaveMarker12.svg';
-
-import type { Group } from '../list/List';
 
 // 마커 매핑 객체 (문자열 -> 이미지)
 const bigMarkers: Record<string, string> = {
@@ -38,7 +39,42 @@ type MyStoreProps = {
   group: Group | null; // 부모로부터 받을 그룹 데이터
 };
 
+interface StoredRestaurant {
+  restaurantId: number;
+  name: string;
+  rating: number;
+  reviewCount: number;
+  openingHoursText: string;
+  imageUrls: string[];
+  corkagePrice: string;
+  corkageOption: string;
+}
+
 const MyStore = ({ group }: MyStoreProps) => {
+  const [restaurants, setRestaurants] = useState<StoredRestaurant[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!group) return;
+
+    const fetchDetail = async () => {
+      setLoading(true);
+      try {
+        // [API 연동] 특정 그룹 내용 조회 (기본 정렬: 최신순)
+        const res = await getBookmarkGroupDetail(group.id, 'LATEST');
+        if (res.success) {
+          setRestaurants(res.data.restaurants);
+        }
+      } catch (error) {
+        console.error('그룹 상세 조회 실패:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetail();
+  }, [group]);
+
   if (!group) return null; // 그룹 데이터 없으면 렌더링 안 함
 
   // 아이콘 이름으로 실제 이미지 찾기 (없으면 기본값 1번)
@@ -51,7 +87,7 @@ const MyStore = ({ group }: MyStoreProps) => {
         {/* 왼쪽: 타이틀 및 카운트 */}
         <div className="flex items-center gap-[8px]">
           <img src={MarkerSrc} alt={group.iconName} className="z-[100] h-[40px] w-[40px]" />
-          <h1 className="text-[24px] font-[700] leading-none text-[#35353F]">내 장소</h1>
+          <h1 className="text-[24px] font-[700] leading-none text-[#35353F]">{group.name}</h1>
           <span className="text-[14px] font-[500] text-[#35353F]">{group.count}</span>
         </div>
 
@@ -66,10 +102,28 @@ const MyStore = ({ group }: MyStoreProps) => {
       {/* 헤더 아래 24px 여백, 좌우 15px 여백 */}
       <div className="mt-[24px] flex flex-1 flex-col gap-[24px] overflow-y-auto px-[15px] pb-[40px] [&::-webkit-scrollbar]:hidden">
         {/* 나중에는 여기도 group.id를 이용해 실제 데이터를 불러와야함 */}
-        <StoreCardInSave />
-        <StoreCardInSave />
-        <StoreCardInSave />
-        <StoreCardInSave />
+        {loading ? (
+          <div className="flex h-40 items-center justify-center text-gray-400">불러오는 중...</div>
+        ) : restaurants.length > 0 ? (
+          restaurants.map((rest) => (
+            <StoreCardInSave
+              key={rest.restaurantId}
+              restaurantId={rest.restaurantId}
+              currentGroupId={group.id}
+              name={rest.name}
+              rating={rest.rating}
+              reviewCount={rest.reviewCount}
+              openingHoursText={rest.openingHoursText}
+              imageUrls={rest.imageUrls}
+              corkagePrice={rest.corkagePrice}
+              corkageOption={rest.corkageOption}
+            />
+          ))
+        ) : (
+          <div className="flex h-40 items-center justify-center text-gray-400">
+            저장된 매장이 없습니다.
+          </div>
+        )}
         {/* 스크롤 확인용 더미 데이터 추가 가능 */}
       </div>
     </div>

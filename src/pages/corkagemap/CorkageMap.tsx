@@ -1,5 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getBookmarkGroups, createBookmark } from '@/shared/apis/bookmark/bookmark.api';
+import { mapColorToIcon } from '@/shared/utils/groupMapper';
+import type { Group } from './list/List';
 import NaverMap from '@/shared/components/navermap/NaverMap';
 import TopBarMap from '@/shared/components/topbar/TopBarMap';
 import BottomSheet from '@/shared/components/bottomsheet/BottomSheet';
@@ -8,7 +11,6 @@ import bttn from './filterImg.svg';
 import List from './list/List';
 import BackArrow from '../../shared/assets/backarrow.svg';
 import X from './list/X.svg';
-import type { Group } from './list/List';
 import MyStore from './mystore/MyStore';
 import MultipinList from './multipinlist/MultipinList';
 import Detail from './restaurant_detail/Detail';
@@ -18,6 +20,39 @@ const CorkageMap = () => {
   const [isActive, setIsActive] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedClusterIds, setSelectedClusterIds] = useState<number[]>([]);
+  const [isSaveMode, setIsSaveMode] = useState(false);
+
+  // 1. 그룹 리스트 불러오기 (초기 로딩 및 갱신용)
+  const fetchGroups = useCallback(async () => {
+    try {
+      const res = await getBookmarkGroups();
+      if (res.success) {
+        // API 데이터 -> Group 타입 변환
+        const mappedGroups: Group[] = res.data.groups.map((g) => ({
+          id: g.groupId,
+          name: g.name,
+          iconName: mapColorToIcon(g.color), // COLOR_01 -> SaveMarker1
+          count: g.storeCount,
+          privacy: g.visibility === 'PUBLIC' ? 'public' : 'private',
+        }));
+        setMyGroups(mappedGroups);
+      }
+    } catch (e) {
+      console.error('그룹 목록 로드 실패', e);
+    }
+  }, []);
+
+  // 초기 로드
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups]);
+
+  // 2. DetailHeader에서 "저장(북마크)" 버튼 눌렀을 때
+  const handleOpenSaveList = () => {
+    setIsSaveMode(true); // 저장 모드 ON
+    setSheetView('list'); // 리스트 뷰로 전환 (바텀시트 내용은 List가 됨)
+    // setIsSheetOpen(true); // 이미 열려있겠지만 확실히 하기 위해
+  };
 
   // 선택된 클러스터 지역명을 저장할 State
   const [selectedAreaName, setSelectedAreaName] = useState<string>('');
@@ -35,14 +70,14 @@ const CorkageMap = () => {
   // 이 컴포넌트는 바텀시트가 닫혀도 계속 살아있으므로 데이터가 유지됨
   const [myGroups, setMyGroups] = useState<Group[]>([]);
 
+  // 바텀시트 닫힐 때 초기화
   const handleSheetClose = () => {
     setIsSheetOpen(false);
-    setIsActive(false); // <-- 버튼 활성화 상태도 함께 false로 변경
-    // [Option] 닫으면 다시 목록으로 초기화할지 여부.
-    // 보통 닫았다 다시 열면 목록이 뜨는게 자연스러우므로 초기화 추천ㅇㅇ
+    setIsActive(false);
     setTimeout(() => {
       setSheetView('list');
-      setSelectedRestaurantId(null); // [추가] 닫을 때 ID 초기화
+      setSelectedRestaurantId(null);
+      setIsSaveMode(false); // 저장 모드 초기화
     }, 300);
   };
 
@@ -54,10 +89,40 @@ const CorkageMap = () => {
   }, []);
 
   // List에서 그룹 클릭 시 호출될 함수
-  const handleGroupSelect = useCallback((group: Group) => {
-    setSelectedGroup(group);
-    setSheetView('store');
-  }, []);
+  const handleGroupSelect = async (group: Group) => {
+    console.log(
+      '[CorkageMap] 그룹 선택됨:',
+      group.name,
+      '현재 모드:',
+      isSaveMode ? '저장' : '조회'
+    );
+    if (isSaveMode && selectedRestaurantId) {
+      // [저장 모드] : 해당 그룹에 식당 저장 API 호출
+      console.log('👉 [CorkageMap] 저장 API 호출 시작...');
+      try {
+        const res = await createBookmark({
+          targetId: selectedRestaurantId,
+          targetType: 'RESTAURANT',
+          groupIds: [group.id],
+        });
+
+        if (res.success) {
+          alert(`'${group.name}' 그룹에 저장되었습니다.`);
+          setIsSaveMode(false); // 모드 해제
+          setSheetView('detail'); // 다시 상세 화면으로 복귀
+          fetchGroups(); // 그룹 카운트가 변했을 테니 갱신
+        }
+      } catch (e) {
+        console.error('식당 저장 실패', e);
+        alert('저장에 실패했습니다.');
+      }
+    } else {
+      // [조회 모드] : MyStore(그룹 상세) 화면으로 이동
+      console.log('👉 [CorkageMap] 상세 조회 화면으로 이동');
+      setSelectedGroup(group);
+      setSheetView('store');
+    }
+  };
 
   // NaverMap에서 클러스터 마커 클릭 시 호출될 함수
   const handleClusterClick = useCallback((name: string, ids: number[]) => {
@@ -119,8 +184,10 @@ const CorkageMap = () => {
 
             <button
               onClick={() => {
+                setIsSaveMode(false); // 조회 모드
                 setIsSheetOpen(true);
                 setIsActive(true);
+                setSheetView('list');
               }}
               className={`flex h-[36px] flex-[0.6] cursor-pointer items-center justify-center gap-2 rounded-full ${isActive ? 'bg-[#90212A] text-[#FFF]' : 'bg-white/90 text-[#90212A]'} shadow-sm backdrop-blur-sm`}
             >
@@ -158,13 +225,18 @@ const CorkageMap = () => {
         onSnapToTop={handleSnapToTop}
       >
         {sheetView === 'list' && (
-          <List myGroups={myGroups} setMyGroups={setMyGroups} onSelectGroup={handleGroupSelect} />
+          <List
+            myGroups={myGroups}
+            setMyGroups={setMyGroups}
+            onSelectGroup={handleGroupSelect}
+            refreshGroups={fetchGroups}
+          />
         )}
         {sheetView === 'store' && <MyStore group={selectedGroup} />}
         {sheetView === 'multipin' && <MultipinList restaurantIds={selectedClusterIds} />}
         {/* [추가] Detail 컴포넌트 렌더링 (ID 전달) */}
         {sheetView === 'detail' && selectedRestaurantId && (
-          <Detail restaurantId={selectedRestaurantId} />
+          <Detail restaurantId={selectedRestaurantId} onOpenSaveList={handleOpenSaveList} />
         )}
       </BottomSheet>
     </main>

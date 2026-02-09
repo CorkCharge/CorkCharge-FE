@@ -6,6 +6,12 @@ import MyGroup from './MyGroup';
 import EditGroup from './EditGroup';
 import ConfirmationModal from './ConfirmationModal';
 import { AnimatePresence } from 'framer-motion';
+import {
+  createBookmarkGroup,
+  updateBookmarkGroup,
+  deleteBookmarkGroup,
+} from '@/shared/apis/bookmark/bookmark.api';
+import { mapIconToColor } from '@/shared/utils/groupMapper';
 
 // 그룹 데이터의 타입 정의
 export type Group = {
@@ -20,15 +26,14 @@ type ListProps = {
   myGroups: Group[]; // 부모가 주는 데이터
   setMyGroups: Dispatch<SetStateAction<Group[]>>; // 부모가 주는 수정 함수
   onSelectGroup: (group: Group) => void; // 그룹 선택 시 부모에게 알림
+  refreshGroups: () => void;
 };
 
-const List = ({ myGroups, setMyGroups, onSelectGroup }: ListProps) => {
+const List = ({ myGroups, setMyGroups, onSelectGroup, refreshGroups }: ListProps) => {
   // 'list' (목록 뷰) | 'edit' (편집 뷰)
   const [view, setView] = useState<'list' | 'edit'>('list');
-
   // 현재 편집 중인 그룹의 ID (null이면 새 그룹 생성 모드)
   const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
-
   // 편집이 완료되었을 때 뜰 확인 모달
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   // 방금 편집/생성한 그룹 정보 (모달에 띄울 용도)
@@ -49,54 +54,67 @@ const List = ({ myGroups, setMyGroups, onSelectGroup }: ListProps) => {
   };
 
   // 3. 개별 그룹 "삭제하기" 클릭 시 (MyGroup에서 호출)
-  const handleDeleteGroup = (id: number) => {
+  const handleDeleteGroup = async (id: number) => {
     const targetGroup = myGroups.find((g) => g.id === id);
-    if (targetGroup) {
-      // 목록에서 제거
-      setMyGroups((prev) => prev.filter((g) => g.id !== id));
+    if (!targetGroup) return;
 
-      // 모달 띄우기 (삭제 모드)
+    try {
+      // [API] 그룹 삭제
+      await deleteBookmarkGroup(id);
+      // [낙관적 업데이트] UI에서 즉시 제거
+      setMyGroups((prev) => prev.filter((g) => g.id !== id)); // setMyGroups 사용!
       setConfirmedGroup(targetGroup);
       setModalMode('delete');
       setShowConfirmModal(true);
+      refreshGroups(); // 목록 새로고침
+    } catch (error) {
+      console.error('그룹 삭제 실패', error);
+      alert('그룹 삭제에 실패했습니다.');
     }
   };
 
   // 4. EditGroup 화면에서 "완료" 클릭 시 (생성 또는 수정 저장)
-  const handleSaveGroup = (data: Omit<Group, 'id' | 'count'>) => {
-    if (editingGroupId) {
-      // [수정 모드] 기존 그룹 업데이트
-      setMyGroups((prev) =>
-        prev.map((group) =>
-          group.id === editingGroupId
-            ? { ...group, ...data } // 기존 데이터 덮어쓰기
-            : group
-        )
-      );
+  const handleSaveGroup = async (data: Omit<Group, 'id' | 'count'>) => {
+    const apiData = {
+      name: data.name,
+      color: mapIconToColor(data.iconName), // SaveMarker1 -> COLOR_01
+      visibility: data.privacy === 'public' ? 'PUBLIC' : ('PRIVATE' as 'PUBLIC' | 'PRIVATE'),
+    };
 
-      // 수정 완료된 그룹 찾아서 모달 데이터 설정
-      const updatedGroup = myGroups.find((g) => g.id === editingGroupId);
-      // (주의: state 업데이트는 비동기이므로 여기서 바로 updatedGroup을 쓰면 이전 값이 나올 수 있음.
-      //  하지만 data에 최신 값이 있으므로 data와 병합하여 사용)
-      const newGroupInfo = { ...updatedGroup, ...data } as Group;
+    try {
+      if (editingGroupId) {
+        // [API] 수정
+        await updateBookmarkGroup(editingGroupId, apiData);
 
-      setConfirmedGroup(newGroupInfo);
-      setModalMode('edit');
-    } else {
-      // [생성 모드] 새 그룹 추가
-      const newGroup: Group = {
-        ...data,
-        id: Date.now(),
-        count: 0,
-      };
-      setMyGroups((prev) => [newGroup, ...prev]); // 맨 위에 추가
-      setConfirmedGroup(newGroup);
-      setModalMode('create');
+        // [낙관적 업데이트]
+        setMyGroups((prev) =>
+          prev.map((group) => (group.id === editingGroupId ? { ...group, ...data } : group))
+        ); // setMyGroups 사용!
+
+        // 모달용 데이터 세팅
+        const updatedGroup = myGroups.find((g) => g.id === editingGroupId);
+        if (updatedGroup) {
+          setConfirmedGroup({ ...updatedGroup, ...data });
+          setModalMode('edit');
+        }
+      } else {
+        // [API] 생성
+        await createBookmarkGroup(apiData);
+
+        // 생성된 그룹은 ID를 서버에서 받지만, 여기선 모달 표기용 임시 객체 생성
+        setConfirmedGroup({ ...data, id: 0, count: 0 });
+        setModalMode('create');
+      }
+
+      // 뷰 복귀 및 새로고침
+      setView('list');
+      setShowConfirmModal(true);
+      setEditingGroupId(null);
+      refreshGroups(); // 목록 새로고침 (중요)
+    } catch (error) {
+      console.error('그룹 저장/수정 실패', error);
+      alert('그룹 저장에 실패했습니다.');
     }
-
-    setView('list');
-    setShowConfirmModal(true);
-    setEditingGroupId(null); // 초기화
   };
 
   // "그룹 편집" 화면에서 "X" 클릭 시
