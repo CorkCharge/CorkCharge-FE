@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategoryStores } from '../apis/restaurant/restaurant.api';
+import { fetchCategoryStores } from '@/shared/apis/restaurant/restaurant.api';
 
 export const useCategoryStores = ({
   sido,

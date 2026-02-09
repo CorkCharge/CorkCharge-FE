@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getBookmarkGroups } from '../apis/bookmark/bookmark.api';
+import { getBookmarkGroups } from '../../apis/bookmark/bookmark.api';
 
 export const useGetGroupList = () => {
   return useQuery({

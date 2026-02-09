@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCorkageReviews } from '../apis/review/review.api';
+import { fetchCorkageReviews } from '@/shared/apis/review/review.api';
 
 export const useReviewList = ({
   keyword,
