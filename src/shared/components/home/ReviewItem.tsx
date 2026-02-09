@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import type { ReviewResponse } from '@/shared/apis/review/review.type';
 import DefaultImage from '../common/DefaultImage';
-import { StarRate } from '../common/StarRate';
+import { StarWithStroke } from '../common/StarRate';
 
 function ReviewItem({ review }: { review: ReviewResponse }) {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function ReviewItem({ review }: { review: ReviewResponse }) {
       <div className="px-3 py-[10px]">
         <span className="text-sm font-bold">{review.restaurantName}</span>
         <div className="flex items-center">
-          <StarRate
+          <StarWithStroke
             rate={review.rating}
             spacing="3px"
             className="mr-1 h-[14px]"

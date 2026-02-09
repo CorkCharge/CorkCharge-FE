@@ -32,10 +32,16 @@ function Notification() {
 
   return (
     <div className="relative">
-      <Header type="back" title="알림" className="mx-4" backFn={() => navigate('/home')} />
+      <Header
+        type="back"
+        title="알림"
+        backFn={() => navigate('/home')}
+        className="fixed top-0 z-[10] mx-4 bg-white"
+        style={{ maxWidth: 'calc(var(--app-width) - 32px)', width: 'calc(100% - 32px)' }}
+      />
 
       <div
-        className="relative flex h-[72px] items-center gap-5 px-4"
+        className="relative mt-12 flex h-[72px] items-center gap-5 px-4"
         style={{
           background:
             'linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%)',
@@ -52,7 +58,7 @@ function Notification() {
         />
       </div>
 
-      <div>{renderNotiPosts()}</div>
+      <>{renderNotiPosts()}</>
 
       {/* empty state */}
       {/* <p className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-medium">

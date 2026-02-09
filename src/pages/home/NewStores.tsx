@@ -7,6 +7,8 @@ import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import Modal from '@/shared/components/common/Modal';
 import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
+import { fetchNewStore } from '@/shared/apis/restaurant/restaurant.api';
+import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
 
 import star from '@/shared/assets/star.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
@@ -14,8 +16,6 @@ import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
-import { fetchNewStore } from '@/shared/apis/restaurant/restaurant.api';
-import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
 
 function NewStores() {
   const navigate = useNavigate();
@@ -97,7 +97,7 @@ function NewStores() {
           <span className="font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
-            <span className="mr-2">{store.rating.toFixed(1)}</span>
+            <span className="mr-2">{store.rating?.toFixed(1) ?? 0}</span>
             <span>리뷰 total {store.reviewCount}</span>
           </div>
           <div className="absolute bottom-0 right-0 flex items-center gap-1">
@@ -138,9 +138,16 @@ function NewStores() {
   return (
     <>
       <div className="relative px-4">
-        <Header title="신규매장등록" type="back" backFn={() => navigate('/home')} />
+        <Header
+          title="신규매장등록"
+          type="back"
+          backFn={() => navigate('/home')}
+          className="fixed top-0 bg-white"
+          style={{ maxWidth: 'calc(var(--app-width) - 32px)', width: 'calc(100% - 32px)' }}
+        />
+
         <div
-          className={`flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
+          className={`mt-12 flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
         >
           {renderNewStores()}
         </div>

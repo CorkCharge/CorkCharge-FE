@@ -99,7 +99,7 @@ function CategoryStores() {
           <span className="font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
-            <span className="mr-2">{store.rating.toFixed(1)}</span>
+            <span className="mr-2">{store.rating?.toFixed(1) ?? 0}</span>
             <span>리뷰 total {store.reviewCount}</span>
           </div>
           <div className="absolute bottom-0 right-0 flex items-center gap-1">
@@ -140,9 +140,15 @@ function CategoryStores() {
   return (
     <>
       <div className="relative px-4">
-        <Header title={title} type="back" backFn={() => navigate('/home')} />
+        <Header
+          title={title}
+          type="back"
+          backFn={() => navigate('/home')}
+          className="fixed top-0 bg-white"
+          style={{ maxWidth: 'calc(var(--app-width) - 32px)', width: 'calc(100% - 32px)' }}
+        />
         <div
-          className={`flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
+          className={`mt-12 flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
         >
           {renderStores()}
         </div>

@@ -3,18 +3,17 @@ import { useState, useEffect } from 'react';
 
 import Header from '@/shared/components/common/Header';
 import Button from '@/shared/components/common/Button';
-import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import Modal from '@/shared/components/common/Modal';
 import type { RestaurantScrapResponse } from '@/shared/apis/restaurant/restaurant.type';
 import { fetchHotStores } from '@/shared/apis/restaurant/restaurant.api';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
 
 import star from '@/shared/assets/star.svg';
 import share from '@/shared/assets/detailPageImgs/share.svg';
 import keep from '@/pages/corkagemap/list/savemarker/SaveMarker3.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
-import GroupSelector from '@/shared/components/home/GroupSelector';
-import GroupList from '@/shared/components/home/GroupList';
 
 function HotStores() {
   const navigate = useNavigate();
@@ -26,8 +25,6 @@ function HotStores() {
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const [stores, setStores] = useState<RestaurantScrapResponse[]>([]);
   const [selectedStore, setSelectedStore] = useState<RestaurantScrapResponse>();
-
-  const selectedDongNames = useRegionFilterStore((state) => state.selectedDongNames);
 
   useEffect(() => {
     getNearbyStores();
@@ -89,7 +86,7 @@ function HotStores() {
           <span className="font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
-            <span className="mr-2">{store.rating.toFixed(1)}</span>
+            <span className="mr-2">{store.rating?.toFixed(1) ?? 0}</span>
             <span>리뷰 total {store.reviewCount}</span>
           </div>
           <div className="absolute bottom-0 right-0 flex items-center gap-1">
@@ -119,12 +116,14 @@ function HotStores() {
   return (
     <>
       <div className="relative px-4">
-        <Header title="핫플 콜키지 추천 매장" type="back" backFn={() => navigate('/home')} />
-        <div
-          className={`flex flex-col gap-6 ${selectedDongNames.length > 0 ? 'mb-[200px]' : 'mb-[120px]'}`}
-        >
-          {renderHotStores()}
-        </div>
+        <Header
+          title="핫플 콜키지 추천 매장"
+          type="back"
+          backFn={() => navigate('/home')}
+          className="fixed top-0 bg-white"
+          style={{ maxWidth: 'calc(var(--app-width) - 32px)', width: 'calc(100% - 32px)' }}
+        />
+        <div className="mb-5 mt-12 flex flex-col gap-6">{renderHotStores()}</div>
 
         {/* 공유하기 모달 */}
         <Modal
