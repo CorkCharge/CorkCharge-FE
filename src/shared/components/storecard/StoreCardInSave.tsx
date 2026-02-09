@@ -5,6 +5,7 @@ import Share from './share.svg';
 import Star from '../../assets/star.svg';
 import DummyFood from './dummyFood.svg';
 import { editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
+import { useNavigate } from 'react-router-dom';
 
 interface StoreCardProps {
   restaurantId: number;
@@ -30,6 +31,7 @@ const StoreCardInSave = ({
   corkageOption,
 }: StoreCardProps) => {
   const [isSaved, setIsSaved] = useState(true);
+  const navigate = useNavigate();
 
   // 저장 토글 핸들러
   const handleToggleSave = async () => {
@@ -50,7 +52,10 @@ const StoreCardInSave = ({
   };
 
   return (
-    <div className="flex w-full flex-col bg-white">
+    <div
+      className="flex w-full cursor-pointer flex-col bg-white"
+      onClick={() => navigate(`/detail-info/${restaurantId}`)}
+    >
       {/* 1. 상단 정보 영역 (이름, 아이콘) */}
       <div className="relative flex w-full items-start justify-between pl-[17px]">
         {/* 식당 이름 */}
