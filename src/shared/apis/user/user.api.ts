@@ -1,0 +1,30 @@
+import apiClient from '../apiClient';
+import type { Role } from './user.type';
+
+// role 부여
+export const modifyRole = async ({ role, nickname }: { role: Role; nickname: string }) => {
+  await apiClient.put('/users/role', { role, nickname });
+};
+
+// 유저 정보 조회
+export const getUser = async () => {
+  const res = await apiClient.get('/user');
+  return res.data.data;
+};
+
+// 유저 정보 수정
+export const modifyName = async (name: string) => {
+  await apiClient.put('/users/modify', null, { params: { name } });
+};
+
+// 내가 쓴 리뷰 가져오기
+export const getMyReviews = async () => {
+  const res = await apiClient.get('/users/reviews');
+  return res.data.data;
+};
+
+// 마이페이지 정보 조회 (닉네임, 이메일, 내가 쓴 리뷰)
+export const getMyPageInfo = async () => {
+  const res = await apiClient.get('/users/page');
+  return res.data.data;
+};

@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 
 import Header from '@/shared/components/common/Header';
 import { GuestMyPage, LoggedInMyPage } from '@/shared/components/myPage/MyPageBranch';
-
 import useAuthStore from '@/shared/store/useAuthStore';
 import useFooterPropsStore from '@/shared/store/useFooterProps';
 

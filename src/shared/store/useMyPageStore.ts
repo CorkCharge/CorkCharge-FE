@@ -4,25 +4,27 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Review } from '../types/mypage';
 
 interface MyProfile {
   nickname: string;
   email: string;
   reviews: Review[];
-  profile_image: string;
 }
 
 interface MyPageStore {
   myProfile: MyProfile;
-  setMyProfile: (fetched: Partial<MyProfile>) => void;
+  setMyProfile: (_: Partial<MyProfile>) => void;
+}
+interface Review {
+  restaurantName: string;
+  location: string;
+  thumbnailUrl: string;
 }
 
 const initState = {
   nickname: '',
   email: '',
   reviews: [],
-  profile_image: '',
 };
 
 const useMyPageStore = create<MyPageStore>()(
@@ -32,7 +34,6 @@ const useMyPageStore = create<MyPageStore>()(
         nickname: '',
         email: '',
         reviews: [],
-        profile_image: '',
       },
 
       setMyProfile: (fetched) => set((prev) => ({ myProfile: { ...prev.myProfile, ...fetched } })),

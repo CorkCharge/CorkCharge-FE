@@ -13,14 +13,14 @@ import useBookmarkStore from './useBookmarkStore';
 
 interface User {
   userId: number;
-  role: 'USER' | 'OWNER' | 'ADMIN' | null;
+  role: 'USER' | 'OWNER';
   accessToken: string;
   refreshToken: string;
 }
 
 interface StoredUser {
   userId: number;
-  role: 'USER' | 'OWNER' | 'ADMIN' | null;
+  role: 'USER' | 'OWNER';
 }
 
 interface AuthState {
@@ -34,6 +34,7 @@ const useAuthStore = create<AuthState>()(
     persist<AuthState>(
       (set) => ({
         user: { userId: 1, role: 'USER' },
+        // user: null,
 
         login: (userInfo: User) => {
           if (!userInfo.userId || !userInfo.accessToken || !userInfo.refreshToken) {
@@ -45,8 +46,8 @@ const useAuthStore = create<AuthState>()(
           apiClient
             .get('/users')
             .then((res) => {
-              const { name, email, image_url } = res.data.data;
-              const myPageData = { nickname: name, email, profile_image: image_url };
+              const { name, email } = res.data.data;
+              const myPageData = { nickname: name, email };
               setMyProfile(myPageData);
             })
             .catch((e) => {

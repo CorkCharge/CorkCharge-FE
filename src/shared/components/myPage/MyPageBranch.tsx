@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import useMyPageStore from '@/shared/store/useMyPageStore';
 import useAuthStore from '@/shared/store/useAuthStore';
 import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
@@ -12,6 +10,7 @@ import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
 import plus from '@/shared/assets/images/plus.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
+import { useGetMypageInfo } from '@/shared/queries/useMyPage';
 
 const renderReviews = (reviews: Review[]) =>
   reviews.map((review, idx) => (
@@ -55,18 +54,7 @@ export const LoggedInMyPage = () => {
 
   const navigate = useNavigate();
 
-  const { myProfile, setMyProfile } = useMyPageStore();
-
-  useEffect(() => {
-    if (myProfile.email) return;
-
-    apiClient
-      .get('/users/page')
-      .then((res) => {
-        setMyProfile(res.data.data);
-      })
-      .catch((e) => console.error(e));
-  }, [myProfile.email, setMyProfile]);
+  const { data: myProfile } = useGetMypageInfo();
 
   const enrollCorkage = () => {
     apiClient
@@ -96,7 +84,7 @@ export const LoggedInMyPage = () => {
           <img
             src={arrow}
             className="absolute right-1 top-1/2 h-4 -translate-y-1/2 cursor-pointer"
-            onClick={() => navigate('/my/modify')}
+            onClick={() => navigate('/my/modify', { state: { from: 'mypage' } })}
           />
         </div>
 

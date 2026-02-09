@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import useMyPageStore from '@/shared/store/useMyPageStore';
 
 import hello from '@/shared/components/myPage/images/hello.png';
-import apiClient from '@/shared/apis/apiClient';
 
 const GRADIENT_BG =
   'linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), radial-gradient(144.85% 146.88% at -4.43% 75%, #90212A 5.69%, #DCDBE8 86.4%)';
@@ -16,18 +15,32 @@ function ChooseRole() {
   const { myProfile } = useMyPageStore();
 
   const letsStart = async () => {
-    if (role === 0) {
-      try {
-        await apiClient.put('/users/role', { role: 'USER' });
-        navigate('/my/role/complete');
-      } catch (e) {
-        console.error('유저 role 등록 실패: ' + e);
-      }
+    if (role === -1) return;
 
-      // navigate('/home');
-    } else if (role === 1) {
+    // try {
+    //   const roleName = role === 0 ? 'USER' : 'OWNER';
+    //   await modifyRole({ role: roleName, nickname: '' });
+    // } catch (e) {
+    //   console.error('role 등록 실패: ' + e);
+    // }
+
+    if (role === 0) {
+      navigate('/my/modify', { state: { from: 'signup' } });
+    } else {
       navigate('/master/signup');
     }
+    // if (role === 0) {
+    //   try {
+    //     await apiClient.put('/users/role', { role: 'USER' });
+    //     navigate('/my/role/complete');
+    //   } catch (e) {
+    //     console.error('유저 role 등록 실패: ' + e);
+    //   }
+
+    //   // navigate('/home');
+    // } else if (role === 1) {
+    //   navigate('/master/signup');
+    // }
   };
 
   return (
@@ -64,7 +77,8 @@ function ChooseRole() {
 
       {role !== -1 && (
         <button
-          className="fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] max-w-[480px] rounded-[10px] bg-[var(--primary)] font-bold text-white"
+          className="fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] rounded-[10px] bg-[var(--primary)] font-bold text-white"
+          style={{ maxWidth: 'calc(var(--app-width) * 0.8)' }}
           onClick={letsStart}
         >
           다음

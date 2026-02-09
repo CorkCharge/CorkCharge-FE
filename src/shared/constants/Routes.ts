@@ -12,7 +12,6 @@ export const FOOTERHIDDENURL = [
   '/my/modify',
   '/',
   '/my/contact',
-  '/my/role',
   '/my/toc',
   '/corkagemap/filter',
   '/doit',
@@ -20,7 +19,13 @@ export const FOOTERHIDDENURL = [
 ];
 
 // 하단 네비게이션 숨김 page URL(prefix)
-export const FOOTERHIDDENPREFIX = ['/onboarding', '/signin', '/master', '/notification'];
+export const FOOTERHIDDENPREFIX = [
+  '/onboarding',
+  '/signin',
+  '/master',
+  '/notification',
+  '/my/role',
+];
 
 // 하단 네비게이션의 각 아이템의 이동 링크 설정
 export const FOOTERROUTER = {
