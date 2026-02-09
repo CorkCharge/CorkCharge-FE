@@ -149,9 +149,7 @@ export const LoggedInMyPage = () => {
       <div className="-mx-4 h-2 bg-[var(--gray-1)]"></div>
 
       <ControlLists>
-        <ControlItem onClick={() => navigate('/my/notification/setting')}>
-          해주세요 목록
-        </ControlItem>
+        <ControlItem onClick={() => navigate('/my/request-list')}>해주세요 목록</ControlItem>
         <ControlItem onClick={() => navigate('/my/toc')}>약관 및 개인정보 처리방침</ControlItem>
         <ControlItem onClick={() => navigate('/my/contact')}>문의하기</ControlItem>
       </ControlLists>

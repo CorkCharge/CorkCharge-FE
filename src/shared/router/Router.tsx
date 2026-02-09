@@ -25,7 +25,6 @@ import MasterSignUp from '@/pages/myPage/MasterSignUp';
 import ModifyInfo from '@/pages/myPage/ModifyInfo';
 import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
-import NotiSetting from '@/pages/myPage/NotiSetting';
 import Contact from '@/pages/myPage/Contact';
 import FilterResult from '@/pages/corkagemap/FilterResult';
 import Notification from '@/pages/notification/Notification';
@@ -48,6 +47,7 @@ import DoitRequest from '@/pages/doit/DoitRequest';
 import CategoryStores from '@/pages/home/CategoryStores';
 import NearbyStores from '@/pages/home/NearbyStores';
 import RoleSelectionComplete from '@/pages/myPage/RoleSelectionComplete';
+import RequestList from '@/pages/myPage/RequestList';
 
 const router = createBrowserRouter([
   // {
@@ -187,12 +187,12 @@ const router = createBrowserRouter([
         element: <MyReview />,
       },
       {
-        path: 'my/notification/setting',
-        element: <NotiSetting />,
-      },
-      {
         path: 'my/contact',
         element: <Contact />,
+      },
+      {
+        path: 'my/request-list',
+        element: <RequestList />,
       },
       {
         path: 'my/toc',

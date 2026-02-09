@@ -28,3 +28,9 @@ export const getMyPageInfo = async () => {
   const res = await apiClient.get('/users/page');
   return res.data.data;
 };
+
+// 나의 해주세요 목록 조회
+export const getMyRequestList = async () => {
+  const res = await apiClient.get('/users/helprequests');
+  return res.data.data.helprequests;
+};

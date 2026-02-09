@@ -2,8 +2,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Slider from 'rc-slider';
 
-import { secondRequest } from '@/shared/apis/helpRequest/helpRequest.api';
 import { type CorkageTypeKr, type Priority } from '@/shared/apis/helpRequest/helpRequest.type';
+import { useCreateRequest } from '@/shared/queries/useMyRequestLists';
 
 import arrow from '@/shared/assets/whiteArrow.svg';
 
@@ -57,20 +57,51 @@ function DoitRequest() {
   );
 
   // 2차 해주세요 제출
-  const handleSubmit = async () => {
+  const { mutate } = useCreateRequest();
+  const handleSubmit = () => {
     if (!storeId) {
       console.error('storeId가 없습니다.');
       return;
     }
+
     if (!firstPriority || !secondPriority) return;
 
-    try {
-      await secondRequest(storeId, corkageType, sliderVal, firstPriority, secondPriority, content);
-      navigate('/doit/complete');
-    } catch (e) {
-      console.error('2차 해주세요 요청 실패: ' + e);
-    }
+    mutate(
+      {
+        restaurantId: storeId,
+        corkageType,
+        preferredPrice: sliderVal,
+        firstPriority,
+        secondPriority,
+        content,
+      },
+      {
+        onSuccess: () => navigate('/doit/complete'),
+        onError: (e) => console.error('2차 해주세요 요청 실패: ' + e),
+      }
+    );
   };
+  // const handleSubmit = async () => {
+  //   if (!storeId) {
+  //     console.error('storeId가 없습니다.');
+  //     return;
+  //   }
+  //   if (!firstPriority || !secondPriority) return;
+
+  //   try {
+  //     await secondRequest({
+  //       restaurantId: storeId,
+  //       corkageType,
+  //       preferredPrice: sliderVal,
+  //       firstPriority,
+  //       secondPriority,
+  //       content,
+  //     });
+  //     navigate('/doit/complete');
+  //   } catch (e) {
+  //     console.error('2차 해주세요 요청 실패: ' + e);
+  //   }
+  // };
 
   return (
     <div
