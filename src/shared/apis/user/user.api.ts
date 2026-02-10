@@ -1,5 +1,5 @@
 import apiClient from '../apiClient';
-import type { Role } from './user.type';
+import type { MyRequestListResponse, Role } from './user.type';
 
 // role 부여
 export const modifyRole = async ({ role, nickname }: { role: Role; nickname: string }) => {
@@ -30,7 +30,7 @@ export const getMyPageInfo = async () => {
 };
 
 // 나의 해주세요 목록 조회
-export const getMyRequestList = async () => {
+export const getMyRequestList = async (): Promise<MyRequestListResponse[]> => {
   const res = await apiClient.get('/users/helprequests');
   return res.data.data.helprequests;
 };
@@ -38,5 +38,5 @@ export const getMyRequestList = async () => {
 // 나의 해주세요 상세 조회
 export const getMyRequestDetail = async (id: number) => {
   const res = await apiClient.get(`/users/helprequests/${id}`);
-  return res.data;
+  return res.data.data;
 };

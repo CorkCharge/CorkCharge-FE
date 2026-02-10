@@ -10,7 +10,7 @@ import { ImageInput } from '@/shared/components/common/Input';
 import apiClient from '@/shared/apis/apiClient';
 
 import crossMark from '@/shared/assets/images/plus.png';
-import { useSetNickname, useUpdateNickname } from '@/shared/queries/useMyPage';
+import { useSetNickname, useUpdateNickname } from '@/shared/queries/user/useMyPage';
 
 function ModifyInfo() {
   const navigate = useNavigate();

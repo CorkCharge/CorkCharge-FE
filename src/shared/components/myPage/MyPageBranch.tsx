@@ -10,7 +10,7 @@ import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
 import plus from '@/shared/assets/images/plus.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
-import { useGetMypageInfo } from '@/shared/queries/useMyPage';
+import { useGetMypageInfo } from '@/shared/queries/user/useMyPage';
 
 const renderReviews = (reviews: Review[]) =>
   reviews.map((review, idx) => (

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getMyPageInfo, modifyName, modifyRole } from '../apis/user/user.api';
-import type { Role } from '../apis/user/user.type';
+import { getMyPageInfo, modifyName, modifyRole } from '../../apis/user/user.api';
+import type { Role } from '../../apis/user/user.type';
 
 // 마이페이지 진입 시 데이터 패칭
 export const useGetMypageInfo = () =>

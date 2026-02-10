@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Slider from 'rc-slider';
 
 import { type CorkageTypeKr, type Priority } from '@/shared/apis/helpRequest/helpRequest.type';
-import { useCreateRequest } from '@/shared/queries/useMyRequestLists';
+import { useCreateRequest } from '@/shared/queries/user/useMyRequestLists';
 
 import arrow from '@/shared/assets/whiteArrow.svg';
 

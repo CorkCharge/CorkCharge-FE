@@ -2,28 +2,16 @@ import type { CorkageTypeEn, PriorityRequest } from '../helpRequest/helpRequest.
 
 export type Role = 'USER' | 'OWNER';
 
-// const corkageTypeMapping: Record<CorkageTypeKr, CorkageTypeEn> = {
-//   테이블당: 'PER_TABLE',
-//   병당: 'PER_BOTTLE',
-//   인당: 'PER_PERSON',
-// };
-
-// const priorityMapping: Record<Priority, PriorityRequest> = {
-//   extraGlass: 'GLASS_PROVIDED',
-//   ice: 'ICE_PROVIDED',
-//   decanting: 'DECANTING',
-// };
-
-export interface MyReqDetailResponse {
-  success: boolean;
-  code: number;
-  message: string;
-  helprequestId: 1;
-  restaurantName: string;
+export interface MyReqDetailResponse extends MyRequestListResponse {
   corkageType: CorkageTypeEn;
-  preferredPrice: number;
+  preferredPrice: 14000;
   firstPriority: PriorityRequest;
   secondPriority: PriorityRequest;
   content: string;
+}
+
+export interface MyRequestListResponse {
+  helprequestId: number;
+  restaurantName: string;
   createdAt: string;
 }

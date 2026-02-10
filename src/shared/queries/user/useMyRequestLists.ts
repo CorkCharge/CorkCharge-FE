@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getMyRequestList } from '../apis/user/user.api';
-import { secondRequest } from '../apis/helpRequest/helpRequest.api';
-import type { CorkageTypeKr, Priority } from '../apis/helpRequest/helpRequest.type';
+import { getMyRequestList } from '../../apis/user/user.api';
+import { secondRequest } from '../../apis/helpRequest/helpRequest.api';
+import type { CorkageTypeKr, Priority } from '../../apis/helpRequest/helpRequest.type';
 
 // 나의 해주세요 목록 가져오기
 export const useGetRequestLists = () =>
