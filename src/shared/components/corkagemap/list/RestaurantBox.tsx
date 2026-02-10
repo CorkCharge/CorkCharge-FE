@@ -33,12 +33,12 @@ const RestaurantBox = ({
     return `${window.location.origin}/detail-info/${resId}`;
   }, [resId]);
 
-  const handleShare = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('공유하기 창 띄우기');
-    setOpenShareModal(true);
-  };
+  // const handleShare = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   console.log('공유하기 창 띄우기');
+  //   setOpenShareModal(true);
+  // };
 
   const handleCopyLink = async () => {
     try {
@@ -47,7 +47,6 @@ const RestaurantBox = ({
       alert('링크가 클립보드에 복사되었습니다: ');
     } catch {
       console.error('복사 실패');
-      // alert('클립보드 복사에 실패하였습니다.');
     }
   };
 
@@ -56,26 +55,19 @@ const RestaurantBox = ({
   };
 
   return (
-    <div className="flex h-[216px] w-full flex-col pl-[20px] pr-[20px] pt-[20px]">
+    <div className="flex h-[216px] w-full cursor-pointer flex-col pl-[20px] pr-[20px] pt-[20px]">
       <div className="text-20px font-[700]" onClick={onClick}>
         {name}
       </div>
       <div className="mt-[3px] flex w-full flex-row items-center">
         <img className="h-[15px] w-[16px]" src={Star} alt="별" onClick={onClick} />
         <p className="ml-[4px] text-[16px] font-[500]" onClick={onClick}>
-          {rating}
+          {rating.toFixed(1)}
         </p>
         <p className="ml-[7px] text-[16px] font-[400]" onClick={onClick}>
           리뷰 total {reviewCount}
         </p>
-        <div className="ml-auto flex flex-row gap-[6px]">
-          {/* <button
-            style={{ background: 'rgba(218, 203, 182, 0.30)' }}
-            className="h-[28px] w-[54px] rounded-[20px] text-[12px] font-[500]"
-          >
-            예약
-          </button> */}
-
+        {/* <div className="ml-auto flex flex-row gap-[6px]">
           <button
             style={{ background: 'rgba(218, 203, 182, 0.30)' }}
             type="button"
@@ -84,7 +76,7 @@ const RestaurantBox = ({
           >
             공유
           </button>
-        </div>
+        </div> */}
       </div>
       <div className="mt-[15px] flex flex-row gap-[17px]" onClick={onClick}>
         <img

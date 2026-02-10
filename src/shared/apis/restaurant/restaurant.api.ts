@@ -1,8 +1,6 @@
 import apiClient from '../apiClient';
 import type { RestaurantScrapResponse } from './restaurant.type';
 
-// 가까운 매장 가져오기 - type
-
 // 위치 가져오기
 const getCurrentPosition = (): Promise<GeolocationPosition> =>
   new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
@@ -76,6 +74,19 @@ export const fetchNewStore = async ({
     sigungu,
     dongList,
   });
+
+  return res.data.data;
+};
+
+// 홈화면 매장 검색
+export const restaurantSearch = async ({
+  keyword,
+  sort = 'PRICE_ASC',
+}: {
+  keyword: string;
+  sort?: 'PRICE_ASC' | 'REVIEW_COUNT_DESC' | 'RATING_DESC';
+}) => {
+  const res = await apiClient.post('/restaurants/search', { keyword, sort });
 
   return res.data.data;
 };

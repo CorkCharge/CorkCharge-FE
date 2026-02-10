@@ -9,7 +9,6 @@ import useRestaurantStore from '@/shared/store/useRestaurantStore';
 import { fetchStoreReviews } from '@/shared/apis/review/review.api';
 import { type StoreReviewResponse } from '@/shared/apis/review/review.type';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
-// import { getBookmarkGroupDetail, getBookmarkGroups } from '@/shared/apis/bookmark/bookmark.api';
 
 const Info = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +22,6 @@ const Info = () => {
 
   const setRestInfo = useRestaurantStore((state) => state.setRestInfo);
   const setReviewCount = useBookmarkStore((state) => state.setReviewCount);
-  // const linkRestaurantsToGroup = useBookmarkStore((state) => state.linkRestaurantsToGroup);
 
   useEffect(() => {
     if (!id) {
@@ -31,28 +29,9 @@ const Info = () => {
       return;
     }
 
-    // temp();
     getRestaurantInfo();
     getReviews();
   }, [id]);
-
-  // const temp = async () => {
-  //   try {
-  //     const storesRes = await getBookmarkGroups();
-  //     const groupList = storesRes.data.groups;
-  //     const groupIds = groupList.map((group) => group.groupId);
-
-  //     await Promise.all(
-  //       groupIds.map(async (gId) => {
-  //         const res = await getBookmarkGroupDetail(gId, 'LATEST');
-  //         const restaurantIds = res.data.restaurants.map((rs) => rs.restaurantId);
-  //         if (restaurantIds.length > 0) linkRestaurantsToGroup(restaurantIds, gId);
-  //       })
-  //     );
-  //   } catch (e) {
-  //     console.error('저장한 가게 가져오기 실패: ' + e);
-  //   }
-  // };
 
   // 가게 정보 가져오기
   const getRestaurantInfo = async () => {

@@ -11,11 +11,12 @@ import arrow from '@/shared/assets/left_arrow.svg';
 
 interface HeaderProps {
   title: string;
-  type?: string;
+  type?: 'back' | 'additional' | undefined;
   backFn?: () => void;
   fnTitle?: string;
   addiFn?: () => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const NormalHeader = ({ title, className }: HeaderProps) => (
@@ -29,12 +30,13 @@ const NormalHeader = ({ title, className }: HeaderProps) => (
   </header>
 );
 
-const BackHeader = ({ title, backFn = () => {}, className }: HeaderProps) => (
+const BackHeader = ({ title, backFn = () => {}, className, style }: HeaderProps) => (
   <header
     className={cn(
       'relative flex h-[48px] items-center justify-center font-bold text-[var(--gray-8)]',
       className
     )}
+    style={style}
   >
     <img src={arrow} className="absolute left-0 cursor-pointer" onClick={backFn} />
     <span>{title}</span>
@@ -69,9 +71,9 @@ const AdditionalHeader = ({
   </header>
 );
 
-function Header({ title, type, backFn, fnTitle, addiFn, className }: HeaderProps) {
+function Header({ title, type, backFn, fnTitle, addiFn, className, style }: HeaderProps) {
   if (type === 'back') {
-    return <BackHeader title={title} backFn={backFn} className={className} />;
+    return <BackHeader title={title} backFn={backFn} className={className} style={style} />;
   } else if (type === 'additional') {
     return <AdditionalHeader title={title} fnTitle={fnTitle} addiFn={addiFn} backFn={backFn} />;
   } else return <NormalHeader title={title} className={className} />;

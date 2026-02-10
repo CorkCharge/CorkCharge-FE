@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createBookmarkGroup } from '../apis/bookmark/bookmark.api';
-import type { CreateGroupRequest } from '../apis/bookmark/bookmarks.type';
+import { createBookmarkGroup } from '../../apis/bookmark/bookmark.api';
+import type { CreateGroupRequest } from '../../apis/bookmark/bookmark.type';
 
 export const useCreateGroup = () => {
   const queryClient = useQueryClient();
