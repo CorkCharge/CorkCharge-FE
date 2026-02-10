@@ -33,7 +33,7 @@ function RequestList() {
 
   return (
     <div className="px-4">
-      <Header title="해주세요 목록" type="back" />
+      <Header title="해주세요 목록" type="back" backFn={() => navigate('/my')} />
 
       <div className="mx-3">{renderRequests()}</div>
     </div>

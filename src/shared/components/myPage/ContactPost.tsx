@@ -1,42 +1,22 @@
-import { useEffect, useState } from 'react';
-
-import apiClient from '@/shared/apis/apiClient';
+import { useGetSuggestionInfo } from '@/shared/queries/suggestion/useSuggestion';
 
 function ContactPost({ selectedIdx }: { selectedIdx: number }) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [postDate, setPostDate] = useState('');
+  const { data: post } = useGetSuggestionInfo(selectedIdx);
 
-  useEffect(() => {
-    if (selectedIdx < 0 || !selectedIdx) return;
-
-    apiClient
-      .get(`/suggestion/${selectedIdx}`)
-      .then((res) => {
-        setTitle(res.data.data.title);
-        setContent(res.data.data.content);
-        const formatted = dateFormatter(res.data.data.createdAt);
-        setPostDate(formatted);
-      })
-      .catch((e) => console.error('문의하기 글 불러오기 실패 : ' + e));
-  }, [selectedIdx]);
-
-  const dateFormatter = (date: string) => {
-    const onlyDate = date.split('T')[0];
-    const formatter = new Date(onlyDate).toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    return formatter;
-  };
+  if (!post) return;
 
   return (
     <>
       <div className="border-b border-t border-[var(--gray-3)] py-7 font-medium">
-        <p className="text-[var(--gray-8)]">{title}</p>
-        <p className="text-[10px] text-[var(--gray-4)]">{postDate}</p>
-        <p className="mt-3 text-sm text-[var(--gray-8)]">{content}</p>
+        <p className="text-[var(--gray-8)]">{post.title}</p>
+        <p className="text-[10px] text-[var(--gray-4)]">
+          {new Date(post.createdAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </p>
+        <p className="mt-3 text-sm text-[var(--gray-8)]">{post.content}</p>
       </div>
 
       {/* <div className="pt-3 font-medium">

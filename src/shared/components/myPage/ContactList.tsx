@@ -1,15 +1,6 @@
-import { useEffect, useState } from 'react';
-
-import apiClient from '@/shared/apis/apiClient';
+import { useGetSuggestionList } from '@/shared/queries/suggestion/useSuggestion';
 
 import plus from '@/shared/components/myPage/images/plus-button.svg';
-
-interface ContactPost {
-  suggestionId: number;
-  title: string;
-  completed: boolean;
-  createdAt: string;
-}
 
 interface ContactListProps {
   onWrite: () => void;
@@ -18,23 +9,13 @@ interface ContactListProps {
 }
 
 function ContactList({ onWrite, onDetail, selectPost }: ContactListProps) {
-  const [posts, setPosts] = useState<ContactPost[]>([]);
-
-  useEffect(() => {
-    apiClient
-      .get('/suggestion')
-      .then((res) => {
-        if (!res.data.success) throw new Error();
-        setPosts(res.data.data);
-      })
-      .catch((e) => console.error('문의하기 목록 호출 실패 : ' + e));
-  }, []);
+  const { data: posts } = useGetSuggestionList();
 
   const renderPosts = () =>
-    posts.map((post) => (
+    posts?.map((post) => (
       <li
         key={post.suggestionId}
-        className="relative border-b border-[var(--gray-3)] px-2 py-4"
+        className="relative cursor-pointer border-b border-[var(--gray-3)] px-2 py-4"
         onClick={() => gotoPost(post.suggestionId)}
       >
         <p className="font-medium text-[var(--gray-8)]">{post.title}</p>
