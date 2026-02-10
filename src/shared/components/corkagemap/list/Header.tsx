@@ -1,12 +1,17 @@
 import { useNavigate } from 'react-router-dom';
+
+import { cn } from '@/shared/utils/utils';
+
 import Back from '../../../../shared/assets/left_arrow.svg';
 import X from '../../../../pages/doit/assets/x.svg';
 
 interface HeaderProps {
   title: string;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-const Header = ({ title }: HeaderProps) => {
+const Header = ({ title, className, style }: HeaderProps) => {
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate(-1);
@@ -14,8 +19,11 @@ const Header = ({ title }: HeaderProps) => {
 
   return (
     <div
-      style={{ boxShadow: '0 4px 7px 0 rgba(0, 0, 0, 0.10)' }}
-      className="fixed flex h-[48px] w-full flex-row place-content-between items-center bg-white"
+      style={{ boxShadow: '0 4px 7px 0 rgba(0, 0, 0, 0.10)', ...style }}
+      className={cn(
+        'fixed flex h-[48px] w-full flex-row place-content-between items-center bg-white',
+        className
+      )}
     >
       <div className="flex flex-row gap-[10px]">
         <img

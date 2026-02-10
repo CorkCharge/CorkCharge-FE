@@ -14,7 +14,7 @@ import SaveMarker9 from '@/pages/corkagemap/list/savemarker/SaveMarker9.svg';
 import SaveMarker10 from '@/pages/corkagemap/list/savemarker/SaveMarker10.svg';
 import SaveMarker11 from '@/pages/corkagemap/list/savemarker/SaveMarker11.svg';
 import SaveMarker12 from '@/pages/corkagemap/list/savemarker/SaveMarker12.svg';
-import { useCreateGroup } from '@/shared/queries/useCreateGroup';
+import { useCreateGroup } from '@/shared/queries/bookmark/useCreateGroup';
 
 const markerList = [
   SaveMarker1,
@@ -88,7 +88,7 @@ const CreateGroup = ({ onComplete, onCancel }: EditGroupProps) => {
       </div>
 
       {/* 마커 선택 그리드 */}
-      <div className="mx-auto mt-6 grid w-fit grid-cols-4 gap-x-[30px] gap-y-[18px]">
+      <div className="mx-4 mt-6 grid w-full grid-cols-4 place-items-center justify-center gap-x-[30px] gap-y-[18px]">
         {markerList.map((Icon, i) => {
           const name = `SaveMarker${i + 1}`;
           const selected = selectedIcon === name;
@@ -97,7 +97,7 @@ const CreateGroup = ({ onComplete, onCancel }: EditGroupProps) => {
               key={name}
               onClick={() => setSelectedIcon(name)}
               className={`relative h-8 w-8 rounded-full ${
-                selected ? 'ring-2 ring-[#90212A] ring-offset-2' : ''
+                selected ? 'ring-2 ring-[var(--primary)] ring-offset-2' : ''
               }`}
             >
               <img src={Icon} alt={name} />

@@ -32,7 +32,7 @@ const useBookmarkStore = create<BookmarkStoreState>()(
     persist(
       (set) => ({
         // 내가 저장한 tip id들
-        selectedTips: [1, 2, 3],
+        selectedTips: [1, 3],
         // selectedStores: [1],
         selectedReviews: [1],
         selectedStores: { 1: [1, 2] },

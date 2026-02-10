@@ -10,7 +10,7 @@ import type {
   UpdateGroupRequest,
   GroupListResponse,
   GroupDetailResponse,
-} from './bookmarks.type';
+} from './bookmark.type';
 
 // 저장하기(리뷰/팁/매장) (2차)
 export const createBookmark = async (data: BookmarkRequest): Promise<ApiResponse> => {

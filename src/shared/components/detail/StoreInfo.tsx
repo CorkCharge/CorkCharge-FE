@@ -1,9 +1,6 @@
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 
 const StoreInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
-  // const [showLocal, setShowLocal] = useState<boolean>(false);
-  // const [showAllHours, setShowAllHours] = useState<boolean>(false);
-  // const [showDirections, setShowDirections] = useState<boolean>(false);
   return (
     <div>
       <div className="px-4">
@@ -21,10 +18,10 @@ const StoreInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           <div>{restaurant.address}</div>
         </div>
         <div className="flex border border-x-0 pb-2 pt-2">
-          <div className="w-[20%] text-[16px] font-bold">영업시간</div>
+          <div className="w-[20%] shrink-0 text-[16px] font-bold">영업시간</div>
           {restaurant.openingHours ? (
             <div>
-              {restaurant.openingHours.split('\n').map((h, idx) => (
+              {restaurant.openingHours.split(',').map((h, idx) => (
                 <p key={idx}>{h}</p>
               ))}
             </div>

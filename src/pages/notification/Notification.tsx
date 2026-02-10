@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
 import Header from '@/shared/components/common/Header';
+import { useNotificationList } from '@/shared/queries/notification/useNotificationList';
+import { NOTI_TYPE_MAPPING } from '@/shared/apis/notification/notification.type';
 
 import loudSpeaker from '@/shared/components/notification/images/loudspeaker.png';
 import whiteArrow from '@/shared/assets/arrow.svg';
@@ -9,22 +11,31 @@ import grayArrow from '@/shared/assets/right_arrow.svg';
 function Notification() {
   const navigate = useNavigate();
 
-  const gotoPost = () => {
-    navigate('/notification/1');
+  const { data: notifications } = useNotificationList();
+
+  const gotoPost = (id: number) => {
+    navigate(`/notification/${id}`);
   };
 
   const renderNotiPosts = () =>
-    [...new Array(5)].map(() => (
+    notifications?.map((notification) => (
       <div
         className="relative flex cursor-pointer items-center gap-5 border-b border-[var(--gray-3)] p-4"
-        onClick={gotoPost}
+        onClick={() => gotoPost(notification.notificationId)}
+        key={notification.notificationId}
       >
         <span className="rounded-[20px] bg-[var(--gray-2)] px-4 py-2 text-sm font-medium">
-          EVENT
+          {NOTI_TYPE_MAPPING[notification.type]}
         </span>
         <div className="flex flex-col justify-center font-medium">
-          <p className="text-[var(--gray-8)]">후기 남기고 커피받자</p>
-          <span className="text-[10px] text-[var(--gray-4)]">2025년 05월 17일</span>
+          <p className="text-[var(--gray-8)]">{notification.title}</p>
+          <span className="text-[10px] text-[var(--gray-4)]">
+            {new Date(notification.createdAt).toLocaleDateString('ko-KR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </span>
         </div>
         <img src={grayArrow} className="absolute right-4 top-1/2 h-4 w-[9px] -translate-y-1/2" />
       </div>
@@ -32,10 +43,16 @@ function Notification() {
 
   return (
     <div className="relative">
-      <Header type="back" title="알림" className="mx-4" backFn={() => navigate('/home')} />
+      <Header
+        type="back"
+        title="알림"
+        backFn={() => navigate('/home')}
+        className="fixed top-0 z-[10] mx-4 bg-white"
+        style={{ maxWidth: 'calc(var(--app-width) - 32px)', width: 'calc(100% - 32px)' }}
+      />
 
       <div
-        className="relative flex h-[72px] items-center gap-5 px-4"
+        className="relative mt-12 flex h-[72px] items-center gap-5 px-4"
         style={{
           background:
             'linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%)',
@@ -52,7 +69,7 @@ function Notification() {
         />
       </div>
 
-      <div>{renderNotiPosts()}</div>
+      <>{renderNotiPosts()}</>
 
       {/* empty state */}
       {/* <p className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-medium">

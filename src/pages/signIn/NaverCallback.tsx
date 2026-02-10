@@ -6,7 +6,7 @@ import apiClient from '@/shared/apis/apiClient';
 import useAuthStore from '@/shared/store/useAuthStore';
 import { fetchMyReviews, fetchMyTips } from '@/shared/apis/bookmark/bookmarkApi';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
-import { type MyReviewResponse, type MyTipsResponse } from '@/shared/apis/bookmark/bookmarks.type';
+import { type MyReviewResponse, type MyTipsResponse } from '@/shared/apis/bookmark/bookmark.type';
 import { getBookmarkGroupDetail, getBookmarkGroups } from '@/shared/apis/bookmark/bookmark.api';
 
 function NaverCallback() {
@@ -37,6 +37,7 @@ function NaverCallback() {
       console.error('로그인 실패 : ' + e);
       alert('로그인에 실패하였습니다. 잠시 후 다시 시도해주세요');
       navigate('/signin');
+      return;
     }
 
     // 내가 저장한 팁들 가져오기
