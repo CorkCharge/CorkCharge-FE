@@ -96,7 +96,23 @@ const createClusterMarkerHtml = (count: number, isSelected: boolean = false): st
   `;
 };
 
-const createRestaurantMarkerHtml = (price: string, isSelected: boolean = false): string => {
+const escapeHtml = (str: string): string => {
+  if (!str) return ''; // 빈 문자열이나 null/undefined 처리
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
+const createRestaurantMarkerHtml = (
+  price: string,
+  name: string,
+  isSelected: boolean = false
+): string => {
+  const safePrice = escapeHtml(price);
+  const safeName = escapeHtml(name);
   if (isSelected) {
     // [선택됨] 물방울 + 병 + 가격
     return `
@@ -121,7 +137,14 @@ const createRestaurantMarkerHtml = (price: string, isSelected: boolean = false):
           color: white; font-size: 14px; font-weight: bold; border-radius: 20px;
           box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
         ">
-          ${price}
+          ${safePrice}
+        </div>
+        <div style="
+          color: #333; font-size: 14px; font-weight: 700; 
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; 
+          /* 텍스트 가독성을 위해 흰색 테두리(그림자) 효과 추가 */
+        ">
+          ${safeName}
         </div>
       </div>
     `;
@@ -129,13 +152,22 @@ const createRestaurantMarkerHtml = (price: string, isSelected: boolean = false):
 
   // [기본 상태] 단순 가격표
   return `
+  <div style="display: flex; flex-direction: column; align-items: center;">
     <div style="
       padding: 12px; background-color: #90212A; color: white;
       font-size: 14px; font-weight: bold; border-radius: 20px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
     ">
-      ${price}
+      ${safePrice}
     </div>
+    <div style="
+        color: #333; font-size: 14px; font-weight: 700; 
+        text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+        margin-top: 4px;
+      ">
+        ${safeName}
+      </div>
+      </div>
   `;
 };
 
@@ -155,7 +187,11 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
   const selectedMarkerDataRef = useRef<MarkerData | null>(null);
 
   // [추가] 개별 식당 마커용 Ref (선택된 마커와 가격만 저장)
-  const selectedRestaurantRef = useRef<{ marker: naver.maps.Marker; price: string } | null>(null);
+  const selectedRestaurantRef = useRef<{
+    marker: naver.maps.Marker;
+    price: string;
+    name: string;
+  } | null>(null);
 
   const clearMarkers = () => {
     markers.current.forEach((marker) => marker.setMap(null));
@@ -166,29 +202,32 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
   };
 
   // [추가] 식당 마커 클릭 핸들러 (상태 관리 로직)
-  const handleRestaurantClick = useCallback((marker: naver.maps.Marker, price: string) => {
-    const prev = selectedRestaurantRef.current;
+  const handleRestaurantClick = useCallback(
+    (marker: naver.maps.Marker, price: string, name: string) => {
+      const prev = selectedRestaurantRef.current;
 
-    // 1. 이전에 선택된 게 있고, 지금 누른 게 아니라면 -> 원래대로 복구
-    if (prev && prev.marker !== marker) {
-      prev.marker.setIcon({
-        content: createRestaurantMarkerHtml(prev.price, false),
-        anchor: new window.naver.maps.Point(30, 15),
+      // 1. 이전에 선택된 게 있고, 지금 누른 게 아니라면 -> 원래대로 복구
+      if (prev && prev.marker !== marker) {
+        prev.marker.setIcon({
+          content: createRestaurantMarkerHtml(prev.price, prev.name, false),
+          anchor: new window.naver.maps.Point(30, 15),
+        });
+        prev.marker.setZIndex(100);
+      }
+
+      // 2. 현재 누른 마커 -> 강조 스타일로 변경
+      marker.setIcon({
+        content: createRestaurantMarkerHtml(price, name, true),
+        // 물방울 꼬리가 지도 좌표에 맞도록 앵커 조정 (가로 72의 반, 세로 전체 + 마진)
+        anchor: new window.naver.maps.Point(36, 85),
       });
-      prev.marker.setZIndex(100);
-    }
+      marker.setZIndex(1000); // 맨 위로
 
-    // 2. 현재 누른 마커 -> 강조 스타일로 변경
-    marker.setIcon({
-      content: createRestaurantMarkerHtml(price, true),
-      // 물방울 꼬리가 지도 좌표에 맞도록 앵커 조정 (가로 72의 반, 세로 전체 + 마진)
-      anchor: new window.naver.maps.Point(36, 85),
-    });
-    marker.setZIndex(1000); // 맨 위로
-
-    // 3. 현재 상태 저장
-    selectedRestaurantRef.current = { marker, price };
-  }, []);
+      // 3. 현재 상태 저장
+      selectedRestaurantRef.current = { marker, price, name };
+    },
+    []
+  );
 
   // [추가] 빈 공간 클릭 시 선택 해제 핸들러
   const handleMapClick = useCallback(() => {
@@ -197,7 +236,7 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
     // 선택된 식당 마커가 있다면 -> 원래대로 복구
     if (prev) {
       prev.marker.setIcon({
-        content: createRestaurantMarkerHtml(prev.price, false),
+        content: createRestaurantMarkerHtml(prev.price, prev.name, false),
         anchor: new window.naver.maps.Point(30, 15),
       });
       prev.marker.setZIndex(100);
@@ -271,14 +310,14 @@ const NaverMap = ({ onClusterClick, onRestaurantClick }: NaverMapProps) => {
             position: new window.naver.maps.LatLng(item.lat, item.lon),
             map: map,
             icon: {
-              content: createRestaurantMarkerHtml(item.corkagePrice),
+              content: createRestaurantMarkerHtml(item.corkagePrice, item.restaurantName),
               anchor: new window.naver.maps.Point(30, 15),
             },
           });
 
           // [수정] 클릭 시 handleRestaurantClick 호출 (가격 정보만 넘김)
           naver.maps.Event.addListener(marker, 'click', () => {
-            handleRestaurantClick(marker, item.corkagePrice);
+            handleRestaurantClick(marker, item.corkagePrice, item.restaurantName);
             // navigate(`/detail-info/${item.restaurantId}`); // 필요하면 주석 해제
             if (onRestaurantClick) {
               onRestaurantClick(item.restaurantId);
