@@ -37,7 +37,7 @@ export const fetchCorkageReviews = async (
   sido?: string,
   sigungu?: string,
   dongList?: string[],
-  isSortByBookmark: boolean = true
+  isSortByBookmark: boolean = false
 ): Promise<ReviewResponse[]> => {
   const sort = isSortByBookmark ? 'BOOKMARK' : 'LATEST';
   const res = await apiClient.post('/reviews/corkageReview', {
@@ -49,4 +49,31 @@ export const fetchCorkageReviews = async (
   });
 
   return res.data.data;
+};
+
+// 리뷰 수정
+export const modifyReview = async ({
+  reviewId,
+  content,
+  rating,
+  images,
+}: {
+  reviewId: number;
+  content: string;
+  rating: number;
+  images?: File[];
+}) => {
+  const formData = new FormData();
+
+  const request = { content, rating };
+  formData.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+
+  images?.forEach((image) => formData.append('images', image));
+
+  await apiClient.patch(`/reviews/${reviewId}`, formData);
+};
+
+// 리뷰 삭제
+export const deleteReview = async (reviewId: number) => {
+  await apiClient.delete(`reviews/${reviewId}`);
 };

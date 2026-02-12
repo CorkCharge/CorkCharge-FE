@@ -11,23 +11,39 @@ import arrow from '@/shared/assets/images/arrow.png';
 import plus from '@/shared/assets/images/plus.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
 import { useGetMypageInfo } from '@/shared/queries/user/useMyPage';
+import DefaultImage from '../common/DefaultImage';
 
 const renderReviews = (reviews: Review[]) =>
-  reviews.map((review, idx) => (
-    <div
-      key={idx}
-      className={`flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white ${!review.thumbnailUrl && 'bg-black'}`}
-      style={{
-        backgroundImage: `url(${review.thumbnailUrl || ''})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      <span className="text-[10px] font-medium">{review.location}</span>
-      <span className="text-sm font-bold">{review.restaurantName}</span>
-    </div>
-  ));
+  reviews.map((review, idx) =>
+    review.thumbnailUrl ? (
+      <div
+        key={idx}
+        className={`flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white ${!review.thumbnailUrl && 'bg-black'}`}
+        style={{
+          backgroundImage: `url(${review.thumbnailUrl || ''})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <span className="text-[10px] font-medium">{review.location}</span>
+        <span className="text-sm font-bold">{review.restaurantName}</span>
+      </div>
+    ) : (
+      <div className="relative h-[168px] w-[30%] shrink-0">
+        <DefaultImage
+          hasLogo={true}
+          containerClassName="rounded-lg"
+          className="rounded-lg"
+          logoHeight="50%"
+        />
+        <div className="absolute inset-x-3 bottom-3 flex flex-col">
+          <span className="text-[10px] font-medium">{review.location}</span>
+          <span className="text-sm font-bold">{review.restaurantName}</span>
+        </div>
+      </div>
+    )
+  );
 
 const ReviewArea = ({ reviews }: { reviews: Review[] }) => {
   return (

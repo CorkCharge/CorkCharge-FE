@@ -1,5 +1,5 @@
 import apiClient from '../apiClient';
-import type { MyRequestListResponse, Role } from './user.type';
+import type { MyRequestListResponse, MyReviewResponse, Role } from './user.type';
 
 // role 부여
 export const modifyRole = async ({ role, nickname }: { role: Role; nickname: string }) => {
@@ -18,7 +18,7 @@ export const modifyName = async (name: string) => {
 };
 
 // 내가 쓴 리뷰 가져오기
-export const getMyReviews = async () => {
+export const getMyReviews = async (): Promise<MyReviewResponse[]> => {
   const res = await apiClient.get('/users/reviews');
   return res.data.data;
 };

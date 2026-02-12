@@ -18,13 +18,13 @@ const DefaultImage = ({
   hasLogo = false,
   containerClassName,
   logoHeight,
-  logoWidth = '1/2',
+  logoWidth = '50%',
 }: backgroundProps) => {
   return (
     <div className={cn(width && `w-[${width}`, 'relative h-full', containerClassName)}>
       <img
         src={default_background}
-        className={cn('w-full', className)}
+        className={cn('h-full w-full', className)}
         style={{ aspectRatio: '2/1' }}
       />
       {hasLogo && (
@@ -35,6 +35,7 @@ const DefaultImage = ({
             logoWidth && `w-[${logoWidth}]`,
             logoHeight && `h-[${logoHeight}]`
           )}
+          style={{ height: logoHeight }}
         />
       )}
     </div>
