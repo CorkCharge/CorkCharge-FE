@@ -29,6 +29,9 @@ export const getMapData = async (params: MapParams) => {
   return response.data;
 };
 
+{
+  /* 다중핀 상세조회 */
+}
 export const getClusterList = async (
   restaurantIds: number[],
   sort?: string

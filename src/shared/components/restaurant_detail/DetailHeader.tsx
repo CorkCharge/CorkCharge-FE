@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-
+import { editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 
@@ -12,6 +12,8 @@ import share from '../../assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
+import notsave from '../storecard/notsave.svg';
+import save from '../storecard/save.svg';
 
 interface detailProps {
   resId: number;
@@ -25,9 +27,12 @@ interface detailProps {
   mainImageUrl: string | null;
   corkageOption: string[];
   corkagePrice: string;
+  isScrap: boolean; // [중요] 부모로부터 현재 스크랩 상태를 받아야 함 (restaurant.scrap)
+  onOpenSaveList: () => void; // [중요] 저장 안 된 상태에서 누르면 부모(CorkageMap)에게 리스트 열라고 요청
 }
 
 const DetailHeader = ({
+  resId,
   name,
   rating,
   isOpen,
@@ -36,11 +41,39 @@ const DetailHeader = ({
   mainImageUrl,
   corkageOption,
   corkagePrice,
+  isScrap,
+  onOpenSaveList,
 }: detailProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isKeep, setIsKeep] = useState(false);
+
+  useEffect(() => {
+    setIsKeep(isScrap);
+  }, [isScrap]);
+
+  const handleBookmarkClick = async () => {
+    if (isKeep) {
+      // 1. 이미 저장됨 -> 저장 취소 (모든 그룹에서 제거)
+      try {
+        // [API] groupIds: [] 빈 배열을 보내면 저장 취소됨
+        const res = await editBookmarkGroup({ restaurantId: resId, groupIds: [] });
+
+        if (res.success) {
+          setIsKeep(false);
+          alert('저장이 취소되었습니다.');
+        }
+      } catch (e) {
+        console.error('저장 취소 실패', e);
+        alert('저장 취소 중 오류가 발생했습니다.');
+      }
+    } else {
+      // 2. 저장 안 됨 -> 그룹 선택창(List) 열기
+      onOpenSaveList();
+    }
+  };
+
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
   const [contactContent, setContactContent] = useState('');
   const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
@@ -57,24 +90,6 @@ const DetailHeader = ({
     // state 초기화 (새로고침 시 안 뜨게)
     //navigate(`/detail-info/${resId}`, { replace: true });
   }, [location.state]);
-
-  const keepMarker = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-      <circle
-        cx="16"
-        cy="16"
-        r="15"
-        fill={isKeep ? '#E75257' : 'none'}
-        stroke={isKeep ? 'none' : 'var(--gray-3)'}
-      />
-      <path
-        d="M10.7239 23.6525C10.4143 23.6525 10.1728 23.5764 9.99935 23.4242C9.82596 23.272 9.73926 23.058 9.73926 22.7821V10.3959C9.73926 9.71567 9.9591 9.20434 10.3988 8.86186C10.8385 8.51939 11.4949 8.34814 12.3681 8.34814H19.6322C20.5054 8.34814 21.1618 8.51939 21.6015 8.86186C22.0412 9.20434 22.261 9.71567 22.261 10.3959V22.7821C22.261 23.058 22.1744 23.272 22.0009 23.4242C21.8276 23.5764 21.586 23.6525 21.2763 23.6525C21.0473 23.6525 20.8336 23.5931 20.6355 23.4742C20.4435 23.3553 20.1369 23.1412 19.7158 22.832L16.0837 20.0851C16.028 20.0375 15.9723 20.0375 15.9165 20.0851L12.2845 22.832C11.8634 23.1459 11.5537 23.36 11.3556 23.4742C11.1574 23.5931 10.9468 23.6525 10.7239 23.6525Z"
-        fill="white"
-        stroke={isKeep ? 'none' : 'var(--gray-7)'}
-        strokeWidth={1.5}
-      />
-    </svg>
-  );
 
   // 좌우 overflow 감지
   useEffect(() => {
@@ -126,8 +141,8 @@ const DetailHeader = ({
         <div>
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
-            <div className="cursor-pointer" onClick={() => setIsKeep((prev) => !prev)}>
-              {keepMarker}
+            <div className="cursor-pointer" onClick={handleBookmarkClick}>
+              <img src={isKeep ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
             </div>
           </div>
           <div className="flex items-center">

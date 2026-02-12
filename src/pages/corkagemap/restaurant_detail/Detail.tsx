@@ -9,9 +9,10 @@ import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/c
 
 interface DetailProps {
   restaurantId?: number;
+  onOpenSaveList: () => void;
 }
 
-const Detail = ({ restaurantId: propId }: DetailProps) => {
+const Detail = ({ restaurantId: propId, onOpenSaveList }: DetailProps) => {
   const { id: paramId } = useParams<{ id: string }>();
   const targetId = propId || Number(paramId);
   const [restaurant, setRestaurant] = useState<RestaurantInfo>();
@@ -50,6 +51,8 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
             mainImageUrl={restaurant.mainImageUrl}
             corkageOption={restaurant.corkageOptions}
             corkagePrice={restaurant.corkagePrice}
+            isScrap={restaurant.scrap ?? false}
+            onOpenSaveList={onOpenSaveList}
           />
         ) : (
           <p className="flex min-h-[100svh] items-center justify-center bg-inherit">
