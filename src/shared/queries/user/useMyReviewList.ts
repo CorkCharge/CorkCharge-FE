@@ -30,10 +30,7 @@ export const useUpdateMyReview = () => {
 };
 
 export const useDeleteMyReview = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (id: number) => deleteReview(id),
-    // onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myReviews'] }),
   });
 };

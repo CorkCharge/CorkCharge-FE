@@ -7,7 +7,6 @@ import camera from '@/shared/components/myPage/images/gray-camera.svg';
 import plus from '@/shared/components/myPage/images/plus.svg';
 import Button from '../common/Button';
 import { useDeleteMyReview, useUpdateMyReview } from '@/shared/queries/user/useMyReviewList';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface ModalProps {
   isOpen: boolean;
