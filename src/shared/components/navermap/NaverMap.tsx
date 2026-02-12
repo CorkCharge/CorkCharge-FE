@@ -96,11 +96,23 @@ const createClusterMarkerHtml = (count: number, isSelected: boolean = false): st
   `;
 };
 
+const escapeHtml = (str: string): string => {
+  if (!str) return ''; // 빈 문자열이나 null/undefined 처리
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 const createRestaurantMarkerHtml = (
   price: string,
   name: string,
   isSelected: boolean = false
 ): string => {
+  const safePrice = escapeHtml(price);
+  const safeName = escapeHtml(name);
   if (isSelected) {
     // [선택됨] 물방울 + 병 + 가격
     return `
@@ -125,14 +137,14 @@ const createRestaurantMarkerHtml = (
           color: white; font-size: 14px; font-weight: bold; border-radius: 20px;
           box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
         ">
-          ${price}
+          ${safePrice}
         </div>
         <div style="
           color: #333; font-size: 14px; font-weight: 700; 
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; 
           /* 텍스트 가독성을 위해 흰색 테두리(그림자) 효과 추가 */
         ">
-          ${name}
+          ${safeName}
         </div>
       </div>
     `;
@@ -146,14 +158,14 @@ const createRestaurantMarkerHtml = (
       font-size: 14px; font-weight: bold; border-radius: 20px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
     ">
-      ${price}
+      ${safePrice}
     </div>
     <div style="
         color: #333; font-size: 14px; font-weight: 700; 
         text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         margin-top: 4px;
       ">
-        ${name}
+        ${safeName}
       </div>
       </div>
   `;

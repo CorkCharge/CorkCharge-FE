@@ -73,7 +73,7 @@ const MyStore = ({ group }: MyStoreProps) => {
     };
 
     fetchDetail();
-  }, [group]);
+  }, [group?.id]);
 
   if (!group) return null; // 그룹 데이터 없으면 렌더링 안 함
 
