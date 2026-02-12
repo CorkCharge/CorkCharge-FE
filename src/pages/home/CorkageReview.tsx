@@ -55,7 +55,7 @@ function CorkageReview() {
     sido,
     sigungu,
     dongList: dong,
-    isSortByBookmark: isRecent,
+    isSortByBookmark: !isRecent,
   });
 
   const renderReviews = () =>

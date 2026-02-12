@@ -48,7 +48,7 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
       <p className="text-sm font-medium">모든 글씨가 선명하게 잘 보이는 사진으로 해주세요</p>
 
       <div
-        className="mt-10 flex aspect-square w-full items-center justify-center rounded-2xl bg-[var(--gray-1)]"
+        className="mt-10 flex aspect-square w-full cursor-pointer items-center justify-center rounded-2xl bg-[var(--gray-1)]"
         onClick={handleUpload}
       >
         <img src={upload} className="h-[155px] w-[194px]" />

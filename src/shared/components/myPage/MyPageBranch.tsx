@@ -1,37 +1,49 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import useMyPageStore from '@/shared/store/useMyPageStore';
-import useFooterPropsStore from '@/shared/store/useFooterProps';
 import useAuthStore from '@/shared/store/useAuthStore';
-
 import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
+import { NaverLogIn } from '@/shared/apis/signIn/Naver';
+import { ControlLists, ControlItem } from './ControlList';
 
 import logo from '@/shared/components/myPage/images/small-logo.png';
 import arrow from '@/shared/assets/images/arrow.png';
 import plus from '@/shared/assets/images/plus.png';
-import shakehand from '@/shared/assets/images/shakehand.png';
-import check from '@/shared/assets/images/cork-check.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
-import { NaverLogIn } from '@/shared/apis/signIn/Naver';
+import { useGetMypageInfo } from '@/shared/queries/user/useMyPage';
+import DefaultImage from '../common/DefaultImage';
 
 const renderReviews = (reviews: Review[]) =>
-  reviews.map((review, idx) => (
-    <div
-      key={idx}
-      className={`flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white ${!review.thumbnailUrl && 'bg-black'}`}
-      style={{
-        backgroundImage: `url(${review.thumbnailUrl || ''})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      <span className="text-[10px] font-medium">{review.location}</span>
-      <span className="text-sm font-bold">{review.restaurantName}</span>
-    </div>
-  ));
+  reviews.map((review, idx) =>
+    review.thumbnailUrl ? (
+      <div
+        key={idx}
+        className="flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white"
+        style={{
+          backgroundImage: `url(${review.thumbnailUrl || ''})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <span className="text-[10px] font-medium">{review.location}</span>
+        <span className="text-sm font-bold">{review.restaurantName}</span>
+      </div>
+    ) : (
+      <div key={idx} className="relative h-[168px] w-[30%] shrink-0">
+        <DefaultImage
+          hasLogo={true}
+          containerClassName="rounded-lg"
+          className="rounded-lg"
+          logoHeight="50%"
+        />
+        <div className="absolute inset-x-3 bottom-3 flex flex-col">
+          <span className="text-[10px] font-medium">{review.location}</span>
+          <span className="text-sm font-bold">{review.restaurantName}</span>
+        </div>
+      </div>
+    )
+  );
 
 const ReviewArea = ({ reviews }: { reviews: Review[] }) => {
   return (
@@ -43,38 +55,22 @@ const ReviewArea = ({ reviews }: { reviews: Review[] }) => {
 
 const NoneReview = () => {
   return (
-    <>
-      <p className="mt-5">코르크 차지에</p>
+    <section className="mt-5 text-[var(--gray-8)]">
+      <p>코르크 차지에</p>
       <p>아직 아무도 남기지 않았어요.</p>
       <p>첫 리뷰, 지금 남겨보세요!</p>
-    </>
+    </section>
   );
 };
 
+// 로그인 사용자에게 보여줄 마이페이지
 export const LoggedInMyPage = () => {
   const { user } = useAuthStore();
   const isMaster = user?.role === 'OWNER';
 
   const navigate = useNavigate();
 
-  const { myProfile, setMyProfile } = useMyPageStore();
-  const { setFooterProps } = useFooterPropsStore();
-
-  useEffect(() => {
-    if (myProfile.email) return;
-
-    apiClient
-      .get('/users/page')
-      .then((res) => {
-        setMyProfile(res.data.data);
-      })
-      .catch((e) => console.error(e));
-  }, [myProfile.email, setMyProfile]);
-
-  const gotoReserVate = () => {
-    navigate('/reservate');
-    setFooterProps(2);
-  };
+  const { data: myProfile } = useGetMypageInfo();
 
   const enrollCorkage = () => {
     apiClient
@@ -92,59 +88,64 @@ export const LoggedInMyPage = () => {
     <>
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
         <div className="relative flex gap-[22px]">
-          <div
-            className={`flex size-16 ${myProfile?.profile_image ? 'items-center justify-center' : 'rounded-[50%] bg-[var(--gray-4)]'}`}
-          >
-            {myProfile?.profile_image && (
-              <img src={myProfile.profile_image} className="size-full rounded-full" />
-            )}
-          </div>
           <div className="flex max-w-[60%] flex-col justify-center">
-            <p className="it ems-center flex gap-1 text-xl font-bold">
-              {myProfile?.nickname}
+            <p className="flex items-center gap-1 text-xl font-bold">
+              <span>{myProfile?.nickname}님</span>
               {isMaster && <img src={logo} className="h-[21px]" />}
             </p>
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[#80818B]">
-              {myProfile?.email}
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[var(--gray-6)]">
+              {myProfile?.email?.split('@')[0]}
             </p>
           </div>
           <img
             src={arrow}
-            className="absolute right-5 top-7 h-4 cursor-pointer"
-            onClick={() => navigate('/my/modify')}
+            className="absolute right-1 top-1/2 h-4 -translate-y-1/2 cursor-pointer"
+            onClick={() => navigate('/my/modify', { state: { from: 'mypage' } })}
           />
         </div>
 
-        {isMaster && <div className="-mx-4 mt-5 h-[1px] bg-[var(--gray-4)]"></div>}
-
         {isMaster && (
-          <div
-            className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
-            onClick={enrollCorkage}
-          >
-            <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
-              <img src={plus} className="size-[14px]" />
-            </div>
-            <p className="font-bold">콜키지 정보 등록하기</p>
-          </div>
-        )}
-      </div>
+          <>
+            <div className="-mx-4 mt-5 border-t border-[var(--gray-4)]" />
 
-      <div className="flex h-20 w-full justify-center gap-3">
-        <div
-          className="flex h-full flex-1 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]"
-          onClick={() => navigate('/doit')}
-        >
-          <img src={shakehand} className="size-[66px]" />
-          <span className="font-medium">해주세요</span>
-        </div>
-        <div
-          className="flex h-full flex-1 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-[var(--gray-1)]"
-          onClick={gotoReserVate}
-        >
-          <img src={check} className="size-[36px]" />
-          <span className="font-medium">나의 예약</span>
-        </div>
+            <div
+              className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
+              onClick={enrollCorkage}
+            >
+              <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--gray-4)]">
+                <img src={plus} className="size-[14px]" />
+              </div>
+              <p className="font-bold">콜키지 정보 등록하기</p>
+            </div>
+
+            <div className="-mx-4 mt-5 border-t border-[var(--gray-4)]" />
+            <div
+              className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
+              onClick={enrollCorkage}
+            >
+              <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--primary)]">
+                <svg
+                  className="ml-[2.5px]"
+                  width="16"
+                  height="22"
+                  viewBox="0 0 16 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.1685 0C13.2901 2.12174 13.2901 5.56717 11.1685 7.68891L3.84422 15.0135C1.72258 12.8917 1.72258 9.44632 3.84422 7.32458L11.1685 0Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M9.67725 10.9858C11.2337 12.5424 11.2337 15.0698 9.67725 16.6264L4.30391 21.9999C2.74745 20.4434 2.74745 17.916 4.30391 16.3594L9.67725 10.9858Z"
+                    fill="white"
+                  />
+                </svg>
+              </div>
+              <p className="font-bold">내 가게 확인하기</p>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="relative mb-10 mt-10">
@@ -162,10 +163,17 @@ export const LoggedInMyPage = () => {
       </div>
 
       <div className="-mx-4 h-2 bg-[var(--gray-1)]"></div>
+
+      <ControlLists>
+        <ControlItem onClick={() => navigate('/my/request-list')}>해주세요 목록</ControlItem>
+        <ControlItem onClick={() => navigate('/my/toc')}>약관 및 개인정보 처리방침</ControlItem>
+        <ControlItem onClick={() => navigate('/my/contact')}>문의하기</ControlItem>
+      </ControlLists>
     </>
   );
 };
 
+// 로그인 하지 않은 사용자에게 보여줄 페이지
 export const GuestMyPage = () => {
   return (
     <>

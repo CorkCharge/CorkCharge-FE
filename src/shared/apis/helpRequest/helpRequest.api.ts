@@ -36,14 +36,21 @@ export const firstRequest = async (restId: number) => {
 };
 
 // 2차 해주세요 요청
-export const secondRequest = async (
-  restaurantId: number,
-  corkageType: CorkageTypeKr,
-  preferredPrice: number,
-  firstPriority: Priority,
-  secondPriority: Priority,
-  content: string
-) => {
+export const secondRequest = async ({
+  restaurantId,
+  corkageType,
+  preferredPrice,
+  firstPriority,
+  secondPriority,
+  content,
+}: {
+  restaurantId: number;
+  corkageType: CorkageTypeKr;
+  preferredPrice: number;
+  firstPriority: Priority;
+  secondPriority: Priority;
+  content: string;
+}) => {
   const res = await apiClient.post('/request/detail', {
     restaurantId,
     corkageType: corkageTypeMapping[corkageType],

@@ -1,32 +1,26 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import Header from '@/shared/components/common/Header';
 import Modal from '@/shared/components/common/Modal';
 
 import useMyPageStore from '@/shared/store/useMyPageStore';
 import useAuthStore from '@/shared/store/useAuthStore';
-
-import pencil from '@/shared/components/myPage/images/pencil.png';
-import crossMark from '@/shared/assets/images/plus.png';
 import { ImageInput } from '@/shared/components/common/Input';
 import apiClient from '@/shared/apis/apiClient';
+
+import crossMark from '@/shared/assets/images/plus.png';
+import { useSetNickname, useUpdateNickname } from '@/shared/queries/user/useMyPage';
 
 function ModifyInfo() {
   const navigate = useNavigate();
 
+  const from = useLocation().state?.from;
+
   const [nickname, setNickname] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [isSecondModalOpen, setSecondModalOpen] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<File>();
-  const [previewUrl, setPreviewUrl] = useState('');
-
-  // DANGER:: Following Code MUST BE Deleted After DEMO
-  // =============================================
-  const [master, setMaster] = useState(0);
-  // =============================================
-
-  const fileSelector = useRef<HTMLInputElement>(null);
+  const [isModifyComplete, setIsModifyComplete] = useState(false);
 
   const { myProfile, setMyProfile } = useMyPageStore();
   const { logout } = useAuthStore();
@@ -73,55 +67,72 @@ function ModifyInfo() {
     </Modal>
   );
 
-  // 프로필 미리보기 URL 생성
-  const handleFileSelector = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPreviewUrl(URL.createObjectURL(file));
-      setSelectedProfile(file);
-    }
-  };
+  // 수정 완료 모달
+  const modifyCompleteModal = () => (
+    <Modal isOpen={isModifyComplete} className="bg-white px-4 pt-[45px]">
+      <h3 className="mb-1 text-center text-2xl font-bold">수정완료</h3>
+      <p className="mb-5 text-center font-medium text-[var(--gray-8)]">수정이 완료되었습니다.</p>
+      <div className="flex w-full gap-3">
+        <button
+          onClick={() => {
+            setIsModifyComplete(false);
+            navigate(-1);
+          }}
+          className="h-[48px] flex-1 rounded-xl bg-[var(--gray-1)] px-4 py-2 font-semibold text-[var(--gray-8)] hover:bg-gray-400"
+        >
+          확인
+        </button>
+      </div>
+    </Modal>
+  );
 
   // 프로필 수정
+  const setMutation = useSetNickname();
+  const updateMutation = useUpdateNickname();
+
   const updateProfile = () => {
     if (!nickname) return;
 
-    // DANGER:: Following Code MUST BE Deleted After DEMO
-    // =============================================
-    if (nickname === 'Owner' || nickname === 'Admin') {
-      if (master === 6) {
-        apiClient.post('/users/role', { role: nickname }).then((res) => console.log(res));
-        setMaster(0);
-      } else {
-        setMaster((prev) => prev + 1);
-      }
-      return;
+    if (from === 'signup') {
+      setMutation.mutate(
+        { role: 'USER', nickname },
+        {
+          onSuccess: () => {
+            setMyProfile({ nickname });
+            navigate('/my/role/complete');
+          },
+          onError: (e) => console.error('닉네임 등록 실패: ' + e),
+        }
+      );
+    } else {
+      updateMutation.mutate(
+        { name: nickname },
+        {
+          onSuccess: () => {
+            setMyProfile({ nickname });
+            setIsModifyComplete(true);
+          },
+          onError: (e) => console.error('닉네임 등록 실패: ' + e),
+        }
+      );
     }
-    // ===============================================
-
-    const formData = new FormData();
-    formData.append('name', nickname);
-    if (selectedProfile) {
-      formData.append('image', selectedProfile);
-    }
-
-    apiClient
-      .put('/users/modify', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-      .then(() => {
-        // 서버 전송 후 업데이트 내용 store에 반영
-        apiClient
-          .get('/users')
-          .then((res) => {
-            const { name, image_url } = res.data.data;
-            setMyProfile({ nickname: name, profile_image: image_url });
-            setNickname('');
-          })
-          .catch((e) => console.error('프로필 업데이트 실패 : ' + e));
-      })
-      .catch((e) => console.error('프로필 서버 전송 실패 : ' + e));
   };
+
+  // const updateProfile = async () => {
+  //   if (!nickname) return;
+
+  //   try {
+  //     if (from === 'signup') {
+  //       await modifyRole({ role: 'USER', nickname });
+  //       navigate('/my/role/complete');
+  //     } else {
+  //       await modifyName(nickname);
+  //       setIsModifyComplete(true);
+  //     }
+  //   } catch (e) {
+  //     console.error('닉네임 등록 실패: ' + e);
+  //   }
+  // };
 
   // 탈퇴 처리
   const withdraw = () => {
@@ -149,33 +160,9 @@ function ModifyInfo() {
       />
 
       <div className="mt-10 flex flex-col items-center">
-        <div>
-          <div
-            className={`relative mb-5 size-[130px] ${!previewUrl && !myProfile?.profile_image && 'rounded-full bg-[var(--gray-3)]'}`}
-          >
-            {!previewUrl && myProfile?.profile_image && (
-              <img src={myProfile?.profile_image} className="size-full rounded-full" />
-            )}
-            {previewUrl && <img src={previewUrl} className="size-full rounded-full" />}
-
-            <div
-              className="absolute bottom-0 right-0 flex size-[48px] cursor-pointer items-center justify-center rounded-full bg-[var(--gray-4)]"
-              onClick={() => fileSelector.current?.click()}
-            >
-              <img src={pencil} className="size-[28px]" />
-            </div>
-            <input
-              type="file"
-              className="hidden"
-              ref={fileSelector}
-              onChange={handleFileSelector}
-              accept="image/*"
-            />
-          </div>
-        </div>
         <p className="mb-10 flex w-full gap-7 text-start font-bold text-[var(--gray-8)]">
           <span className="min-w-[100px]">로그인한 계정</span>
-          <span className="overflow-auto break-words">{myProfile.email}</span>
+          <span className="overflow-auto break-words">{myProfile.email.split('@')[0]}</span>
         </p>
         <div className="flex w-full justify-start gap-7">
           <span className="font-bold text-[var(--gray-8)]">닉네임</span>
@@ -188,22 +175,26 @@ function ModifyInfo() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
-            <span className="text-sm font-medium text-[var(--gray-5)]">
-              현재 닉네임 : {myProfile.nickname}
-            </span>
+            {from === 'mypage' && (
+              <span className="text-sm font-medium text-[var(--gray-5)]">
+                현재 닉네임 : {myProfile.nickname}
+              </span>
+            )}
           </div>
         </div>
       </div>
 
       <button
-        className={`fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] max-w-[480px] rounded-[10px] font-bold ${nickname ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)] text-[var(--gray-8)]'}`}
+        className={`fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] rounded-[10px] font-bold ${nickname ? 'bg-[var(--primary)] text-white' : 'bg-[var(--gray-1)] text-[var(--gray-8)]'}`}
+        style={{ maxWidth: 'calc(var(--app-width) * 0.8 )' }}
         onClick={updateProfile}
       >
-        변경하기
+        {from === 'signup' ? '시작하기' : '변경하기'}
       </button>
 
       {withdrawCheck()}
       {completeWithDraw()}
+      {modifyCompleteModal()}
     </div>
   );
 }

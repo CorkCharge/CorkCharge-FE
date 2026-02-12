@@ -5,6 +5,7 @@ import arrow from '@/shared/assets/whiteArrow.svg';
 
 function CompleteSignUp() {
   const navigate = useNavigate();
+
   return (
     <div className="px-4">
       <div className="pt-[60px]"></div>
@@ -20,6 +21,7 @@ function CompleteSignUp() {
         <img src={logo} className="mb-10" />
         <p>사장님 회원가입 신청이 완료되었습니다.</p>
         <p>일주일 내 확인 후 가입이 승인됩니다.</p>
+        <p>(네이버 메일 발송)</p>
       </div>
 
       <button
