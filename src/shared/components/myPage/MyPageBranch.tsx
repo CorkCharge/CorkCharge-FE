@@ -18,7 +18,7 @@ const renderReviews = (reviews: Review[]) =>
     review.thumbnailUrl ? (
       <div
         key={idx}
-        className={`flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white ${!review.thumbnailUrl && 'bg-black'}`}
+        className="flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white"
         style={{
           backgroundImage: `url(${review.thumbnailUrl || ''})`,
           backgroundSize: 'cover',
@@ -30,7 +30,7 @@ const renderReviews = (reviews: Review[]) =>
         <span className="text-sm font-bold">{review.restaurantName}</span>
       </div>
     ) : (
-      <div className="relative h-[168px] w-[30%] shrink-0">
+      <div key={idx} className="relative h-[168px] w-[30%] shrink-0">
         <DefaultImage
           hasLogo={true}
           containerClassName="rounded-lg"

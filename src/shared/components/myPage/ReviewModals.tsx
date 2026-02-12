@@ -88,7 +88,7 @@ export const ModifyModal = ({ isOpen, onClose, reviewId, setModifyCompleteOpen }
           setModifyCompleteOpen(true);
         },
         onError: (e) => {
-          console.error('리뷰 삭제 실패: ' + e);
+          console.error('리뷰 수정 실패: ' + e);
         },
       }
     );
