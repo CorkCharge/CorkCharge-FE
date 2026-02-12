@@ -47,13 +47,6 @@ const CorkageMap = () => {
     fetchGroups();
   }, [fetchGroups]);
 
-  // 2. DetailHeader에서 "저장(북마크)" 버튼 눌렀을 때
-  const handleOpenSaveList = () => {
-    setIsSaveMode(true); // 저장 모드 ON
-    setSheetView('list'); // 리스트 뷰로 전환 (바텀시트 내용은 List가 됨)
-    // setIsSheetOpen(true); // 이미 열려있겠지만 확실히 하기 위해
-  };
-
   // 선택된 클러스터 지역명을 저장할 State
   const [selectedAreaName, setSelectedAreaName] = useState<string>('');
 
@@ -237,7 +230,7 @@ const CorkageMap = () => {
         {sheetView === 'multipin' && <MultipinList restaurantIds={selectedClusterIds} />}
         {/* [추가] Detail 컴포넌트 렌더링 (ID 전달) */}
         {sheetView === 'detail' && selectedRestaurantId && (
-          <Detail restaurantId={selectedRestaurantId} onOpenSaveList={handleOpenSaveList} />
+          <Detail restaurantId={selectedRestaurantId} />
         )}
       </BottomSheet>
     </main>
