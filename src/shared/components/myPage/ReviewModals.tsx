@@ -102,6 +102,8 @@ export const ModifyModal = ({ isOpen, onClose, reviewId, setModifyCompleteOpen }
     setFiles((prev) => [...prev, ...fileArr]);
     const urls = fileArr.map((f) => URL.createObjectURL(f));
     setPreviewUrls((prev) => [...prev, ...urls]);
+
+    e.target.value = '';
   };
 
   const handleRemoveImage = (idx: number) => {
