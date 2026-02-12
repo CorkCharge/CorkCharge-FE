@@ -26,7 +26,7 @@ type ListProps = {
   myGroups: Group[]; // 부모가 주는 데이터
   setMyGroups: Dispatch<SetStateAction<Group[]>>; // 부모가 주는 수정 함수
   onSelectGroup: (group: Group) => void; // 그룹 선택 시 부모에게 알림
-  refreshGroups: () => void;
+  refreshGroups: () => Promise<void>;
 };
 
 const List = ({ myGroups, setMyGroups, onSelectGroup, refreshGroups }: ListProps) => {
@@ -62,13 +62,14 @@ const List = ({ myGroups, setMyGroups, onSelectGroup, refreshGroups }: ListProps
       // [API] 그룹 삭제
       await deleteBookmarkGroup(id);
       // [낙관적 업데이트] UI에서 즉시 제거
-      setMyGroups((prev) => prev.filter((g) => g.id !== id)); // setMyGroups 사용!
+
       setConfirmedGroup(targetGroup);
       setModalMode('delete');
       setShowConfirmModal(true);
-      refreshGroups(); // 목록 새로고침
+      await refreshGroups(); // 목록 새로고침
     } catch (error) {
       console.error('그룹 삭제 실패', error);
+      setMyGroups((prev) => [...prev, targetGroup]);
       alert('그룹 삭제에 실패했습니다.');
     }
   };
@@ -83,13 +84,11 @@ const List = ({ myGroups, setMyGroups, onSelectGroup, refreshGroups }: ListProps
 
     try {
       if (editingGroupId) {
-        // [API] 수정
-        await updateBookmarkGroup(editingGroupId, apiData);
-
-        // [낙관적 업데이트]
         setMyGroups((prev) =>
           prev.map((group) => (group.id === editingGroupId ? { ...group, ...data } : group))
-        ); // setMyGroups 사용!
+        );
+
+        await updateBookmarkGroup(editingGroupId, apiData);
 
         // 모달용 데이터 세팅
         const updatedGroup = myGroups.find((g) => g.id === editingGroupId);
@@ -110,7 +109,7 @@ const List = ({ myGroups, setMyGroups, onSelectGroup, refreshGroups }: ListProps
       setView('list');
       setShowConfirmModal(true);
       setEditingGroupId(null);
-      refreshGroups(); // 목록 새로고침 (중요)
+      await refreshGroups(); // 목록 새로고침 (중요)
     } catch (error) {
       console.error('그룹 저장/수정 실패', error);
       alert('그룹 저장에 실패했습니다.');

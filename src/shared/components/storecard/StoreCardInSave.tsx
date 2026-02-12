@@ -34,7 +34,8 @@ const StoreCardInSave = ({
   const navigate = useNavigate();
 
   // 저장 토글 핸들러
-  const handleToggleSave = async () => {
+  const handleToggleSave = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       if (isSaved) {
         // [저장 취소] -> 그룹에서 제거

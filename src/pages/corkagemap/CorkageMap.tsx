@@ -188,6 +188,7 @@ const CorkageMap = () => {
                 setIsSheetOpen(true);
                 setIsActive(true);
                 setSheetView('list');
+                fetchGroups();
               }}
               className={`flex h-[36px] flex-[0.6] cursor-pointer items-center justify-center gap-2 rounded-full ${isActive ? 'bg-[#90212A] text-[#FFF]' : 'bg-white/90 text-[#90212A]'} shadow-sm backdrop-blur-sm`}
             >
