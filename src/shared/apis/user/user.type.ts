@@ -4,7 +4,7 @@ export type Role = 'USER' | 'OWNER';
 
 export interface MyReqDetailResponse extends MyRequestListResponse {
   corkageType: CorkageTypeEn;
-  preferredPrice: 14000;
+  preferredPrice: number;
   firstPriority: PriorityRequest;
   secondPriority: PriorityRequest;
   content: string;
@@ -21,7 +21,7 @@ export interface MyReviewResponse {
   reviewId: number;
   restaurantId: number;
   restaurantName: string;
-  scrap_count: 89;
+  scrap_count: number;
   userId: number;
   content: string;
   rating: number;

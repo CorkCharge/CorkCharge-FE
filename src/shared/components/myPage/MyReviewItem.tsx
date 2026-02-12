@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 import { StarWithStroke } from '../common/StarRate';
 import {
@@ -30,7 +30,6 @@ const DeleteSvg = () => (
 function MyReviewItem({ review }: { review: MyReviewResponse }) {
   const queryClient = useQueryClient();
 
-  const [isOpen, setIsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [modifyOpen, setModifyOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -39,26 +38,10 @@ function MyReviewItem({ review }: { review: MyReviewResponse }) {
   const [modifyCompleteOpen, setModifyCompleteOpen] = useState(false);
   const [deleteCompleteOpen, setDeleteCompleteOpen] = useState(false);
 
-  const popUpRef = useRef<HTMLUListElement>(null);
-
   const myProfile = useMyPageStore((state) => state.myProfile);
   const selectedReviews = useBookmarkStore((state) => state.selectedReviews);
   const reviewCount = useBookmarkStore((state) => state.reviewCount);
   const toggleReview = useBookmarkStore((state) => state.toggleReview);
-
-  useEffect(() => {
-    const clickOutsideEvent = (e: MouseEvent) => {
-      if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('mousedown', clickOutsideEvent);
-    }
-    return () => {
-      document.removeEventListener('mousedown', clickOutsideEvent);
-    };
-  }, [isOpen]);
 
   const handleKeep = async (e: React.MouseEvent<HTMLDivElement>, id: number) => {
     e.stopPropagation();

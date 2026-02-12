@@ -75,5 +75,5 @@ export const modifyReview = async ({
 
 // 리뷰 삭제
 export const deleteReview = async (reviewId: number) => {
-  await apiClient.delete(`reviews/${reviewId}`);
+  await apiClient.delete(`/reviews/${reviewId}`);
 };

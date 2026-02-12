@@ -14,6 +14,7 @@ interface MyProfile {
 interface MyPageStore {
   myProfile: MyProfile;
   setMyProfile: (_: Partial<MyProfile>) => void;
+  clear: () => void;
 }
 interface Review {
   restaurantName: string;

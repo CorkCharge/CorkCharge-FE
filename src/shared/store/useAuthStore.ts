@@ -33,8 +33,8 @@ const useAuthStore = create<AuthState>()(
   devtools(
     persist<AuthState>(
       (set) => ({
-        user: { userId: 1, role: 'USER' },
-        // user: null,
+        // user: { userId: 1, role: 'USER' },
+        user: null,
 
         login: (userInfo: User) => {
           if (!userInfo.userId || !userInfo.accessToken || !userInfo.refreshToken) {

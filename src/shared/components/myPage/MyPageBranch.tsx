@@ -89,12 +89,12 @@ export const LoggedInMyPage = () => {
       <div className="mx-auto mb-4 rounded-2xl bg-[var(--gray-1)] px-4 py-[21px]">
         <div className="relative flex gap-[22px]">
           <div className="flex max-w-[60%] flex-col justify-center">
-            <p className="it ems-center flex gap-1 text-xl font-bold">
+            <p className="flex items-center gap-1 text-xl font-bold">
               <span>{myProfile?.nickname}님</span>
               {isMaster && <img src={logo} className="h-[21px]" />}
             </p>
             <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-[var(--gray-6)]">
-              {myProfile?.email.split('@')[0]}
+              {myProfile?.email?.split('@')[0]}
             </p>
           </div>
           <img

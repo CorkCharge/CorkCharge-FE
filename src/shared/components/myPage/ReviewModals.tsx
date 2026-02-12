@@ -114,6 +114,9 @@ export const ModifyModal = ({ isOpen, onClose, reviewId, setModifyCompleteOpen }
   const handleClose = () => {
     setReviewInput('');
     setRating(0);
+    previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    setFiles([]);
+    setPreviewUrls([]);
     onClose();
   };
 
@@ -147,7 +150,7 @@ export const ModifyModal = ({ isOpen, onClose, reviewId, setModifyCompleteOpen }
       ) : (
         <div className="flex max-w-[300px] items-center gap-2 overflow-x-auto">
           {previewUrls.map((url, idx) => (
-            <div className="relative shrink-0 rounded-lg">
+            <div key={url} className="relative shrink-0 rounded-lg">
               <img src={url} className="aspect-square w-[80px] rounded-lg" />
               <span
                 className="absolute right-1 top-0 cursor-pointer"
