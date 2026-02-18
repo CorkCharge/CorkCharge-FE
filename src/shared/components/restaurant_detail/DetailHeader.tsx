@@ -44,6 +44,7 @@ const DetailHeader = ({
   isScrap,
   onOpenSaveList,
 }: detailProps) => {
+  const displayRating = Number(rating).toFixed(1);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -148,7 +149,7 @@ const DetailHeader = ({
           <div className="flex items-center">
             <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
             <img src={star} />
-            <span className="ml-1 font-medium">{rating}</span>
+            <span className="ml-1 font-medium">{displayRating}</span>
           </div>
           <div className="mt-1 flex items-center gap-2 text-[14px]">
             <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>

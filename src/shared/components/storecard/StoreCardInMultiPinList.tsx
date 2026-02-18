@@ -34,6 +34,7 @@ const StoreCard = ({
   imageUrls,
   openingHours,
 }: StoreCardProps) => {
+  const displayRating = Number(rating).toFixed(1);
   // 이미지 로드 에러 시 처리를 위한 핸들러
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = DummyFood; // 에러 시 더미 이미지로 대체
@@ -91,7 +92,7 @@ const StoreCard = ({
         <img src={Star} alt="star" className="h-[15px] w-[16px]" />
 
         {/* 평점 */}
-        <span className="ml-[4px] text-[16px] font-[500] text-[#35353F]">{rating}</span>
+        <span className="ml-[4px] text-[16px] font-[500] text-[#35353F]">{displayRating}</span>
 
         {/* 리뷰 수 */}
         <span className="ml-[4px] text-[14px] font-[500] text-[#9FA2AA]">({reviewCount})</span>
@@ -157,7 +158,7 @@ const StoreCard = ({
         {/* [추가] 카드별로 독립적인 GroupSelector 배치 */}
         <GroupSelector
           isOpen={isGroupSelectorOpen}
-          topSnapVh={17.8}
+          topSnapVh={-10}
           onClose={() => setIsGroupSelectorOpen(false)}
         >
           <GroupList
