@@ -1,9 +1,14 @@
+import { useState, useEffect } from 'react';
 import Save from './save.svg';
 import NotSave from './notsave.svg'; // 필요시 사용
 import Share from './share.svg';
 import Star from '../../assets/star.svg';
 import DummyFood from './dummyFood.svg';
 import { useNavigate } from 'react-router-dom';
+
+import GroupSelector from '../home/GroupSelector';
+import GroupList from '../home/GroupList';
+
 // [수정] API 데이터 타입에 맞춰 Props 인터페이스 정의
 interface StoreCardProps {
   resId: number;
@@ -34,13 +39,32 @@ const StoreCard = ({
     e.currentTarget.src = DummyFood; // 에러 시 더미 이미지로 대체
   };
 
-  // 버튼 클릭 이벤트 전파 방지 (카드 클릭과 분리)
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>, action: string) => {
-    e.stopPropagation();
-    console.log(`${action} 버튼 클릭: ${resId}`);
-    // 추후 스크랩/공유 로직 연결
+  const handleBookmarkClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 카드 클릭(상세이동) 이벤트 방지
+
+    if (isKeep) {
+      // 이미 저장된 경우: 보통은 여기서 바로 해제 API를 쏘거나 확인 모달을 띄움
+      console.log('이미 저장됨: 해제 로직 필요');
+      // 예: if(confirm('저장을 취소하시겠습니까?')) { ... API 호출 ... }
+    } else {
+      // 저장 안 된 경우: 그룹 선택 바텀시트 열기
+      setIsGroupSelectorOpen(true);
+    }
   };
+
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('공유 클릭');
+  };
+
   const navigate = useNavigate();
+  const [isKeep, setIsKeep] = useState(scrap);
+
+  useEffect(() => {
+    setIsKeep(scrap);
+  }, [scrap]);
+
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   return (
     <div
       className="flex w-full flex-col bg-white"
@@ -52,11 +76,11 @@ const StoreCard = ({
         <h2 className="text-[20px] font-bold leading-none text-[#35353F]">{name}</h2>
         {/* 우측 아이콘 버튼들 */}
         <div className="flex gap-[4px]">
-          <button type="button" onClick={(e) => handleButtonClick(e, 'Scrap')}>
+          <button type="button" onClick={handleBookmarkClick}>
             {/* scrap ? Save : NotSave */}
-            <img src={scrap ? Save : NotSave} alt="save" className="h-[25px] w-[25px]" />
+            <img src={isKeep ? Save : NotSave} alt="save" className="h-[25px] w-[25px]" />
           </button>
-          <button type="button" onClick={(e) => handleButtonClick(e, 'Share')}>
+          <button type="button" onClick={handleShareClick}>
             <img src={Share} alt="share" className="h-[25px] w-[25px]" />
           </button>
         </div>
@@ -127,6 +151,21 @@ const StoreCard = ({
             {corkageOptions?.join(', ')}
           </span>
         </div>
+      </div>
+
+      <div onClick={(e) => e.stopPropagation()}>
+        {/* [추가] 카드별로 독립적인 GroupSelector 배치 */}
+        <GroupSelector
+          isOpen={isGroupSelectorOpen}
+          topSnapVh={17.8}
+          onClose={() => setIsGroupSelectorOpen(false)}
+        >
+          <GroupList
+            onClose={() => setIsGroupSelectorOpen(false)}
+            restaurantName={name} // Props로 받은 name 사용
+            restaurantId={resId} // Props로 받은 resId 사용
+          />
+        </GroupSelector>
       </div>
     </div>
   );
