@@ -158,7 +158,7 @@ const StoreCard = ({
         {/* [추가] 카드별로 독립적인 GroupSelector 배치 */}
         <GroupSelector
           isOpen={isGroupSelectorOpen}
-          topSnapVh={-10}
+          topSnapVh={17.8}
           onClose={() => setIsGroupSelectorOpen(false)}
         >
           <GroupList
