@@ -32,6 +32,7 @@ const StoreCardInSave = ({
 }: StoreCardProps) => {
   const [isSaved, setIsSaved] = useState(true);
   const navigate = useNavigate();
+  const displayRating = Number(rating).toFixed(1);
 
   // 저장 토글 핸들러
   const handleToggleSave = async (e: React.MouseEvent) => {
@@ -81,7 +82,7 @@ const StoreCardInSave = ({
         <img src={Star} alt="star" className="h-[15px] w-[16px]" />
 
         {/* 평점 */}
-        <span className="ml-[4px] text-[16px] font-[500] text-[#35353F]">{rating}</span>
+        <span className="ml-[4px] text-[16px] font-[500] text-[#35353F]">{displayRating}</span>
 
         {/* 리뷰 수 */}
         <span className="ml-[4px] text-[14px] font-[500] text-[#9FA2AA]">({reviewCount})</span>
