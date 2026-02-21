@@ -1,4 +1,5 @@
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { PanInfo } from 'framer-motion';
@@ -117,8 +118,9 @@ const GroupSelector = ({
       onClose(); // (useEffect[isOpen]이 y를 HIDDEN으로 애니메이션함)
     }
   };
+  if (typeof window === 'undefined') return null; // SSR 대응
 
-  return (
+  return createPortal(
     <>
       {/* 1. 뒷 배경 (어둡게 처리) */}
       <motion.div
@@ -162,7 +164,8 @@ const GroupSelector = ({
           {children}
         </div>
       </motion.div>
-    </>
+    </>,
+    document.body
   );
 };
 
