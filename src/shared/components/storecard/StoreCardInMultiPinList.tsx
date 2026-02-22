@@ -35,22 +35,15 @@ const StoreCard = ({
   openingHours,
 }: StoreCardProps) => {
   const displayRating = Number(rating).toFixed(1);
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   // 이미지 로드 에러 시 처리를 위한 핸들러
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = DummyFood; // 에러 시 더미 이미지로 대체
   };
 
-  const handleBookmarkClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 카드 클릭(상세이동) 이벤트 방지
-
-    if (isKeep) {
-      // 이미 저장된 경우: 보통은 여기서 바로 해제 API를 쏘거나 확인 모달을 띄움
-      console.log('이미 저장됨: 해제 로직 필요');
-      // 예: if(confirm('저장을 취소하시겠습니까?')) { ... API 호출 ... }
-    } else {
-      // 저장 안 된 경우: 그룹 선택 바텀시트 열기
-      setIsGroupSelectorOpen(true);
-    }
+  const handleKeepClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
+    setIsGroupSelectorOpen(true);
   };
 
   const handleShareClick = (e: React.MouseEvent) => {
@@ -64,8 +57,6 @@ const StoreCard = ({
   useEffect(() => {
     setIsKeep(scrap);
   }, [scrap]);
-
-  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   return (
     <div
       className="flex w-full flex-col bg-white"
@@ -77,7 +68,7 @@ const StoreCard = ({
         <h2 className="text-[20px] font-bold leading-none text-[#35353F]">{name}</h2>
         {/* 우측 아이콘 버튼들 */}
         <div className="flex gap-[4px]">
-          <button type="button" onClick={handleBookmarkClick}>
+          <button type="button" onClick={handleKeepClick}>
             {/* scrap ? Save : NotSave */}
             <img src={isKeep ? Save : NotSave} alt="save" className="h-[25px] w-[25px]" />
           </button>
