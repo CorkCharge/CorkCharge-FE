@@ -8,6 +8,10 @@ import useBookmarkStore from '@/shared/store/useBookmarkStore';
 import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
 import { useNavigate } from 'react-router-dom';
+import Modal from '../common/Modal';
+import Button from '../common/Button';
+import check from '../../components/detail/assets/check.svg';
+import logo from '@/shared/assets/images/logo.svg';
 
 interface StoreCardProps {
   restaurantId: number;
@@ -34,7 +38,8 @@ const StoreCardInSave = ({
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const navigate = useNavigate();
   const displayRating = Number(rating).toFixed(1);
-
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
 
   const handleKeepClick = (e: React.MouseEvent) => {
@@ -44,7 +49,15 @@ const StoreCardInSave = ({
 
   const handleShareClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
-    console.log('공유하기 클릭'); // 여기에 공유 로직 추가
+    setIsShareModalOpen(true);
+  };
+
+  // 공유 클릭 시 주소 복사
+  const clipLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsShareModalOpen(false);
+    setIsCopiedModalOpen(true);
+    setTimeout(() => setIsCopiedModalOpen(false), 1000);
   };
 
   useEffect(() => {
@@ -135,6 +148,37 @@ const StoreCardInSave = ({
           </span>
         </div>
       </div>
+
+      {/* 공유하기 모달 */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <Modal
+          isOpen={isShareModalOpen}
+          hasCloseButton={true}
+          onClose={() => setIsShareModalOpen(false)}
+        >
+          <div className="mb-4 flex items-center">
+            <img src={logo} className="h-[22px] w-[13px]" />
+            <div className="ml-3 flex flex-col">
+              <span className="font-semibold">{name}</span>
+              <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
+            </div>
+          </div>
+          <Button
+            value="링크 복사하기"
+            className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+            onClick={clipLink}
+          />
+        </Modal>
+      </div>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
+        </div>
+      )}
 
       {/* [추가] Detail 안에서 GroupSelector 직접 렌더링 */}
       <div onClick={(e) => e.stopPropagation()}>
