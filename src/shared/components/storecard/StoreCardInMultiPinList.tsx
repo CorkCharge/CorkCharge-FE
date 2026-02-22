@@ -5,7 +5,7 @@ import Share from './share.svg';
 import Star from '../../assets/star.svg';
 import DummyFood from './dummyFood.svg';
 import { useNavigate } from 'react-router-dom';
-
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
 import GroupSelector from '../home/GroupSelector';
 import GroupList from '../home/GroupList';
 import Modal from '../common/Modal';
@@ -42,6 +42,7 @@ const StoreCard = ({
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
   // 이미지 로드 에러 시 처리를 위한 핸들러
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = DummyFood; // 에러 시 더미 이미지로 대체
@@ -71,6 +72,21 @@ const StoreCard = ({
   useEffect(() => {
     setIsKeep(scrap);
   }, [scrap]);
+
+  useEffect(() => {
+    // 스토어에 현재 매장 ID가 있는지 확인
+    const isCurrentlyInStore = resId in selectedStores;
+
+    // 만약 스토어에 데이터가 있다면 (배열이 비어있지 않다면) 저장된 것으로 간주
+    // (스토어 구조에 따라 selectedStores[resId]?.length > 0 등의 조건이 필요할 수 있습니다)
+    setIsKeep(isCurrentlyInStore);
+  }, [resId, selectedStores]);
+
+  // [수정] 그룹 셀렉터가 닫힐 때 실행될 핸들러
+  const handleCloseGroupSelector = () => {
+    setIsGroupSelectorOpen(false);
+  };
+
   return (
     <div
       className="flex w-full flex-col bg-white"
@@ -195,10 +211,10 @@ const StoreCard = ({
         <GroupSelector
           isOpen={isGroupSelectorOpen}
           topSnapVh={17.8}
-          onClose={() => setIsGroupSelectorOpen(false)}
+          onClose={handleCloseGroupSelector}
         >
           <GroupList
-            onClose={() => setIsGroupSelectorOpen(false)}
+            onClose={handleCloseGroupSelector}
             restaurantName={name} // Props로 받은 name 사용
             restaurantId={resId} // Props로 받은 resId 사용
           />
