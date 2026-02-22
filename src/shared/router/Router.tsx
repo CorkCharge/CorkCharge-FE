@@ -49,6 +49,7 @@ import NearbyStores from '@/pages/home/NearbyStores';
 import RoleSelectionComplete from '@/pages/myPage/RoleSelectionComplete';
 import RequestList from '@/pages/myPage/RequestList';
 import MyRequest from '@/pages/myPage/MyRequest';
+import MasterStoreList from '@/pages/myPage/MasterStoreList';
 
 const router = createBrowserRouter([
   // {
@@ -130,6 +131,10 @@ const router = createBrowserRouter([
       {
         path: 'add/storecheck/:restaurantId',
         element: <StoreCheck />,
+      },
+      {
+        path: 'add/my-stores',
+        element: <MasterStoreList />,
       },
       {
         path: 'add/search',

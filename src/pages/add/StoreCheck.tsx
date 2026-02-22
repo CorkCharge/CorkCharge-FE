@@ -1,8 +1,12 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+
 import Back from '../../shared/assets/whiteArrow.svg';
 import Bg from '../doit/assets/request_bg.svg';
 import Placeholder from '../../shared/assets/placeholder.svg';
+import Header from '@/shared/components/common/Header';
+import { useMasterStores } from '@/shared/queries/user/useMasterStores';
+
 const StoreCheck = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -12,6 +16,8 @@ const StoreCheck = () => {
     restaurantId: 'Id 없음',
     thumbnailUrl: '사진 미제공',
   };
+
+  const { data: stores } = useMasterStores();
 
   useEffect(() => {
     console.log(location);
@@ -28,15 +34,11 @@ const StoreCheck = () => {
       },
     });
   };
+
   return (
-    <div className="relative flex h-screen flex-col items-center">
-      <img
-        src={Bg}
-        alt="배경"
-        className="absolute left-0 top-0 z-[-1] h-full w-full object-cover"
-      />
-      {/*헤더*/}
-      <div className="mt-[7vh] flex h-[48px] w-full flex-row items-center">
+    <div className="px-4">
+      <Header title="내 가게 목록" type="back" backFn={() => navigate(-1)} />
+      {/*<div className="mt-[7vh] flex h-[48px] w-full flex-row items-center">
         <img
           src={Back}
           alt="왼쪽 화살표"
@@ -60,7 +62,6 @@ const StoreCheck = () => {
           alt="가게 썸네일"
           className="mt-[27px] h-[201px] w-[268px] rounded-bl-[3%] rounded-br-[25%] rounded-tl-[25%] rounded-tr-[3%]"
         />
-        {/*가게정보*/}
         <div className="mt-[20px] flex w-full flex-col gap-[10px]">
           <div className={`ml-[26px] text-[24px] font-[700]`}>{storeName}</div>
           <div className={`ml-[26px] text-[14px] font-[500] text-[#35353F]`}>{address}</div>
@@ -73,7 +74,7 @@ const StoreCheck = () => {
             맞습니다
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -4,9 +4,12 @@ import Header from '@/shared/components/common/Header';
 import { GuestMyPage, LoggedInMyPage } from '@/shared/components/myPage/MyPageBranch';
 import useAuthStore from '@/shared/store/useAuthStore';
 import useFooterPropsStore from '@/shared/store/useFooterProps';
+import { useQueryClient } from '@tanstack/react-query';
 
 function MainMyPage() {
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const { user } = useAuthStore();
   const { logout } = useAuthStore();
@@ -27,6 +30,7 @@ function MainMyPage() {
             onClick={() => {
               navigate('/home');
               logout();
+              queryClient.clear();
               setFooterProps(0);
             }}
           >

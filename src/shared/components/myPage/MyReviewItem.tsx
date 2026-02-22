@@ -168,14 +168,14 @@ function MyReviewItem({ review }: { review: MyReviewResponse }) {
 
           <div className="absolute right-2 top-3 flex gap-1 text-[10px] font-medium text-white">
             <button
-              className="flex gap-1 rounded-2xl bg-[var(--sand)] px-2 py-1"
+              className="flex items-center gap-1 whitespace-nowrap rounded-2xl bg-[var(--sand)] px-2 py-1"
               onClick={() => setModifyOpen(true)}
             >
               <img src={edit} />
               수정하기
             </button>
             <button
-              className="flex gap-1 rounded-2xl bg-[var(--sand)] px-2 py-1"
+              className="flex items-center gap-1 whitespace-nowrap rounded-2xl bg-[var(--sand)] px-2 py-1"
               onClick={() => setDeleteOpen(true)}
             >
               <DeleteSvg />

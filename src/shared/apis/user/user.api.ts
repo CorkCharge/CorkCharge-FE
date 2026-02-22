@@ -1,5 +1,10 @@
 import apiClient from '../apiClient';
-import type { MyRequestListResponse, MyReviewResponse, Role } from './user.type';
+import type {
+  MasterStoreResponse,
+  MyRequestListResponse,
+  MyReviewResponse,
+  Role,
+} from './user.type';
 
 // role 부여
 export const modifyRole = async ({ role, nickname }: { role: Role; nickname: string }) => {
@@ -39,4 +44,17 @@ export const getMyRequestList = async (): Promise<MyRequestListResponse[]> => {
 export const getMyRequestDetail = async (id: number) => {
   const res = await apiClient.get(`/users/helprequests/${id}`);
   return res.data.data;
+};
+
+// 사장님 매장 검색 (가입 시)
+export const getMasterRestaurant = async (): Promise<MasterStoreResponse[]> => {
+  const res = await apiClient.get('/ownerRestaurant/my');
+  return res.data.data.items;
+};
+
+// 사장님 사업자 등록증 입력
+export const submitCertificate = async (cert: File) => {
+  const formData = new FormData();
+  formData.append('images', cert);
+  await apiClient.put('/users/registration', formData);
 };

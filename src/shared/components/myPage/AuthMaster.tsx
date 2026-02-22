@@ -1,12 +1,20 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import upload from '@/shared/components/myPage/images/upload-image.png';
-import apiClient from '@/shared/apis/apiClient';
+import { submitCertificate } from '@/shared/apis/user/user.api';
 
 function AuthMaster({ onNext }: { onNext: () => void }) {
   const fileSelector = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [previewUrl, setPreviewUrl] = useState('');
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl !== '') URL.revokeObjectURL(previewUrl);
+    };
+  }, []);
 
   const handleUpload = () => {
     fileSelector.current?.click();
@@ -16,20 +24,22 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
-  const handVerification = () => {
-    if (!selectedFile) return;
+  const handVerification = async () => {
+    if (!selectedFile || isPending) return;
 
-    const formData = new FormData();
-    formData.append('images', selectedFile);
-    apiClient
-      .put('/users/registration', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-      .then(() => {
-        onNext();
-      })
-      .catch((e) => console.error(e));
+    setIsPending(true);
+    try {
+      await submitCertificate(selectedFile);
+      onNext();
+    } catch (e) {
+      console.error('사업자 등록증 등록 실패: ' + e);
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -51,7 +61,11 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
         className="mt-10 flex aspect-square w-full cursor-pointer items-center justify-center rounded-2xl bg-[var(--gray-1)]"
         onClick={handleUpload}
       >
-        <img src={upload} className="h-[155px] w-[194px]" />
+        {previewUrl ? (
+          <img src={previewUrl} className="size-[80%]" />
+        ) : (
+          <img src={upload} className="h-[35%] w-[40%]" />
+        )}
       </div>
       <input
         type="file"

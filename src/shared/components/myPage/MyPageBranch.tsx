@@ -121,7 +121,7 @@ export const LoggedInMyPage = () => {
             <div className="-mx-4 mt-5 border-t border-[var(--gray-4)]" />
             <div
               className="flex cursor-pointer items-center gap-[22px] pl-2 pt-4"
-              onClick={enrollCorkage}
+              onClick={() => navigate('/add/my-stores')}
             >
               <div className="flex size-[30px] items-center justify-center rounded-[50%] bg-[var(--primary)]">
                 <svg
