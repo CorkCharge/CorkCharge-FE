@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 
@@ -28,7 +29,6 @@ interface detailProps {
   corkageOption: string[];
   corkagePrice: string;
   isScrap: boolean; // [중요] 부모로부터 현재 스크랩 상태를 받아야 함 (restaurant.scrap)
-  onOpenSaveList: () => void; // [중요] 저장 안 된 상태에서 누르면 부모(CorkageMap)에게 리스트 열라고 요청
 }
 
 const DetailHeader = ({
@@ -42,38 +42,11 @@ const DetailHeader = ({
   corkageOption,
   corkagePrice,
   isScrap,
-  onOpenSaveList,
 }: detailProps) => {
   const displayRating = Number(rating).toFixed(1);
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [isKeep, setIsKeep] = useState(false);
-
-  useEffect(() => {
-    setIsKeep(isScrap);
-  }, [isScrap]);
-
-  const handleBookmarkClick = async () => {
-    if (isKeep) {
-      // 1. 이미 저장됨 -> 저장 취소 (모든 그룹에서 제거)
-      try {
-        // [API] groupIds: [] 빈 배열을 보내면 저장 취소됨
-        const res = await editBookmarkGroup({ restaurantId: resId, groupIds: [] });
-
-        if (res.success) {
-          setIsKeep(false);
-          alert('저장이 취소되었습니다.');
-        }
-      } catch (e) {
-        console.error('저장 취소 실패', e);
-        alert('저장 취소 중 오류가 발생했습니다.');
-      }
-    } else {
-      // 2. 저장 안 됨 -> 그룹 선택창(List) 열기
-      onOpenSaveList();
-    }
-  };
+  //const selectedStores = useBookmarkStore((state) => state.selectedStores);
 
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
   const [contactContent, setContactContent] = useState('');
@@ -82,7 +55,7 @@ const DetailHeader = ({
   const [isCallModalOpen, setIsCallModalOpen] = useState(false); // 전화하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
-
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   // const location = useLocation();
@@ -142,8 +115,8 @@ const DetailHeader = ({
         <div>
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
-            <div className="cursor-pointer" onClick={handleBookmarkClick}>
-              <img src={isKeep ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
+            <div className="cursor-pointer" onClick={() => setIsGroupSelectorOpen(true)}>
+              <img src={isScrap ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
             </div>
           </div>
           <div className="flex items-center">
@@ -312,6 +285,19 @@ const DetailHeader = ({
           </div>
         </div>
       )}
+
+      {/* [추가] Detail 안에서 GroupSelector 직접 렌더링 */}
+      <GroupSelector
+        isOpen={isGroupSelectorOpen}
+        topSnapVh={17.8}
+        onClose={() => setIsGroupSelectorOpen(false)}
+      >
+        <GroupList
+          onClose={() => setIsGroupSelectorOpen(false)}
+          restaurantName={name}
+          restaurantId={resId}
+        />
+      </GroupSelector>
     </div>
   );
 };
