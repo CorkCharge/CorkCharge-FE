@@ -9,7 +9,8 @@ const MasterStoreList = () => {
 
   const { data: stores } = useMasterStores();
 
-  const renderStores = () => stores?.map((store) => <MyStoreItem store={store} />);
+  const renderStores = () =>
+    stores?.map((store) => <MyStoreItem key={store.restaurantId} store={store} />);
 
   return (
     <div className="px-4">

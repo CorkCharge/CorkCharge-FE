@@ -1,5 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // import Back from '../../shared/assets/whiteArrow.svg';
 // import Bg from '../doit/assets/request_bg.svg';
@@ -9,7 +8,6 @@ import Header from '@/shared/components/common/Header';
 
 const StoreCheck = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   // const { storeName, address, restaurantId, thumb?nailUrl } = location.state || {
   //   storeName: '매장명 없음',
   //   address: '주소 없음',
@@ -19,9 +17,6 @@ const StoreCheck = () => {
 
   // const { data: stores } = useMasterStores();
 
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
   // const handleBackClick = () => {
   //   navigate(-1);
   // };

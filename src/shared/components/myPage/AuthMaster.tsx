@@ -14,7 +14,7 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
     return () => {
       if (previewUrl !== '') URL.revokeObjectURL(previewUrl);
     };
-  }, []);
+  }, [previewUrl]);
 
   const handleUpload = () => {
     fileSelector.current?.click();
@@ -28,7 +28,7 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
     }
   };
 
-  const handVerification = async () => {
+  const handleVerification = async () => {
     if (!selectedFile || isPending) return;
 
     setIsPending(true);
@@ -80,7 +80,7 @@ function AuthMaster({ onNext }: { onNext: () => void }) {
       {selectedFile && (
         <button
           className="fixed bottom-4 left-[10%] right-[10%] mx-auto h-[48px] w-[80%] max-w-[480px] rounded-[10px] bg-[var(--primary)] font-bold text-white"
-          onClick={handVerification}
+          onClick={handleVerification}
         >
           다음
         </button>

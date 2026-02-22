@@ -40,7 +40,9 @@ const MyStoreItem = ({ store }: { store: MasterStoreResponse }) => {
   };
 
   const renderImages = (urls: string[]) =>
-    urls.map((url) => <img src={url} className="aspect-square size-[25%] rounded-lg" />);
+    urls.map((url, idx) => (
+      <img key={idx} src={url} className="aspect-square size-[25%] rounded-lg" />
+    ));
 
   return (
     <div className="relative flex flex-col gap-1">
@@ -54,7 +56,7 @@ const MyStoreItem = ({ store }: { store: MasterStoreResponse }) => {
       <div className="flex items-center gap-1 px-4">
         <img src={star} />
         <span className="font-medium text-[var(--gray-8)]">{store.rating?.toFixed(1) ?? 0}</span>
-        <span className="text-sm font-medium text-[var(--gray-5)]">(333)</span>
+        <span className="text-sm font-medium text-[var(--gray-5)]">({store.totalReviewCount})</span>
         <span className="text-sm font-semibold">영업중</span>
         <span className="text-sm font-medium text-[var(--gray-6)]">
           {getTodayOperatingHours(store.openingHours)}
@@ -62,7 +64,7 @@ const MyStoreItem = ({ store }: { store: MasterStoreResponse }) => {
       </div>
 
       {store.mainImages.length > 0 && (
-        <div className="flex gap-1 overflow-y-auto px-4">{renderImages(store.mainImages)}</div>
+        <div className="flex gap-1 overflow-x-auto px-4">{renderImages(store.mainImages)}</div>
       )}
 
       <div className="mt-1 rounded-2xl bg-[var(--gray-1)] px-4 py-2">
