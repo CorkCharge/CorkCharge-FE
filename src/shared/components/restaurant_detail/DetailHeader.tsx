@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
@@ -20,8 +20,8 @@ interface detailProps {
   resId: number;
   name: string;
   rating: number;
-  adr: string;
-  alias?: string;
+  //adr: string;
+  //alias?: string;
   isOpen: boolean;
   time: string;
   phone: string;
@@ -45,9 +45,6 @@ const DetailHeader = ({
 }: detailProps) => {
   const displayRating = Number(rating).toFixed(1);
   const navigate = useNavigate();
-  const location = useLocation();
-  //const selectedStores = useBookmarkStore((state) => state.selectedStores);
-
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
   const [contactContent, setContactContent] = useState('');
   const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
@@ -57,13 +54,6 @@ const DetailHeader = ({
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  // const location = useLocation();
-
-  useEffect(() => {
-    // state 초기화 (새로고침 시 안 뜨게)
-    //navigate(`/detail-info/${resId}`, { replace: true });
-  }, [location.state]);
 
   // 좌우 overflow 감지
   useEffect(() => {

@@ -62,11 +62,10 @@ const StoreCardInSave = ({
         <h2 className="text-[20px] font-bold leading-none text-[#35353F]">{name}</h2>
         {/* 우측 아이콘 버튼들 */}
         <div className="flex gap-[4px]">
-          <button type="button">
+          <button type="button" onClick={handleKeepClick}>
             <img
               src={isKeep ? Save : NotSave}
               alt={isKeep ? 'saved' : 'unsaved'}
-              onClick={handleKeepClick}
               className="h-[25px] w-[25px]"
             />
           </button>

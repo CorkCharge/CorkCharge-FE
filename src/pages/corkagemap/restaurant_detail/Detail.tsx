@@ -42,7 +42,7 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
             resId={restaurant.restaurantId}
             name={restaurant.restaurantName}
             rating={restaurant.rating}
-            adr={restaurant.address}
+            //adr={restaurant.address}
             isOpen={true}
             time={restaurant.openingHours}
             phone={restaurant.phone}
