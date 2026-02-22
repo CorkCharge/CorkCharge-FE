@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Save from './save.svg';
 import NotSave from './notsave.svg'; // 필요시 사용
 import Share from './share.svg';
 import Star from '../../assets/star.svg';
 import DummyFood from './dummyFood.svg';
-import { editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
 import { useNavigate } from 'react-router-dom';
 
 interface StoreCardProps {
   restaurantId: number;
-  currentGroupId: number;
   name: string;
   rating: number;
   reviewCount: number;
@@ -21,7 +22,6 @@ interface StoreCardProps {
 
 const StoreCardInSave = ({
   restaurantId,
-  currentGroupId,
   name,
   rating,
   reviewCount,
@@ -30,28 +30,26 @@ const StoreCardInSave = ({
   corkagePrice,
   corkageOption,
 }: StoreCardProps) => {
-  const [isSaved, setIsSaved] = useState(true);
+  const [isKeep, setIsKeep] = useState(true);
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const navigate = useNavigate();
   const displayRating = Number(rating).toFixed(1);
 
-  // 저장 토글 핸들러
-  const handleToggleSave = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    try {
-      if (isSaved) {
-        // [저장 취소] -> 그룹에서 제거
-        await editBookmarkGroup({ restaurantId, groupIds: [] });
-        setIsSaved(false);
-      } else {
-        // [다시 저장] -> 현재 그룹에 다시 추가
-        await editBookmarkGroup({ restaurantId, groupIds: [currentGroupId] });
-        setIsSaved(true);
-      }
-    } catch (error) {
-      console.error('저장 상태 변경 실패', error);
-      alert('요청을 처리하는 중 오류가 발생했습니다.');
-    }
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
+
+  const handleKeepClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
+    setIsGroupSelectorOpen(true);
   };
+
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
+    console.log('공유하기 클릭'); // 여기에 공유 로직 추가
+  };
+
+  useEffect(() => {
+    setIsKeep(restaurantId in selectedStores);
+  }, [restaurantId, selectedStores]);
 
   return (
     <div
@@ -64,14 +62,15 @@ const StoreCardInSave = ({
         <h2 className="text-[20px] font-bold leading-none text-[#35353F]">{name}</h2>
         {/* 우측 아이콘 버튼들 */}
         <div className="flex gap-[4px]">
-          <button type="button" onClick={handleToggleSave}>
+          <button type="button">
             <img
-              src={isSaved ? Save : NotSave}
-              alt={isSaved ? 'saved' : 'unsaved'}
+              src={isKeep ? Save : NotSave}
+              alt={isKeep ? 'saved' : 'unsaved'}
+              onClick={handleKeepClick}
               className="h-[25px] w-[25px]"
             />
           </button>
-          <button type="button">
+          <button type="button" onClick={handleShareClick}>
             <img src={Share} alt="share" className="h-[25px] w-[25px]" />
           </button>
         </div>
@@ -136,6 +135,22 @@ const StoreCardInSave = ({
             {corkageOption}
           </span>
         </div>
+      </div>
+
+      {/* [추가] Detail 안에서 GroupSelector 직접 렌더링 */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <GroupSelector
+          isOpen={isGroupSelectorOpen}
+          topSnapVh={17.8}
+          onClose={() => setIsGroupSelectorOpen(false)}
+        >
+          <GroupList
+            onClose={() => setIsGroupSelectorOpen(false)}
+            // 선택된 식당 상태에서 데이터를 가져와 전달
+            restaurantName={name}
+            restaurantId={restaurantId}
+          />
+        </GroupSelector>
       </div>
     </div>
   );
