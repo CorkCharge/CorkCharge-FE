@@ -105,9 +105,9 @@ const DetailHeader = ({
         <div>
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
-            <div className="cursor-pointer" onClick={() => setIsGroupSelectorOpen(true)}>
+            <button onClick={() => setIsGroupSelectorOpen(true)}>
               <img src={isScrap ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
-            </div>
+            </button>
           </div>
           <div className="flex items-center">
             <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
