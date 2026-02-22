@@ -1,19 +1,22 @@
 import { useState } from 'react';
-import type { MasterStoreResponse } from '@/shared/apis/user/user.type';
 
+import type { MasterStoreResponse } from '@/shared/apis/user/user.type';
 import Share from '@/shared/icons/Share';
 import Bookmark from '@/shared/icons/Bookmark';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
+import { getTodayOperatingHours } from '@/shared/utils/operatingHours';
 
 import star from '@/shared/assets/star.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
-import { getTodayOperatingHours } from '@/shared/utils/operatingHours';
+import GroupSelector from '../home/GroupSelector';
+import GroupList from '../home/GroupList';
 
 const MyStoreItem = ({ store }: { store: MasterStoreResponse }) => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false);
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
 
   const clipLink = async () => {
     const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -44,7 +47,7 @@ const MyStoreItem = ({ store }: { store: MasterStoreResponse }) => {
       <h3 className="px-4 text-xl font-bold text-[var(--gray-8)]">{store.restaurantName}</h3>
 
       <div className="absolute right-4 top-0 flex gap-1">
-        <Bookmark />
+        <Bookmark onClick={() => setIsGroupSelectorOpen(true)} />
         <Share onClick={() => setShareModalOpen(true)} />
       </div>
 
@@ -97,6 +100,19 @@ const MyStoreItem = ({ store }: { store: MasterStoreResponse }) => {
           </div>
         </div>
       )}
+
+      {/* 그룹 셀렉터 */}
+      <GroupSelector
+        isOpen={isGroupSelectorOpen}
+        topSnapVh={17.8}
+        onClose={() => setIsGroupSelectorOpen(false)}
+      >
+        <GroupList
+          onClose={() => setIsGroupSelectorOpen(false)}
+          restaurantId={store.restaurantId}
+          restaurantName={store.restaurantName}
+        />
+      </GroupSelector>
     </div>
   );
 };
