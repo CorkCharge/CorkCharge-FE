@@ -59,7 +59,7 @@ const StoreCard = ({
 
   // 공유 클릭 시 주소 복사
   const clipLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(`${window.location.origin}/detail-info/${resId}`); // 해당 매장의 상세정보 페이지 주소를 복사
     setIsShareModalOpen(false);
     setIsCopiedModalOpen(true);
     setTimeout(() => setIsCopiedModalOpen(false), 1000);

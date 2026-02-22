@@ -54,7 +54,7 @@ const StoreCardInSave = ({
 
   // 공유 클릭 시 주소 복사
   const clipLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(`${window.location.origin}/detail-info/${restaurantId}`);
     setIsShareModalOpen(false);
     setIsCopiedModalOpen(true);
     setTimeout(() => setIsCopiedModalOpen(false), 1000);
