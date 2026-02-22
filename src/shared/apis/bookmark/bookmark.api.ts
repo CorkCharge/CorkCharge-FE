@@ -80,7 +80,7 @@ export const getBookmarkGroupDetail = async (
   return response.data;
 };
 
-// 특정 매장이 각 그룹에 저장되어 있는지 여부 조회 (storedFlag 포함)
+// 특정 매장이 각 그룹에 저장되어 있는지 여부 조회 (사용할거면 GroupListResponse 타입 groups 배열 항목에 storedFlag 추가할 것)
 export const getRestaurantBookmarkStatus = async (
   restaurantId: number
 ): Promise<GroupListResponse> => {
