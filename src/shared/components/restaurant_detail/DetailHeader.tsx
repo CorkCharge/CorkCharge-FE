@@ -4,7 +4,7 @@ import GroupSelector from '@/shared/components/home/GroupSelector';
 import GroupList from '@/shared/components/home/GroupList';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
-
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
 import call from '../../assets/detailPageImgs/call.svg';
@@ -43,6 +43,7 @@ const DetailHeader = ({
   corkagePrice,
   isScrap,
 }: detailProps) => {
+  const [isKeep, setIsKeep] = useState(isScrap);
   const displayRating = Number(rating).toFixed(1);
   const navigate = useNavigate();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
@@ -54,6 +55,17 @@ const DetailHeader = ({
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
+
+  useEffect(() => {
+    // 스토어에 현재 매장 ID가 존재하는지 여부를 확인
+    setIsKeep(resId in selectedStores);
+  }, [resId, selectedStores]);
+
+  const handleCloseGroupSelector = () => {
+    setIsGroupSelectorOpen(false);
+    setIsKeep(resId in selectedStores);
+  };
 
   // 좌우 overflow 감지
   useEffect(() => {
@@ -106,7 +118,7 @@ const DetailHeader = ({
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
             <button onClick={() => setIsGroupSelectorOpen(true)}>
-              <img src={isScrap ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
+              <img src={isKeep ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
             </button>
           </div>
           <div className="flex items-center">
@@ -280,13 +292,9 @@ const DetailHeader = ({
       <GroupSelector
         isOpen={isGroupSelectorOpen}
         topSnapVh={17.8}
-        onClose={() => setIsGroupSelectorOpen(false)}
+        onClose={handleCloseGroupSelector}
       >
-        <GroupList
-          onClose={() => setIsGroupSelectorOpen(false)}
-          restaurantName={name}
-          restaurantId={resId}
-        />
+        <GroupList onClose={handleCloseGroupSelector} restaurantName={name} restaurantId={resId} />
       </GroupSelector>
     </div>
   );

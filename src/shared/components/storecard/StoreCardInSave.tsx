@@ -47,6 +47,14 @@ const StoreCardInSave = ({
     setIsGroupSelectorOpen(true);
   };
 
+  const handleCloseGroupSelector = () => {
+    setIsGroupSelectorOpen(false);
+
+    // 전역 스토어에 해당 매장 ID가 있는지 확인 (있으면 true, 없으면 false)
+    const isCurrentlySaved = restaurantId in selectedStores;
+    setIsKeep(isCurrentlySaved);
+  };
+
   const handleShareClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
     setIsShareModalOpen(true);
@@ -185,10 +193,10 @@ const StoreCardInSave = ({
         <GroupSelector
           isOpen={isGroupSelectorOpen}
           topSnapVh={17.8}
-          onClose={() => setIsGroupSelectorOpen(false)}
+          onClose={handleCloseGroupSelector}
         >
           <GroupList
-            onClose={() => setIsGroupSelectorOpen(false)}
+            onClose={handleCloseGroupSelector}
             // 선택된 식당 상태에서 데이터를 가져와 전달
             restaurantName={name}
             restaurantId={restaurantId}
