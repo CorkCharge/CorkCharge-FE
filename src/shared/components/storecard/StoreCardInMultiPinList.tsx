@@ -8,6 +8,10 @@ import { useNavigate } from 'react-router-dom';
 
 import GroupSelector from '../home/GroupSelector';
 import GroupList from '../home/GroupList';
+import Modal from '../common/Modal';
+import Button from '../common/Button';
+import check from '../../components/detail/assets/check.svg';
+import logo from '@/shared/assets/images/logo.svg';
 
 // [수정] API 데이터 타입에 맞춰 Props 인터페이스 정의
 interface StoreCardProps {
@@ -36,6 +40,8 @@ const StoreCard = ({
 }: StoreCardProps) => {
   const displayRating = Number(rating).toFixed(1);
   const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   // 이미지 로드 에러 시 처리를 위한 핸들러
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = DummyFood; // 에러 시 더미 이미지로 대체
@@ -47,8 +53,16 @@ const StoreCard = ({
   };
 
   const handleShareClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log('공유 클릭');
+    e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
+    setIsShareModalOpen(true);
+  };
+
+  // 공유 클릭 시 주소 복사
+  const clipLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsShareModalOpen(false);
+    setIsCopiedModalOpen(true);
+    setTimeout(() => setIsCopiedModalOpen(false), 1000);
   };
 
   const navigate = useNavigate();
@@ -144,6 +158,37 @@ const StoreCard = ({
           </span>
         </div>
       </div>
+
+      {/* 공유하기 모달 */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <Modal
+          isOpen={isShareModalOpen}
+          hasCloseButton={true}
+          onClose={() => setIsShareModalOpen(false)}
+        >
+          <div className="mb-4 flex items-center">
+            <img src={logo} className="h-[22px] w-[13px]" />
+            <div className="ml-3 flex flex-col">
+              <span className="font-semibold">{name}</span>
+              <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
+            </div>
+          </div>
+          <Button
+            value="링크 복사하기"
+            className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+            onClick={clipLink}
+          />
+        </Modal>
+      </div>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
+        </div>
+      )}
 
       <div onClick={(e) => e.stopPropagation()}>
         {/* [추가] 카드별로 독립적인 GroupSelector 배치 */}
