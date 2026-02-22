@@ -1,39 +1,39 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import Back from '../../shared/assets/whiteArrow.svg';
-import Bg from '../doit/assets/request_bg.svg';
-import Placeholder from '../../shared/assets/placeholder.svg';
+// import Back from '../../shared/assets/whiteArrow.svg';
+// import Bg from '../doit/assets/request_bg.svg';
+// import Placeholder from '../../shared/assets/placeholder.svg';
 import Header from '@/shared/components/common/Header';
-import { useMasterStores } from '@/shared/queries/user/useMasterStores';
+// import { useMasterStores } from '@/shared/queries/user/useMasterStores';
 
 const StoreCheck = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address, restaurantId, thumbnailUrl } = location.state || {
-    storeName: '매장명 없음',
-    address: '주소 없음',
-    restaurantId: 'Id 없음',
-    thumbnailUrl: '사진 미제공',
-  };
+  // const { storeName, address, restaurantId, thumb?nailUrl } = location.state || {
+  //   storeName: '매장명 없음',
+  //   address: '주소 없음',
+  //   restaurantId: 'Id 없음',
+  //   thumbnailUrl: '사진 미제공',
+  // };
 
-  const { data: stores } = useMasterStores();
+  // const { data: stores } = useMasterStores();
 
   useEffect(() => {
     console.log(location);
   }, [location]);
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-  const handleRegisterClick = () => {
-    navigate('/add/option', {
-      state: {
-        storeName: storeName,
-        address: address,
-        restaurantId: restaurantId,
-      },
-    });
-  };
+  // const handleBackClick = () => {
+  //   navigate(-1);
+  // };
+  // const handleRegisterClick = () => {
+  //   navigate('/add/option', {
+  //     state: {
+  //       storeName: storeName,
+  //       address: address,
+  //       restaurantId: restaurantId,
+  //     },
+  //   });
+  // };
 
   return (
     <div className="px-4">
