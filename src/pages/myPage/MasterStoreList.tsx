@@ -9,7 +9,7 @@ const MasterStoreList = () => {
 
   const { data: stores } = useMasterStores();
 
-  const renderStores = () => [...Array(3)].map((store) => <MyStoreItem />);
+  const renderStores = () => stores?.map((store) => <MyStoreItem store={store} />);
 
   return (
     <div className="px-4">
