@@ -70,21 +70,25 @@ const StoreCard = ({
   const [isKeep, setIsKeep] = useState(scrap);
 
   useEffect(() => {
-    setIsKeep(scrap);
-  }, [scrap]);
+    // 사용자가 현재 세션에서 한 번이라도 조작을 해서 스토어에 데이터가 담겼는지 확인
+    const hasUserAction = resId in selectedStores;
 
-  useEffect(() => {
-    // 스토어에 현재 매장 ID가 있는지 확인
-    const isCurrentlyInStore = resId in selectedStores;
+    if (hasUserAction) {
+      // 조작 이력이 있다면 스토어의 최신 상태를 반영
+      setIsKeep(selectedStores[resId].length > 0);
+    } else {
+      // 조작 이력이 없다면 초기 서버 데이터(scrap)를 신뢰함
+      setIsKeep(scrap);
+    }
+  }, [resId, selectedStores, scrap]);
 
-    // 만약 스토어에 데이터가 있다면 (배열이 비어있지 않다면) 저장된 것으로 간주
-    // (스토어 구조에 따라 selectedStores[resId]?.length > 0 등의 조건이 필요할 수 있습니다)
-    setIsKeep(isCurrentlyInStore);
-  }, [resId, selectedStores]);
-
-  // [수정] 그룹 셀렉터가 닫힐 때 실행될 핸들러
+  // [해결 2] 그룹 셀렉터가 닫힐 때 최신 상태 확정
   const handleCloseGroupSelector = () => {
     setIsGroupSelectorOpen(false);
+    // 닫히는 시점의 스토어 상태를 다시 한번 동기화
+    if (resId in selectedStores) {
+      setIsKeep(selectedStores[resId].length > 0);
+    }
   };
 
   return (
@@ -213,11 +217,14 @@ const StoreCard = ({
           topSnapVh={17.8}
           onClose={handleCloseGroupSelector}
         >
-          <GroupList
-            onClose={handleCloseGroupSelector}
-            restaurantName={name} // Props로 받은 name 사용
-            restaurantId={resId} // Props로 받은 resId 사용
-          />
+          {isGroupSelectorOpen && (
+            <GroupList
+              key={`group-list-${resId}-${isGroupSelectorOpen}`}
+              onClose={handleCloseGroupSelector}
+              restaurantName={name}
+              restaurantId={resId}
+            />
+          )}
         </GroupSelector>
       </div>
     </div>

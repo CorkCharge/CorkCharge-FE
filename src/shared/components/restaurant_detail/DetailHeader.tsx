@@ -58,13 +58,19 @@ const DetailHeader = ({
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
 
   useEffect(() => {
-    // 스토어에 현재 매장 ID가 존재하는지 여부를 확인
-    setIsKeep(resId in selectedStores);
-  }, [resId, selectedStores]);
+    // 1. 전역 스토어(Zustand)에 현재 매장에 대한 데이터가 한 번이라도 담겼다면 (저장 혹은 수정 이력 있음)
+    if (resId in selectedStores) {
+      // 해당 매장이 속한 그룹 배열이 비어있지 않은지 확인 (더 정확한 체크)
+      setIsKeep(selectedStores[resId].length > 0);
+    }
+    // 2. 스토어에 데이터가 없다면, 아직 이 세션에서 수정한 적이 없으므로 서버 값(isScrap)을 유지합니다.
+    else {
+      setIsKeep(isScrap);
+    }
+  }, [resId, selectedStores, isScrap]);
 
   const handleCloseGroupSelector = () => {
     setIsGroupSelectorOpen(false);
-    setIsKeep(resId in selectedStores);
   };
 
   // 좌우 overflow 감지
