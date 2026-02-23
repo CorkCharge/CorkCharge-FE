@@ -11,9 +11,11 @@ import apiClient from '@/shared/apis/apiClient';
 
 import crossMark from '@/shared/assets/images/plus.png';
 import { useSetNickname, useUpdateNickname } from '@/shared/queries/user/useMyPage';
+import { useQueryClient } from '@tanstack/react-query';
 
 function ModifyInfo() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const from = useLocation().state?.from;
 
@@ -140,6 +142,7 @@ function ModifyInfo() {
       .delete('/users')
       .then(() => {
         logout();
+        queryClient.clear();
         setSecondModalOpen(true);
       })
       .catch((e) => {

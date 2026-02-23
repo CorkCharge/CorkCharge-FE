@@ -77,11 +77,25 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   }, []);
 
   // 공유 클릭 시 주소 복사
-  const clipLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setIsShareModalOpen(false);
-    setIsCopiedModalOpen(true);
-    setTimeout(() => setIsCopiedModalOpen(false), 1000);
+  const clipLink = async () => {
+    const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
+
+    if (navigator.share && isMobile) {
+      try {
+        await navigator.share({
+          title: restaurant.restaurantName,
+          text: `${restaurant.restaurantName} 정보를 확인해보세요!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('공유 중 에러 발생 : ' + err);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      setIsShareModalOpen(false);
+      setIsCopiedModalOpen(true);
+      setTimeout(() => setIsCopiedModalOpen(false), 1000);
+    }
   };
 
   // 전화 클릭 시 전화 이동 or 번호 복사

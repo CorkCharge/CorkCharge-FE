@@ -28,3 +28,15 @@ export interface MyReviewResponse {
   reviewImageUrl: string;
   createdAt: string;
 }
+
+// 사장님 가게 응답
+export interface MasterStoreResponse {
+  restaurantId: number;
+  restaurantName: string;
+  rating: number;
+  totalReviewCount: number;
+  openingHours: string;
+  corkagePrice: string;
+  corkageOptions: string[];
+  mainImages: string[];
+}
