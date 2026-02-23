@@ -1,9 +1,10 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
-
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
 import smallGlass from '../../assets/smallGlass.svg';
 import star from '../../assets/star.svg';
 import call from '../../assets/detailPageImgs/call.svg';
@@ -19,8 +20,8 @@ interface detailProps {
   resId: number;
   name: string;
   rating: number;
-  adr: string;
-  alias?: string;
+  //adr: string;
+  //alias?: string;
   isOpen: boolean;
   time: string;
   phone: string;
@@ -28,7 +29,6 @@ interface detailProps {
   corkageOption: string[];
   corkagePrice: string;
   isScrap: boolean; // [중요] 부모로부터 현재 스크랩 상태를 받아야 함 (restaurant.scrap)
-  onOpenSaveList: () => void; // [중요] 저장 안 된 상태에서 누르면 부모(CorkageMap)에게 리스트 열라고 요청
 }
 
 const DetailHeader = ({
@@ -42,38 +42,10 @@ const DetailHeader = ({
   corkageOption,
   corkagePrice,
   isScrap,
-  onOpenSaveList,
 }: detailProps) => {
+  const [isKeep, setIsKeep] = useState(isScrap);
+  const displayRating = Number(rating).toFixed(1);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const [isKeep, setIsKeep] = useState(false);
-
-  useEffect(() => {
-    setIsKeep(isScrap);
-  }, [isScrap]);
-
-  const handleBookmarkClick = async () => {
-    if (isKeep) {
-      // 1. 이미 저장됨 -> 저장 취소 (모든 그룹에서 제거)
-      try {
-        // [API] groupIds: [] 빈 배열을 보내면 저장 취소됨
-        const res = await editBookmarkGroup({ restaurantId: resId, groupIds: [] });
-
-        if (res.success) {
-          setIsKeep(false);
-          alert('저장이 취소되었습니다.');
-        }
-      } catch (e) {
-        console.error('저장 취소 실패', e);
-        alert('저장 취소 중 오류가 발생했습니다.');
-      }
-    } else {
-      // 2. 저장 안 됨 -> 그룹 선택창(List) 열기
-      onOpenSaveList();
-    }
-  };
-
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // 문의하기 modal 열기
   const [contactContent, setContactContent] = useState('');
   const [contactOption, setContactOption] = useState(true); // true: 콜키지정보오류, false: 가게 정보 오류
@@ -81,15 +53,25 @@ const DetailHeader = ({
   const [isCallModalOpen, setIsCallModalOpen] = useState(false); // 전화하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const [isOverflow, setIsOverflow] = useState(false); // 버튼 그룹 overflow 감지
-
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  // const location = useLocation();
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
 
   useEffect(() => {
-    // state 초기화 (새로고침 시 안 뜨게)
-    //navigate(`/detail-info/${resId}`, { replace: true });
-  }, [location.state]);
+    // 1. 전역 스토어(Zustand)에 현재 매장에 대한 데이터가 한 번이라도 담겼다면 (저장 혹은 수정 이력 있음)
+    if (resId in selectedStores) {
+      // 해당 매장이 속한 그룹 배열이 비어있지 않은지 확인 (더 정확한 체크)
+      setIsKeep(selectedStores[resId].length > 0);
+    }
+    // 2. 스토어에 데이터가 없다면, 아직 이 세션에서 수정한 적이 없으므로 서버 값(isScrap)을 유지합니다.
+    else {
+      setIsKeep(isScrap);
+    }
+  }, [resId, selectedStores, isScrap]);
+
+  const handleCloseGroupSelector = () => {
+    setIsGroupSelectorOpen(false);
+  };
 
   // 좌우 overflow 감지
   useEffect(() => {
@@ -141,14 +123,14 @@ const DetailHeader = ({
         <div>
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
-            <div className="cursor-pointer" onClick={handleBookmarkClick}>
+            <button onClick={() => setIsGroupSelectorOpen(true)}>
               <img src={isKeep ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
-            </div>
+            </button>
           </div>
           <div className="flex items-center">
             <span className="mr-2 text-sm font-medium">콜키지리뷰</span>
             <img src={star} />
-            <span className="ml-1 font-medium">{rating}</span>
+            <span className="ml-1 font-medium">{displayRating}</span>
           </div>
           <div className="mt-1 flex items-center gap-2 text-[14px]">
             <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>
@@ -311,6 +293,15 @@ const DetailHeader = ({
           </div>
         </div>
       )}
+
+      {/* [추가] Detail 안에서 GroupSelector 직접 렌더링 */}
+      <GroupSelector
+        isOpen={isGroupSelectorOpen}
+        topSnapVh={17.8}
+        onClose={handleCloseGroupSelector}
+      >
+        <GroupList onClose={handleCloseGroupSelector} restaurantName={name} restaurantId={resId} />
+      </GroupSelector>
     </div>
   );
 };

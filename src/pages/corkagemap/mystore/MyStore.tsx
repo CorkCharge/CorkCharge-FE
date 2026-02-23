@@ -109,7 +109,7 @@ const MyStore = ({ group }: MyStoreProps) => {
             <StoreCardInSave
               key={rest.restaurantId}
               restaurantId={rest.restaurantId}
-              currentGroupId={group.id}
+              //currentGroupId={group.id}
               name={rest.name}
               rating={rest.rating}
               reviewCount={rest.reviewCount}

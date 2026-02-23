@@ -1,15 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Save from './save.svg';
 import NotSave from './notsave.svg'; // 필요시 사용
 import Share from './share.svg';
 import Star from '../../assets/star.svg';
 import DummyFood from './dummyFood.svg';
-import { editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
+import useBookmarkStore from '@/shared/store/useBookmarkStore';
+import GroupSelector from '@/shared/components/home/GroupSelector';
+import GroupList from '@/shared/components/home/GroupList';
 import { useNavigate } from 'react-router-dom';
+import Modal from '../common/Modal';
+import Button from '../common/Button';
+import check from '../../components/detail/assets/check.svg';
+import logo from '@/shared/assets/images/logo.svg';
 
 interface StoreCardProps {
   restaurantId: number;
-  currentGroupId: number;
   name: string;
   rating: number;
   reviewCount: number;
@@ -21,7 +26,6 @@ interface StoreCardProps {
 
 const StoreCardInSave = ({
   restaurantId,
-  currentGroupId,
   name,
   rating,
   reviewCount,
@@ -30,27 +34,43 @@ const StoreCardInSave = ({
   corkagePrice,
   corkageOption,
 }: StoreCardProps) => {
-  const [isSaved, setIsSaved] = useState(true);
+  const [isKeep, setIsKeep] = useState(true);
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false); // 그룹 선택 바텀 시트 열기
   const navigate = useNavigate();
+  const displayRating = Number(rating).toFixed(1);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
+  const selectedStores = useBookmarkStore((state) => state.selectedStores);
 
-  // 저장 토글 핸들러
-  const handleToggleSave = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    try {
-      if (isSaved) {
-        // [저장 취소] -> 그룹에서 제거
-        await editBookmarkGroup({ restaurantId, groupIds: [] });
-        setIsSaved(false);
-      } else {
-        // [다시 저장] -> 현재 그룹에 다시 추가
-        await editBookmarkGroup({ restaurantId, groupIds: [currentGroupId] });
-        setIsSaved(true);
-      }
-    } catch (error) {
-      console.error('저장 상태 변경 실패', error);
-      alert('요청을 처리하는 중 오류가 발생했습니다.');
-    }
+  const handleKeepClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
+    setIsGroupSelectorOpen(true);
   };
+
+  const handleCloseGroupSelector = () => {
+    setIsGroupSelectorOpen(false);
+
+    // 전역 스토어에 해당 매장 ID가 있는지 확인 (있으면 true, 없으면 false)
+    const isCurrentlySaved = restaurantId in selectedStores;
+    setIsKeep(isCurrentlySaved);
+  };
+
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
+    setIsShareModalOpen(true);
+  };
+
+  // 공유 클릭 시 주소 복사
+  const clipLink = () => {
+    navigator.clipboard.writeText(`${window.location.origin}/detail-info/${restaurantId}`);
+    setIsShareModalOpen(false);
+    setIsCopiedModalOpen(true);
+    setTimeout(() => setIsCopiedModalOpen(false), 1000);
+  };
+
+  useEffect(() => {
+    setIsKeep(restaurantId in selectedStores);
+  }, [restaurantId, selectedStores]);
 
   return (
     <div
@@ -63,14 +83,14 @@ const StoreCardInSave = ({
         <h2 className="text-[20px] font-bold leading-none text-[#35353F]">{name}</h2>
         {/* 우측 아이콘 버튼들 */}
         <div className="flex gap-[4px]">
-          <button type="button" onClick={handleToggleSave}>
+          <button type="button" onClick={handleKeepClick}>
             <img
-              src={isSaved ? Save : NotSave}
-              alt={isSaved ? 'saved' : 'unsaved'}
+              src={isKeep ? Save : NotSave}
+              alt={isKeep ? 'saved' : 'unsaved'}
               className="h-[25px] w-[25px]"
             />
           </button>
-          <button type="button">
+          <button type="button" onClick={handleShareClick}>
             <img src={Share} alt="share" className="h-[25px] w-[25px]" />
           </button>
         </div>
@@ -81,7 +101,7 @@ const StoreCardInSave = ({
         <img src={Star} alt="star" className="h-[15px] w-[16px]" />
 
         {/* 평점 */}
-        <span className="ml-[4px] text-[16px] font-[500] text-[#35353F]">{rating}</span>
+        <span className="ml-[4px] text-[16px] font-[500] text-[#35353F]">{displayRating}</span>
 
         {/* 리뷰 수 */}
         <span className="ml-[4px] text-[14px] font-[500] text-[#9FA2AA]">({reviewCount})</span>
@@ -135,6 +155,53 @@ const StoreCardInSave = ({
             {corkageOption}
           </span>
         </div>
+      </div>
+
+      {/* 공유하기 모달 */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <Modal
+          isOpen={isShareModalOpen}
+          hasCloseButton={true}
+          onClose={() => setIsShareModalOpen(false)}
+        >
+          <div className="mb-4 flex items-center">
+            <img src={logo} className="h-[22px] w-[13px]" />
+            <div className="ml-3 flex flex-col">
+              <span className="font-semibold">{name}</span>
+              <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
+            </div>
+          </div>
+          <Button
+            value="링크 복사하기"
+            className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+            onClick={clipLink}
+          />
+        </Modal>
+      </div>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
+        </div>
+      )}
+
+      {/* [추가] Detail 안에서 GroupSelector 직접 렌더링 */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <GroupSelector
+          isOpen={isGroupSelectorOpen}
+          topSnapVh={17.8}
+          onClose={handleCloseGroupSelector}
+        >
+          <GroupList
+            onClose={handleCloseGroupSelector}
+            // 선택된 식당 상태에서 데이터를 가져와 전달
+            restaurantName={name}
+            restaurantId={restaurantId}
+          />
+        </GroupSelector>
       </div>
     </div>
   );

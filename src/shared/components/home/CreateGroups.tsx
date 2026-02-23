@@ -15,7 +15,7 @@ import SaveMarker10 from '@/pages/corkagemap/list/savemarker/SaveMarker10.svg';
 import SaveMarker11 from '@/pages/corkagemap/list/savemarker/SaveMarker11.svg';
 import SaveMarker12 from '@/pages/corkagemap/list/savemarker/SaveMarker12.svg';
 import { useCreateGroup } from '@/shared/queries/bookmark/useCreateGroup';
-
+import { mapIconToColor } from '@/shared/utils/groupMapper';
 const markerList = [
   SaveMarker1,
   SaveMarker2,
@@ -52,7 +52,11 @@ const CreateGroup = ({ onComplete, onCancel }: EditGroupProps) => {
     }
 
     try {
-      await mutation.mutateAsync({ name: groupName, color: selectedIcon, visibility: privacy });
+      await mutation.mutateAsync({
+        name: groupName,
+        color: mapIconToColor(selectedIcon), // 변환 함수 적용
+        visibility: privacy,
+      });
       onComplete();
     } catch (e) {
       console.error('그룹 생성 실패: ' + e);

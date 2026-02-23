@@ -6,8 +6,6 @@ import DetailInfoSection from '@/shared/components/restaurant_detail/DetailInfoS
 // import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 import { fetchRestaurant, type RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 //import useRestaurantStore from '@/shared/store/useRestaurantStore';
-import GroupSelector from '@/shared/components/home/GroupSelector';
-import GroupList from '@/shared/components/home/GroupList';
 interface DetailProps {
   restaurantId?: number;
 }
@@ -17,7 +15,6 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
   const targetId = propId || Number(paramId);
   const [restaurant, setRestaurant] = useState<RestaurantInfo>();
   //const setRestInfo = useRestaurantStore((state) => state.setRestInfo);
-  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
 
   useEffect(() => {
     if (!targetId) {
@@ -45,7 +42,7 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
             resId={restaurant.restaurantId}
             name={restaurant.restaurantName}
             rating={restaurant.rating}
-            adr={restaurant.address}
+            //adr={restaurant.address}
             isOpen={true}
             time={restaurant.openingHours}
             phone={restaurant.phone}
@@ -53,7 +50,6 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
             corkageOption={restaurant.corkageOptions}
             corkagePrice={restaurant.corkagePrice}
             isScrap={restaurant.scrap ?? false}
-            onOpenSaveList={() => setIsGroupSelectorOpen(true)}
           />
         ) : (
           <p className="flex min-h-[100svh] items-center justify-center bg-inherit">
@@ -63,22 +59,6 @@ const Detail = ({ restaurantId: propId }: DetailProps) => {
       </div>
 
       {restaurant && <DetailInfoSection {...restaurant} />}
-
-      {/* [추가] Detail 안에서 GroupSelector 직접 렌더링 */}
-      {restaurant && (
-        <GroupSelector
-          isOpen={isGroupSelectorOpen}
-          topSnapVh={17.8}
-          onClose={() => setIsGroupSelectorOpen(false)}
-        >
-          <GroupList
-            onClose={() => setIsGroupSelectorOpen(false)}
-            // 내가 API로 받아온 restaurant 객체에서 바로 전달
-            restaurantName={restaurant.restaurantName}
-            restaurantId={restaurant.restaurantId}
-          />
-        </GroupSelector>
-      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
-
+import { mapColorToIcon } from '@/shared/utils/groupMapper';
 import GroupItem from './GroupItem';
 import CreateGroup from './CreateGroups';
 import ConfirmationModal from '@/pages/corkagemap/list/ConfirmationModal';
@@ -136,7 +136,7 @@ const GroupList = ({
               <GroupItem
                 key={group.groupId}
                 id={group.groupId}
-                iconName={group.color}
+                iconName={mapColorToIcon(group.color)}
                 name={group.name}
                 count={group.storeCount}
                 checked={initialSelectedGroupIds.includes(group.groupId)}
