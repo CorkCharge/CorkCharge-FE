@@ -12,6 +12,7 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import check from '../../components/detail/assets/check.svg';
 import logo from '@/shared/assets/images/logo.svg';
+import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
 
 // [수정] API 데이터 타입에 맞춰 Props 인터페이스 정의
 interface StoreCardProps {
@@ -91,6 +92,18 @@ const StoreCard = ({
     }
   };
 
+  const getMarkerIcon = () => {
+    const groupIds = selectedStores[resId];
+
+    if (!groupIds || groupIds.length === 0) {
+      return NotSave;
+    }
+    if (groupIds.length >= 2) {
+      return MultiSaveMarker;
+    }
+    return Save;
+  };
+
   return (
     <div
       className="flex w-full flex-col bg-white"
@@ -104,7 +117,11 @@ const StoreCard = ({
         <div className="flex gap-[4px]">
           <button type="button" onClick={handleKeepClick}>
             {/* scrap ? Save : NotSave */}
-            <img src={isKeep ? Save : NotSave} alt="save" className="h-[25px] w-[25px]" />
+            <img
+              src={getMarkerIcon()}
+              alt={isKeep ? 'saved' : 'unsaved'}
+              className="h-[25px] w-[25px]"
+            />
           </button>
           <button type="button" onClick={handleShareClick}>
             <img src={Share} alt="share" className="h-[25px] w-[25px]" />

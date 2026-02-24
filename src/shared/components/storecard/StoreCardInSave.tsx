@@ -12,6 +12,7 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import check from '../../components/detail/assets/check.svg';
 import logo from '@/shared/assets/images/logo.svg';
+import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
 
 interface StoreCardProps {
   restaurantId: number;
@@ -41,6 +42,18 @@ const StoreCardInSave = ({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
+
+  const getMarkerIcon = () => {
+    const groupIds = selectedStores[restaurantId];
+
+    if (!groupIds || groupIds.length === 0) {
+      return NotSave;
+    }
+    if (groupIds.length >= 2) {
+      return MultiSaveMarker;
+    }
+    return Save;
+  };
 
   const handleKeepClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
@@ -85,7 +98,7 @@ const StoreCardInSave = ({
         <div className="flex gap-[4px]">
           <button type="button" onClick={handleKeepClick}>
             <img
-              src={isKeep ? Save : NotSave}
+              src={getMarkerIcon()}
               alt={isKeep ? 'saved' : 'unsaved'}
               className="h-[25px] w-[25px]"
             />

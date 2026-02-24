@@ -15,6 +15,7 @@ import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
 import notsave from '../storecard/notsave.svg';
 import save from '../storecard/save.svg';
+import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
 
 interface detailProps {
   resId: number;
@@ -110,6 +111,18 @@ const DetailHeader = ({
     }
   };
 
+  const getMarkerIcon = () => {
+    const groupIds = selectedStores[resId];
+
+    if (!groupIds || groupIds.length === 0) {
+      return notsave;
+    }
+    if (groupIds.length >= 2) {
+      return MultiSaveMarker;
+    }
+    return save;
+  };
+
   return (
     <div className="relative flex w-full flex-col">
       <img
@@ -124,7 +137,11 @@ const DetailHeader = ({
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
             <button onClick={() => setIsGroupSelectorOpen(true)}>
-              <img src={isKeep ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
+              <img
+                src={getMarkerIcon()}
+                alt={isKeep ? 'saved' : 'unsaved'}
+                className="h-[32px] w-[32px]"
+              />
             </button>
           </div>
           <div className="flex items-center">
