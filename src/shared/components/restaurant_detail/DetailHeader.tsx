@@ -112,26 +112,22 @@ const DetailHeader = ({
   };
 
   const getMarkerIcon = () => {
+    const hasUserAction = resId in selectedStores;
     const groupIds = selectedStores[resId];
 
-    // 1. 스토어에 이 매장에 대한 기록이 아예 없는 경우 (초기 로딩 상태)
-    if (!groupIds) {
-      // 초기 scrap 여부(isKeep)에 따라 아이콘을 보여줌
-      return isKeep ? save : notsave;
+    // 사용자가 조작을 한 기록이 있다면, 스토어의 데이터만 보고 판단합니다.
+    if (hasUserAction) {
+      if (!groupIds || groupIds.length === 0) {
+        return notsave; // 모든 그룹 해제 시 확실하게 notsave 반환
+      }
+      if (groupIds.length >= 2) {
+        return MultiSaveMarker;
+      }
+      return save;
     }
 
-    // 2. 사용자가 조작하여 그룹이 0개가 된 경우
-    if (groupIds.length === 0) {
-      return notsave;
-    }
-
-    // 3. 2개 이상의 그룹에 저장된 경우
-    if (groupIds.length >= 2) {
-      return MultiSaveMarker;
-    }
-
-    // 4. 1개의 그룹에 저장된 경우
-    return save;
+    // 2. 조작 기록이 전혀 없는 초기 상태일 때만 부모의 scrap(isKeep) 상태를 따릅니다.
+    return isKeep ? save : notsave;
   };
 
   return (
