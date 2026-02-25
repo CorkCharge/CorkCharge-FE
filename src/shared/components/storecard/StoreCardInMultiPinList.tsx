@@ -95,12 +95,23 @@ const StoreCard = ({
   const getMarkerIcon = () => {
     const groupIds = selectedStores[resId];
 
-    if (!groupIds || groupIds.length === 0) {
+    // 1. 스토어에 이 매장에 대한 기록이 아예 없는 경우 (초기 로딩 상태)
+    if (!groupIds) {
+      // 초기 scrap 여부(isKeep)에 따라 아이콘을 보여줌
+      return isKeep ? Save : NotSave;
+    }
+
+    // 2. 사용자가 조작하여 그룹이 0개가 된 경우
+    if (groupIds.length === 0) {
       return NotSave;
     }
+
+    // 3. 2개 이상의 그룹에 저장된 경우
     if (groupIds.length >= 2) {
       return MultiSaveMarker;
     }
+
+    // 4. 1개의 그룹에 저장된 경우
     return Save;
   };
 
