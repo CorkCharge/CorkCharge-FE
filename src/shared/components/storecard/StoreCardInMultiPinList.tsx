@@ -12,6 +12,7 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import check from '../../components/detail/assets/check.svg';
 import logo from '@/shared/assets/images/logo.svg';
+import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
 
 // [수정] API 데이터 타입에 맞춰 Props 인터페이스 정의
 interface StoreCardProps {
@@ -91,6 +92,25 @@ const StoreCard = ({
     }
   };
 
+  const getMarkerIcon = () => {
+    const hasUserAction = resId in selectedStores;
+    const groupIds = selectedStores[resId];
+
+    // 사용자가 조작을 한 기록이 있다면, 스토어의 데이터만 보고 판단합니다.
+    if (hasUserAction) {
+      if (!groupIds || groupIds.length === 0) {
+        return NotSave; // 모든 그룹 해제 시 확실하게 NotSave 반환
+      }
+      if (groupIds.length >= 2) {
+        return MultiSaveMarker;
+      }
+      return Save;
+    }
+
+    // 2. 조작 기록이 전혀 없는 초기 상태일 때만 부모의 scrap(isKeep) 상태를 따릅니다.
+    return isKeep ? Save : NotSave;
+  };
+
   return (
     <div
       className="flex w-full flex-col bg-white"
@@ -104,7 +124,11 @@ const StoreCard = ({
         <div className="flex gap-[4px]">
           <button type="button" onClick={handleKeepClick}>
             {/* scrap ? Save : NotSave */}
-            <img src={isKeep ? Save : NotSave} alt="save" className="h-[25px] w-[25px]" />
+            <img
+              src={getMarkerIcon()}
+              alt={isKeep ? 'saved' : 'unsaved'}
+              className="h-[25px] w-[25px]"
+            />
           </button>
           <button type="button" onClick={handleShareClick}>
             <img src={Share} alt="share" className="h-[25px] w-[25px]" />

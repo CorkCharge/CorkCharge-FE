@@ -15,6 +15,7 @@ import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
 import notsave from '../storecard/notsave.svg';
 import save from '../storecard/save.svg';
+import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
 
 interface detailProps {
   resId: number;
@@ -110,6 +111,25 @@ const DetailHeader = ({
     }
   };
 
+  const getMarkerIcon = () => {
+    const hasUserAction = resId in selectedStores;
+    const groupIds = selectedStores[resId];
+
+    // 사용자가 조작을 한 기록이 있다면, 스토어의 데이터만 보고 판단합니다.
+    if (hasUserAction) {
+      if (!groupIds || groupIds.length === 0) {
+        return notsave; // 모든 그룹 해제 시 확실하게 notsave 반환
+      }
+      if (groupIds.length >= 2) {
+        return MultiSaveMarker;
+      }
+      return save;
+    }
+
+    // 2. 조작 기록이 전혀 없는 초기 상태일 때만 부모의 scrap(isKeep) 상태를 따릅니다.
+    return isKeep ? save : notsave;
+  };
+
   return (
     <div className="relative flex w-full flex-col">
       <img
@@ -124,7 +144,11 @@ const DetailHeader = ({
           <div className="flex flex-row gap-[8px]">
             <div className="text-[24px] font-bold">{name}</div>
             <button onClick={() => setIsGroupSelectorOpen(true)}>
-              <img src={isKeep ? save : notsave} alt="bookmark" className="h-[32px] w-[32px]" />
+              <img
+                src={getMarkerIcon()}
+                alt={isKeep ? 'saved' : 'unsaved'}
+                className="h-[32px] w-[32px]"
+              />
             </button>
           </div>
           <div className="flex items-center">

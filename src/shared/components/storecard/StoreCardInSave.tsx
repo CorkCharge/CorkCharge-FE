@@ -12,6 +12,7 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import check from '../../components/detail/assets/check.svg';
 import logo from '@/shared/assets/images/logo.svg';
+import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
 
 interface StoreCardProps {
   restaurantId: number;
@@ -41,6 +42,25 @@ const StoreCardInSave = ({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
+
+  const getMarkerIcon = () => {
+    const hasUserAction = restaurantId in selectedStores;
+    const groupIds = selectedStores[restaurantId];
+
+    // 사용자가 조작을 한 기록이 있다면, 스토어의 데이터만 보고 판단합니다.
+    if (hasUserAction) {
+      if (!groupIds || groupIds.length === 0) {
+        return NotSave; // 모든 그룹 해제 시 확실하게 NotSave 반환
+      }
+      if (groupIds.length >= 2) {
+        return MultiSaveMarker;
+      }
+      return Save;
+    }
+
+    // 2. 조작 기록이 전혀 없는 초기 상태일 때만 부모의 scrap(isKeep) 상태를 따릅니다.
+    return isKeep ? Save : NotSave;
+  };
 
   const handleKeepClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 부모 div로의 이벤트 전파를 막습니다.
@@ -85,7 +105,7 @@ const StoreCardInSave = ({
         <div className="flex gap-[4px]">
           <button type="button" onClick={handleKeepClick}>
             <img
-              src={isKeep ? Save : NotSave}
+              src={getMarkerIcon()}
               alt={isKeep ? 'saved' : 'unsaved'}
               className="h-[25px] w-[25px]"
             />
