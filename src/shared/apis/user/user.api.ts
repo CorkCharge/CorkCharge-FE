@@ -58,3 +58,9 @@ export const submitCertificate = async (cert: File) => {
   formData.append('images', cert);
   await apiClient.put('/users/registration', formData);
 };
+
+// 사장님 콜키지 정보 등록하기
+export const enrollCorkage = async () => {
+  const res = await apiClient.get('/corkages/verify');
+  return res.data.data;
+};

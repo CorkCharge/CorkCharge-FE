@@ -16,6 +16,7 @@ export const FOOTERHIDDENURL = [
   '/corkagemap/filter',
   '/doit',
   '/doit/complete',
+  '/add/storecheck',
 ];
 
 // 하단 네비게이션 숨김 page URL(prefix)
