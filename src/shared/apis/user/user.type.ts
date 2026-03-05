@@ -40,3 +40,21 @@ export interface MasterStoreResponse {
   corkageOptions: string[];
   mainImages: string[];
 }
+
+// 사장님 콜키지 등록 응답
+export interface EnrollCorkageResponse {
+  restaurantId: number;
+  restaurantName: string;
+  address: string;
+  mainImageUrl: string;
+}
+
+// 사장님 콜키지 등록 요청
+export interface EnrollCorkageRequest {
+  restaurantId: number;
+  corkageType: string;
+  corkagePrice: number;
+  multiCorkages: { liquorType: string; price: number }[] | null;
+  optionTypes: string[];
+  etcContent: string | null;
+}

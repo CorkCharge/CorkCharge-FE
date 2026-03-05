@@ -5,12 +5,15 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Back from '../../shared/assets/whiteArrow.svg';
 import { enrollCorkage } from '@/shared/apis/user/user.api';
 import Button from '@/shared/components/common/Button';
+import type { EnrollCorkageResponse } from '@/shared/apis/user/user.type';
 
 const StoreCheck = () => {
   const navigate = useNavigate();
-  const [emblaRef, emblaApi] = useEmblaCarousel();
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    containScroll: false,
+  });
 
-  const [stores, setStores] = useState([]);
+  const [stores, setStores] = useState<EnrollCorkageResponse[]>([]);
   const [emblaIdx, setEmblaIdx] = useState(0);
   // const location = useLocation();
   // const { storeName, address, restaurantId, thumbnailUrl } = location.state || {
@@ -63,29 +66,29 @@ const StoreCheck = () => {
   };
 
   const renderMasterStores = () => {
-    // if (stores.length < 1) return;
-    // const isActive = emblaIdx ===
     return (
-      <div className="embla w-[80%]" style={{ maxWidth: 'calc(var(--app-width) * 0.7)' }}>
+      <div className="embla w-[100%]">
         <div className="embla__viewport overflow-hidden" ref={emblaRef}>
           <div className="embla__container flex touch-pan-y touch-pinch-zoom">
-            {[...Array(3)].map((_, idx) => {
+            {stores.map((store, idx) => {
               const isActive = emblaIdx === idx;
               return (
                 <div
-                  className={`embla__slide relative -ml-[25%] h-[65svh] w-full flex-[0_0_80%] rounded-bl-lg rounded-br-[70px] rounded-tl-[70px] rounded-tr-lg bg-white px-4 py-7 first:ml-0 ${isActive ? 'z-10' : 'z-5 scale-90 opacity-60'}`}
+                  key={store.restaurantId}
+                  className={`embla__slide relative -ml-[25%] h-[65svh] flex-[0_0_80%] rounded-bl-lg rounded-br-[70px] rounded-tl-[70px] rounded-tr-lg bg-white px-4 py-7 first:ml-0 ${isActive ? 'z-10' : 'z-5 scale-90 opacity-60'}`}
                 >
                   <img
-                    src="https://picsum.photos/200/178"
+                    src={store.mainImageUrl}
                     className="h-[50%] w-full rounded-bl-lg rounded-br-[70px] rounded-tl-[70px] rounded-tr-lg object-cover"
                   />
                   <div className="mt-5 flex flex-col gap-3 text-[var(--gray-8)]">
-                    <span className="text-2xl font-bold">성수 누메르도스</span>
-                    <span className="text-sm font-medium">서울 광진구 아차산로 21길 1 2층</span>
+                    <span className="text-2xl font-bold">{store.restaurantName}</span>
+                    <span className="text-sm font-medium">{store.address}</span>
                   </div>
                   <Button
                     value="맞습니다"
                     className="absolute bottom-5 left-1/2 w-[60%] -translate-x-1/2 bg-[var(--primary)] text-white"
+                    onClick={() => navigate('/add/option', { state: { restaurant: store } })}
                   />
                 </div>
               );
@@ -93,18 +96,17 @@ const StoreCheck = () => {
           </div>
         </div>
 
-        <div className="mt-3 flex justify-center gap-2">
-          {[...Array(3)].map((_, idx) => (
-            <span
-              className={`size-1 rounded-full ${idx === emblaIdx ? 'bg-[var(--primary)]' : 'bg-[var(--gray-5)]'}`}
-            ></span>
-          ))}
-        </div>
+        {stores.length > 1 && (
+          <div className="mt-3 flex justify-center gap-2">
+            {stores.map((_, idx) => (
+              <span
+                className={`size-1 rounded-full ${idx === emblaIdx ? 'bg-[var(--primary)]' : 'bg-[var(--gray-5)]'}`}
+              ></span>
+            ))}
+          </div>
+        )}
       </div>
     );
-    // else if (stores.length === 1) {
-    // } else {
-    // }
   };
 
   return (
@@ -130,34 +132,7 @@ const StoreCheck = () => {
         위 가게가 맞습니까?
       </div>
 
-      <div className="-mx-4 flex justify-center">
-        {renderMasterStores()}
-        {/* <div
-          className="flex h-[480px] w-[293px] flex-col items-center rounded-bl-[3%] rounded-br-[25%] rounded-tl-[25%] rounded-tr-[3%] bg-white/80"
-          style={{
-            boxShadow:
-              '0px 4px 20px 0px rgba(58, 13, 16, 0.20), 0.318px 0.318px 2px 0px rgba(255, 255, 255, 0.30) inset',
-          }}
-        >
-          <img
-            src={''}
-            alt="가게 썸네일"
-            className="mt-[27px] h-[201px] w-[268px] rounded-bl-[3%] rounded-br-[25%] rounded-tl-[25%] rounded-tr-[3%]"
-          />
-          <div className="mt-[20px] flex w-full flex-col gap-[10px]">
-            <div className={`ml-[26px] text-[24px] font-[700]`}>{'ss'}</div>
-            <div className={`ml-[26px] text-[14px] font-[500] text-[#35353F]`}>{'ss'}</div>
-          </div>
-          <div className="mt-[67px] flex flex-row gap-[6px]">
-            <button
-              onClick={handleRegisterClick}
-              className="m-auto h-[48px] w-[246px] cursor-pointer items-center rounded-[12px] bg-[#90212A] font-[600] text-white"
-            >
-              맞습니다
-            </button>
-          </div>
-        </div> */}
-      </div>
+      <div className="-mx-4 flex justify-center">{renderMasterStores()}</div>
     </div>
   );
 };

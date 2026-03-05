@@ -17,6 +17,7 @@ export const FOOTERHIDDENURL = [
   '/doit',
   '/doit/complete',
   '/add/storecheck',
+  '/add/option',
 ];
 
 // 하단 네비게이션 숨김 page URL(prefix)
