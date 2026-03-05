@@ -15,13 +15,6 @@ const StoreCheck = () => {
 
   const [stores, setStores] = useState<EnrollCorkageResponse[]>([]);
   const [emblaIdx, setEmblaIdx] = useState(0);
-  // const location = useLocation();
-  // const { storeName, address, restaurantId, thumbnailUrl } = location.state || {
-  //   storeName: '매장명 없음',
-  //   address: '주소 없음',
-  //   restaurantId: 'Id 없음',
-  //   thumbnailUrl: '사진 미제공',
-  // };
 
   useEffect(() => {
     getMasterStore();
@@ -53,16 +46,6 @@ const StoreCheck = () => {
     } catch (e) {
       console.error('사장님 콜키지 정보 등록 실패: ' + e);
     }
-  };
-
-  const handleRegisterClick = () => {
-    // navigate('/add/option', {
-    //   state: {
-    //     storeName: storeName,
-    //     address: address,
-    //     restaurantId: restaurantId,
-    //   },
-    // });
   };
 
   const renderMasterStores = () => {
