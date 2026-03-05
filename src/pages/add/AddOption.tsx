@@ -263,7 +263,7 @@ const AddOption = () => {
         <div className="mt-8 h-[1px] bg-[var(--gray-3)]" />
         {/*세부옵션 및 버튼 */}
         <div className="mt-[22px] flex w-full gap-[20px]">
-          <div className="ml-4 text-[16px] font-[700]">세부 옵션</div>
+          <div className="ml-4 text-nowrap text-[16px] font-[700]">세부 옵션</div>
           <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
             <button
               onClick={() => toggleOption('ICE_PROVIDED')}
@@ -339,7 +339,7 @@ const AddOption = () => {
       >
         <button
           onClick={handleRegister}
-          className="h-[48px] flex-1 cursor-pointer items-center rounded-[12px] bg-[var(--primary)] text-[16px] font-[700] text-white disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-8)]"
+          className="h-[48px] w-[80%] cursor-pointer items-center rounded-[12px] bg-[var(--primary)] text-[16px] font-[700] text-white disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-8)]"
           disabled={!selected || !Object.values(selectedOptions).includes(true) || price === ''}
         >
           등록하기
