@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
 import useAuthStore from '@/shared/store/useAuthStore';
-import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
 import { NaverLogIn } from '@/shared/apis/signIn/Naver';
 import { ControlLists, ControlItem } from './ControlList';
