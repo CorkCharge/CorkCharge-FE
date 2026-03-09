@@ -1,31 +1,21 @@
-import StoreCard from '@/shared/components/StoreCard';
-import Review from './Review';
 import { useCallback, useEffect, useState } from 'react';
-import TopBar from '@/shared/components/TopBar';
+import { useNavigate } from 'react-router-dom';
+
+// import StoreCard from '@/shared/components/keep/StoreCard';
+import Review from './Review';
 import { fetchSavedRestaurant, type SavedResto } from '@/shared/apis/bookmark/restaurantApi';
 import { fetchSavedTip } from '@/shared/apis/bookmark/tipApi';
 import SavedCuration from './SavedCuration';
 import type { TipData } from '@/shared/apis/tip/tipListApi';
+import Header from '@/shared/components/common/Header';
+import MyStoreList from '@/shared/components/keep/StoreList';
+// import StoreCard from '@/shared/components/storecard/StoreCardInMultiPinList';
 
+type tapIdx = '매장' | '리뷰' | 'Tip';
 const Keep = () => {
-  const [review, setReview] = useState<boolean>(true);
-  const [store, setStore] = useState<boolean>(false);
-  const [tip, setTip] = useState<boolean>(false);
-  const handleReviewSelected = () => {
-    setReview(true);
-    setStore(false);
-    setTip(false);
-  };
-  const handleStoreSelected = () => {
-    setReview(false);
-    setStore(true);
-    setTip(false);
-  };
-  const handleTipSelected = () => {
-    setReview(false);
-    setStore(false);
-    setTip(true);
-  };
+  const navigate = useNavigate();
+
+  const [currentIdx, setCurrentIdx] = useState<tapIdx>('매장');
 
   //fetchRestosData (저장된 매장만)
   // const [savedRestos, SetSavedRestos] = useState<SavedResto[]>();
@@ -76,57 +66,62 @@ const Keep = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      {/* <div className="flex h-[60px] items-center text-[16px] font-bold text-[#35353F]">저장</div> */}
-      <TopBar text="저장" />
-      <div className="mb-2 flex h-[30px] w-[393px] items-center justify-center gap-14 border-b">
-        <button
-          onClick={handleReviewSelected}
-          className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${review ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+    <main className="px-4">
+      <Header title="저장" type="back" backFn={() => navigate(-1)} />
+      <div className="flex flex-col items-center justify-center">
+        <div
+          className="mb-2 flex h-[30px] min-w-full items-center justify-center gap-4 border-b px-6"
+          style={{ width: 'calc(100% + 32px)' }}
         >
-          리뷰
-        </button>
-        <button
-          onClick={handleStoreSelected}
-          className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${store ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
-        >
-          매장
-        </button>
-        <button
-          onClick={handleTipSelected}
-          className={`h-full w-[120px] border-x-0 border-b-2 border-t-0 border-solid ${tip ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
-        >
-          Tip
-        </button>
+          <button
+            onClick={() => setCurrentIdx('매장')}
+            className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === '매장' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+          >
+            매장
+          </button>
+          <button
+            onClick={() => setCurrentIdx('리뷰')}
+            className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === '리뷰' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+          >
+            리뷰
+          </button>
+          <button
+            onClick={() => setCurrentIdx('Tip')}
+            className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === 'Tip' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+          >
+            Tip
+          </button>
+        </div>
+        {currentIdx === '리뷰' ? (
+          //저장한 리뷰 목록 -> restaurantId 받아올 수 있음.
+          <Review />
+        ) : currentIdx === '매장' ? (
+          <>
+            {/* keep된것만 map 필요 */}
+            {/* {savedRestos &&
+              savedRestos.map((savedResto) => {
+                return (
+                  <StoreCard
+                    restaurantId={savedResto.restaurantId}
+                    imageUrl={savedResto.thumbnailUrl}
+                    keep={savedResto.bookmarkCount}
+                    price={savedResto?.corkagePrice ?? '0원'}
+                    name={savedResto.name}
+                    local={savedResto.address}
+                    rating={savedResto.rating}
+                    onUnbookmarked={refetchSavedRestaurants}
+                  />
+                );
+              })} */}
+            <MyStoreList />
+          </>
+        ) : (
+          <>
+            <SavedCuration tiplist={savedTips} />{' '}
+          </>
+        )}
       </div>
-      {review ? (
-        //저장한 리뷰 목록 -> restaurantId 받아올 수 있음.
-        <Review />
-      ) : store ? (
-        <>
-          {/* keep된것만 map 필요 */}
-          {savedRestos &&
-            savedRestos.map((savedResto) => {
-              return (
-                <StoreCard
-                  restaurantId={savedResto.restaurantId}
-                  imageUrl={savedResto.thumbnailUrl}
-                  keep={savedResto.bookmarkCount}
-                  price={savedResto?.corkagePrice ?? '0원'}
-                  name={savedResto.name}
-                  local={savedResto.address}
-                  rating={savedResto.rating}
-                  onUnbookmarked={refetchSavedRestaurants}
-                />
-              );
-            })}
-        </>
-      ) : (
-        <>
-          <SavedCuration tiplist={savedTips} />{' '}
-        </>
-      )}
-    </div>
+    </main>
   );
 };
 export default Keep;

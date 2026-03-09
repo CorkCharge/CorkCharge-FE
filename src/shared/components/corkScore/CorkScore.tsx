@@ -69,9 +69,9 @@ const CorkScore = ({
           goStore();
         }
       }}
-      className="flex h-[144px] w-[357px] cursor-pointer justify-between rounded-2xl bg-[#F3F3F6]"
+      className="flex h-[144px] w-full cursor-pointer justify-between rounded-2xl bg-[#F3F3F6]"
     >
-      <div className="mb-4 ml-4 mt-4 flex w-[210px] flex-col pr-2">
+      <div className="mb-4 ml-4 mt-4 flex flex-col pr-2">
         <div className="flex justify-between">
           <div className="text-[20px] font-bold">{restaurantName}</div>
           <div onClick={stop} className="flex items-center justify-center">

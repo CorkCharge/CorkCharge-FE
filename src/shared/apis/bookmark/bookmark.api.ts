@@ -10,6 +10,7 @@ import type {
   UpdateGroupRequest,
   GroupListResponse,
   GroupDetailResponse,
+  MyStoreOrder,
 } from './bookmark.type';
 
 // 저장하기(리뷰/팁/매장) (2차)
@@ -72,7 +73,7 @@ export const getBookmarkGroups = async (): Promise<GroupListResponse> => {
 // 특정 그룹 내용 조회
 export const getBookmarkGroupDetail = async (
   groupId: number,
-  sort: 'LATEST' | 'REVIEW_COUNT_DESC' | 'RATING_DESC' = 'LATEST'
+  sort: MyStoreOrder = 'LATEST'
 ): Promise<GroupDetailResponse> => {
   const response = await apiClient.get<GroupDetailResponse>(`/bookmarks/groups/${groupId}`, {
     params: { sort },

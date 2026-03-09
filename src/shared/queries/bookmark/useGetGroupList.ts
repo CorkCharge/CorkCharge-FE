@@ -5,7 +5,7 @@ export const useGetGroupList = () => {
   return useQuery({
     queryKey: ['group'],
     queryFn: getBookmarkGroups,
-    select: (res) => res.data.groups,
+    select: (res) => res.data,
     staleTime: 0,
   });
 };

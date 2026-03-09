@@ -1,7 +1,8 @@
-// import React from 'react'
+import { useEffect, useState } from 'react';
+
 import CorkScore from '../../shared/components/corkScore/CorkScore';
 import { fetchSavedReview, type SavedReview } from '@/shared/apis/bookmark/reviewApi';
-import { useEffect, useState } from 'react';
+import { useGetMyReviews } from '@/shared/queries/user/useMyReviewList';
 
 //이거 저장한 리뷰임...
 const Review = () => {
@@ -11,8 +12,6 @@ const Review = () => {
     const fetchData = async () => {
       try {
         const res = await fetchSavedReview();
-        // console.log(res);
-        console.log('저장한 리뷰 list API  호출 성공');
         SetSavedReviews(res);
       } catch {
         console.error('저장한 리뷰 list API  호출 실패');
@@ -21,9 +20,11 @@ const Review = () => {
     fetchData();
   }, []);
 
+  // const { data: savedReviews } = useGetMyReviews();
+
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      {/* <div>저장한 리뷰 list</div> */}
+    <div className="flex w-full flex-col items-center justify-center gap-4">
+      <div>저장한 리뷰 list</div>
       {savedReviews &&
         savedReviews.map((savedReview) => {
           return (
