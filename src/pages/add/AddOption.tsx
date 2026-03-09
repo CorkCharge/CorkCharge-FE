@@ -2,19 +2,14 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Back from '../../shared/assets/left_arrow.svg';
 import X from '../doit/assets/x.svg';
-import TextArea from '../../shared/assets/Input.svg';
 import TextArea2 from '../../shared/assets/Input2.svg';
 import x from './assets/x.svg';
 import InfoModal from '@/shared/components/addModal/InfoModal';
+import { ImageInput } from '@/shared/components/common/Input';
 const AddOption = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, address, restaurantId } = location.state || {
-    // restaurantId 추가하기.
-    storeName: '매장명 없음',
-    address: '주소 없음',
-    restaurantId: 0,
-  };
+  const { restaurantName, address, restaurantId } = location.state.restaurant;
 
   const [selected, setSelected] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,7 +34,6 @@ const AddOption = () => {
       ...prev,
       [key]: !prev[key],
     }));
-    console.log(key);
   };
 
   const handleBackClick = () => {
@@ -74,46 +68,43 @@ const AddOption = () => {
   };
 
   const handleXClick = () => {
-    navigate('/home');
+    navigate('/my');
   };
 
   return (
-    <main
-      className="relative flex h-screen w-full flex-col items-stretch"
-      style={{ height: 'calc(100vh - 60px)' }}
-    >
-      {/* 헤더1 */}
-      <div className="mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center">
+    <main className="relative flex w-full flex-col items-stretch px-4">
+      {/* 헤더 */}
+      <div className="flex h-[48px] w-full place-content-between items-center">
         <img
           src={Back}
           alt="왼쪽 화살표"
-          className="ml-[3vh] h-[20.34px] w-[11.46px] cursor-pointer"
+          className="h-[20.34px] w-[11.46px] cursor-pointer"
           onClick={handleBackClick}
         />
         <p className="text-[16px] font-[700]">추가하기</p>
-        <img
-          src={X}
-          alt="x"
-          className="mr-[12px] h-[17px] w-[17px] cursor-pointer"
-          onClick={handleXClick}
-        />
+        <img src={X} alt="x" className="h-[17px] w-[17px] cursor-pointer" onClick={handleXClick} />
       </div>
+
       {/*가게정보*/}
       <div className="mt-[8px] flex w-full flex-col gap-[8px]">
-        <div className={`ml-[32px] text-[30px] font-[700]`}>{storeName}</div>
-        <div className={`ml-[32px] text-[14px] font-[500] text-[#35353F]`}>{address}</div>
+        <div className={`ml-4 text-[30px] font-[700]`}>{restaurantName}</div>
+        <div className={`ml-4 text-[14px] font-[500] text-[var(--gray-8)]`}>{address}</div>
       </div>
+
       {/*구분선*/}
-      <div className="mt-[8px] h-[1px] w-[91%] bg-[#DBDDE1]"></div>
-      <div className="absolute top-[20px] mt-[22.6vh] h-[66vh] w-full flex-1 overflow-y-auto">
+      <div className="mt-4 h-[1px] bg-[var(--gray-3)]" />
+
+      <div className="mb-[100px] w-full flex-1 overflow-y-auto">
         {/*기본정보 및 버튼*/}
-        <div className="mt-[22px] flex w-full flex-row gap-[20px]">
-          <div className="ml-[32px] text-[16px] font-[700]">기본정보</div>
+        <div className="mt-[22px] flex w-full gap-[20px]">
+          <div className="ml-4 text-nowrap text-[16px] font-[700]">기본정보</div>
           <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
             <button
               onClick={() => handleSelect('FREE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'FREE' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'FREE'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               콜키지 프리
@@ -122,8 +113,8 @@ const AddOption = () => {
               onClick={() => handleSelect('PER_BOTTLE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
                 selected === 'PER_BOTTLE'
-                  ? 'bg-[#90212A] text-white'
-                  : 'bg-[#F3F3F6] text-[#35353F]'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               병당 콜키지
@@ -132,8 +123,8 @@ const AddOption = () => {
               onClick={() => handleSelect('PER_PERSON')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
                 selected === 'PER_PERSON'
-                  ? 'bg-[#90212A] text-white'
-                  : 'bg-[#F3F3F6] text-[#35353F]'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               인당 콜키지
@@ -141,7 +132,9 @@ const AddOption = () => {
             <button
               onClick={() => handleSelect('PER_TABLE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'PER_TABLE' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'PER_TABLE'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               테이블 콜키지
@@ -149,7 +142,9 @@ const AddOption = () => {
             <button
               onClick={() => handleSelect('MULTIPLE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selected === 'MULTIPLE' ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selected === 'MULTIPLE'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               다중 콜키지
@@ -162,9 +157,9 @@ const AddOption = () => {
             {multipleOptions.map((option, index) => (
               <div key={index}>
                 {/* 주종, 입력창 묶음 div */}
-                <div className="mb-[10px] flex w-full flex-row gap-[20px]">
+                <div className="mb-[10px] flex w-full gap-[20px]">
                   <div className="ml-[32px] text-[16px] font-[700]">주종</div>
-                  <div className="relative flex flex-row items-center">
+                  <div className="relative flex items-center">
                     <img src={TextArea2} alt="입력창" className="h-[47px] w-[262px]" />
                     {/* 입력창 */}
                     <input
@@ -172,7 +167,7 @@ const AddOption = () => {
                       placeholder="주종을 입력하세요"
                       value={option.liquorType}
                       onChange={(e) => handleMultipleChange(index, 'liquorType', e.target.value)}
-                      className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+                      className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[var(--gray-8)] focus:outline-none"
                     />
                     <img
                       src={x}
@@ -183,17 +178,17 @@ const AddOption = () => {
                   </div>
                 </div>
                 {/* 비용, 입력창 묶음 div */}
-                <div className="flex w-full flex-row gap-[20px]">
+                <div className="flex w-full gap-[20px]">
                   <div className="ml-[32px] text-[16px] font-[700]">비용</div>
-                  <div className="relative flex flex-row items-center">
+                  <div className="relative flex items-center">
                     <img src={TextArea2} alt="입력창" className="h-[47px] w-[262px]" />
                     {/* 입력창 */}
                     <input
-                      type="text"
+                      type="number"
                       placeholder="비용을 입력하세요"
                       value={option.price}
                       onChange={(e) => handleMultipleChange(index, 'price', e.target.value)}
-                      className="top-50 absolute left-[36px] z-10 h-[24px] w-[188px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+                      className="top-50 absolute left-[36px] z-10 h-[24px] w-[138px] bg-transparent text-[14px] text-[var(--gray-8)] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                     <img
                       src={x}
@@ -201,7 +196,7 @@ const AddOption = () => {
                       className="absolute right-[26.81px] h-[11.3px] w-[9.18px]"
                       onClick={() => handleClearInput(index, 'price')}
                     />
-                    <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[#35353F]">
+                    <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[var(--gray-8)]">
                       원
                     </span>
                   </div>
@@ -220,7 +215,27 @@ const AddOption = () => {
         )}
         {/* 병당, 인당, 테이블 콜키지 클릭 */}
         {['PER_BOTTLE', 'PER_PERSON', 'PER_TABLE'].includes(selected!) && (
-          <div className="relative mt-[16px] flex flex-row items-center justify-center">
+          <div className="relative mt-4 flex h-11 items-center rounded-ee-full rounded-ss-full bg-[var(--gray-1)]">
+            <input
+              type="number"
+              placeholder="비용을 입력해주세요"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="z-10 h-[24px] w-[220px] bg-transparent pl-8 text-[var(--gray-8)] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+            <img
+              src={x}
+              alt="x"
+              className="absolute right-[14.2%] h-[11.3px] w-[9.18px] cursor-pointer"
+              onClick={() => setPrice('')}
+            />
+            <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[var(--gray-8)]">
+              원
+            </span>
+          </div>
+        )}
+        {/* {['PER_BOTTLE', 'PER_PERSON', 'PER_TABLE'].includes(selected!) && (
+          <div className="relative mt-[16px] flex items-center justify-center">
             <p className="absolute left-[15%]">
               {selected === 'PER_BOTTLE'
                 ? '병당'
@@ -231,32 +246,31 @@ const AddOption = () => {
                     : ''}
             </p>
             <img src={TextArea} alt="입력창" className="h-[47px] w-[85.7%]" />
-            {/* 입력창 */}
             <input
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="top-50 absolute left-[32.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
+              className="top-50 absolute left-[32.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[var(--gray-8)] focus:outline-none"
             />
             <img src={x} alt="x" className="absolute right-[14.2%] h-[11.3px] w-[9.18px]" />
-            {/* "원" 표시 */}
-            <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[#35353F]">
+            <span className="absolute right-[25.2%] z-10 text-[16px] font-[500] text-[var(--gray-8)]">
               원
             </span>
           </div>
-        )}
+        )} */}
+
         {/*구분선*/}
-        <div className="mt-[30px] h-[1px] w-[91%] bg-[#DBDDE1]"></div>
+        <div className="mt-8 h-[1px] bg-[var(--gray-3)]" />
         {/*세부옵션 및 버튼 */}
-        <div className="mb-[136px] mt-[22px] flex w-full flex-row gap-[20px]">
-          <div className="ml-[32px] text-[16px] font-[700]">세부 옵션</div>
+        <div className="mt-[22px] flex w-full gap-[20px]">
+          <div className="ml-4 text-nowrap text-[16px] font-[700]">세부 옵션</div>
           <div className="grid grid-cols-2 gap-x-[20px] gap-y-[8px]">
             <button
               onClick={() => toggleOption('ICE_PROVIDED')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
                 selectedOptions.ICE_PROVIDED
-                  ? 'bg-[#90212A] text-white'
-                  : 'bg-[#F3F3F6] text-[#35353F]'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               얼음 제공
@@ -265,8 +279,8 @@ const AddOption = () => {
               onClick={() => toggleOption('GLASS_PROVIDED')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
                 selectedOptions.GLASS_PROVIDED
-                  ? 'bg-[#90212A] text-white'
-                  : 'bg-[#F3F3F6] text-[#35353F]'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               잔 제공
@@ -275,8 +289,8 @@ const AddOption = () => {
               onClick={() => toggleOption('ONE_BOTTLE_FREE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
                 selectedOptions.ONE_BOTTLE_FREE
-                  ? 'bg-[#90212A] text-white'
-                  : 'bg-[#F3F3F6] text-[#35353F]'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               한병 무료
@@ -285,8 +299,8 @@ const AddOption = () => {
               onClick={() => toggleOption('TWO_BOTTLE_FREE')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
                 selectedOptions.TWO_BOTTLE_FREE
-                  ? 'bg-[#90212A] text-white'
-                  : 'bg-[#F3F3F6] text-[#35353F]'
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               두병 무료
@@ -294,46 +308,46 @@ const AddOption = () => {
             <button
               onClick={() => toggleOption('ETC')}
               className={`h-[32px] w-[111px] rounded-[20px] text-[14px] font-[500] ${
-                selectedOptions.ETC ? 'bg-[#90212A] text-white' : 'bg-[#F3F3F6] text-[#35353F]'
+                selectedOptions.ETC
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[var(--gray-1)] text-[var(--gray-8)]'
               }`}
             >
               여러 기타
             </button>
           </div>
         </div>
+
         {/*여러 기타 클릭*/}
         {selectedOptions.ETC && (
-          <div className="relative mt-[16px] flex flex-row items-center justify-center">
-            <img src={TextArea} alt="입력창" className="h-[47px] w-[85.7%]" />
-            {/* 입력창 */}
-            <input
-              type="text"
-              placeholder="기타사항을 입력해주세요"
-              value={otherOptionText}
-              onChange={(e) => setOtherOptionText(e.target.value)}
-              className="top-50 absolute left-[12.2%] z-10 h-[24px] w-[220px] bg-transparent text-[14px] text-[#35353F] focus:outline-none"
-            />
-            <img src={x} alt="x" className="absolute right-[14.2%] h-[11.3px] w-[9.18px]" />
-          </div>
+          <ImageInput
+            placeholder="기타 사항을 입력해주세요"
+            className="mt-4 w-full"
+            imgClassName="w-3 h-8 cursor-pointer"
+            imgSrc={X}
+            value={otherOptionText}
+            onChange={(e) => setOtherOptionText(e.target.value)}
+            onImgClick={() => setOtherOptionText('')}
+          />
         )}
       </div>
-      <div className="absolute bottom-[5.6vh] flex w-full flex-row justify-center gap-[12px]">
-        <button
-          className="h-[48px] w-[38%] cursor-pointer items-center rounded-[12px] bg-[#F3F3F6] text-[16px] font-[700] text-black"
-          onClick={handleBackClick}
-        >
-          뒤로가기
-        </button>
+
+      {/* 등록하기 버튼 */}
+      <div
+        className="fixed bottom-8 left-1/2 flex w-full -translate-x-1/2 justify-center gap-[12px]"
+        style={{ maxWidth: 'calc(var(--app-width) * 0.8)' }}
+      >
         <button
           onClick={handleRegister}
-          className="h-[48px] w-[38%] cursor-pointer items-center rounded-[12px] bg-[#90212A] text-[16px] font-[700] text-white"
+          className="h-[48px] w-[80%] cursor-pointer items-center rounded-[12px] bg-[var(--primary)] text-[16px] font-[700] text-white disabled:bg-[var(--gray-1)] disabled:text-[var(--gray-8)]"
+          disabled={!selected || !Object.values(selectedOptions).includes(true) || price === ''}
         >
           등록하기
         </button>
       </div>
       {isModalOpen && (
         <InfoModal
-          storeName={storeName}
+          storeName={restaurantName}
           restaurantId={restaurantId}
           onClose={handleCloseModal}
           corkageInfo={{

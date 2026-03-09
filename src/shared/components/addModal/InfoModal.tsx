@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CompleteModal from './CompleteModal';
-import { addCorkageInfo, type AddCorkageRequest } from '@/shared/apis/corkage/corkageApi';
+import { type AddCorkageRequest } from '@/shared/apis/corkage/corkageApi';
+import { addCorkageInfo } from '@/shared/apis/user/user.api';
 
 type CorkageInfo = {
   selectedType: string | null;
@@ -87,9 +88,7 @@ const InfoModal = ({ storeName, restaurantId, onClose, corkageInfo }: InfoModalP
 
     // API 호출
     try {
-      console.log('API 요청 Body:', requestBody);
       const response = await addCorkageInfo(requestBody);
-      console.log('API 응답:', response);
 
       if (response.success) {
         setIsCompleteModalOpen(true);
@@ -106,7 +105,6 @@ const InfoModal = ({ storeName, restaurantId, onClose, corkageInfo }: InfoModalP
 
   // "확인하러 가기" 버튼 클릭 시 실행될 함수
   const handleConfirm = () => {
-    console.log('확인하러가기 버튼 클릭!');
     navigate(`/detail-info/${restaurantId}`);
     setIsCompleteModalOpen(false); // 확인 후 모달 닫기
     onClose(); // 기존 정보 모달도 닫기
@@ -117,7 +115,7 @@ const InfoModal = ({ storeName, restaurantId, onClose, corkageInfo }: InfoModalP
       {!isCompleteModalOpen && (
         <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-[rgba(0,0,0,0.5)]">
           <div
-            className="h-auto max-h-[80vh] w-[293px] rounded-[16px] bg-white/80 pb-[24px] pl-[15px] pr-[15px] pt-[24px] text-[24px] font-[700]"
+            className="h-auto max-h-[80vh] w-[293px] rounded-[16px] bg-white pb-[24px] pl-[15px] pr-[15px] pt-[24px] text-[24px] font-[700]"
             style={{
               boxShadow:
                 '0px 4px 20px 0px rgba(58, 13, 16, 0.20), 0.318px 0.318px 2px 0px rgba(255, 255, 255, 0.30) inset',

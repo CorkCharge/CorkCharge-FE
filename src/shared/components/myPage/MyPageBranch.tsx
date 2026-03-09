@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
 import useAuthStore from '@/shared/store/useAuthStore';
-import apiClient from '@/shared/apis/apiClient';
 import type { Review } from '@/shared/types/mypage';
 import { NaverLogIn } from '@/shared/apis/signIn/Naver';
 import { ControlLists, ControlItem } from './ControlList';
@@ -72,16 +71,17 @@ export const LoggedInMyPage = () => {
 
   const { data: myProfile } = useGetMypageInfo();
 
-  const enrollCorkage = () => {
-    apiClient
-      .get('/corkages/verify')
-      .then((res) => {
-        if (!res.data.success) throw new Error('OOPS');
-        const { restaurantName, restaurantId, ...rest } = res.data.data[0];
-        const stateObj = { storeName: restaurantName, restaurantId, ...rest };
-        navigate(`/add/storecheck/${restaurantId}`, { state: stateObj });
-      })
-      .catch((e) => console.error('<권한 검증 실패> ' + e));
+  const enrollCorkage = async () => {
+    // apiClient
+    //   .get('/corkages/verify')
+    //   .then((res) => {
+    //     if (!res.data.success) throw new Error('OOPS');
+    //     const { restaurantName, restaurantId, ...rest } = res.data.data[0];
+    //     const stateObj = { storeName: restaurantName, restaurantId, ...rest };
+    //     navigate(`/add/storecheck/${restaurantId}`, { state: stateObj });
+    //   })
+    //   .catch((e) => console.error('<권한 검증 실패> ' + e));
+    navigate('/add/storecheck');
   };
 
   return (
