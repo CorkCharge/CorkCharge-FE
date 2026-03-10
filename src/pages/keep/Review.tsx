@@ -1,13 +1,17 @@
 import { useState } from 'react';
-
 // import { useNavigate } from 'react-router-dom';
+
 import { StarWithStroke } from '@/shared/components/common/StarRate';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
-import share from '@/shared/assets/detailPageImgs/share.svg';
 import { createBookmark, deleteBookmark } from '@/shared/apis/bookmark/bookmark.api';
 import { useGetMyKeepReviews } from '@/shared/queries/bookmark/useGetMyKeepReviews';
+import Modal from '@/shared/components/common/Modal';
+import Button from '@/shared/components/common/Button';
 
-//이거 저장한 리뷰임...
+import share from '@/shared/assets/detailPageImgs/share.svg';
+import logo from '@/shared/assets/images/logo.svg';
+import check from '@/shared/components/detail/assets/check.svg';
+
 const Review = () => {
   // const navigate = useNavigate();
 
@@ -15,6 +19,7 @@ const Review = () => {
   const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
   const [isPending, setIsPending] = useState(false);
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
 
   const selectedReviews = useBookmarkStore((state) => state.selectedReviews);
   const reviewCount = useBookmarkStore((state) => state.reviewCount);
@@ -22,8 +27,14 @@ const Review = () => {
 
   const { data: reviews } = useGetMyKeepReviews();
 
-  const renderReviews = () =>
-    reviews?.map((review) => (
+  const renderReviews = () => {
+    if (!reviews) return;
+
+    if (reviews?.length < 1) {
+      return <p className="flex h-[30vh] items-center justify-center">저장된 리뷰가 없습니다.</p>;
+    }
+
+    return reviews?.map((review) => (
       <div
         className="relative w-full cursor-pointer rounded-2xl bg-[var(--gray-1)] p-4"
         key={review.reviewId}
@@ -91,6 +102,7 @@ const Review = () => {
         </div>
       </div>
     ));
+  };
 
   const handleShare = async (
     e: React.MouseEvent<HTMLDivElement>,
@@ -118,6 +130,14 @@ const Review = () => {
     }
   };
 
+  // 공유 클릭 시 주소 복사
+  const clipLink = () => {
+    navigator.clipboard.writeText(window.location.origin + `/detail-info/${modalStoreId}`);
+    setIsShareModalOpen(false);
+    setIsCopiedModalOpen(true);
+    setTimeout(() => setIsCopiedModalOpen(false), 1000);
+  };
+
   const handleKeep = async (e: React.MouseEvent<HTMLDivElement>, id: number) => {
     e.stopPropagation();
 
@@ -140,7 +160,38 @@ const Review = () => {
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-4">{renderReviews()}</div>
+    <div className="flex w-full flex-col items-center justify-center gap-4">
+      {renderReviews()}
+
+      {/* 공유하기 모달 */}
+      <Modal
+        isOpen={isShareModalOpen}
+        hasCloseButton={true}
+        onClose={() => setIsShareModalOpen(false)}
+      >
+        <div className="mb-4 flex items-center">
+          <img src={logo} className="h-[22px] w-[13px]" />
+          <div className="ml-3 flex flex-col">
+            <span className="font-semibold">{modalStoreName}</span>
+            <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
+          </div>
+        </div>
+        <Button
+          value="링크 복사하기"
+          className="bg-[var(--gray-1)] text-[var(--gray-8)] shadow-none"
+          onClick={clipLink}
+        />
+      </Modal>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

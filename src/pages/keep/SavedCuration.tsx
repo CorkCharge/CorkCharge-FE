@@ -16,7 +16,7 @@ const SavedCuration = ({ tiplist = [] }: CurationProps) => {
     selected === 'ALL' ? tiplist : tiplist?.filter((t) => t.tipCategory === selected);
   return (
     <div>
-      <Tip selected={selected} setSelected={setSelected} />
+      <Tip selected={selected} setSelected={setSelected} className="mt-2" />
       <div className="h-[15px]"></div>
       <Curation tiplist={filtered} />
     </div>
