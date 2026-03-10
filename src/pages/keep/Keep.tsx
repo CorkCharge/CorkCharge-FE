@@ -1,15 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// import StoreCard from '@/shared/components/keep/StoreCard';
 import Review from './Review';
-import { fetchSavedRestaurant, type SavedResto } from '@/shared/apis/bookmark/restaurantApi';
 import { fetchSavedTip } from '@/shared/apis/bookmark/tipApi';
 import SavedCuration from './SavedCuration';
 import type { TipData } from '@/shared/apis/tip/tipListApi';
 import Header from '@/shared/components/common/Header';
 import MyStoreList from '@/shared/components/keep/StoreList';
-// import StoreCard from '@/shared/components/storecard/StoreCardInMultiPinList';
 
 type tapIdx = '매장' | '리뷰' | 'Tip';
 const Keep = () => {
@@ -66,21 +63,6 @@ const Keep = () => {
         ) : currentIdx === '매장' ? (
           <>
             {/* keep된것만 map 필요 */}
-            {/* {savedRestos &&
-              savedRestos.map((savedResto) => {
-                return (
-                  <StoreCard
-                    restaurantId={savedResto.restaurantId}
-                    imageUrl={savedResto.thumbnailUrl}
-                    keep={savedResto.bookmarkCount}
-                    price={savedResto?.corkagePrice ?? '0원'}
-                    name={savedResto.name}
-                    local={savedResto.address}
-                    rating={savedResto.rating}
-                    onUnbookmarked={refetchSavedRestaurants}
-                  />
-                );
-              })} */}
             <MyStoreList />
           </>
         ) : (
