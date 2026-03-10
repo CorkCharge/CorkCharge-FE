@@ -14,6 +14,8 @@ interface InputProps {
   imgSrc?: string;
   onImgClick?: () => void;
   imgClassName?: string;
+  inputClassName?: string;
+  type?: string;
 }
 
 export const Input = ({ className, placeholder, onChange, value }: InputProps) => {
@@ -25,7 +27,7 @@ export const Input = ({ className, placeholder, onChange, value }: InputProps) =
       )}
     >
       <input
-        className="w-full bg-transparent"
+        className="w-full bg-transparent focus:outline-none"
         placeholder={placeholder}
         onChange={onChange}
         value={value}
@@ -72,6 +74,8 @@ export const ImageInput = ({
   value,
   onImgClick,
   imgClassName,
+  inputClassName,
+  ...rest
 }: InputProps) => {
   return (
     <div
@@ -81,10 +85,11 @@ export const ImageInput = ({
       )}
     >
       <input
-        className="w-full bg-transparent"
+        className={cn('w-full bg-transparent focus:outline-none', inputClassName)}
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        {...rest}
       />
 
       <img

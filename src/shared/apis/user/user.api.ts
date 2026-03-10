@@ -1,5 +1,7 @@
 import apiClient from '../apiClient';
 import type {
+  EnrollCorkageRequest,
+  EnrollCorkageResponse,
   MasterStoreResponse,
   MyRequestListResponse,
   MyReviewResponse,
@@ -57,4 +59,15 @@ export const submitCertificate = async (cert: File) => {
   const formData = new FormData();
   formData.append('images', cert);
   await apiClient.put('/users/registration', formData);
+};
+
+// 사장님 콜키지 정보 등록하기
+export const enrollCorkage = async (): Promise<EnrollCorkageResponse[]> => {
+  const res = await apiClient.get('/corkages/verify');
+  return res.data.data;
+};
+
+export const addCorkageInfo = async (data: EnrollCorkageRequest) => {
+  const response = await apiClient.post('/corkages', data);
+  return response.data;
 };
