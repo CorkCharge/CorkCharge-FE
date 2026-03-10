@@ -6,6 +6,7 @@ export const useGetGroupItems = (id: number | undefined, sort: MyStoreOrder = 'L
   useQuery({
     queryKey: ['group', id, sort],
     queryFn: () => getBookmarkGroupDetail(id!, sort),
+    staleTime: 1000 * 60,
     select: (res) => res.data,
     enabled: !!id,
   });

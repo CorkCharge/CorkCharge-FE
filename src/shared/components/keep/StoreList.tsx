@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 
 import { useGetGroupList } from '@/shared/queries/bookmark/useGetGroupList';
 import { GROUP_ICONS } from '@/shared/constants/groupMarker';
@@ -26,7 +27,7 @@ function MyStoreList() {
 
   const { data } = useGetGroupList();
   const groups = data?.groups;
-  const { data: groupItemsResponse } = useGetGroupItems(selectedGpId);
+  const { data: groupItemsResponse, isLoading } = useGetGroupItems(selectedGpId, orderBy);
   const groupItems = groupItemsResponse?.restaurants;
 
   useEffect(() => {
@@ -38,11 +39,12 @@ function MyStoreList() {
   }, [groups]);
 
   // 드롭 다운에서 그룹 선택 시
-  const handleGroupClick = (gName: string, storeCount: number, gColor: string) => {
+  const handleGroupClick = (gName: string, storeCount: number, gColor: string, gId: number) => {
     setSelectedGroup(gName);
     setIsGroupDrop(false);
     setHowManyStore(storeCount);
     setSelectedGpIcon(gColor);
+    setSelectedGpId(gId);
   };
 
   const renderStoreCards = () =>
@@ -81,7 +83,7 @@ function MyStoreList() {
                       <li
                         className={`flex cursor-pointer items-center gap-1 border-b px-2 py-1 ${selectedGroup === g.name ? 'text-[var(--primary)]' : 'text-[var(--gray-5)]'}`}
                         onClick={() => {
-                          handleGroupClick(g.name, g.storeCount, g.color);
+                          handleGroupClick(g.name, g.storeCount, g.color, g.groupId);
                         }}
                       >
                         <img src={GROUP_ICONS[g.color]} className="size-6" />
@@ -132,6 +134,11 @@ function MyStoreList() {
         </div>
       </div>
 
+      {isLoading && (
+        <div className="w-full py-10 text-center">
+          <ClipLoader color="var(--primary)" />
+        </div>
+      )}
       <div className="mt-2">{renderStoreCards()}</div>
     </div>
   );

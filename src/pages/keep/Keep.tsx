@@ -17,37 +17,6 @@ const Keep = () => {
 
   const [currentIdx, setCurrentIdx] = useState<tapIdx>('매장');
 
-  //fetchRestosData (저장된 매장만)
-  // const [savedRestos, SetSavedRestos] = useState<SavedResto[]>();
-  const [savedRestos, SetSavedRestos] = useState<SavedResto[]>();
-  const refetchSavedRestaurants = useCallback(async () => {
-    try {
-      const res = await fetchSavedRestaurant();
-      SetSavedRestos(res);
-    } catch {
-      console.error('저장한 식당 list API  호출 실패');
-    }
-  }, []);
-
-  // 최초 1회 로딩
-  useEffect(() => {
-    refetchSavedRestaurants();
-  }, [refetchSavedRestaurants]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetchSavedRestaurant();
-        console.log(res);
-        console.log('저장한 식당 list API  호출 성공');
-        SetSavedRestos(res);
-      } catch {
-        console.error('저장한 식당 list API  호출 실패');
-      }
-    };
-    fetchData();
-  }, []);
-
   //fetchTipData (저장된 tip만)
   const [savedTips, SetSavedTips] = useState<TipData[]>();
 
@@ -56,7 +25,6 @@ const Keep = () => {
       try {
         const res = await fetchSavedTip();
         // console.log(res);
-        console.log('저장한 tip list API  호출 성공');
         SetSavedTips(res);
       } catch {
         console.error('저장한 tip list API  호출 실패');

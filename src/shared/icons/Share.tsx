@@ -1,6 +1,8 @@
 import { cn } from '../utils/utils';
 
-const Share = ({ className, onClick }: { className?: string; onClick?: () => void }) => (
+type ShareProps = React.SVGProps<SVGSVGElement>;
+
+const Share = ({ className, onClick, ...props }: ShareProps) => (
   <svg
     width="25"
     height="25"
@@ -9,6 +11,7 @@ const Share = ({ className, onClick }: { className?: string; onClick?: () => voi
     xmlns="http://www.w3.org/2000/svg"
     className={cn('cursor-pointer', className)}
     onClick={onClick}
+    {...props}
   >
     <circle cx="12.5" cy="12.5" r="12.25" fill="white" stroke="#DBDDE1" strokeWidth="0.5" />
     <path

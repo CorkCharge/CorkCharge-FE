@@ -6,6 +6,6 @@ export const useGetGroupList = () => {
     queryKey: ['group'],
     queryFn: getBookmarkGroups,
     select: (res) => res.data,
-    staleTime: 0,
+    staleTime: 1000 * 60,
   });
 };

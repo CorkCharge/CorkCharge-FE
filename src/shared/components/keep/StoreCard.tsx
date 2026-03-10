@@ -1,148 +1,62 @@
-import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { bookmarkRequest, deleteRequest } from '../../apis/bookmark/bookmarkApi';
-// import Share from '../detail/Share';
 import Share from '@/shared/icons/Share';
-
-import bookmark from '@/shared/components/home/assets/keep.svg';
-import share from '@/shared/components/home/assets/share.svg';
-import star from '@/shared/assets/star.svg';
-import keepIcon from '@/shared/assets/keep.svg';
-import bookmarked from '@/shared/components/keep/assets/bookmarked.svg';
-import Star from '../../assets/star.svg';
-import Bookmark from '@/shared/icons/Bookmark';
+import Modal from '../common/Modal';
 import { GROUP_ICONS } from '@/shared/constants/groupMarker';
 
-interface storeProps {
-  key?: number;
-  restaurantId?: number;
-  imageUrl?: string;
-  keep: number;
-  price: string;
+import Star from '../../assets/star.svg';
+import logo from '@/shared/assets/images/logo.svg';
+import Button from '../common/Button';
+import check from '@/shared/components/detail/assets/check.svg';
+import GroupSelector from '../home/GroupSelector';
+import GroupList from '../home/GroupList';
+
+interface StoreProps {
+  restaurantId: number;
   name: string;
-  local: string;
   rating: number;
-  review?: number;
-  onUnbookmarked?: () => void;
+  reviewCount: number;
+  openingHoursText: string;
+  imageUrls: string[];
+  corkagePrice: string;
+  corkageOption: string;
 }
 
-// const StoreCard = ({
-//   key,
-//   restaurantId,
-//   imageUrl,
-//   keep,
-//   price,
-//   name,
-//   local,
-//   rating,
-//   review,
-//   onUnbookmarked,
-// }: storeProps) => {
 const StoreCard = ({
   restaurant,
   groupMarker,
 }: {
-  restaurant: {
-    restaurantId: number;
-    name: string;
-    rating: number;
-    reviewCount: number;
-    openingHoursText: string;
-    imageUrls: string[];
-    corkagePrice: string;
-    corkageOption: string;
-  };
+  restaurant: StoreProps;
   groupMarker: string;
 }) => {
   const navigate = useNavigate();
-  const goStore = () => {
-    navigate(`/detail-info/${restaurant.restaurantId}`);
-  };
 
-  const { pathname } = useLocation();
-  const [isBookmarked, setIsBookmarked] = useState<boolean>();
-  // const [isBookmarked, setIsBookmarked] = useState<boolean>(() => pathname.startsWith('/keep'));
-  // const [keepCount, setKeepCount] = useState<number>(keep);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 복사하기 모달
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false);
+  const [isGroupSelectorOpen, setIsGroupSelectorOpen] = useState(false);
 
-  //가게 저장 취소 시 리렌더링
-  const didMountRef = useRef(false);
-  useEffect(() => {
-    if (!didMountRef.current) {
-      didMountRef.current = true;
-      return;
-    }
-    // setKeepCount((prev) => prev + (isBookmarked ? 1 : -1));
-  }, [isBookmarked]);
+  // 복사하기 로직
+  const clipLink = async () => {
+    const isMobile = /Android|iphone|ipad|ipod/i.test(navigator.userAgent);
 
-  // 라우트가 바뀌면 북마크 초기 상태를 경로에 맞춰 동기화
-  useEffect(() => {
-    setIsBookmarked(pathname.startsWith('/keep'));
-  }, [pathname]);
-
-  //가게 저장하기
-  const keepStore = async () => {
-    try {
-      const res = await bookmarkRequest({
-        targetId: restaurant.restaurantId ?? 0,
-        targetType: 'RESTAURANT',
-      });
-    } catch (err) {
-      console.error('저장실패: ', err);
-    }
-  };
-
-  //가게 저장취소
-  const deleteStore = async () => {
-    try {
-      const res = await deleteRequest({
-        targetId: restaurant.restaurantId ?? 0,
-        targetType: 'RESTAURANT',
-      });
-      console.log('가게 저장 삭제성공: ', res);
-    } catch (err) {
-      console.log('가게 저장 삭제실패: ', err);
-    }
-  };
-
-  const [pending, setPending] = useState<boolean>(false);
-  const onBookmarkClick = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (pending) return;
-    setPending(true);
-    try {
-      if (isBookmarked) {
-        await deleteStore();
-        setIsBookmarked(false);
-        //onUnbookmarked?.(); //성공시 Keep.tsx 로 보냄
-      } else {
-        await keepStore();
-        setIsBookmarked(true);
+    if (navigator.share && isMobile) {
+      try {
+        await navigator.share({
+          title: restaurant.name,
+          text: `${restaurant.name} 정보를 확인해보세요!`,
+          url: `${window.location.origin}/detail-info/${restaurant.restaurantId}`,
+        });
+      } catch (err) {
+        console.log('공유 중 에러 발생 : ' + err);
       }
-    } catch (err) {
-      console.log('북마크 토글 실패:', err);
-    } finally {
-      setPending(false);
-    }
-  };
-
-  //공유하기 기능
-  //링크 공유하기 기능
-  const [openShareModal, setOpenShareModal] = useState<boolean>(false);
-  const handleShare = () => {
-    console.log('공유하기 창 띄우기');
-    setOpenShareModal(true);
-  };
-
-  const baseURL = window.location.origin;
-  const pathURL = `${baseURL}/detail-info/${restaurant.restaurantId}`;
-  const handleCopyLink = () => {
-    try {
-      navigator.clipboard.writeText(pathURL);
-      setOpenShareModal(false);
-      alert('링크가 클립보드에 복사되었습니다: ');
-    } catch {
-      console.error('복사 실패');
+    } else {
+      navigator.clipboard.writeText(
+        `${window.location.origin}/detail-info/${restaurant.restaurantId}`
+      );
+      setIsShareModalOpen(false);
+      setIsCopiedModalOpen(true);
+      setTimeout(() => setIsCopiedModalOpen(false), 1000);
     }
   };
 
@@ -156,8 +70,21 @@ const StoreCard = ({
         <h2 className="text-xl font-bold leading-none text-[var(--gray-8)]">{restaurant.name}</h2>
         {/* 우측 아이콘 버튼들 */}
         <div className="flex gap-1">
-          <img src={GROUP_ICONS[groupMarker]} className="size-6 cursor-pointer" />
-          <Share className="cursor-pointer" />
+          <img
+            src={GROUP_ICONS[groupMarker]}
+            className="size-6 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsGroupSelectorOpen(true);
+            }}
+          />
+          <Share
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsShareModalOpen(true);
+            }}
+          />
         </div>
       </div>
 
@@ -220,7 +147,7 @@ const StoreCard = ({
       </div>
 
       {/* 공유하기 모달 */}
-      {/* <div onClick={(e) => e.stopPropagation()}>
+      <div onClick={(e) => e.stopPropagation()}>
         <Modal
           isOpen={isShareModalOpen}
           hasCloseButton={true}
@@ -229,7 +156,7 @@ const StoreCard = ({
           <div className="mb-4 flex items-center">
             <img src={logo} className="h-[22px] w-[13px]" />
             <div className="ml-3 flex flex-col">
-              <span className="font-semibold">{name}</span>
+              <span className="font-semibold">{restaurant.name}</span>
               <span className="text-xs text-[rgba(60,60,67,0.6)]">corkcharge.com</span>
             </div>
           </div>
@@ -239,33 +166,31 @@ const StoreCard = ({
             onClick={clipLink}
           />
         </Modal>
-      </div> */}
+      </div>
 
       {/* 복사완료 모달 */}
-      {/* {isCopiedModalOpen && (
+      {isCopiedModalOpen && (
         <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
           <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
             <img src={check} />
           </div>
         </div>
-      )} */}
+      )}
 
-      {/* <div onClick={(e) => e.stopPropagation()}>
-        <GroupSelector
-          isOpen={isGroupSelectorOpen}
-          topSnapVh={17.8}
-          onClose={handleCloseGroupSelector}
-        >
-          {isGroupSelectorOpen && (
-            <GroupList
-              key={`group-list-${resId}-${isGroupSelectorOpen}`}
-              onClose={handleCloseGroupSelector}
-              restaurantName={name}
-              restaurantId={resId}
-            />
-          )}
-        </GroupSelector>
-      </div> */}
+      {/* 그룹 셀렉터 */}
+      <GroupSelector
+        isOpen={isGroupSelectorOpen}
+        topSnapVh={17.8}
+        onClose={() => setIsGroupSelectorOpen(false)}
+      >
+        {isGroupSelectorOpen && (
+          <GroupList
+            onClose={() => setIsGroupSelectorOpen(false)}
+            restaurantName={restaurant.name}
+            restaurantId={restaurant.restaurantId}
+          />
+        )}
+      </GroupSelector>
     </div>
   );
 };
