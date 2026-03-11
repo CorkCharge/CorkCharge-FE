@@ -18,6 +18,7 @@ const Review = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // 공유하기 modal 열기
   const [modalStoreName, setModalStoreName] = useState(''); //공유하기 모달 내 store 이름
   const [modalStoreId, setModalStoreId] = useState<number>(); //공유하기 모달 내 store id
+  const [modalReviewId, setModalReviewId] = useState<number>(); //공유하기 모달 내 review id
   const [isPending, setIsPending] = useState(false);
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
 
@@ -48,7 +49,7 @@ const Review = () => {
         </div>
 
         {/* 리뷰 이미지 */}
-        <div className="mb-1 flex gap-2 overflow-y-auto">
+        <div className="mb-1 flex gap-2 overflow-x-auto">
           {/* {renderReviewImages(review.imageUrls)} */}
         </div>
 
@@ -92,7 +93,7 @@ const Review = () => {
           </span>
           <div
             className="relative flex size-6 cursor-pointer rounded-full bg-white"
-            onClick={(e) => handleShare(e, review.restaurantName, review.reviewId)}
+            onClick={(e) => handleShare(e, review.reviewId, review.restaurantName, 1)}
           >
             <img
               src={share}
@@ -106,6 +107,7 @@ const Review = () => {
 
   const handleShare = async (
     e: React.MouseEvent<HTMLDivElement>,
+    reviewId: number,
     storeName: string,
     storeId: number
   ) => {
@@ -116,23 +118,28 @@ const Review = () => {
     if (navigator.share && isMobile) {
       try {
         await navigator.share({
-          title: storeName,
-          text: `${storeName} 리뷰를 확인해보세요!`,
-          url: `${window.location.href}#${storeId}`,
+          title: modalStoreName,
+          text: `${modalStoreName} 리뷰를 확인해보세요!`,
+          url: window.location.origin + `/detail-info/${modalStoreId}#${modalReviewId}`,
         });
       } catch (err) {
-        console.log('공유 중 에러 발생 : ' + err);
+        console.error('공유 중 에러 발생 : ' + err);
       }
     } else {
       setModalStoreId(storeId);
       setModalStoreName(storeName);
+      setModalReviewId(reviewId);
       setIsShareModalOpen(true);
     }
   };
 
   // 공유 클릭 시 주소 복사
   const clipLink = () => {
-    navigator.clipboard.writeText(window.location.origin + `/detail-info/${modalStoreId}`);
+    if (!modalStoreId || !modalReviewId) return;
+
+    navigator.clipboard.writeText(
+      window.location.origin + `/detail-info/${modalStoreId}#${modalReviewId}`
+    );
     setIsShareModalOpen(false);
     setIsCopiedModalOpen(true);
     setTimeout(() => setIsCopiedModalOpen(false), 1000);

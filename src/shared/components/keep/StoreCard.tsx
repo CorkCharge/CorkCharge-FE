@@ -48,7 +48,7 @@ const StoreCard = ({
           url: `${window.location.origin}/detail-info/${restaurant.restaurantId}`,
         });
       } catch (err) {
-        console.log('공유 중 에러 발생 : ' + err);
+        console.error('공유 중 에러 발생 : ' + err);
       }
     } else {
       navigator.clipboard.writeText(
@@ -122,7 +122,7 @@ const StoreCard = ({
               <img
                 key={index}
                 src={url}
-                alt={`${name}-food-${index}`}
+                alt={`food-${index}`}
                 className="h-[80px] w-[80px] rounded-[4px] object-cover"
               />
             ))}

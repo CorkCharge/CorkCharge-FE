@@ -8,6 +8,7 @@ import StoreCard from './StoreCard';
 
 import arrow from '@/shared/assets/selectArrow.svg';
 import { useGetGroupItems } from '@/shared/queries/bookmark/useGetGroupItems';
+import { mapColorToIcon } from '@/shared/utils/groupMapper';
 
 const RESTAURANT_ORDER_BY = {
   LATEST: '최신순',
@@ -34,7 +35,7 @@ function MyStoreList() {
     if (!groups || groups.length < 1) return;
     setSelectedGroup(groups[0].name);
     setHowManyStore(groups[0].storeCount);
-    setSelectedGpIcon(groups[0].color);
+    setSelectedGpIcon(mapColorToIcon(groups[0].color));
     setSelectedGpId(groups[0].groupId);
   }, [groups]);
 
@@ -43,7 +44,7 @@ function MyStoreList() {
     setSelectedGroup(gName);
     setIsGroupDrop(false);
     setHowManyStore(storeCount);
-    setSelectedGpIcon(gColor);
+    setSelectedGpIcon(mapColorToIcon(gColor));
     setSelectedGpId(gId);
   };
 
@@ -81,6 +82,7 @@ function MyStoreList() {
                   <ul className="whitespace-nowrap text-center text-sm font-medium">
                     {groups?.map((g) => (
                       <li
+                        key={g.groupId}
                         className={`flex cursor-pointer items-center gap-1 border-b px-2 py-1 ${selectedGroup === g.name ? 'text-[var(--primary)]' : 'text-[var(--gray-5)]'}`}
                         onClick={() => {
                           handleGroupClick(g.name, g.storeCount, g.color, g.groupId);
@@ -115,8 +117,9 @@ function MyStoreList() {
                   className={`absolute right-0 top-[130%] rounded-2xl bg-white px-3 py-2 shadow-lg`}
                 >
                   <ul className="whitespace-nowrap text-center text-sm font-medium">
-                    {(Object.keys(RESTAURANT_ORDER_BY) as RestaurantOrderKey[]).map((ord) => (
+                    {(Object.keys(RESTAURANT_ORDER_BY) as RestaurantOrderKey[]).map((ord, idx) => (
                       <li
+                        key={idx}
                         className={`cursor-pointer border-b px-2 py-1 ${orderBy === ord ? 'text-[var(--primary)]' : 'text-[var(--gray-5)]'}`}
                         onClick={() => {
                           setOrderBy(ord);
