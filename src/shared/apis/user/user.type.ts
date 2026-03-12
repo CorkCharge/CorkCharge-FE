@@ -16,7 +16,7 @@ export interface MyRequestListResponse {
   createdAt: string;
 }
 
-// 나의 리뷰 리스트 응답
+// 내가 쓴 리뷰 리스트 응답
 export interface MyReviewResponse {
   reviewId: number;
   restaurantId: number;

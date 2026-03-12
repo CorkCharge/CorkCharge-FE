@@ -134,6 +134,7 @@ const GroupSelector = ({
 
       {/* 2. 바텀시트 본체 */}
       <motion.div
+        onClick={(e) => e.stopPropagation()}
         drag="y"
         onDragEnd={onDragEnd}
         style={{

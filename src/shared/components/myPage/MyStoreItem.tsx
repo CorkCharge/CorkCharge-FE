@@ -6,12 +6,12 @@ import Bookmark from '@/shared/icons/Bookmark';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 import { getTodayOperatingHours } from '@/shared/utils/operatingHours';
+import GroupSelector from '../home/GroupSelector';
+import GroupList from '../home/GroupList';
 
 import star from '@/shared/assets/star.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from '@/shared/components/detail/assets/check.svg';
-import GroupSelector from '../home/GroupSelector';
-import GroupList from '../home/GroupList';
 
 const MyStoreItem = ({ store }: { store: MasterStoreResponse }) => {
   const [shareModalOpen, setShareModalOpen] = useState(false);

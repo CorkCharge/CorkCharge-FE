@@ -123,3 +123,6 @@ export interface GroupDetailResponse extends ApiResponse {
     }[];
   };
 }
+
+// 내가 저장한 매장 list 정렬 순서
+export type MyStoreOrder = 'LATEST' | 'REVIEW_COUNT_DESC' | 'RATING_DESC';
