@@ -44,7 +44,8 @@ const GroupList = ({
   const selectedStores = useBookmarkStore((state) => state.selectedStores);
   const updateSelectedStores = useBookmarkStore((state) => state.updateSelectedStores);
 
-  const { data: myGroups } = useGetGroupList();
+  const { data } = useGetGroupList();
+  const myGroups = data?.groups;
 
   const initialSelectedGroupIds = useMemo(
     () => selectedStores[restaurantId] ?? [],

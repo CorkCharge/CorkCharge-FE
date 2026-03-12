@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { Selected, tipCategory } from '@/shared/components/home/home.types';
 import './tip.css';
+import { cn } from '../utils/utils';
 
 type TipProps = {
   selected: Selected;
   setSelected: (_: Selected) => void;
+  className?: string;
 };
 
-const Tip = ({ selected, setSelected }: TipProps) => {
+const Tip = ({ selected, setSelected, className }: TipProps) => {
   const is = (v: Selected | tipCategory) => selected === v;
 
   const ref = useRef<HTMLDivElement>(null);
@@ -31,7 +33,10 @@ const Tip = ({ selected, setSelected }: TipProps) => {
 
   return (
     <div
-      className={`mt-4 flex gap-1 px-4 ${isOverflow ? 'justify-start overflow-auto' : 'justify-center'}`}
+      className={cn(
+        `mt-4 flex gap-1 px-4 ${isOverflow ? 'justify-start overflow-auto' : 'justify-center'}`,
+        className
+      )}
       ref={ref}
     >
       <button
