@@ -22,6 +22,7 @@ const Tip = ({ selected, setSelected, className }: TipProps) => {
     const el = ref.current;
     if (!el) return;
     const checkOverflow = () => {
+      console.log(el.scrollWidth, el.clientWidth);
       setIsOverflow(el.scrollWidth > el.clientWidth);
     };
     checkOverflow();

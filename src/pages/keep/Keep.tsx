@@ -67,7 +67,7 @@ const Keep = () => {
           </>
         ) : (
           <>
-            <SavedCuration tiplist={savedTips} />{' '}
+            <SavedCuration tiplist={savedTips} />
           </>
         )}
       </div>

@@ -51,12 +51,16 @@ const StoreCard = ({
         console.error('공유 중 에러 발생 : ' + err);
       }
     } else {
-      navigator.clipboard.writeText(
-        `${window.location.origin}/detail-info/${restaurant.restaurantId}`
-      );
-      setIsShareModalOpen(false);
-      setIsCopiedModalOpen(true);
-      setTimeout(() => setIsCopiedModalOpen(false), 1000);
+      try {
+        navigator.clipboard.writeText(
+          `${window.location.origin}/detail-info/${restaurant.restaurantId}`
+        );
+        setIsShareModalOpen(false);
+        setIsCopiedModalOpen(true);
+        setTimeout(() => setIsCopiedModalOpen(false), 1000);
+      } catch (e) {
+        console.error('클립보드 복사 실패: ' + e);
+      }
     }
   };
 
