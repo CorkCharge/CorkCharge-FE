@@ -136,7 +136,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
       <img
         src={arrow}
         className="absolute left-3 top-2 h-4 w-[9px] cursor-pointer"
-        onClick={() => navigate('/home')}
+        onClick={() => navigate(-1)}
       />
 
       {/* 가게 정보 */}
