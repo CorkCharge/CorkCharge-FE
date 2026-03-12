@@ -17,6 +17,7 @@ import share from '../../assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/whiteArrow.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import check from './assets/check.svg';
+import { getTodayOperatingHours } from '@/shared/utils/operatingHours';
 
 const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   const navigate = useNavigate();
@@ -150,7 +151,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           <span className="text-nowrap font-semibold">영업 중</span>
           <span className="text-[var(--gray-6)]">
             {restaurant.openingHours
-              ? restaurant.openingHours.split(',').map((hour, idx) => <p key={idx}>{hour}</p>)
+              ? getTodayOperatingHours(restaurant.openingHours)
               : '운영시간 정보 없음'}
           </span>
         </div>
