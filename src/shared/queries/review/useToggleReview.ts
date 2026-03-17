@@ -1,11 +1,7 @@
-import {
-  createBookmark,
-  deleteBookmark,
-  toggleBookmark,
-} from '@/shared/apis/bookmark/bookmark.api';
-import type { ReviewBookmark } from '@/shared/apis/bookmark/bookmark.type';
-import type { ReviewResponse } from '@/shared/apis/review/review.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { deleteBookmark, toggleBookmark } from '@/shared/apis/bookmark/bookmark.api';
+import type { ReviewResponse } from '@/shared/apis/review/review.type';
 
 type ReviewType = ReviewResponse;
 

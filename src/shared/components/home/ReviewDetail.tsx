@@ -1,23 +1,43 @@
 import { useNavigate } from 'react-router-dom';
 
-import type { ReviewResponse } from '@/shared/apis/review/review.type';
 import { StarWithStroke } from '../common/StarRate';
 import { useToggleReviewLike } from '@/shared/queries/review/useToggleReview';
 
 import share from '@/shared/assets/detailPageImgs/share.svg';
 
 interface ReviewDetailProps {
-  review: ReviewResponse;
-  setIsShareModalOpen: (_: boolean) => void;
-  setModalStoreName: (_: string) => void;
-  setModalStoreId: (_: number) => void;
+  id: number;
+  isLiked: boolean;
+  restaurantId: number;
+  restaurantName: string;
+  rating: number;
+  imageUrls: string[];
+  writer: string;
+  content: string;
+  createdAt: string;
+  bookmarkCount: number;
+
+  setIsShareModalOpen?: (_: boolean) => void;
+  setModalStoreName?: (_: string) => void;
+  setModalStoreId?: (_: number) => void;
+  setModalReviewId?: (_: number) => void;
 }
 
 function ReviewDetail({
-  review,
+  id,
+  isLiked,
+  restaurantId,
+  restaurantName,
+  rating,
+  imageUrls,
+  writer,
+  content,
+  createdAt,
+  bookmarkCount,
   setIsShareModalOpen,
   setModalStoreId,
   setModalStoreName,
+  setModalReviewId,
 }: ReviewDetailProps) {
   const navigate = useNavigate();
 
@@ -31,7 +51,7 @@ function ReviewDetail({
   const handleKeep = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
-    toggleBookmark({ id: review.reviewId, isLiked: review.scrap });
+    toggleBookmark({ id, isLiked });
   };
 
   const handleShare = async (
@@ -46,41 +66,42 @@ function ReviewDetail({
     if (navigator.share && isMobile) {
       try {
         await navigator.share({
-          title: storeName,
-          text: `${storeName} 리뷰를 확인해보세요!`,
-          url: `${window.location.href}#${storeId}`,
+          title: restaurantName,
+          text: `${restaurantName} 리뷰를 확인해보세요!`,
+          url: window.location.origin + `/detail-info/${restaurantId}#${id}`,
         });
       } catch (err) {
         console.error('공유 중 에러 발생 : ' + err);
       }
     } else {
-      setModalStoreId(storeId);
-      setModalStoreName(storeName);
-      setIsShareModalOpen(true);
+      setModalStoreId?.(storeId);
+      setModalStoreName?.(storeName);
+      setIsShareModalOpen?.(true);
+      setModalReviewId?.(id);
     }
   };
 
   return (
     <div
-      className="relative cursor-pointer rounded-2xl bg-[var(--gray-1)] p-4"
-      key={review.reviewId}
-      onClick={() => navigate(`/detail-info/${review.restaurantId}`)}
+      className="relative w-full cursor-pointer rounded-2xl bg-[var(--gray-1)] p-4"
+      key={id}
+      onClick={() => navigate(`/detail-info/${restaurantId}`)}
     >
       {/* 매장명 + 별점 */}
-      <span className="text-xl font-bold text-[var(--gray-8)]">{review.restaurantName}</span>
+      <span className="text-xl font-bold text-[var(--gray-8)]">{restaurantName}</span>
       <div className="my-2 flex gap-1">
-        <StarWithStroke rate={review.rating} />
-        <span className="font-medium">{review.rating}</span>
+        <StarWithStroke rate={rating} />
+        <span className="font-medium">{rating}</span>
       </div>
 
       {/* 리뷰 이미지 */}
-      <div className="mb-1 flex gap-2 overflow-y-auto">{renderReviewImages(review.imageUrls)}</div>
+      <div className="mb-1 flex gap-2 overflow-y-auto">{renderReviewImages(imageUrls)}</div>
 
       {/* 리뷰 작성 정보 */}
-      <p className="mb-2 font-medium">{review.content}</p>
+      <p className="mb-2 font-medium">{content}</p>
       <div className="flex gap-2 text-[10px] font-medium">
-        <span>{review.writer}</span>
-        <span>{review.createdAt.split('T')[0].replaceAll('-', '.')}</span>
+        <span>{writer}</span>
+        <span>{createdAt.split('T')[0].replaceAll('-', '.')}</span>
       </div>
 
       {/* 좋아요 + 공유 */}
@@ -100,23 +121,23 @@ function ReviewDetail({
               cx="16"
               cy="16"
               r="15"
-              fill={review.scrap ? 'var(--primary)' : 'none'}
-              stroke={review.scrap ? 'none' : 'var(--gray-3)'}
+              fill={isLiked ? 'var(--primary)' : 'none'}
+              stroke={isLiked ? 'none' : 'var(--gray-3)'}
             />
             <path
               d="M10.7239 23.6525C10.4143 23.6525 10.1728 23.5764 9.99935 23.4242C9.82596 23.272 9.73926 23.058 9.73926 22.7821V10.3959C9.73926 9.71567 9.9591 9.20434 10.3988 8.86186C10.8385 8.51939 11.4949 8.34814 12.3681 8.34814H19.6322C20.5054 8.34814 21.1618 8.51939 21.6015 8.86186C22.0412 9.20434 22.261 9.71567 22.261 10.3959V22.7821C22.261 23.058 22.1744 23.272 22.0009 23.4242C21.8276 23.5764 21.586 23.6525 21.2763 23.6525C21.0473 23.6525 20.8336 23.5931 20.6355 23.4742C20.4435 23.3553 20.1369 23.1412 19.7158 22.832L16.0837 20.0851C16.028 20.0375 15.9723 20.0375 15.9165 20.0851L12.2845 22.832C11.8634 23.1459 11.5537 23.36 11.3556 23.4742C11.1574 23.5931 10.9468 23.6525 10.7239 23.6525Z"
               fill="white"
-              stroke={review.scrap ? 'none' : 'var(--gray-7)'}
+              stroke={isLiked ? 'none' : 'var(--gray-7)'}
               strokeWidth={1.5}
             />
           </svg>
         </div>
         <span className="text-[10px] font-medium text-[var(--gray-8)]">
-          {(review.bookmarkCount ?? 0) > 99 ? '99+' : (review.bookmarkCount ?? 0)}
+          {(bookmarkCount ?? 0) > 99 ? '99+' : (bookmarkCount ?? 0)}
         </span>
         <div
           className="relative flex size-6 cursor-pointer rounded-full bg-white"
-          onClick={(e) => handleShare(e, review.restaurantName, review.reviewId)}
+          onClick={(e) => handleShare(e, restaurantName, id)}
         >
           <img
             src={share}

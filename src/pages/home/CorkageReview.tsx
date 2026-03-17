@@ -53,7 +53,17 @@ function CorkageReview() {
   const renderReviews = () => {
     return reviews?.map((review) => (
       <ReviewDetail
-        review={review}
+        // review={review}
+        id={review.reviewId}
+        isLiked={review.scrap}
+        restaurantId={review.restaurantId}
+        restaurantName={review.restaurantName}
+        rating={review.rating}
+        imageUrls={review.imageUrls}
+        writer={review.writer}
+        content={review.content}
+        createdAt={review.createdAt}
+        bookmarkCount={review.bookmarkCount}
         setIsShareModalOpen={(isOpen) => setIsShareModalOpen(isOpen)}
         setModalStoreId={(id) => setModalStoreId(id)}
         setModalStoreName={(name) => setModalStoreName(name)}
