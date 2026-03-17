@@ -56,17 +56,19 @@ export interface EditGroupRequest {
 }
 
 export interface ReviewBookmarkListResponse extends ApiResponse {
-  data: {
-    bookmarkId: number;
-    reviewId: number;
-    restaurantName: string;
-    bookmarkCount: number;
-    reviewImageUrl: string;
-    rating: number;
-    content: string;
-    userName: string;
-    createdAt: string;
-  }[];
+  data: ReviewBookmark[];
+}
+
+export interface ReviewBookmark {
+  bookmarkId: number;
+  reviewId: number;
+  restaurantName: string;
+  bookmarkCount: number;
+  reviewImageUrl: string;
+  rating: number;
+  content: string;
+  userName: string;
+  createdAt: string;
 }
 
 export interface TipBookmarkListResponse extends ApiResponse {
