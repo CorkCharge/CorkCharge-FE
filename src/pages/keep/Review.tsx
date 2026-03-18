@@ -31,6 +31,7 @@ const Review = () => {
 
     return reviews?.map((review) => (
       <ReviewDetail
+        key={review.reviewId}
         id={review.reviewId}
         isLiked={review.scrap}
         restaurantId={1}

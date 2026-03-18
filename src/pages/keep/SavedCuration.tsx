@@ -9,7 +9,6 @@ interface CurationProps {
   tiplist?: TipData[];
 }
 
-//이것도 저장한 Tip 이어야할걸?
 const SavedCuration = ({ tiplist = [] }: CurationProps) => {
   const [selected, setSelected] = useState<Selected>('ALL');
   const filtered =

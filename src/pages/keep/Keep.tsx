@@ -31,42 +31,51 @@ const Keep = () => {
   }, []);
 
   return (
-    <main className="px-4">
-      <Header title="저장" type="back" backFn={() => navigate(-1)} />
-      <div className="flex flex-col items-center justify-center">
-        <div
-          className="mb-2 flex h-[30px] min-w-full items-center justify-center gap-4 border-b px-6"
-          style={{ width: 'calc(100% + 32px)' }}
-        >
-          <button
-            onClick={() => setCurrentIdx('매장')}
-            className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === '매장' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+    <main className="">
+      <div
+        className="fixed top-0 z-[10] w-full bg-white px-4"
+        style={{ maxWidth: 'var(--app-width)' }}
+      >
+        <Header title="저장" type="back" backFn={() => navigate(-1)} />
+        <div className="flex flex-col items-center justify-center">
+          <div
+            className="mb-2 flex h-[30px] min-w-full items-center justify-center gap-4 border-b px-6"
+            style={{ width: 'calc(100% + 32px)' }}
           >
-            매장
-          </button>
-          <button
-            onClick={() => setCurrentIdx('리뷰')}
-            className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === '리뷰' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
-          >
-            리뷰
-          </button>
-          <button
-            onClick={() => setCurrentIdx('Tip')}
-            className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === 'Tip' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
-          >
-            Tip
-          </button>
+            <button
+              onClick={() => setCurrentIdx('매장')}
+              className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === '매장' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+            >
+              매장
+            </button>
+            <button
+              onClick={() => setCurrentIdx('리뷰')}
+              className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === '리뷰' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+            >
+              리뷰
+            </button>
+            <button
+              onClick={() => setCurrentIdx('Tip')}
+              className={`h-full flex-1 border-x-0 border-b-2 border-t-0 border-solid ${currentIdx === 'Tip' ? 'border-b-black text-black' : 'border-b-transparent text-gray-300'}`}
+            >
+              Tip
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div className="mt-[104px] px-4">
         {currentIdx === '리뷰' ? (
-          //저장한 리뷰 목록 -> restaurantId 받아올 수 있음.
+          //저장한 리뷰 목록
           <Review />
         ) : currentIdx === '매장' ? (
           <>
-            {/* keep된것만 map 필요 */}
+            {/* 가게 목록 */}
             <MyStoreList />
           </>
         ) : (
           <>
+            {/* 팁 목록 */}
             <SavedCuration tiplist={savedTips} />
           </>
         )}
