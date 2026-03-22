@@ -3,8 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useGetMyKeepReviews = () =>
   useQuery({
-    queryKey: ['keepReview'],
+    queryKey: ['reviewList', 'my'],
     queryFn: getMyReviewBookmarks,
     staleTime: 1000 * 60 * 5,
-    select: (res) => res.data,
+    select: (res) => {
+      return res.data.map((d) => ({ ...d, scrap: true }));
+    },
   });

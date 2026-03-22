@@ -67,29 +67,30 @@ apiClient.interceptors.response.use(
 
 /*
 let isRefreshing = false; // 리프레시 토큰 갱신 중
-let pendingRequests: ((token: string) => void)[] = []; // 갱신 중 들어오는 추가요청은 큐잉처리
+let pendingRequests: ((_token: string | null) => void)[] = []; // 갱신 중 들어오는 추가요청은 큐잉처리
 
 apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalReq = error.config;
-    const code = error.code;
-    console.log(error);
+    console.error(error);
 
     const accTk = sessionStorage.getItem('accessToken');
 
-    if (code === 'ERR_NETWORK') {
-      if (accTk && !originalReq._retry) {
-        if (isRefreshing) {
-          return new Promise((resolve) => {
-            pendingRequests.push((token: string) => {
+    console.log(error);
+    if (error.response?.status === 302 && accTk && !originalReq._retry) {
+      console.log('ss');
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          pendingRequests.push((token) => {
+            if (token) {
               originalReq.headers.Authorization = `Bearer ${token}`;
               resolve(apiClient(originalReq));
-            });
+            } else {
+              reject(new Error('리프레시 토큰을 통한 갱신 실패'));
+            }
           });
-        } else {
-          // window.location.href = '/signin';
-        }
+        });
       }
 
       originalReq._retry = true;
@@ -106,19 +107,20 @@ apiClient.interceptors.response.use(
         const { accessToken: newAccToken } = res.data.data;
         sessionStorage.setItem('accessToken', newAccToken);
         pendingRequests.forEach((cb) => cb(newAccToken));
-        pendingRequests = [];
-        isRefreshing = false;
 
         originalReq.headers.Authorization = `Bearer ${newAccToken}`;
         return apiClient(originalReq);
       } catch (e) {
-        console.log('리프레시 토큰이 만료되었습니다 : ' + e);
+        console.error('리프레시 토큰이 만료되었습니다 : ' + e);
         alert('토큰이 만료되었습니다 (ERR: E0001)');
-        isRefreshing = false;
-        pendingRequests = [];
+
         sessionStorage.clear();
+        pendingRequests.forEach((cb) => cb(null));
         window.location.href = '/signin';
         return Promise.reject(e);
+      } finally {
+        isRefreshing = false;
+        pendingRequests = [];
       }
     }
     return Promise.reject(error);

@@ -76,8 +76,8 @@ function NearbyStores() {
           ) : (
             <div className="h-[172px] rounded-t-2xl bg-black" />
           )}
-          <div className="flex h-11 items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
-            {store.corkagePrice}
+          <div className="flex h-11 w-full items-center justify-center rounded-b-2xl bg-[var(--glass)] px-4 text-sm font-bold text-[var(--gray-8)]">
+            <span className="truncate">{store.corkagePrice}</span>
           </div>
         </div>
         <div className="relative">

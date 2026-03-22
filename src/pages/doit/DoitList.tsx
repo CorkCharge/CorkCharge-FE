@@ -205,7 +205,7 @@ const DoitList = () => {
     <>
       {/* 헤더 영역 */}
       <div
-        className="fixed w-full max-w-[var(--app-width)] bg-white px-4"
+        className="fixed z-[10] w-full max-w-[var(--app-width)] bg-white px-4"
         style={{ boxShadow: '0 4px 7px 0px rgba(0,0,0,0.1)' }}
       >
         <Header title="해주세요" type="back" backFn={() => navigate('/home')} />
