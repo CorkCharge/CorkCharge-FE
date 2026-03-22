@@ -63,7 +63,7 @@ const CorkageMap = () => {
   const [myGroups, setMyGroups] = useState<Group[]>([]);
 
   // 바텀시트 닫힐 때 초기화
-  const handleSheetClose = () => {
+  const handleSheetClose = useCallback(() => {
     setIsSheetOpen(false);
     setIsActive(false);
     setIsSaveModeView(false);
@@ -73,7 +73,7 @@ const CorkageMap = () => {
       setSelectedRestaurantId(null);
       setIsSaveMode(false); // 저장 모드 초기화
     }, 300);
-  };
+  }, []);
 
   // [추가] NaverMap에서 개별 식당 마커 클릭 시 호출될 함수
   const handleRestaurantClick = useCallback((restaurantId: number) => {
@@ -186,14 +186,20 @@ const CorkageMap = () => {
             <button
               onClick={() => {
                 const nextState = !isSaveModeView;
-                setIsSaveModeView(nextState);
-                setSelectedGroupColor(undefined);
 
-                setIsSaveMode(false); // 조회 모드
-                setIsSheetOpen(true);
-                setIsActive(true);
-                setSheetView('list');
-                if (nextState) fetchGroups();
+                if (nextState) {
+                  // 버튼을 켤 때
+                  setIsSaveModeView(true);
+                  setSelectedGroupColor(undefined);
+                  setIsSaveMode(false); // 조회 모드
+                  setIsSheetOpen(true);
+                  setIsActive(true);
+                  setSheetView('list');
+                  fetchGroups();
+                } else {
+                  // 버튼을 끌 때 (바텀시트 닫기 + 버튼 비활성화 + 각종 상태 초기화)
+                  handleSheetClose();
+                }
               }}
               className={`flex h-[36px] flex-[0.6] cursor-pointer items-center justify-center gap-2 rounded-full ${isActive ? 'bg-[#90212A] text-[#FFF]' : 'bg-white/90 text-[#90212A]'} shadow-sm backdrop-blur-sm`}
             >

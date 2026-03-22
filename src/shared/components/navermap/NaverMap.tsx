@@ -352,7 +352,7 @@ const NaverMap = ({
       }
       marker.setZIndex(1000);
 
-      selectedRestaurantRef.current = { marker, price, name, type, iconSrc };
+      selectedRestaurantRef.current = { marker, price, name, type, iconSrc, iconName };
     },
     []
   );
@@ -504,7 +504,14 @@ const NaverMap = ({
 
           naver.maps.Event.addListener(marker, 'click', () => {
             // API 명세 상 name이 없으므로 빈 문자열, 타입은 'saved'로 전달
-            handleRestaurantClick(marker, pinInfo.corkagePrice, '', 'saved', markerSrc);
+            handleRestaurantClick(
+              marker,
+              pinInfo.corkagePrice,
+              '',
+              'saved',
+              markerSrc,
+              currentIconName
+            );
             if (onRestaurantClick) {
               onRestaurantClick(restaurantId);
             }
@@ -643,25 +650,26 @@ const NaverMap = ({
     const map = mapInstance.current;
     if (!map) return;
 
-    // 1. 데이터 즉시 로드
     fetchAndDrawMarkers();
+  }, [fetchAndDrawMarkers]);
 
-    // 2. 리스너 등록
+  // [수정] Effect 3: 지도 이벤트 리스너 전용 (이벤트 함수가 바뀌어도 지도를 다시 그리지 않음!)
+  useEffect(() => {
+    const map = mapInstance.current;
+    if (!map) return;
+
     const dragEndListener = naver.maps.Event.addListener(map, 'dragend', fetchAndDrawMarkers);
     const zoomChangedListener = naver.maps.Event.addListener(
       map,
       'zoom_changed',
       fetchAndDrawMarkers
     );
-
-    // [추가] 지도 빈 공간 클릭 리스너
     const mapClickListener = naver.maps.Event.addListener(map, 'click', handleMapClick);
 
-    // 3. Cleanup: 리스너 중복 방지
     return () => {
       naver.maps.Event.removeListener(dragEndListener);
       naver.maps.Event.removeListener(zoomChangedListener);
-      naver.maps.Event.removeListener(mapClickListener); // [추가] 해제
+      naver.maps.Event.removeListener(mapClickListener);
     };
   }, [fetchAndDrawMarkers, handleMapClick]);
 
