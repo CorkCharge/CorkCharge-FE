@@ -7,7 +7,7 @@ import ConfirmationModal from '@/pages/corkagemap/list/ConfirmationModal';
 import Button from '../common/Button';
 import { useGetGroupList } from '@/shared/queries/bookmark/useGetGroupList';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
-import { createBookmark, editBookmarkGroup } from '@/shared/apis/bookmark/bookmark.api';
+import { useEditRestaurant, useSaveRestaurant } from '@/shared/queries/bookmark/useKeepRestaurant';
 
 import newSvg from '@/pages/corkagemap/list/plus.svg';
 
@@ -46,6 +46,9 @@ const GroupList = ({
 
   const { data } = useGetGroupList();
   const myGroups = data?.groups;
+
+  const { mutate: saveRestaurant } = useSaveRestaurant();
+  const { mutate: editRestaurant } = useEditRestaurant();
 
   const initialSelectedGroupIds = useMemo(
     () => selectedStores[restaurantId] ?? [],
@@ -91,15 +94,17 @@ const GroupList = ({
     try {
       // 매장을 처음 저장하는 경우
       if (initialSelectedGroupIds.length === 0) {
-        await createBookmark({
-          targetId: restaurantId,
-          targetType: 'RESTAURANT',
-          groupIds: changedIds,
-        });
+        // await createBookmark({
+        //   targetId: restaurantId,
+        //   targetType: 'RESTAURANT',
+        //   groupIds: changedIds,
+        // });
+        saveRestaurant({ targetId: restaurantId, groupIds: changedIds });
       }
       // 매장 저장 정보를 수정할 때
       else {
-        await editBookmarkGroup({ restaurantId, groupIds: changedIds });
+        // await editBookmarkGroup({ restaurantId, groupIds: changedIds });
+        editRestaurant({ restaurantId, groupIds: changedIds });
       }
 
       updateSelectedStores(restaurantId, changedIds);

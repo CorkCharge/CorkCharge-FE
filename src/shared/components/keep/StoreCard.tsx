@@ -146,7 +146,7 @@ const StoreCard = ({
         {/* 기타 */}
         <div className="flex w-full items-center">
           <span className="min-w-fit font-[700]">기타</span>
-          <span className="ml-9 text-nowrap font-[500]">{restaurant.corkageOption ?? '없음'}</span>
+          <span className="ml-9 truncate font-[500]">{restaurant.corkageOption ?? '없음'}</span>
         </div>
       </div>
 

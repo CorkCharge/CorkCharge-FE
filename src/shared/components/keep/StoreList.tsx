@@ -142,7 +142,7 @@ function MyStoreList() {
           <ClipLoader color="var(--primary)" />
         </div>
       )}
-      <div className="mt-2">{renderStoreCards()}</div>
+      <div className="mt-2 flex flex-col gap-6">{renderStoreCards()}</div>
     </div>
   );
 }

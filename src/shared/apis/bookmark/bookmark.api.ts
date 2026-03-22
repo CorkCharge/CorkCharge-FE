@@ -25,6 +25,20 @@ export const deleteBookmark = async (data: CancelBookmarkRequest): Promise<ApiRe
   return response.data;
 };
 
+// 저장하기 / 취소하기 토글 (리뷰/팁)
+export const toggleBookmark = async ({
+  targetType,
+  targetId,
+  isBookmarked,
+}: {
+  targetType: 'REVIEW' | 'TIP';
+  targetId: number;
+  isBookmarked: boolean;
+}) => {
+  if (isBookmarked) return await deleteBookmark({ targetId, targetType });
+  else return await createBookmark({ targetId, targetType });
+};
+
 // 저장 그룹 편집
 export const editBookmarkGroup = async (data: EditGroupRequest): Promise<ApiResponse> => {
   const response = await apiClient.put<ApiResponse>('/bookmarks/restaurants', data);
