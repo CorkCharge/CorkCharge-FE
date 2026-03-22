@@ -126,3 +126,31 @@ export interface GroupDetailResponse extends ApiResponse {
 
 // 내가 저장한 매장 list 정렬 순서
 export type MyStoreOrder = 'LATEST' | 'REVIEW_COUNT_DESC' | 'RATING_DESC';
+
+export interface SavedMapPin {
+  restaurantId: number;
+  lat: number;
+  lon: number;
+  corkagePrice: string;
+}
+
+export interface SavedMapGroup {
+  groupId: number;
+  name: string;
+  color: string;
+  visibility: 'PUBLIC' | 'PRIVATE';
+  storeCount: number;
+  pins: SavedMapPin[];
+}
+
+export interface SavedGroupMapDataResponse extends ApiResponse {
+  data: {
+    totalGroupCount: number;
+    groups: SavedMapGroup[];
+  };
+}
+
+// NaverMap 컴포넌트 내부에서 데이터를 취합할 때 사용할 확장 타입
+export interface AggregatedPin extends SavedMapPin {
+  colors: string[];
+}

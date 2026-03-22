@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBookmarkGroups, createBookmark } from '@/shared/apis/bookmark/bookmark.api';
-import { mapColorToIcon } from '@/shared/utils/groupMapper';
+import { mapColorToIcon, mapIconToColor } from '@/shared/utils/groupMapper';
 import type { Group } from './list/List';
 import NaverMap from '@/shared/components/navermap/NaverMap';
 import TopBarMap from '@/shared/components/topbar/TopBarMap';
@@ -21,6 +21,9 @@ const CorkageMap = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedClusterIds, setSelectedClusterIds] = useState<number[]>([]);
   const [isSaveMode, setIsSaveMode] = useState(false);
+  // [추가] 지도 마커 제어용 상태
+  const [isSaveModeView, setIsSaveModeView] = useState(false);
+  const [selectedGroupColor, setSelectedGroupColor] = useState<string | undefined>(undefined);
 
   // 1. 그룹 리스트 불러오기 (초기 로딩 및 갱신용)
   const fetchGroups = useCallback(async () => {
@@ -49,16 +52,12 @@ const CorkageMap = () => {
 
   // 선택된 클러스터 지역명을 저장할 State
   const [selectedAreaName, setSelectedAreaName] = useState<string>('');
-
   //바텀시트 내부 뷰 상태: 'list' | 'store' 'multipin' 상태 추가 (클러스터 마커 클릭 시 보여줄 화면)
   const [sheetView, setSheetView] = useState<'list' | 'store' | 'multipin' | 'detail'>('list');
-
   // [추가] 선택된 개별 식당 ID 저장
   const [selectedRestaurantId, setSelectedRestaurantId] = useState<number | null>(null);
-
   // 선택된 그룹 정보 (MyStore에 전달하거나 나중에 사용)
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
-
   // List에 있던 상태를 부모인 여기로 끌어올림 (State Lifting)
   // 이 컴포넌트는 바텀시트가 닫혀도 계속 살아있으므로 데이터가 유지됨
   const [myGroups, setMyGroups] = useState<Group[]>([]);
@@ -67,6 +66,8 @@ const CorkageMap = () => {
   const handleSheetClose = () => {
     setIsSheetOpen(false);
     setIsActive(false);
+    setIsSaveModeView(false);
+    setSelectedGroupColor(undefined);
     setTimeout(() => {
       setSheetView('list');
       setSelectedRestaurantId(null);
@@ -114,6 +115,7 @@ const CorkageMap = () => {
       console.log('👉 [CorkageMap] 상세 조회 화면으로 이동');
       setSelectedGroup(group);
       setSheetView('store');
+      setSelectedGroupColor(mapIconToColor(group.iconName));
     }
   };
 
@@ -152,7 +154,12 @@ const CorkageMap = () => {
     <main className="relative h-screen w-full overflow-hidden">
       {/* 지도: 화면 전체 덮기 */}
       <div className="absolute inset-0 z-0">
-        <NaverMap onClusterClick={handleClusterClick} onRestaurantClick={handleRestaurantClick} />
+        <NaverMap
+          onClusterClick={handleClusterClick}
+          onRestaurantClick={handleRestaurantClick}
+          isSaveModeView={isSaveModeView}
+          selectedGroupColor={selectedGroupColor}
+        />
       </div>
 
       {/* 멀티핀 뷰가 아닐 때만 보여줌  (TopBarMap + 필터/저장 버튼) */}
@@ -177,11 +184,15 @@ const CorkageMap = () => {
 
             <button
               onClick={() => {
+                const nextState = !isSaveModeView;
+                setIsSaveModeView(nextState);
+                setSelectedGroupColor(undefined);
+
                 setIsSaveMode(false); // 조회 모드
                 setIsSheetOpen(true);
                 setIsActive(true);
                 setSheetView('list');
-                fetchGroups();
+                if (nextState) fetchGroups();
               }}
               className={`flex h-[36px] flex-[0.6] cursor-pointer items-center justify-center gap-2 rounded-full ${isActive ? 'bg-[#90212A] text-[#FFF]' : 'bg-white/90 text-[#90212A]'} shadow-sm backdrop-blur-sm`}
             >

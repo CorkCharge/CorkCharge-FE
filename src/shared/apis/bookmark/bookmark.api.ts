@@ -90,3 +90,14 @@ export const getRestaurantBookmarkStatus = async (
   );
   return response.data;
 };
+
+export const getSavedGroupMapData = async (params: {
+  latMin: number;
+  latMax: number;
+  lonMin: number;
+  lonMax: number;
+  color?: string | null;
+}) => {
+  const response = await apiClient.get('/restaurants/map/group', { params });
+  return response.data;
+};
