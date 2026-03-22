@@ -40,6 +40,31 @@ const saveMarkers: Record<string, string> = {
   SaveMarker12,
 };
 
+const markerBgColors: Record<string, string> = {
+  SaveMarker1: '#90212A',
+  SaveMarker2: '#E75257',
+  SaveMarker3: '#F3A2AD',
+  SaveMarker4: '#C59683',
+  SaveMarker5: '#FFEFBA',
+  SaveMarker6: '#749755',
+  SaveMarker7: '#9CABE2',
+  SaveMarker8: '#9188D5',
+  SaveMarker9: '#D0A8DD',
+  SaveMarker10: '#DCDBE8',
+  SaveMarker11: '#FFF',
+  SaveMarker12: '#35353F',
+  MultiSaveMarker:
+    'linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), radial-gradient(144.85% 146.88% at -4.43% 75%, #90212A 5.69%, #DCDBE8 86.4%)',
+};
+
+const getTextColor = (iconName: string) => {
+  // 연노랑(5), 연보라(10), 흰색(11)의 경우 텍스트를 어둡게 표시
+  if (['SaveMarker5', 'SaveMarker10', 'SaveMarker11'].includes(iconName)) {
+    return '#35353F';
+  }
+  return '#FFF';
+};
+
 interface MarkerData {
   count: number;
   name: string;
@@ -216,15 +241,25 @@ const createRestaurantMarkerHtml = (
 const createSavedMarkerHtml = (
   price: string,
   iconSrc: string,
+  iconName: string,
   isSelected: boolean = false
 ): string => {
   const safePrice = escapeHtml(price);
+
+  // iconName이 MultiSaveMarker면 통째로 background로 처리, 일반 마커면 background-color로 처리
+  const bgStyle =
+    iconName === 'MultiSaveMarker'
+      ? `background: ${markerBgColors[iconName]};`
+      : `background-color: ${markerBgColors[iconName] || '#90212A'};`;
+
+  const textColor = getTextColor(iconName);
+
   return `
     <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; z-index: ${isSelected ? 1000 : 1};">
       <div style="
         padding: 6px 12px; 
-        background-color: ${isSelected ? '#90212A' : '#D36C6C'}; 
-        color: white; font-size: 14px; font-weight: bold; border-radius: 20px;
+        ${bgStyle}
+        color: ${textColor}; font-size: 14px; font-weight: bold; border-radius: 20px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; margin-bottom: 4px;
         ${isSelected ? 'border: 2px solid white;' : ''}
       ">
@@ -264,6 +299,7 @@ const NaverMap = ({
     name: string;
     type: 'normal' | 'saved';
     iconSrc?: string;
+    iconName?: string;
   } | null>(null);
 
   const clearMarkers = () => {
@@ -281,7 +317,8 @@ const NaverMap = ({
       price: string,
       name: string,
       type: 'normal' | 'saved' = 'normal',
-      iconSrc?: string
+      iconSrc?: string,
+      iconName?: string
     ) => {
       const prev = selectedRestaurantRef.current;
 
@@ -293,7 +330,7 @@ const NaverMap = ({
           });
         } else {
           prev.marker.setIcon({
-            content: createSavedMarkerHtml(prev.price, prev.iconSrc!, false),
+            content: createSavedMarkerHtml(prev.price, prev.iconSrc!, prev.iconName!, false),
             anchor: new window.naver.maps.Point(16, 50),
           });
         }
@@ -307,7 +344,7 @@ const NaverMap = ({
         });
       } else {
         marker.setIcon({
-          content: createSavedMarkerHtml(price, iconSrc!, true),
+          content: createSavedMarkerHtml(price, iconSrc!, iconName!, true),
           anchor: new window.naver.maps.Point(16, 50),
         });
       }
@@ -322,14 +359,20 @@ const NaverMap = ({
   const handleMapClick = useCallback(() => {
     const prev = selectedRestaurantRef.current;
 
-    // 선택된 식당 마커가 있다면 -> 원래대로 복구
     if (prev) {
-      prev.marker.setIcon({
-        content: createRestaurantMarkerHtml(prev.price, prev.name, false),
-        anchor: new window.naver.maps.Point(30, 15),
-      });
+      if (prev.type === 'normal') {
+        prev.marker.setIcon({
+          content: createRestaurantMarkerHtml(prev.price, prev.name, false),
+          anchor: new window.naver.maps.Point(30, 15),
+        });
+      } else {
+        prev.marker.setIcon({
+          content: createSavedMarkerHtml(prev.price, prev.iconSrc!, prev.iconName!, false), // <-- 추가됨
+          anchor: new window.naver.maps.Point(16, 50),
+        });
+      }
       prev.marker.setZIndex(100);
-      selectedRestaurantRef.current = null; // 상태 초기화
+      selectedRestaurantRef.current = null;
     }
   }, []);
 
@@ -432,17 +475,24 @@ const NaverMap = ({
         // [수정 4] any 제거: pinInfo 파라미터에 AggregatedPin 타입 지정
         pinAggregator.forEach((pinInfo: AggregatedPin, restaurantId: number) => {
           let markerSrc = MultiSaveMarker;
+          let currentIconName = 'MultiSaveMarker';
 
           if (pinInfo.colors.length === 1) {
             const iconName = mapColorToIcon(pinInfo.colors[0]); // "COLOR_01" -> "SaveMarker1"
             markerSrc = saveMarkers[iconName] || MultiSaveMarker;
+            currentIconName = iconName;
           }
 
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(pinInfo.lat, pinInfo.lon),
             map: map,
             icon: {
-              content: createSavedMarkerHtml(pinInfo.corkagePrice, markerSrc, false),
+              content: createSavedMarkerHtml(
+                pinInfo.corkagePrice,
+                markerSrc,
+                currentIconName,
+                false
+              ),
               anchor: new window.naver.maps.Point(16, 50),
             },
           });
