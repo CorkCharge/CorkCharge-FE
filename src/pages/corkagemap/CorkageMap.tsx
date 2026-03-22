@@ -159,6 +159,7 @@ const CorkageMap = () => {
           onRestaurantClick={handleRestaurantClick}
           isSaveModeView={isSaveModeView}
           selectedGroupColor={selectedGroupColor}
+          onMapClick={handleSheetClose}
         />
       </div>
 
@@ -228,6 +229,7 @@ const CorkageMap = () => {
         topSnapVh={currentTopSnapVh}
         hideHandleOnTop={isMultipinView}
         onSnapToTop={handleSnapToTop}
+        interactiveBackground={true}
       >
         {sheetView === 'list' && (
           <List

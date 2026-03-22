@@ -275,6 +275,7 @@ interface NaverMapProps {
   onRestaurantClick?: (_restaurantId: number) => void;
   isSaveModeView?: boolean;
   selectedGroupColor?: string;
+  onMapClick?: () => void;
 }
 
 const NaverMap = ({
@@ -282,6 +283,7 @@ const NaverMap = ({
   onRestaurantClick,
   isSaveModeView,
   selectedGroupColor,
+  onMapClick,
 }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<naver.maps.Map | null>(null);
@@ -374,7 +376,10 @@ const NaverMap = ({
       prev.marker.setZIndex(100);
       selectedRestaurantRef.current = null;
     }
-  }, []);
+    if (onMapClick) {
+      onMapClick();
+    }
+  }, [onMapClick]);
 
   // [3] handleClusterMarkerClick를 먼저 정의하고 useCallback으로 감쌉니다.
   // (이 함수가 아래 fetchAndDrawMarkers에서 사용되기 때문입니다)
