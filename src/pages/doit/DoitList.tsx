@@ -222,7 +222,10 @@ const DoitList = () => {
           </div>
           <div
             className="relative flex h-full shrink-0 cursor-pointer items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]"
-            onClick={() => navigate('/region-filter', { state: { from: 2 } })}
+            onClick={() => {
+              resetAddress();
+              navigate('/region-filter', { state: { from: 2 } });
+            }}
           >
             {mapSvg}
             <span className="ml-1 py-1 text-center text-xs">지역필터</span>

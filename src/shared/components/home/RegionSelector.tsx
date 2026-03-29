@@ -23,6 +23,16 @@ const RegionSelector = ({
 }: RegionFilterProps) => {
   const toggleAddress = useRegionFilterStore((state) => state.toggleAddress);
 
+  // 도 또는 시까지만 고른 경우
+  const handleSelect = (name: string, type: 'do' | 'si') => {
+    if (type === 'do') {
+      toggleAddress(name, undefined, undefined);
+    } else if (type === 'si') {
+      toggleAddress(selectedSido!, name, undefined);
+    }
+  };
+
+  // 동을 선택한 경우
   const handleDongSelect = (dong: string) => {
     if (!selectedSido || !selectedSigungu) return;
 
@@ -66,6 +76,7 @@ const RegionSelector = ({
               onClick={() => {
                 setSelectedSido(sido);
                 setSelectedSigungu(null);
+                handleSelect(sido, 'do');
               }}
               className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
                 selectedSido === sido ? 'bg-[#90212A] font-semibold text-white' : ''
@@ -81,7 +92,10 @@ const RegionSelector = ({
             Object.keys(regions[selectedSido]).map((sigungu) => (
               <div
                 key={sigungu}
-                onClick={() => setSelectedSigungu(sigungu)}
+                onClick={() => {
+                  setSelectedSigungu(sigungu);
+                  handleSelect(sigungu, 'si');
+                }}
                 className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
                   selectedSigungu === sigungu ? 'bg-[#90214626] font-semibold text-[#90212A]' : ''
                 }`}
