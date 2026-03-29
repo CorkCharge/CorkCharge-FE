@@ -144,7 +144,7 @@ const DoitList = () => {
     return stores.map((store: DoitStoreResponse) => (
       <div key={store.restaurantId} onClick={() => handleSelect(store)} className="cursor-pointer">
         {store.imageUrl ? (
-          <img className="h-[172px] w-full rounded-t-2xl" src={store.imageUrl} />
+          <img className="h-[172px] w-full rounded-t-2xl object-cover" src={store.imageUrl} />
         ) : (
           <div className="h-[172px] w-full rounded-t-2xl bg-black" />
         )}
