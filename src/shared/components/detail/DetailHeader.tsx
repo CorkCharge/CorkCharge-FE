@@ -171,6 +171,15 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
         <button
           className="flex shrink-0 items-center justify-center gap-1 rounded-full px-4"
           style={{ border: 'solid 1px var(--gray-3)' }}
+          onClick={() =>
+            navigate('/doit/request', {
+              state: {
+                storeId: restaurant.restaurantId,
+                storeName: restaurant.restaurantName,
+                address: restaurant.address,
+              },
+            })
+          }
         >
           <img src={smallGlass} className="size-6" />
           <span className="text-sm font-medium text-[var(--primary)]">해주세요</span>
