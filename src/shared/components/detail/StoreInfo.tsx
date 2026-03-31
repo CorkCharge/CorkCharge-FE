@@ -36,7 +36,7 @@ const StoreInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           </span>
         </div>
         <div className="flex border border-x-0 pb-2 pt-2">
-          <div className="w-[20%] text-nowrap font-bold">주소</div>
+          <div className="w-[20%] shrink-0 text-nowrap font-bold">주소</div>
           <div className="">
             <span className="mr-2 align-middle text-[var(--gray-8)] underline">
               {restaurant.address}
