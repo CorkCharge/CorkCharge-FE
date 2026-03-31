@@ -32,6 +32,7 @@ interface BottomSheetProps {
   topSnapVh?: number; // 최대 높이(vh)를 prop으로 받기 (opt)
   hideHandleOnTop?: boolean;
   onSnapToTop?: () => void;
+  interactiveBackground?: boolean; // 배경을 통과시켜 뒤쪽 요소와 상호작용할지 여부
 }
 
 // vh를 px로 변환하는 헬퍼 함수
@@ -47,6 +48,7 @@ const BottomSheet = ({
   topSnapVh = SNAP_POINTS.DEFAULT_TOP,
   hideHandleOnTop = false,
   onSnapToTop,
+  interactiveBackground = false,
 }: BottomSheetProps) => {
   //y축 위치를 motionValue로 실시간 관리
   const y = useMotionValue(vhToPx(SNAP_POINTS.HIDDEN));
@@ -150,9 +152,9 @@ const BottomSheet = ({
           position: 'fixed',
           inset: 0,
           zIndex: 100, // 네비바(99)보다 높게
-          pointerEvents: isOpen ? 'auto' : 'none',
+          pointerEvents: isOpen ? (interactiveBackground ? 'none' : 'auto') : 'none',
         }}
-        onClick={onClose}
+        onClick={interactiveBackground ? undefined : onClose}
       />
 
       {/* 2. 바텀시트 본체 */}
