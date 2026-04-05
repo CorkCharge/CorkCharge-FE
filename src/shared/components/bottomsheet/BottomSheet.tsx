@@ -149,7 +149,7 @@ const BottomSheet = ({
         style={{
           opacity,
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          position: 'fixed',
+          position: 'absolute',
           inset: 0,
           zIndex: 100, // 네비바(99)보다 높게
           pointerEvents: isOpen ? (interactiveBackground ? 'none' : 'auto') : 'none',
@@ -173,7 +173,7 @@ const BottomSheet = ({
         dragElastic={{ top: 0, bottom: 0 }}
         // [수정 1] currentSnap이 'TOP'일 때 rounded-none 적용, 아닐 땐 rounded-t-[20px]
         // transition-all duration-300을 추가하여 부드럽게 변하도록 함
-        className={`fixed left-0 right-0 z-[101] flex w-full flex-col bg-white shadow-lg transition-[border-radius] duration-300 ${
+        className={`absolute left-0 right-0 top-0 z-[101] flex w-full flex-col bg-white shadow-lg transition-[border-radius] duration-300 ${
           shouldHideHandle ? 'rounded-none' : 'rounded-t-[20px]'
         }`}
       >
