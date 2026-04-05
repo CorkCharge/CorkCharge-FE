@@ -1,4 +1,5 @@
 import type { TipInfo } from '../apis/tip/tipListApi';
+import { GradOverlay } from './common/OverLayImage';
 import TipDefaultImage from './home/TipDefaultImage';
 
 const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
@@ -6,7 +7,10 @@ const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
     <>
       <div className="relative mb-6">
         {imageUrls.length > 0 ? (
-          <img src={imageUrls[0]} className="aspect-square w-full rounded-b-2xl" />
+          <>
+            <GradOverlay />
+            <img src={imageUrls[0]} className="aspect-square w-full rounded-b-2xl" />
+          </>
         ) : (
           <TipDefaultImage className="aspect-square rounded-b-2xl" />
         )}
@@ -21,7 +25,7 @@ const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
 
       {/* 상세 설명 */}
       <div className="mx-6">
-        <div className="whitespace-pre-line text-[16px] font-medium">{content}</div>
+        <div className="whitespace-pre-line pb-10 font-medium">{content}</div>
       </div>
     </>
   );

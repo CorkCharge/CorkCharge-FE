@@ -71,8 +71,11 @@ function NewStores() {
     setTimeout(() => setIsCopiedModalOpen(false), 1000);
   };
 
-  const renderNewStores = () =>
-    newStores.map((store) => (
+  const renderNewStores = () => {
+    if (newStores.length === 0)
+      return <p className="flex h-[30vh] items-center justify-center">신규 등록 매장이 없습니다</p>;
+
+    return newStores.map((store) => (
       <div
         key={store.restaurantId}
         className="flex cursor-pointer flex-col gap-2"
@@ -84,8 +87,8 @@ function NewStores() {
           ) : (
             <div className="h-[172px] rounded-t-2xl bg-black" />
           )}
-          <div className="flex h-11 items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
-            {store.corkagePrice}
+          <div className="flex h-11 w-full items-center justify-center rounded-b-2xl bg-[var(--glass)] px-4 text-sm font-bold text-[var(--gray-8)]">
+            <span className="truncate">{store.corkagePrice}</span>
           </div>
         </div>
         <div className="relative">
@@ -94,7 +97,7 @@ function NewStores() {
             <span>{store.distance}km</span>
             <span>{store.address}</span>
           </p>
-          <span className="font-medium">{store.openingHours}</span>
+          <span className="inline-block truncate font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
             <span className="mr-2">{store.rating?.toFixed(1) ?? 0}</span>
@@ -123,6 +126,7 @@ function NewStores() {
         </div>
       </div>
     ));
+  };
 
   const renderDongs = () =>
     selectedDongNames.map((dong: string, idx: number) => (
@@ -152,15 +156,17 @@ function NewStores() {
           {renderNewStores()}
         </div>
         {selectedDongNames.length < 1 ? (
-          <Button
-            value="지역 검색"
-            className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white"
-            style={{
-              maxWidth: 'calc(var(--app-width) * 0.8)',
-              bottom: 'calc(var(--footer-h) + 15px)',
-            }}
-            onClick={() => navigate('/region-filter', { state: { from: 0 } })}
-          />
+          newStores.length !== 0 && (
+            <Button
+              value="지역 검색"
+              className="fixed left-1/2 mx-auto w-4/5 -translate-x-1/2 bg-[var(--primary)] text-white"
+              style={{
+                maxWidth: 'calc(var(--app-width) * 0.8)',
+                bottom: 'calc(var(--footer-h) + 15px)',
+              }}
+              onClick={() => navigate('/region-filter', { state: { from: 0 } })}
+            />
+          )
         ) : (
           <div
             className="fixed left-1/2 h-[150px] w-full -translate-x-1/2 bg-white px-4 py-2"

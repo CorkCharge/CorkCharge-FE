@@ -41,3 +41,8 @@ export const OverLayImage = ({
     </div>
   );
 };
+
+// 그라데이션 오버레이
+export const GradOverlay = () => (
+  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-transparent"></div>
+);

@@ -73,8 +73,8 @@ function HotStores() {
           ) : (
             <div className="h-[172px] rounded-t-2xl bg-black" />
           )}
-          <div className="flex h-11 items-center justify-center rounded-b-2xl bg-[var(--glass)] text-sm font-bold text-[var(--gray-8)]">
-            {store.corkagePrice}
+          <div className="flex h-11 w-full items-center justify-center rounded-b-2xl bg-[var(--glass)] px-4 text-sm font-bold text-[var(--gray-8)]">
+            <span className="truncate">{store.corkagePrice}</span>
           </div>
         </div>
         <div className="relative">
@@ -83,7 +83,7 @@ function HotStores() {
             <span>{store.distance}km</span>
             <span>{store.address}</span>
           </p>
-          <span className="font-medium">{store.openingHours}</span>
+          <span className="inline-block w-full truncate font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
             <span className="mr-2">{store.rating?.toFixed(1) ?? 0}</span>

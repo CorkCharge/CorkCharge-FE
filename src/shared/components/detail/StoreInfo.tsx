@@ -1,9 +1,17 @@
+import { useState } from 'react';
+
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 
+import check from './assets/check.svg';
+
 const StoreInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
+  const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false);
+
   const handleCopy = async (copied: string) => {
     try {
       await navigator.clipboard.writeText(copied);
+      setIsCopiedModalOpen(true);
+      setTimeout(() => setIsCopiedModalOpen(false), 1000);
     } catch (e) {
       console.error('복사 실패: ' + e);
     }
@@ -28,7 +36,7 @@ const StoreInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           </span>
         </div>
         <div className="flex border border-x-0 pb-2 pt-2">
-          <div className="w-[20%] text-nowrap font-bold">주소</div>
+          <div className="w-[20%] shrink-0 text-nowrap font-bold">주소</div>
           <div className="">
             <span className="mr-2 align-middle text-[var(--gray-8)] underline">
               {restaurant.address}
@@ -54,6 +62,15 @@ const StoreInfo = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           )}
         </div>
       </div>
+
+      {/* 복사완료 모달 */}
+      {isCopiedModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50">
+          <div className="absolute top-12 flex h-12 w-[125px] items-center justify-center rounded-xl bg-white p-6 font-semibold text-[var(--primary)] shadow-lg">
+            <img src={check} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

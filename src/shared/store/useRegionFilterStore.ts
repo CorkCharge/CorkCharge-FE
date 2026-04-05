@@ -10,7 +10,7 @@ interface RegionFilterProps {
   filteredRegions: RegionTree;
   selectedDongNames: string[];
   deleteByDong: (_: string) => void;
-  toggleAddress: (_do: string, _si: string, _gu: string) => void;
+  toggleAddress: (_do: string, _si?: string, _gu?: string) => void;
   resetAddress: () => void;
   setSelectedDongNames: (_: string[]) => void;
   removeDongFromArray: (_: string) => void;
@@ -47,10 +47,19 @@ const useRegionFilterStore = create<RegionFilterProps>()(
       },
 
       // filteredRegions에 넣고 빼기
-      toggleAddress: (doName: string, siName: string, guName: string) =>
+      toggleAddress: (doName: string, siName?: string, guName?: string) =>
         set((state) => {
           const doObj = state.filteredRegions[doName] || {};
+          if (!siName) {
+            return { filteredRegions: { ...state.filteredRegions, [doName]: doObj } };
+          }
+
           const siArr = doObj[siName] || [];
+          if (!guName) {
+            return {
+              filteredRegions: { ...state.filteredRegions, [doName]: { ...doObj, [siName]: [] } },
+            };
+          }
 
           // 3주소를 가지고 있는 경우
           if (siArr.includes(guName)) {

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { ClipLoader } from 'react-spinners';
+import { useQueryClient } from '@tanstack/react-query';
 
 import Button from '@/shared/components/common/Button';
 import Modal from '@/shared/components/common/Modal';
@@ -8,11 +9,11 @@ import useRegionFilterStore from '@/shared/store/useRegionFilterStore';
 import type { DoitStoreResponse } from '@/shared/apis/helpRequest/helpRequest.type';
 import Header from '@/shared/components/common/Header';
 import { useDebounce } from '@/shared/hooks/useDebounce';
+import { useDoitList } from '@/shared/queries/helprequest/useDoitList';
+import { firstRequest } from '@/shared/apis/helpRequest/helpRequest.api';
 
 import search from '@/shared/assets/images/search.png';
 import filterImg from '@/pages/corkagemap/filterImg.svg';
-import { useDoitList } from '@/shared/queries/helprequest/useDoitList';
-import { firstRequest } from '@/shared/apis/helpRequest/helpRequest.api';
 
 const DoitList = () => {
   const navigate = useNavigate();
@@ -29,6 +30,8 @@ const DoitList = () => {
   const removeDongFromArray = useRegionFilterStore((state) => state.removeDongFromArray);
   const filteredRegions = useRegionFilterStore((state) => state.filteredRegions);
   const resetAddress = useRegionFilterStore((state) => state.resetAddress);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (whichPage !== 2) resetAddress();
@@ -144,7 +147,7 @@ const DoitList = () => {
     return stores.map((store: DoitStoreResponse) => (
       <div key={store.restaurantId} onClick={() => handleSelect(store)} className="cursor-pointer">
         {store.imageUrl ? (
-          <img className="h-[172px] w-full rounded-t-2xl" src={store.imageUrl} />
+          <img className="h-[172px] w-full rounded-t-2xl object-cover" src={store.imageUrl} />
         ) : (
           <div className="h-[172px] w-full rounded-t-2xl bg-black" />
         )}
@@ -191,6 +194,7 @@ const DoitList = () => {
     if (selectedIdx < 0) return;
     try {
       const res = await firstRequest(selectedIdx);
+      queryClient.invalidateQueries({ queryKey: ['myRequestList'] });
       if (res.code === 160000) {
         setIsAlreadyModalOpen(true);
       } else {
@@ -222,7 +226,10 @@ const DoitList = () => {
           </div>
           <div
             className="relative flex h-full shrink-0 cursor-pointer items-center rounded-2xl bg-[var(--gray-1)] px-3 py-2 text-sm font-medium text-[var(--gray-6)]"
-            onClick={() => navigate('/region-filter', { state: { from: 2 } })}
+            onClick={() => {
+              resetAddress();
+              navigate('/region-filter', { state: { from: 2 } });
+            }}
           >
             {mapSvg}
             <span className="ml-1 py-1 text-center text-xs">지역필터</span>
