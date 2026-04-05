@@ -86,7 +86,7 @@ function NearbyStores() {
             <span>{store.distance}km</span>
             <span>{store.address}</span>
           </p>
-          <span className="font-medium">{store.openingHours}</span>
+          <span className="inline-block truncate font-medium">{store.openingHours}</span>
           <div className="mt-1 flex font-medium text-[var(--gray-8)]">
             <img src={star} className="mr-1" />
             <span className="mr-2">{store.rating?.toFixed(1) ?? 0}</span>
