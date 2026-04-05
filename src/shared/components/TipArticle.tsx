@@ -25,7 +25,7 @@ const TipArticle = ({ title, content, tipCategory, imageUrls }: TipInfo) => {
 
       {/* 상세 설명 */}
       <div className="mx-6">
-        <div className="whitespace-pre-line text-[16px] font-medium">{content}</div>
+        <div className="whitespace-pre-line pb-10 font-medium">{content}</div>
       </div>
     </>
   );
