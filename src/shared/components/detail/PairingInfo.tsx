@@ -1,6 +1,7 @@
 import type { RestaurantInfo } from '@/shared/apis/restaurant/corkageApi';
 
 import link from '@/shared/components/detail/assets/link.svg';
+import { GradOverlay } from '../common/OverLayImage';
 
 const PairingInfo = (restaurant: RestaurantInfo) => {
   return (
@@ -23,7 +24,7 @@ const PairingInfo = (restaurant: RestaurantInfo) => {
             className={`relative ${!restaurant.pairingImageUrl && 'bg-gray-500'}`}
             style={{ aspectRatio: '5/8' }}
           >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-transparent"></div>
+            <GradOverlay />
             {restaurant.pairingImageUrl && (
               <img src={restaurant.pairingImageUrl} className="h-full w-full object-cover" />
             )}
