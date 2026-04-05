@@ -152,9 +152,13 @@ const BottomSheet = ({
           position: 'absolute',
           inset: 0,
           zIndex: 100, // 네비바(99)보다 높게
-          pointerEvents: isOpen ? (interactiveBackground ? 'none' : 'auto') : 'none',
+          pointerEvents: isOpen
+            ? currentSnap === 'TOP' || !interactiveBackground
+              ? 'auto'
+              : 'none'
+            : 'none',
         }}
-        onClick={interactiveBackground ? undefined : onClose}
+        onClick={currentSnap === 'TOP' || !interactiveBackground ? onClose : undefined}
       />
 
       {/* 2. 바텀시트 본체 */}
