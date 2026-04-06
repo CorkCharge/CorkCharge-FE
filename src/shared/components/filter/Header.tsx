@@ -9,7 +9,7 @@ const Header = () => {
   };
 
   return (
-    <header className="relative mt-[7vh] flex h-[48px] w-full flex-row place-content-between items-center justify-center">
+    <header className="relative mt-[1vh] flex h-[48px] w-full flex-row place-content-between items-center justify-center">
       <p className="text-[16px] font-[700]">필터</p>
       <img
         src={X}
