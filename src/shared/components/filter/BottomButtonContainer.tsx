@@ -42,7 +42,7 @@ const BottomButtonContainer = ({
 
   return (
     <div
-      className="fixed bottom-[3.169%] left-1/2 z-10 flex w-full -translate-x-1/2 justify-center gap-[3.53%] pb-[50px]"
+      className="fixed bottom-[3.169%] left-1/2 z-10 flex w-full -translate-x-1/2 justify-center gap-[3.53%]"
       style={{ maxWidth: 'var(--app-width)' }}
     >
       <button
