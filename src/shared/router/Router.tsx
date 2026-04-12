@@ -6,14 +6,10 @@ import Doit from '@/pages/doit/Doit';
 import DoitList from '@/pages/doit/DoitList';
 import Search from '../../pages/doit/Search';
 import SearchMap from '@/pages/search/SearchMap';
-import NotRegistered from '../../pages/doit/NotRegistered';
-import AlreadyRegistered from '../../pages/doit/AlreadyRegistered';
-import Request from '../../pages/doit/Request';
 import DoitComplete from '../../pages/doit/DoitComplete';
 // import OnBoarding from '@/pages/onBoarding/OnBoarding';
 import SignIn from '@/pages/signIn/SignIn';
 import StoreCheck from '@/pages/add/StoreCheck';
-import SearchStore from '@/pages/add/SearchStore';
 import AddOption from '@/pages/add/AddOption';
 import PreferSelect from '@/pages/onBoarding/PreferSelect';
 import CorkageMap from '@/pages/corkagemap/CorkageMap';
@@ -29,7 +25,6 @@ import Contact from '@/pages/myPage/Contact';
 import FilterResult from '@/pages/corkagemap/FilterResult';
 import Notification from '@/pages/notification/Notification';
 import Tip from '@/pages/home/Tip';
-import CorkStores from '@/pages/home/CorkStores';
 import Keep from '@/pages/keep/Keep';
 import NaverCallback from '@/pages/signIn/NaverCallback';
 import ReservateDrink from '@/pages/reservation/ReservateDrink';
@@ -69,10 +64,6 @@ const router = createBrowserRouter([
         element: <Store />,
       },
       {
-        path: 'corkScore',
-        element: <CorkStores />,
-      },
-      {
         path: 'searchMap',
         element: <SearchMap />,
       },
@@ -105,18 +96,6 @@ const router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: 'doit/search/request/1',
-        element: <NotRegistered />,
-      },
-      {
-        path: 'doit/search/request/2',
-        element: <AlreadyRegistered />,
-      },
-      {
-        path: 'doit/request/:restaurantId',
-        element: <Request />,
-      },
-      {
         path: 'doit/complete',
         element: <DoitComplete />,
       },
@@ -135,10 +114,6 @@ const router = createBrowserRouter([
       {
         path: 'add/my-stores',
         element: <MasterStoreList />,
-      },
-      {
-        path: 'add/search',
-        element: <SearchStore />,
       },
       {
         path: 'add/option',
