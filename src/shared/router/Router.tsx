@@ -4,7 +4,6 @@ import HotStores from '../../pages/home/HotStores';
 import RegionFilter from '../../pages/home/RegionFilter';
 import Doit from '@/pages/doit/Doit';
 import DoitList from '@/pages/doit/DoitList';
-import Search from '../../pages/doit/Search';
 import SearchMap from '@/pages/search/SearchMap';
 import DoitComplete from '../../pages/doit/DoitComplete';
 // import OnBoarding from '@/pages/onBoarding/OnBoarding';
@@ -15,11 +14,10 @@ import PreferSelect from '@/pages/onBoarding/PreferSelect';
 import CorkageMap from '@/pages/corkagemap/CorkageMap';
 import Filter from '../../pages/corkagemap/Filter';
 import Info from '@/pages/detail/Info';
-import Review from '@/shared/components/detail/Review';
+import Review from '@/pages/detail/Review';
 import MainMyPage from '@/pages/myPage/MainMyPage';
 import MasterSignUp from '@/pages/myPage/MasterSignUp';
 import ModifyInfo from '@/pages/myPage/ModifyInfo';
-import Reservation from '@/pages/myPage/Reservation';
 import MyReview from '@/pages/myPage/MyReview';
 import Contact from '@/pages/myPage/Contact';
 import FilterResult from '@/pages/corkagemap/FilterResult';
@@ -30,12 +28,12 @@ import NaverCallback from '@/pages/signIn/NaverCallback';
 import ReservateDrink from '@/pages/reservation/ReservateDrink';
 import MainLayout from '../components/layout/Layout';
 import SearchMapResult from '@/pages/search/SearchMapResult';
-import ChooseRole from '../components/myPage/ChooseRole';
+import ChooseRole from '../../pages/signIn/ChooseRole';
 import { RootRedirect } from './RootRedirect';
 import Toc from '@/pages/myPage/Toc';
 import ExamplePage from '@/pages/ExamplePage';
 import ExamplePage2 from '@/pages/ExamplePage2';
-import NotiPost from '../components/notification/NotiPost';
+import NotiPost from '../../pages/notification/NotiPost';
 import NewStores from '@/pages/home/NewStores';
 import CorkageReview from '@/pages/home/CorkageReview';
 import DoitRequest from '@/pages/doit/DoitRequest';
@@ -90,10 +88,6 @@ const router = createBrowserRouter([
       {
         path: 'doit/request',
         element: <DoitRequest />,
-      },
-      {
-        path: 'doit/search',
-        element: <Search />,
       },
       {
         path: 'doit/complete',
@@ -158,10 +152,6 @@ const router = createBrowserRouter([
       {
         path: 'my/modify',
         element: <ModifyInfo />,
-      },
-      {
-        path: 'my/reservation',
-        element: <Reservation />,
       },
       {
         path: 'my/review',
