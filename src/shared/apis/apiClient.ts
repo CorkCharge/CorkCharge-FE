@@ -1,4 +1,6 @@
 import axios from 'axios';
+import useMyPageStore from '../store/useMyPageStore';
+import useAuthStore from '../store/useAuthStore';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -65,21 +67,31 @@ apiClient.interceptors.response.use(
   }
 );
 
-/*
 let isRefreshing = false; // 리프레시 토큰 갱신 중
 let pendingRequests: ((_token: string | null) => void)[] = []; // 갱신 중 들어오는 추가요청은 큐잉처리
+let isRedirecting = false; // 토큰이 없을 경우 강제 redirect
 
 apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalReq = error.config;
-    console.error(error);
 
     const accTk = sessionStorage.getItem('accessToken');
 
-    console.log(error);
-    if (error.response?.status === 302 && accTk && !originalReq._retry) {
-      console.log('ss');
+    // access token이 없는 경우
+    if (error.response?.status === 401 && !accTk) {
+      if (!isRedirecting) {
+        isRedirecting = true;
+        useMyPageStore.getState().clear();
+        useAuthStore.getState().logout();
+        alert('로그인이 필요한 서비스입니다.');
+        window.location.href = '/signin';
+      }
+      return Promise.reject(error);
+    }
+
+    // acctoken은 발급 받았지만 401인 경우
+    if (error.response?.status === 401 && accTk && !originalReq._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           pendingRequests.push((token) => {
@@ -104,8 +116,9 @@ apiClient.interceptors.response.use(
           { headers: { Authorization: `Bearer ${refreshToken}` } }
         );
 
-        const { accessToken: newAccToken } = res.data.data;
+        const { accessToken: newAccToken, refreshToken: newRefToken } = res.data.data;
         sessionStorage.setItem('accessToken', newAccToken);
+        sessionStorage.setItem('refreshToken', newRefToken);
         pendingRequests.forEach((cb) => cb(newAccToken));
 
         originalReq.headers.Authorization = `Bearer ${newAccToken}`;
@@ -126,6 +139,5 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-*/
 
 export default apiClient;
