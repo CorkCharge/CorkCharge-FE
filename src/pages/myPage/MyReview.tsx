@@ -9,8 +9,11 @@ function MyReview() {
 
   const { data: reviews } = useGetMyReviews();
 
-  const renderReviews = () =>
-    reviews?.map((review) => <MyReviewItem key={review.reviewId} review={review} />);
+  const renderReviews = () => {
+    if (reviews?.length === 0)
+      return <p className="flex h-20 items-center justify-center">작성한 리뷰가 없습니다</p>;
+    return reviews?.map((review) => <MyReviewItem key={review.reviewId} review={review} />);
+  };
 
   return (
     <div className="relative px-4">

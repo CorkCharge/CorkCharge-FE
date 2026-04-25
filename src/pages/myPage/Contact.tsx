@@ -30,7 +30,7 @@ function Contact() {
           selectPost={setSelectedSuggestionIdx}
         />
       )}
-      {contactController === 2 && <WriteContact onPreview={() => setContactController(0)} />}
+      {contactController === 2 && <WriteContact onPreview={() => setContactController(1)} />}
       {contactController === 3 && <ContactPost selectedIdx={selectedSuggestionIdx} />}
     </div>
   );
