@@ -5,8 +5,8 @@ import { StarRate } from '../common/StarRate';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 import type { StoreReviewResponse } from '@/shared/apis/review/review.type';
-import useBookmarkStore from '@/shared/store/useBookmarkStore';
-import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
+import { useToggleReviewLike } from '@/shared/queries/review/useToggleReview';
+import { useGetRestaurantReview } from '@/shared/queries/review/useRestaurantReview';
 
 import share from '@/shared/assets/detailPageImgs/share.svg';
 import arrow from '@/shared/assets/images/arrow-up-right.svg';
@@ -15,24 +15,25 @@ import check from './assets/check.svg';
 interface ReviewInfoProps {
   reviews: StoreReviewResponse[];
   storeName: string;
+  restId: number;
 }
 
-const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
+const ReviewInfo = ({ storeName, restId }: ReviewInfoProps) => {
   const navigate = useNavigate();
   const isRated = useRef(false); // 사용자가 별점을 주었는지 확인
 
   // const selectedReviews = useMyReviewStore((state) => state.selectedReviews);
-  const selectedReviews = useBookmarkStore((state) => state.selectedReviews);
-  const toggleReview = useBookmarkStore((state) => state.toggleReview);
   const setReviewInfo = useMyReviewStore((state) => state.setReviewInfo);
   const restinfo = useRestaurantStore((state) => state.restInfo);
-  const reviewCount = useBookmarkStore((state) => state.reviewCount);
 
   const [isBookmarkPending, setIsBookmarkPending] = useState(false);
   const [isCopiedModalOpen, setIsCopiedModalOpen] = useState(false); // 복사완료 modal 열기
 
+  const { data: reviews } = useGetRestaurantReview(restId);
+  const { mutate: toggleBookmark } = useToggleReviewLike();
+
   const renderReviews = () => {
-    if (reviews.length === 0) {
+    if (reviews?.length === 0) {
       return (
         <p className="py-10 text-center text-lg font-medium text-[var(--gray-8)]">
           저장된 리뷰가 없습니다.
@@ -40,7 +41,7 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
       );
     }
 
-    return reviews.map((review) => (
+    return reviews?.map((review) => (
       <div
         className="relative rounded-2xl bg-[var(--gray-1)] p-4"
         key={review.reviewId}
@@ -67,7 +68,8 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
         <div className="absolute bottom-4 right-4 flex items-center gap-1">
           <div
             className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-white"
-            onClick={() => handleBookmark(review.reviewId)}
+            // onClick={() => handleBookmark(review.reviewId, review.scrap)}
+            onClick={() => handleBookmark(review.reviewId, review.scrap)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -80,19 +82,23 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
                 cx="16"
                 cy="16"
                 r="15"
-                fill={selectedReviews.includes(review.reviewId) ? 'var(--primary)' : 'none'}
-                stroke={selectedReviews.includes(review.reviewId) ? 'none' : 'var(--gray-3)'}
+                // fill={selectedReviews.includes(review.reviewId) ? 'var(--primary)' : 'none'}
+                // stroke={selectedReviews.includes(review.reviewId) ? 'none' : 'var(--gray-3)'}
+                fill={review.scrap ? 'var(--primary)' : 'none'}
+                stroke={review.scrap ? 'none' : 'var(--gray-3)'}
               />
               <path
                 d="M10.7239 23.6525C10.4143 23.6525 10.1728 23.5764 9.99935 23.4242C9.82596 23.272 9.73926 23.058 9.73926 22.7821V10.3959C9.73926 9.71567 9.9591 9.20434 10.3988 8.86186C10.8385 8.51939 11.4949 8.34814 12.3681 8.34814H19.6322C20.5054 8.34814 21.1618 8.51939 21.6015 8.86186C22.0412 9.20434 22.261 9.71567 22.261 10.3959V22.7821C22.261 23.058 22.1744 23.272 22.0009 23.4242C21.8276 23.5764 21.586 23.6525 21.2763 23.6525C21.0473 23.6525 20.8336 23.5931 20.6355 23.4742C20.4435 23.3553 20.1369 23.1412 19.7158 22.832L16.0837 20.0851C16.028 20.0375 15.9723 20.0375 15.9165 20.0851L12.2845 22.832C11.8634 23.1459 11.5537 23.36 11.3556 23.4742C11.1574 23.5931 10.9468 23.6525 10.7239 23.6525Z"
                 fill="white"
-                stroke={selectedReviews.includes(review.reviewId) ? 'none' : 'var(--gray-7)'}
+                // stroke={selectedReviews.includes(review.reviewId) ? 'none' : 'var(--gray-7)'}
+                stroke={review.scrap ? 'none' : 'var(--gray-7)'}
                 strokeWidth={1.5}
               />
             </svg>
           </div>
           <span className="text-[10px] font-medium text-[var(--gray-8)]">
-            {(reviewCount[review.reviewId] ?? 0) > 99 ? '99+' : (reviewCount[review.reviewId] ?? 0)}
+            {/* {(reviewCount[review.reviewId] ?? 0) > 99 ? '99+' : (reviewCount[review.reviewId] ?? 0)} */}
+            {(review.bookmarkCount ?? 0) > 99 ? '99+' : (review.bookmarkCount ?? 0)}
           </span>
           <div
             className="relative flex size-6 cursor-pointer rounded-full bg-white"
@@ -134,26 +140,38 @@ const ReviewInfo = ({ reviews, storeName }: ReviewInfoProps) => {
         setTimeout(() => setIsCopiedModalOpen(false), 1000);
       }
     } catch (e) {
-      console.log('공유 중 에러 발생 : ' + e);
+      console.error('공유 중 에러 발생 : ' + e);
     }
   };
 
-  const handleBookmark = async (id: number) => {
+  const handleBookmark = async (id: number, isLiked: boolean) => {
     if (isBookmarkPending) return;
 
     setIsBookmarkPending(true);
-    try {
-      if (selectedReviews.includes(id)) {
-        await deleteTip(id, 'REVIEW');
-      } else {
-        await save(id, 'REVIEW');
+
+    toggleBookmark(
+      { id, isLiked },
+      {
+        onError: (e) => {
+          console.error(e);
+        },
+        onSettled: () => {
+          setIsBookmarkPending(false);
+        },
       }
-      toggleReview(id);
-    } catch (e) {
-      console.error('리뷰 토글 실패: ' + e);
-    } finally {
-      setIsBookmarkPending(false);
-    }
+    );
+    // try {
+    //   if (selectedReviews.includes(id)) {
+    //     await deleteTip(id, 'REVIEW');
+    //   } else {
+    //     await save(id, 'REVIEW');
+    //   }
+    //   toggleReview(id);
+    // } catch (e) {
+    //   console.error('리뷰 토글 실패: ' + e);
+    // } finally {
+    //   setIsBookmarkPending(false);
+    // }
   };
 
   return (

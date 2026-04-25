@@ -1,5 +1,5 @@
 import apiClient from '../apiClient';
-import type { ReviewResponse } from './review.type';
+import type { ReviewResponse, StoreReviewResponse } from './review.type';
 
 // 홈 화면에 콜키지 리뷰들 가져오기
 export const fetchHomeReviews = async () => {
@@ -8,7 +8,7 @@ export const fetchHomeReviews = async () => {
 };
 
 // 가게 상세 정보 탭에서 리뷰 가져오기
-export const fetchStoreReviews = async (id: number) => {
+export const fetchStoreReviews = async (id: number): Promise<StoreReviewResponse[]> => {
   const res = await apiClient.get(`/reviews/${id}`);
 
   return res.data.data;

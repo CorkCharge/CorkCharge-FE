@@ -39,7 +39,13 @@ const DetailInfoSection = ({ restaurant, reviews }: DetailInfoSectionProps) => {
 
       {corkSelect === 0 && <DetailInfo restaurant={restaurant} />}
       {corkSelect === 1 && <StoreInfo restaurant={restaurant} />}
-      {corkSelect === 2 && <ReviewInfo reviews={reviews} storeName={restaurant.restaurantName} />}
+      {corkSelect === 2 && (
+        <ReviewInfo
+          reviews={reviews}
+          storeName={restaurant.restaurantName}
+          restId={restaurant.restaurantId}
+        />
+      )}
     </div>
   );
 };
