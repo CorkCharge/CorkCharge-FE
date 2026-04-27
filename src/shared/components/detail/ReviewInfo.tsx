@@ -160,18 +160,6 @@ const ReviewInfo = ({ storeName, restId }: ReviewInfoProps) => {
         },
       }
     );
-    // try {
-    //   if (selectedReviews.includes(id)) {
-    //     await deleteTip(id, 'REVIEW');
-    //   } else {
-    //     await save(id, 'REVIEW');
-    //   }
-    //   toggleReview(id);
-    // } catch (e) {
-    //   console.error('리뷰 토글 실패: ' + e);
-    // } finally {
-    //   setIsBookmarkPending(false);
-    // }
   };
 
   return (
