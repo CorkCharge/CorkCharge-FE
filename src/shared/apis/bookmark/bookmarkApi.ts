@@ -12,14 +12,6 @@ export interface BookmarkResponse {
   message: string;
 }
 
-export const bookmarkRequest = async (
-  //보낼 데이터(요청)
-  bookmarkBody: BookmarkPayload
-): Promise<BookmarkResponse> => {
-  const { data } = await apiClient.post<BookmarkResponse>('/bookmarks', bookmarkBody);
-  return data;
-};
-
 //저장삭제
 // export const deleteRequest = async (bookmarkBody: BookmarkPayload): Promise<BookmarkResponse> => {
 //   const { data } = await apiClient.delete<BookmarkResponse>('/bookmarks,', bookmarkBody);

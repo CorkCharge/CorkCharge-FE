@@ -7,7 +7,7 @@ import Modal from '@/shared/components/common/Modal';
 import { deleteTip, save } from '@/shared/apis/bookmark/tipApi';
 import useBookmarkStore from '@/shared/store/useBookmarkStore';
 
-import whiteArrow from '../../shared/assets/TipImgs/whiteArrow.svg';
+import whiteArrow from '../../shared/assets/whiteArrow.svg';
 import bookmarked from '@/shared/components/home/assets/bookmarked.svg';
 import keep from '@/shared/assets/keep.svg';
 

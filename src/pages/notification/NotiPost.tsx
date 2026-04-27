@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import Header from '@/shared/components/common/Header';
-import Button from '../common/Button';
+import Button from '../../shared/components/common/Button';
 import { useNotificationDetail } from '@/shared/queries/notification/useNotificationDetail';
 import { NOTI_TYPE_MAPPING } from '@/shared/apis/notification/notification.type';
 

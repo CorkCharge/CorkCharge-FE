@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { StarRate } from '../common/StarRate';
-import Header from '../common/Header';
+import { StarRate } from '@/shared/components/common/StarRate';
+import Header from '@/shared/components/common/Header';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
-import Modal from '../common/Modal';
-
-import camera from '../../assets/detailPageImgs/camera.svg';
+import Modal from '@/shared/components/common/Modal';
 import { writeReview } from '@/shared/apis/review/review.api';
+
+import camera from '@/shared/assets/detailPageImgs/camera.svg';
 
 const Review = () => {
   const navigate = useNavigate();
