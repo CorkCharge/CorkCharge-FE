@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
 import { Input } from '../common/Input';
-// import camera from '@/shared/components/myPage/images/camera.png';
-import apiClient from '@/shared/apis/apiClient';
+import { usePostSuggestion } from '@/shared/queries/suggestion/usePostSuggestion';
 
 // const TYPE = ['콜키지 정보 오류', '가게 정보 오류', '기타'];
 // const TYPE_VAL = ['CORKAGE_ERROR', '', 'OTHER_ERROR'];
@@ -11,14 +10,23 @@ function WriteContact({ onPreview }: { onPreview: () => void }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
+  const { mutate, isPending } = usePostSuggestion();
+
   const uploadPost = () => {
-    apiClient
-      .post('/suggestion', { title, content, category: 'OTHER_ERROR' })
-      .then((res) => {
-        console.log(res);
-        onPreview();
-      })
-      .catch((e) => console.log(e));
+    if (isPending) return;
+    if (!title.trim() || !content.trim()) return;
+
+    mutate(
+      { title, content, category: 'OTHER_ERROR' },
+      {
+        onSuccess: () => {
+          onPreview();
+        },
+        onError: (e) => {
+          console.error(e);
+        },
+      }
+    );
   };
   return (
     <>
@@ -40,10 +48,12 @@ function WriteContact({ onPreview }: { onPreview: () => void }) {
         사진 첨부하기
       </button> */}
       <button
-        className="fixed bottom-9 left-10 right-10 mx-auto h-[48px] max-w-[480px] rounded-[10px] bg-[var(--primary)] font-bold text-white"
+        className="fixed bottom-9 left-1/2 mx-auto h-[48px] w-[80%] -translate-x-1/2 rounded-[10px] bg-[var(--primary)] font-bold text-white disabled:opacity-60"
+        disabled={isPending || !title.trim() || !content.trim()}
         onClick={uploadPost}
+        style={{ maxWidth: 'calc(var(--app-width) * 0.8)' }}
       >
-        등록하기
+        {isPending ? '등록 중...' : '등록하기'}
       </button>
     </>
   );

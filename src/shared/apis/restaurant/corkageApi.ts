@@ -44,7 +44,7 @@ export interface RestaurantInfo {
   pairingDescription: string | null; //null,
   pairingImageUrl: string; //null,
   openingHours: string; //null,
-  // reviews?: reviewProps[];
+  operationStatus: string;
   scrap?: boolean; //false
 }
 

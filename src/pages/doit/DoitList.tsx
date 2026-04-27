@@ -184,7 +184,9 @@ const DoitList = () => {
           <div className="font-medium">
             <span>{store.address}</span>
           </div>
-          <span className="font-medium">{store.openingHoursText}</span>
+          <span className="inline-block w-full truncate font-medium" title={store.openingHoursText}>
+            {store.openingHoursText}
+          </span>
         </div>
       </div>
     ));

@@ -148,7 +148,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
           <span className="ml-1 font-medium">{restaurant.rating?.toFixed(1) ?? 0}</span>
         </div>
         <div className="mt-1 flex gap-2 text-sm">
-          <span className="text-nowrap font-semibold">영업 중</span>
+          <span className="text-nowrap font-semibold">{restaurant.operationStatus}</span>
           <span className="text-[var(--gray-6)]">
             {restaurant.openingHours
               ? getTodayOperatingHours(restaurant.openingHours)

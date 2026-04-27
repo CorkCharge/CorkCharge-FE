@@ -53,9 +53,7 @@ function ContactList({ onWrite, onDetail, selectPost }: ContactListProps) {
 
       <ul>{renderPosts()}</ul>
 
-      <div className="fixed bottom-[20px] left-0 right-0 mx-auto max-w-[600px] cursor-pointer bg-[yellow]">
-        <img src={plus} className="absolute bottom-0 right-4" onClick={onWrite} />
-      </div>
+      <img src={plus} className="absolute bottom-4 right-4 cursor-pointer" onClick={onWrite} />
     </>
   );
 }
