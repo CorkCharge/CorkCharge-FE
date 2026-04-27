@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 import { StarRate } from '../common/StarRate';
 import useMyReviewStore from '@/shared/store/useMyReviewStore';
 import useRestaurantStore from '@/shared/store/useRestaurantStore';
-import type { StoreReviewResponse } from '@/shared/apis/review/review.type';
 import { useToggleReviewLike } from '@/shared/queries/review/useToggleReview';
 import { useGetRestaurantReview } from '@/shared/queries/review/useRestaurantReview';
 
@@ -13,7 +12,6 @@ import arrow from '@/shared/assets/images/arrow-up-right.svg';
 import check from './assets/check.svg';
 
 interface ReviewInfoProps {
-  reviews: StoreReviewResponse[];
   storeName: string;
   restId: number;
 }
