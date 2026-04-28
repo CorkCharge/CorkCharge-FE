@@ -31,9 +31,8 @@ jobs:
         run: pnpm run build # 또는 tsc -b && vite build
 
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        # npx vercel@latest를 사용해 항상 최신 버전을 가져오고, --yes로 CI 환경 프롬프트를 무시합니다.
+        run: npx vercel@latest --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
