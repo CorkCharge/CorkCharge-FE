@@ -121,7 +121,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   return (
     <div className="relative flex w-full flex-col">
       {restaurant.mainImageUrl ? (
-        <img src={restaurant.mainImageUrl} className="h-[197px] w-full" />
+        <img src={restaurant.mainImageUrl} className="h-[197px] w-full object-cover" />
       ) : (
         <div className="grid grid-cols-2 gap-[1px]">
           <div className="aspect-square bg-gray-300"></div>
