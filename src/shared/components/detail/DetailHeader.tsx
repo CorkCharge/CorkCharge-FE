@@ -214,7 +214,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
       <div className="mb-7 w-full px-4">
         <div className="mt-2 border-b-2 pb-1 font-bold">콜키지 정보</div>
         <div className="flex gap-12 border-b py-2">
-          <div className="font-bold">비용</div>
+          <div className="text-nowrap font-bold">비용</div>
           <span>{restaurant.corkagePrice}</span>
         </div>
         {restaurant.corkageOptions.length > 0 && (
