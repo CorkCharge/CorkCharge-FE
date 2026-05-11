@@ -16,26 +16,13 @@ import { OverLayImage } from '../common/OverLayImage';
 const renderReviews = (reviews: Review[]) =>
   reviews.map((review, idx) =>
     review.thumbnailUrl ? (
-      <OverLayImage src={review.thumbnailUrl} className="w-[30%]">
+      <OverLayImage src={review.thumbnailUrl} className="w-[30%] shrink-0">
         <div className="absolute inset-x-3 bottom-3 flex flex-col text-white">
           <span className="text-[10px] font-medium">{review.location}</span>
           <span className="text-sm font-bold">{review.restaurantName}</span>
         </div>
       </OverLayImage>
     ) : (
-      // <div
-      //   key={idx}
-      //   className="flex h-[168px] w-[30%] flex-none flex-col justify-end rounded-lg p-3 text-white"
-      //   style={{
-      //     backgroundImage: `url(${review.thumbnailUrl || ''})`,
-      //     backgroundSize: 'cover',
-      //     backgroundPosition: 'center',
-      //     backgroundRepeat: 'no-repeat',
-      //   }}
-      // >
-      //   <span className="text-[10px] font-medium">{review.location}</span>
-      //   <span className="text-sm font-bold">{review.restaurantName}</span>
-      // </div>
       <div key={idx} className="relative h-[168px] w-[30%] shrink-0">
         <DefaultImage
           hasLogo={true}
@@ -54,7 +41,7 @@ const renderReviews = (reviews: Review[]) =>
 const ReviewArea = ({ reviews }: { reviews: Review[] }) => {
   return (
     <>
-      <div className="mt-5 flex gap-2 overflow-x-auto">{renderReviews(reviews)}</div>
+      <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4">{renderReviews(reviews)}</div>
     </>
   );
 };

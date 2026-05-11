@@ -34,7 +34,7 @@ export const OverLayImage = ({
 
   return (
     <div className={cn('relative w-full', className)} style={dynamicPadding} {...rest}>
-      <img src={src} className="h-full w-full rounded-2xl" />
+      <img src={src} className="h-full w-full rounded-2xl object-cover" />
       <div className={cn('absolute rounded-2xl bg-[rgba(0,0,0,0.5)]')} style={dynamicInset}></div>
 
       {children}

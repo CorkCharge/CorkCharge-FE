@@ -121,7 +121,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
   return (
     <div className="relative flex w-full flex-col">
       {restaurant.mainImageUrl ? (
-        <img src={restaurant.mainImageUrl} className="h-[197px] w-full" />
+        <img src={restaurant.mainImageUrl} className="h-[197px] w-full object-cover" />
       ) : (
         <div className="grid grid-cols-2 gap-[1px]">
           <div className="aspect-square bg-gray-300"></div>
@@ -214,7 +214,7 @@ const DetailHeader = ({ restaurant }: { restaurant: RestaurantInfo }) => {
       <div className="mb-7 w-full px-4">
         <div className="mt-2 border-b-2 pb-1 font-bold">콜키지 정보</div>
         <div className="flex gap-12 border-b py-2">
-          <div className="font-bold">비용</div>
+          <div className="text-nowrap font-bold">비용</div>
           <span>{restaurant.corkagePrice}</span>
         </div>
         {restaurant.corkageOptions.length > 0 && (
