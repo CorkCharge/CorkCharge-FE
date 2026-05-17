@@ -8,7 +8,6 @@ import StoreCard from './StoreCard';
 
 import arrow from '@/shared/assets/selectArrow.svg';
 import { useGetGroupItems } from '@/shared/queries/bookmark/useGetGroupItems';
-import { mapColorToIcon } from '@/shared/utils/groupMapper';
 
 const RESTAURANT_ORDER_BY = {
   LATEST: '최신순',
@@ -35,7 +34,7 @@ function MyStoreList() {
     if (!groups || groups.length < 1) return;
     setSelectedGroup(groups[0].name);
     setHowManyStore(groups[0].storeCount);
-    setSelectedGpIcon(mapColorToIcon(groups[0].color));
+    setSelectedGpIcon(groups[0].color);
     setSelectedGpId(groups[0].groupId);
   }, [groups]);
 
@@ -44,7 +43,7 @@ function MyStoreList() {
     setSelectedGroup(gName);
     setIsGroupDrop(false);
     setHowManyStore(storeCount);
-    setSelectedGpIcon(mapColorToIcon(gColor));
+    setSelectedGpIcon(gColor);
     setSelectedGpId(gId);
   };
 
