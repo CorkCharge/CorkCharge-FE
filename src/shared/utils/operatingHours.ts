@@ -4,7 +4,10 @@ export const getTodayOperatingHours = (opString: string) => {
 
   if (!opString.includes(',')) return opString;
 
-  const todayOperation = opString.split(',').find((x) => x.startsWith(`${dayMapper[todayDay]}:`));
+  const todayOperation = opString
+    .split(',')
+    .map((x) => x.trim())
+    .find((x) => x.startsWith(`${dayMapper[todayDay]}:`));
 
   return todayOperation ?? '';
 };

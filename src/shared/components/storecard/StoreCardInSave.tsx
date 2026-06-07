@@ -13,6 +13,7 @@ import Button from '../common/Button';
 import check from '../../components/detail/assets/check.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
+import { getTodayOperatingHours } from '@/shared/utils/operatingHours';
 
 interface StoreCardProps {
   restaurantId: number;
@@ -129,9 +130,11 @@ const StoreCardInSave = ({
         {/* 구분 여백 */}
         <div className="ml-[9px] flex items-center gap-[4px]">
           {/* 영업 상태 */}
-          <span className="text-[14px] font-[600] text-[#35353F]">영업중</span>
+          <span className="text-nowrap text-[14px] font-[600] text-[#35353F]">영업중</span>
           {/* 영업 시간 */}
-          <span className="text-[14px] font-[500] text-[#9FA2AA]">{openingHoursText}</span>
+          <span className="text-[14px] font-[500] text-[#9FA2AA]">
+            {getTodayOperatingHours(openingHoursText)}
+          </span>
         </div>
       </div>
 

@@ -75,7 +75,15 @@ function Header({ title, type, backFn, fnTitle, addiFn, className, style }: Head
   if (type === 'back') {
     return <BackHeader title={title} backFn={backFn} className={className} style={style} />;
   } else if (type === 'additional') {
-    return <AdditionalHeader title={title} fnTitle={fnTitle} addiFn={addiFn} backFn={backFn} />;
+    return (
+      <AdditionalHeader
+        title={title}
+        fnTitle={fnTitle}
+        addiFn={addiFn}
+        backFn={backFn}
+        className={className}
+      />
+    );
   } else return <NormalHeader title={title} className={className} />;
 }
 
