@@ -226,7 +226,12 @@ const CorkageMap = () => {
         //   </div>
         // </div>
         <div className="absolute z-[102] w-full bg-white px-4">
-          <Header title={selectedAreaName} type="back" className="bg-white p-4" />
+          <Header
+            title={selectedAreaName}
+            type="back"
+            className="bg-white p-4"
+            backFn={handleSheetClose}
+          />
         </div>
       )}
 
