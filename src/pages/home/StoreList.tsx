@@ -9,7 +9,7 @@ import { fetchTipList, type TipData } from '@/shared/apis/tip/tipListApi';
 import type { Selected } from '@/shared/components/home/home.types';
 import ReviewItem from '@/shared/components/home/ReviewItem';
 import StoresInfo from '@/shared/components/home/StoresInfo';
-import type { ReviewResponse } from '@/shared/apis/review/review.type';
+import type { ReviewCardResponse } from '@/shared/apis/review/review.type';
 import { fetchHomeReviews } from '@/shared/apis/review/review.api';
 import { fetchHomeStoreCard } from '@/shared/apis/restaurant/restaurant.api';
 import type { StoreCard } from '@/shared/apis/restaurant/restaurant.type';
@@ -27,7 +27,7 @@ const StoreList = () => {
   const [storeSelected, setStoreSelected] = useState<boolean>(true);
   const [selected, setSelected] = useState<Selected>('ALL');
   const [tiplist, setTiplist] = useState<TipData[]>([]);
-  const [reviewCards, setReviewCards] = useState<ReviewResponse[]>([]);
+  const [reviewCards, setReviewCards] = useState<ReviewCardResponse[]>([]);
 
   const [nearStores, setNearStores] = useState<StoreCard[]>([]);
   const [hotStores, setHotStores] = useState<StoreCard[]>([]);

@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
-import type { ReviewResponse } from '@/shared/apis/review/review.type';
+import type { ReviewCardResponse } from '@/shared/apis/review/review.type';
 import DefaultImage from '../common/DefaultImage';
 import { StarWithStroke } from '../common/StarRate';
 
-function ReviewItem({ review }: { review: ReviewResponse }) {
+function ReviewItem({ review }: { review: ReviewCardResponse }) {
   const navigate = useNavigate();
   return (
     <div

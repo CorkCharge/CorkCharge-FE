@@ -10,38 +10,32 @@ import arrow from '@/shared/assets/images/arrow.png';
 import plus from '@/shared/assets/images/plus.png';
 import naver from '@/shared/components/myPage/images/naver-white.png';
 import { useGetMypageInfo } from '@/shared/queries/user/useMyPage';
-import DefaultImage from '../common/DefaultImage';
-import { OverLayImage } from '../common/OverLayImage';
+import ReviewItem from '../home/ReviewItem';
+import type { ReviewCardResponse } from '@/shared/apis/review/review.type';
+import useMyPageStore from '@/shared/store/useMyPageStore';
 
-const renderReviews = (reviews: Review[]) =>
-  reviews.map((review, idx) =>
-    review.thumbnailUrl ? (
-      <OverLayImage src={review.thumbnailUrl} className="w-[30%] shrink-0">
-        <div className="absolute inset-x-3 bottom-3 flex flex-col text-white">
-          <span className="text-[10px] font-medium">{review.location}</span>
-          <span className="text-sm font-bold">{review.restaurantName}</span>
-        </div>
-      </OverLayImage>
-    ) : (
-      <div key={idx} className="relative h-[168px] w-[30%] shrink-0">
-        <DefaultImage
-          hasLogo={true}
-          containerClassName="rounded-lg"
-          className="rounded-lg"
-          logoHeight="50%"
-        />
-        <div className="absolute inset-x-3 bottom-3 flex flex-col">
-          <span className="text-[10px] font-medium">{review.location}</span>
-          <span className="text-sm font-bold">{review.restaurantName}</span>
-        </div>
-      </div>
-    )
-  );
+const renderReviews = (reviews: Review[], author: string) =>
+  reviews.map((review, idx) => {
+    const formattedReview: ReviewCardResponse = {
+      reviewId: idx + 1,
+      writer: author,
+      content: '리뷰리뷰리뷰리뷰리뷰',
+      rating: 4,
+      createdAt: '2026-01-01',
+      imageUrls: [review.thumbnailUrl],
+      restaurantId: 1,
+      restaurantName: review.restaurantName,
+    };
+    return <ReviewItem key={idx} review={formattedReview} />;
+  });
 
 const ReviewArea = ({ reviews }: { reviews: Review[] }) => {
+  const nickname = useMyPageStore((state) => state.myProfile).nickname;
   return (
     <>
-      <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4">{renderReviews(reviews)}</div>
+      <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4">
+        {renderReviews(reviews, nickname)}
+      </div>
     </>
   );
 };
