@@ -50,7 +50,7 @@ function CategoryStores() {
   const sido = Object.keys(filteredRegions)[0];
   const sigungu = sido ? Object.keys(filteredRegions[sido])[0] : undefined;
   const dong = sigungu ? filteredRegions[sido][sigungu] : undefined;
-  const { data: stores } = useCategoryStores({ category: title, sido, sigungu, dong });
+  const { data: stores = [] } = useCategoryStores({ category: title, sido, sigungu, dong });
 
   const handleShare = (e: React.MouseEvent<HTMLDivElement>, name: string, id: number) => {
     e.stopPropagation();
@@ -73,8 +73,15 @@ function CategoryStores() {
     setTimeout(() => setIsCopiedModalOpen(false), 1000);
   };
 
-  const renderStores = () =>
-    stores?.map((store) => (
+  const renderStores = () => {
+    if (stores?.length < 1) {
+      return (
+        <p className="flex h-[200px] items-center justify-center">
+          해당 카테고리의 가게가 없습니다
+        </p>
+      );
+    }
+    return stores?.map((store) => (
       <div
         key={store.restaurantId}
         className="flex cursor-pointer flex-col gap-2"
@@ -82,7 +89,10 @@ function CategoryStores() {
       >
         <div>
           {store.mainImageUrls ? (
-            <img src={store.mainImageUrls} className="h-[172px] w-full rounded-t-2xl" />
+            <img
+              src={store.mainImageUrls}
+              className="h-[172px] w-full rounded-t-2xl object-cover"
+            />
           ) : (
             <div className="h-[172px] rounded-t-2xl bg-black" />
           )}
@@ -125,6 +135,7 @@ function CategoryStores() {
         </div>
       </div>
     ));
+  };
 
   const renderDongs = () =>
     selectedDongNames.map((dong: string, idx: number) => (
