@@ -13,8 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false # install 단계에서 직접 캐시 사용
 
       - uses: actions/setup-node@v4
         with:
