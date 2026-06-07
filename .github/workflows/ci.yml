@@ -25,13 +25,8 @@ jobs:
           node-version: 22
           cache: 'pnpm'
 
-      - name: Debug versions
-        run: |
-          node -v
-          pnpm -v
-
       - name: Install deps
-        run: pnpm install --allow-build=esbuild
+        run: pnpm install
 
       # 타입체크 + 번들
       - run: pnpm run build
