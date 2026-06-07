@@ -6,7 +6,8 @@ export const getTodayOperatingHours = (opString: string) => {
 
   const todayOperation = opString
     .split(',')
-    .find((x) => x.trim().startsWith(`${dayMapper[todayDay]}:`));
+    .map((x) => x.trim())
+    .find((x) => x.startsWith(`${dayMapper[todayDay]}:`));
 
   return todayOperation ?? '';
 };
