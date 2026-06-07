@@ -75,7 +75,7 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
     // [수정] 전체를 감싸는 하나의 부모 div 안에 내용을 배치합니다.
     <div className="relative flex h-full w-full flex-col bg-white">
       {/* 헤더 영역 (드롭다운) */}
-      <div className="flex w-full items-center justify-between px-[15px] pt-[15px]">
+      <div className="flex w-full items-center justify-between">
         <span className="max-w-[160px] truncate text-[16px] font-[500] text-[#80818B]">
           {restaurants.length}개의 매장
         </span>
@@ -130,7 +130,7 @@ const MultipinList = ({ restaurantIds }: MultipinListProps) => {
 
       {/* 리스트 영역 (스크롤) */}
       {/* 헤더 아래 24px 여백, 좌우 15px 여백 */}
-      <div className="mt-[24px] flex flex-1 flex-col gap-[24px] overflow-y-auto px-[15px] pb-[40px] [&::-webkit-scrollbar]:hidden">
+      <div className="mt-1 flex flex-1 flex-col gap-[24px] overflow-y-auto pb-[40px] [&::-webkit-scrollbar]:hidden">
         {restaurants.length > 0 ? (
           restaurants.map((r) => (
             <StoreCardInMultiPinList

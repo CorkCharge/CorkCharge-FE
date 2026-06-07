@@ -195,7 +195,7 @@ const BottomSheet = ({
 
         {/* 바텀시트 내용물 */}
         <div
-          className="flex-1 px-6 pb-6"
+          className="flex-1 px-5 pb-6"
           style={{
             overflowY: currentSnap === 'TOP' ? 'auto' : 'hidden',
           }}

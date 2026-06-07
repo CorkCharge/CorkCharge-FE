@@ -9,11 +9,10 @@ import BottomSheet from '@/shared/components/bottomsheet/BottomSheet';
 import save from './save.svg';
 import bttn from './filterImg.svg';
 import List from './list/List';
-import BackArrow from '../../shared/assets/backarrow.svg';
-import X from './list/X.svg';
 import MyStore from './mystore/MyStore';
 import MultipinList from './multipinlist/MultipinList';
 import Detail from './restaurant_detail/Detail';
+import Header from '@/shared/components/common/Header';
 
 const CorkageMap = () => {
   const navigate = useNavigate();
@@ -212,19 +211,22 @@ const CorkageMap = () => {
 
       {/* 지역명 표시 상단바 */}
       {isMultipinView && (
-        <div className="absolute top-0 z-[102] h-[96px] w-full bg-white pt-[4px]">
-          <div className="flex flex-row place-content-between items-center px-[18px] pt-[48px]">
-            <div className="flex flex-row gap-[13px]">
-              <img
-                src={BackArrow}
-                alt="뒤로가기"
-                className="cursor-pointer"
-                onClick={handleSheetClose}
-              />
-              <span className="color-[#35353F] text-[16px] font-[500]">{selectedAreaName}</span>
-            </div>
-            <img src={X} alt="X" className="cursor-pointer" onClick={handleSheetClose} />
-          </div>
+        // <div className="absolute top-0 z-[102] h-[96px] w-full bg-white pt-[4px]">
+        //   <div className="flex flex-row place-content-between items-center px-[18px] pt-[48px]">
+        //     <div className="flex flex-row gap-[13px]">
+        //       <img
+        //         src={BackArrow}
+        //         alt="뒤로가기"
+        //         className="cursor-pointer"
+        //         onClick={handleSheetClose}
+        //       />
+        //       <span className="color-[#35353F] text-[16px] font-[500]">{selectedAreaName}</span>
+        //     </div>
+        //     <img src={X} alt="X" className="cursor-pointer" onClick={handleSheetClose} />
+        //   </div>
+        // </div>
+        <div className="absolute z-[102] w-full bg-white px-4">
+          <Header title={selectedAreaName} type="back" className="bg-white p-4" />
         </div>
       )}
 
