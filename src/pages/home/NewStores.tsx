@@ -83,7 +83,10 @@ function NewStores() {
       >
         <div>
           {store.mainImageUrls ? (
-            <img src={store.mainImageUrls} className="h-[172px] w-full rounded-t-2xl" />
+            <img
+              src={store.mainImageUrls}
+              className="h-[172px] w-full rounded-t-2xl object-cover"
+            />
           ) : (
             <div className="h-[172px] rounded-t-2xl bg-black" />
           )}

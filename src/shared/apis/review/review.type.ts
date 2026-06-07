@@ -7,6 +7,11 @@ interface BaseReviewResponse {
   imageUrls: string[];
 }
 
+export interface ReviewCardResponse extends BaseReviewResponse {
+  restaurantId: number;
+  restaurantName: string;
+}
+
 export interface StoreReviewResponse extends BaseReviewResponse {
   bookmarkCount: number;
   scrap: boolean;
