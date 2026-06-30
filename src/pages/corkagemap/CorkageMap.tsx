@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBookmarkGroups, createBookmark } from '@/shared/apis/bookmark/bookmark.api';
 import { mapColorToIcon, mapIconToColor } from '@/shared/utils/groupMapper';
@@ -126,18 +126,20 @@ const CorkageMap = () => {
     setIsSheetOpen(true);
   }, []);
 
-  const headerHeightPx = 96;
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeightPx, setHeaderHeightPx] = useState(96); // 초기 렌더링용 기본값
+  const isMultipinView = sheetView === 'multipin';
+  // 헤더가 화면에 나타날 때(isMultipinView) 실제 높이를 측정하여 업데이트
+  useEffect(() => {
+    if (isMultipinView && headerRef.current) {
+      setHeaderHeightPx(headerRef.current.offsetHeight);
+    }
+  }, [isMultipinView, selectedAreaName]);
+
   const headerVh =
     typeof window !== 'undefined' ? (headerHeightPx / window.innerHeight) * 100 : 11.5;
-  // MyStore 뷰일 때 topSnapVh는 19.8, List일 땐 17.8, 근데 이게 처음에 BottomSheet가 마운트될때 이미 17.8로 마운트되서 바뀌질 않음
-  const currentTopSnapVh =
-    sheetView === 'detail'
-      ? 0 // 화면 상단 5% 정도만 남기고 다 올림 (원하는 만큼 조절)
-      : sheetView === 'multipin'
-        ? headerVh
-        : 17.8;
-  // [편의용] 멀티핀 뷰인지 확인하는 변수
-  const isMultipinView = sheetView === 'multipin';
+
+  const currentTopSnapVh = sheetView === 'detail' ? 0 : sheetView === 'multipin' ? headerVh : 17.8;
 
   const handleSnapToTop = () => {
     // Detail 뷰일 때만 페이지 이동
@@ -225,7 +227,7 @@ const CorkageMap = () => {
         //     <img src={X} alt="X" className="cursor-pointer" onClick={handleSheetClose} />
         //   </div>
         // </div>
-        <div className="absolute z-[102] w-full bg-white px-4">
+        <div ref={headerRef} className="absolute top-0 z-[102] w-full bg-white px-4">
           <Header
             title={selectedAreaName}
             type="back"
