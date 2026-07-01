@@ -131,16 +131,35 @@ const CorkageMap = () => {
   const isMultipinView = sheetView === 'multipin';
   // 헤더가 화면에 나타날 때(isMultipinView) 실제 높이를 측정하여 업데이트
   useEffect(() => {
-    if (isMultipinView && headerRef.current) {
-      setHeaderHeightPx(headerRef.current.offsetHeight);
-    }
+    // 멀티핀 뷰가 아니거나 DOM이 아직 연결되지 않았으면 실행하지 않음
+    if (!isMultipinView || !headerRef.current) return;
+
+    const element = headerRef.current;
+
+    // 높이를 측정해서 state에 업데이트하는 함수
+    const measure = () => setHeaderHeightPx(element.offsetHeight);
+
+    // 마운트 시 최초 1회 측정 실행
+    measure();
+
+    // ResizeObserver: 헤더 요소 자체의 크기 변경 감지
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+
+    // window resize: 브라우저 창 크기 변경(회전 등) 감지
+    window.addEventListener('resize', measure);
+
+    // 클린업 함수: 컴포넌트가 언마운트되거나 의존성이 바뀔 때 이벤트 리스너 해제 (메모리 누수 방지)
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+    };
   }, [isMultipinView, selectedAreaName]);
 
   const headerVh =
     typeof window !== 'undefined' ? (headerHeightPx / window.innerHeight) * 100 : 11.5;
 
-  const currentTopSnapVh = sheetView === 'detail' ? 0 : sheetView === 'multipin' ? headerVh : 17.8;
-
+  const currentTopSnapVh = sheetView === 'detail' ? 0 : isMultipinView ? headerVh : 17.8;
   const handleSnapToTop = () => {
     // Detail 뷰일 때만 페이지 이동
     if (sheetView === 'detail' && selectedRestaurantId) {
