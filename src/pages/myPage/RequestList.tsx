@@ -15,10 +15,14 @@ function RequestList() {
       <div
         key={req.helprequestId}
         className="relative cursor-pointer border-b border-[var(--gray-3)] p-4"
-        onClick={() => navigate(`/my/request/${req.helprequestId}`)}
+        onClick={() =>
+          navigate(`/my/request/${req.helprequestId}`, {
+            state: { restaurantName: 'rn', restaurantId: 5 },
+          })
+        }
       >
-        <div className="flex flex-col font-medium">
-          <span className="text-[var(--gray-8)]">{req.restaurantName}</span>
+        <div className="flex flex-col font-medium" style={{ maxWidth: 'calc(100% - 20px)' }}>
+          <span className="truncate text-[var(--gray-8)]">{req.restaurantName}</span>
           <span className="text-[10px] text-[var(--gray-4)]">
             {new Date(req.createdAt).toLocaleDateString('ko-KR', {
               year: 'numeric',

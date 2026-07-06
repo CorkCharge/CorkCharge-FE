@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import { getMyRequestDetail } from '@/shared/apis/user/user.api';
@@ -22,6 +22,9 @@ function MyRequest() {
 
   const { id } = useParams();
 
+  const location = useLocation();
+  const { restName, restId } = location.state;
+
   const [myReq, setMyReq] = useState<MyReqDetailResponse>();
 
   useEffect(() => {
@@ -33,6 +36,19 @@ function MyRequest() {
 
     try {
       const res = await getMyRequestDetail(Number(id));
+      if (!res.preferredPrice) {
+        // preferredPrice가 없는 경우는 1차 해주세요만 한 경우
+        navigate('/doit/request', {
+          state: {
+            storeId: restId,
+            storeName: restName,
+            address: '',
+          },
+          // 현재 페이지를 스택에서 제외하면서 이동
+          replace: true,
+        });
+        return;
+      }
       setMyReq(res);
     } catch (e) {
       console.error('해주세요 상세정보 가져오기 실패: ' + e);
