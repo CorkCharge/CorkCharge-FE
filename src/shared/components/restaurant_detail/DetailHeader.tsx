@@ -16,6 +16,7 @@ import check from './assets/check.svg';
 import notsave from '../storecard/notsave.svg';
 import save from '../storecard/save.svg';
 import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
+import { getTodayOperatingHours } from '@/shared/utils/operatingHours';
 
 interface detailProps {
   resId: number;
@@ -158,7 +159,7 @@ const DetailHeader = ({
           </div>
           <div className="mt-1 flex items-center gap-2 text-[14px]">
             <span className="font-semibold">{isOpen ? '영업중' : '영업종료'}</span>
-            <span className="text-[#80818B]">영업시간 {time} 영업종료</span>
+            <span className="text-[#80818B]">{getTodayOperatingHours(time) || '정보 없음'}</span>
           </div>
         </div>
         <div>
@@ -214,13 +215,13 @@ const DetailHeader = ({
       {/* 콜키지 정보 */}
       <div className="mb-7 w-full px-4">
         <div className="mt-2 border-b-2 pb-1 font-bold">콜키지 정보</div>
-        <div className="flex gap-12 border-b py-2">
-          <div className="font-bold">비용</div>
+        <div className="flex gap-5 border-b py-2">
+          <div className="min-w-[40px] font-bold">비용</div>
           <span>{corkagePrice}</span>
         </div>
         {corkageOption.length > 0 && (
-          <div className="flex w-full gap-12 pb-2 pr-2 pt-2">
-            <div className="font-bold">기타</div>
+          <div className="flex w-full gap-5 pb-2 pr-2 pt-2">
+            <div className="min-w-[40px] font-bold">기타</div>
             <div>
               {corkageOption.map((option) => (
                 <p>{option}</p>
