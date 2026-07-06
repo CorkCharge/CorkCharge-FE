@@ -13,6 +13,7 @@ import Button from '../common/Button';
 import check from '../../components/detail/assets/check.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import MultiSaveMarker from '../../assets/common/multiSaveMarker.svg';
+import { getTodayOperatingHours } from '@/shared/utils/operatingHours';
 
 // [수정] API 데이터 타입에 맞춰 Props 인터페이스 정의
 interface StoreCardProps {
@@ -151,8 +152,8 @@ const StoreCard = ({
           {/* 영업 상태 */}
           <span className="text-[14px] font-[600] text-[#35353F]">영업중</span>
           {/* 영업 시간 => openingHours */}
-          <span className="max-w-[120px] truncate text-[14px] font-[500] text-[#9FA2AA]">
-            {openingHours}
+          <span className="max-w-[200px] truncate text-[14px] font-[500] text-[#9FA2AA]">
+            {getTodayOperatingHours(openingHours) || '정보 없음'}
           </span>
         </div>
       </div>
@@ -197,7 +198,7 @@ const StoreCard = ({
         {/* 기타 행 */}
         <div className="flex w-full items-center">
           <span className="min-w-fit text-[16px] font-[700] text-[#35353F]">기타</span>
-          <span className="ml-[36.5px] line-clamp-2 text-[14px] font-[500] text-[#35353F]">
+          <span className="ml-[36.5px] line-clamp-2 truncate text-[14px] font-[500] text-[#35353F]">
             {corkageOptions?.join(', ')}
           </span>
         </div>
