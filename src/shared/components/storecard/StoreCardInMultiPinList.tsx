@@ -152,8 +152,8 @@ const StoreCard = ({
           {/* 영업 상태 */}
           <span className="text-[14px] font-[600] text-[#35353F]">영업중</span>
           {/* 영업 시간 => openingHours */}
-          <span className="max-w-[120px] truncate text-[14px] font-[500] text-[#9FA2AA]">
-            {getTodayOperatingHours(openingHours)}
+          <span className="max-w-[200px] truncate text-[14px] font-[500] text-[#9FA2AA]">
+            {getTodayOperatingHours(openingHours) || '정보 없음'}
           </span>
         </div>
       </div>
