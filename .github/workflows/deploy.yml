@@ -36,4 +36,6 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         # npx vercel@latest를 사용해 항상 최신 버전을 가져오고, --yes로 CI 환경 프롬프트를 무시합니다.
-        run: npx vercel@latest --prod --yes
+        run: |
+          rm -rf .vercel
+          npx vercel@latest --prod --yes
