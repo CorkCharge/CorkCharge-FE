@@ -1,5 +1,4 @@
 import { useEffect, useRef, useCallback } from 'react';
-//import { useNavigate } from 'react-router-dom';
 import { getMapData } from '@/shared/apis/map/mapApi';
 import type {
   SavedMapPin,
@@ -58,7 +57,6 @@ const markerBgColors: Record<string, string> = {
 };
 
 const getTextColor = (iconName: string) => {
-  // 연노랑(5), 연보라(10), 흰색(11)의 경우 텍스트를 어둡게 표시
   if (['SaveMarker5', 'SaveMarker10', 'SaveMarker11'].includes(iconName)) {
     return '#35353F';
   }
@@ -71,15 +69,8 @@ interface MarkerData {
   size: number;
 }
 
-// [1] Ref에 사용할 데이터 타입 정의
-interface MarkerData {
-  count: number;
-  name: string;
-  size: number;
-}
-
 /* =========================
-   유틸 함수 (컴포넌트 외부)
+   유틸 함수 (동 단위 & 구 단위 분리)
    ========================= */
 const getDongFromAddress = (address: string): string | null => {
   if (!address) return null;
@@ -95,6 +86,18 @@ const getDongFromAddress = (address: string): string | null => {
   const cand3 = parts.find((t) => /(구|군|시)$/.test(t));
   if (cand3) return cand3;
   return null;
+};
+
+// [NEW] 구 단위 추출 로직
+const getSigunguFromAddress = (address: string): string | null => {
+  if (!address) return null;
+  const parts = address.split(/\s+/);
+  const candidates = parts.filter(
+    (t) => /(구|군|시)$/.test(t) && !/(특별시|광역시|특별자치시|도)$/.test(t)
+  );
+  if (candidates.length > 0) return candidates[candidates.length - 1];
+  const city = parts.find((t) => /(특별시|광역시|특별자치시)$/.test(t));
+  return city || '기타';
 };
 
 type DongBucket = {
@@ -117,8 +120,33 @@ const groupByDong = (points: MapRestaurantData[]) => {
       b.sumLon += p.lon;
       b.ids.push(p.restaurantId);
     } else {
-      map.set(dong, {
-        name: dong,
+      map.set(dong, { name: dong, count: 1, sumLat: p.lat, sumLon: p.lon, ids: [p.restaurantId] });
+    }
+  }
+  return Array.from(map.values()).map((b) => ({
+    name: b.name,
+    count: b.count,
+    centerLat: b.sumLat / b.count,
+    centerLon: b.sumLon / b.count,
+    restaurantIds: b.ids,
+  }));
+};
+
+// [NEW] 구 단위 그룹화 로직
+const groupBySigungu = (points: MapRestaurantData[]) => {
+  const map = new Map<string, DongBucket>();
+  for (const p of points) {
+    const parsed = getSigunguFromAddress(p.address);
+    const sigungu = parsed ?? '기타';
+    const b = map.get(sigungu);
+    if (b) {
+      b.count += 1;
+      b.sumLat += p.lat;
+      b.sumLon += p.lon;
+      b.ids.push(p.restaurantId);
+    } else {
+      map.set(sigungu, {
+        name: sigungu,
         count: 1,
         sumLat: p.lat,
         sumLon: p.lon,
@@ -142,13 +170,23 @@ const getMapLevel = (zoom: number): MapLevel => {
   return 'sido';
 };
 
-const createClusterMarkerHtml = (count: number, isSelected: boolean = false): string => {
-  const size = 35 + count * 1.5;
+// [NEW] 최대 크기를 제한하는 헬퍼 함수
+const getClusterSize = (count: number) => {
+  const displayCountForSize = Math.min(count, 30); // 30개를 초과해도 크기는 고정
+  return 35 + displayCountForSize * 1.5;
+};
+
+const createClusterMarkerHtml = (
+  count: number,
+  size: number,
+  isSelected: boolean = false
+): string => {
   const activeBackground = `
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), 
                 radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%);
   `;
   const defaultBackground = `background-color: #90212A;`;
+  const displayCount = count > 999 ? '999+' : count;
 
   return `
     <div style="
@@ -158,13 +196,13 @@ const createClusterMarkerHtml = (count: number, isSelected: boolean = false): st
       color:white; font-size:12px; font-weight:bold; border-radius:50%;
       box-shadow:0 2px 4px rgba(0,0,0,0.2); transition:all 0.2s; padding:4px; cursor: pointer;
     ">
-      <div style="font-size:14px; line-height:1">${count}</div>
+      <div style="font-size:14px; line-height:1">${displayCount}</div>
     </div>
   `;
 };
 
 const escapeHtml = (str: string): string => {
-  if (!str) return ''; // 빈 문자열이나 null/undefined 처리
+  if (!str) return '';
   return str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -181,61 +219,36 @@ const createRestaurantMarkerHtml = (
   const safePrice = escapeHtml(price);
   const safeName = escapeHtml(name);
   if (isSelected) {
-    // [선택됨] 물방울 + 병 + 가격
     return `
       <div style="display: flex; flex-direction: column; align-items: center;">
         <div style="
-          width: 72px; height: 72px;
-          border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg);
-          border: 2px solid #FFF;
-          background: radial-gradient(151% 149.45% at -10.81% 68.19%, #90212A 0%, #DCDBE8 70.67%);
-          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-          display: flex; align-items: center; justify-content: center;
-          margin-bottom: 8px;
-          z-index: 1000;
+          width: 72px; height: 72px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+          border: 2px solid #FFF; background: radial-gradient(151% 149.45% at -10.81% 68.19%, #90212A 0%, #DCDBE8 70.67%);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;
+          margin-bottom: 8px; z-index: 1000;
         ">
           <img src="${Bottle}" style="width: 24px; height: 48px; transform: rotate(45deg);" alt="bottle" />
         </div>
         <div style="
-          padding: 8px 12px;
-          background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), 
+          padding: 8px 12px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), 
                       radial-gradient(191.49% 164.27% at -1.8% 88.07%, #90212A 32.79%, #DCDBE8 86.4%);
-          color: white; font-size: 14px; font-weight: bold; border-radius: 20px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
-        ">
-          ${safePrice}
-        </div>
-        <div style="
-          color: #333; font-size: 14px; font-weight: 700; 
-          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; 
-          /* 텍스트 가독성을 위해 흰색 테두리(그림자) 효과 추가 */
-        ">
+          color: white; font-size: 14px; font-weight: bold; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
+        ">${safePrice}</div>
+        <div style="color: #333; font-size: 14px; font-weight: 700; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;">
           ${safeName}
         </div>
       </div>
     `;
   }
-
-  // [기본 상태] 단순 가격표
   return `
   <div style="display: flex; flex-direction: column; align-items: center;">
-    <div style="
-      padding: 12px; background-color: #90212A; color: white;
-      font-size: 14px; font-weight: bold; border-radius: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;
-    ">
+    <div style="padding: 12px; background-color: #90212A; color: white; font-size: 14px; font-weight: bold; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap;">
       ${safePrice}
     </div>
-    <div style="
-        color: #333; font-size: 14px; font-weight: 700; 
-        text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-        margin-top: 4px;
-      ">
+    <div style="color: #333; font-size: 14px; font-weight: 700; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; margin-top: 4px;">
         ${safeName}
       </div>
-      </div>
-  `;
+  </div>`;
 };
 
 const createSavedMarkerHtml = (
@@ -245,24 +258,15 @@ const createSavedMarkerHtml = (
   isSelected: boolean = false
 ): string => {
   const safePrice = escapeHtml(price);
-
-  // iconName이 MultiSaveMarker면 통째로 background로 처리, 일반 마커면 background-color로 처리
   const bgStyle =
     iconName === 'MultiSaveMarker'
       ? `background: ${markerBgColors[iconName]};`
       : `background-color: ${markerBgColors[iconName] || '#90212A'};`;
-
   const textColor = getTextColor(iconName);
 
   return `
     <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; z-index: ${isSelected ? 1000 : 1};">
-      <div style="
-        padding: 6px 12px; 
-        ${bgStyle}
-        color: ${textColor}; font-size: 14px; font-weight: bold; border-radius: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; margin-bottom: 4px;
-        ${isSelected ? 'border: 2px solid white;' : ''}
-      ">
+      <div style="padding: 6px 12px; ${bgStyle} color: ${textColor}; font-size: 14px; font-weight: bold; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; margin-bottom: 4px; ${isSelected ? 'border: 2px solid white;' : ''}">
         ${safePrice}
       </div>
       <img src="${iconSrc}" style="width: 32px; height: 32px;" alt="save-marker" />
@@ -288,13 +292,13 @@ const NaverMap = ({
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<naver.maps.Map | null>(null);
   const markers = useRef<naver.maps.Marker[]>([]);
-  //const navigate = useNavigate();
 
-  // [2] Ref에 타입 명시
   const selectedMarkerRef = useRef<naver.maps.Marker | null>(null);
   const selectedMarkerDataRef = useRef<MarkerData | null>(null);
 
-  // [추가] 개별 식당 마커용 Ref (선택된 마커와 가격만 저장)
+  // [NEW] API 캐싱을 위한 Ref (요구사항 1) - any 없이 엄격한 타입 유지
+  const lastFetchInfo = useRef<{ bounds: naver.maps.LatLngBounds; zoom: number } | null>(null);
+
   const selectedRestaurantRef = useRef<{
     marker: naver.maps.Marker;
     price: string;
@@ -312,7 +316,6 @@ const NaverMap = ({
     selectedRestaurantRef.current = null;
   };
 
-  // [추가] 식당 마커 클릭 핸들러 (상태 관리 로직)
   const handleRestaurantClick = useCallback(
     (
       marker: naver.maps.Marker,
@@ -357,7 +360,6 @@ const NaverMap = ({
     []
   );
 
-  // [추가] 빈 공간 클릭 시 선택 해제 핸들러
   const handleMapClick = useCallback(() => {
     const prev = selectedRestaurantRef.current;
 
@@ -369,7 +371,7 @@ const NaverMap = ({
         });
       } else {
         prev.marker.setIcon({
-          content: createSavedMarkerHtml(prev.price, prev.iconSrc!, prev.iconName!, false), // <-- 추가됨
+          content: createSavedMarkerHtml(prev.price, prev.iconSrc!, prev.iconName!, false),
           anchor: new window.naver.maps.Point(16, 50),
         });
       }
@@ -381,41 +383,33 @@ const NaverMap = ({
     }
   }, [onMapClick]);
 
-  // [3] handleClusterMarkerClick를 먼저 정의하고 useCallback으로 감쌉니다.
-  // (이 함수가 아래 fetchAndDrawMarkers에서 사용되기 때문입니다)
   const handleClusterMarkerClick = useCallback(
     (marker: naver.maps.Marker, data: MarkerData, restaurantIds: number[]) => {
-      // 1. 이전 마커 복구
       const prevMarker = selectedMarkerRef.current;
       const prevData = selectedMarkerDataRef.current;
 
       if (prevMarker && prevData && prevMarker !== marker) {
         prevMarker.setIcon({
-          content: createClusterMarkerHtml(prevData.count, false),
+          content: createClusterMarkerHtml(prevData.count, prevData.size, false),
           anchor: new window.naver.maps.Point(prevData.size / 2, prevData.size / 2),
         });
       }
 
-      // 2. 현재 마커 변경
       marker.setIcon({
-        content: createClusterMarkerHtml(data.count, true),
+        content: createClusterMarkerHtml(data.count, data.size, true),
         anchor: new window.naver.maps.Point(data.size / 2, data.size / 2),
       });
 
-      // 3. 저장
       selectedMarkerRef.current = marker;
       selectedMarkerDataRef.current = data;
 
-      // 4. 부모 알림
       if (onClusterClick) {
         onClusterClick(data.name, restaurantIds);
       }
     },
-    [onClusterClick] // onClusterClick이 바뀌면 이 함수도 갱신됨 (Stale Closure 방지)
+    [onClusterClick]
   );
 
-  // [4] fetchAndDrawMarkers도 useCallback으로 감쌉니다.
-  // handleClusterMarkerClick이 갱신되면 얘도 갱신되어야 이벤트 리스너가 최신 함수를 바라봅니다.
   const fetchAndDrawMarkers = useCallback(async () => {
     if (!mapInstance.current) return;
     const map = mapInstance.current;
@@ -426,18 +420,44 @@ const NaverMap = ({
     const zoom = map.getZoom();
     const level = getMapLevel(zoom);
 
-    const mapParams = {
-      latMin: rawBounds.south(),
-      latMax: rawBounds.north(),
-      lonMin: rawBounds.west(),
-      lonMax: rawBounds.east(),
+    // [NEW] 캐싱 검사: 화면이 넓은 버퍼 안에 완전히 들어가 있고, 줌 레벨이 같다면 API 스킵
+    if (isSaveModeView) {
+      lastFetchInfo.current = null;
+    } else if (
+      lastFetchInfo.current &&
+      lastFetchInfo.current.zoom === zoom &&
+      lastFetchInfo.current.bounds.hasBounds(rawBounds)
+    ) {
+      return;
+    }
+
+    // [NEW] 현재 화면보다 상하좌우 1.5배 넓은 버퍼 영역 계산
+    const latDiff = rawBounds.north() - rawBounds.south();
+    const lonDiff = rawBounds.east() - rawBounds.west();
+
+    const expandedBounds = new window.naver.maps.LatLngBounds(
+      new window.naver.maps.LatLng(
+        rawBounds.south() - latDiff * 0.5,
+        rawBounds.west() - lonDiff * 0.5
+      ),
+      new window.naver.maps.LatLng(
+        rawBounds.north() + latDiff * 0.5,
+        rawBounds.east() + lonDiff * 0.5
+      )
+    );
+
+    // API 요청용 파라미터는 확장된 버퍼 영역으로 설정
+    const requestParams = {
+      latMin: expandedBounds.south(),
+      latMax: expandedBounds.north(),
+      lonMin: expandedBounds.west(),
+      lonMax: expandedBounds.east(),
     };
 
-    console.log('[NaverMap] UI에서 생성한 요청 데이터:', mapParams);
+    console.log('[NaverMap] 캐시 미스! 넓은 영역으로 새로 요청:', requestParams);
 
     try {
       if (isSaveModeView) {
-        // [수정 1] any 제거: 새 API가 요구하는 파라미터 타입에 맞게 객체 생성
         const savedParams: {
           latMin: number;
           latMax: number;
@@ -445,10 +465,10 @@ const NaverMap = ({
           lonMax: number;
           color?: string;
         } = {
-          latMin: mapParams.latMin,
-          latMax: mapParams.latMax,
-          lonMin: mapParams.lonMin,
-          lonMax: mapParams.lonMax,
+          latMin: requestParams.latMin,
+          latMax: requestParams.latMax,
+          lonMin: requestParams.lonMin,
+          lonMax: requestParams.lonMax,
         };
 
         if (selectedGroupColor) {
@@ -460,30 +480,24 @@ const NaverMap = ({
 
         if (!res.data || !res.data.groups) return;
 
-        // [수정 2] any 제거: 식당 ID(number)를 키로, AggregatedPin 타입을 값으로 가지는 Map
         const pinAggregator = new Map<number, AggregatedPin>();
 
-        // [수정 3] any 제거: group과 pin에 API 명세에 맞는 정확한 타입 지정
         res.data.groups.forEach((group: SavedMapGroup) => {
           group.pins.forEach((pin: SavedMapPin) => {
             if (pinAggregator.has(pin.restaurantId)) {
-              // 이미 등록된 식당이면 색상만 배열에 추가 (non-null assertion ! 사용)
               pinAggregator.get(pin.restaurantId)!.colors.push(group.color);
             } else {
-              // 처음 등록하는 식당이면 핀 정보와 함께 색상 배열 초기화
               pinAggregator.set(pin.restaurantId, { ...pin, colors: [group.color] });
             }
           });
         });
 
-        // 병합된 정보를 바탕으로 마커 그리기
-        // [수정 4] any 제거: pinInfo 파라미터에 AggregatedPin 타입 지정
         pinAggregator.forEach((pinInfo: AggregatedPin, restaurantId: number) => {
           let markerSrc = MultiSaveMarker;
           let currentIconName = 'MultiSaveMarker';
 
           if (pinInfo.colors.length === 1) {
-            const iconName = mapColorToIcon(pinInfo.colors[0]); // "COLOR_01" -> "SaveMarker1"
+            const iconName = mapColorToIcon(pinInfo.colors[0]);
             markerSrc = saveMarkers[iconName] || MultiSaveMarker;
             currentIconName = iconName;
           }
@@ -503,7 +517,6 @@ const NaverMap = ({
           });
 
           naver.maps.Event.addListener(marker, 'click', () => {
-            // API 명세 상 name이 없으므로 빈 문자열, 타입은 'saved'로 전달
             handleRestaurantClick(
               marker,
               pinInfo.corkagePrice,
@@ -520,13 +533,14 @@ const NaverMap = ({
           markers.current.push(marker);
         });
 
-        return; // 저장 모드 로직 완료 후 조기 종료
+        return;
       }
 
-      const response = await getMapData(mapParams);
+      const response = await getMapData(requestParams);
+      lastFetchInfo.current = { bounds: expandedBounds, zoom };
       clearMarkers();
 
-      // 1. 개별 매장
+      // 1. 개별 매장 (Zoom >= 17)
       if (level === 'restaurant') {
         const restaurantData = response.data as MapRestaurantData[];
         restaurantData.forEach((item) => {
@@ -539,10 +553,8 @@ const NaverMap = ({
             },
           });
 
-          // [수정] 클릭 시 handleRestaurantClick 호출 (가격 정보만 넘김)
           naver.maps.Event.addListener(marker, 'click', () => {
             handleRestaurantClick(marker, item.corkagePrice, item.restaurantName);
-            // navigate(`/detail-info/${item.restaurantId}`); // 필요하면 주석 해제
             if (onRestaurantClick) {
               onRestaurantClick(item.restaurantId);
             }
@@ -551,20 +563,20 @@ const NaverMap = ({
           markers.current.push(marker);
         });
       }
-      // 2. 동 단위
+      // 2. 동 단위 클러스터 (14 <= Zoom < 17)
       else if (level === 'dong') {
         const clusterData = response.data as MapRestaurantData[];
         const dongClusters = groupByDong(clusterData);
 
         dongClusters.forEach(({ name, count, centerLat, centerLon, restaurantIds }) => {
-          const size = 35 + count * 1.5;
+          const size = getClusterSize(count);
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
             clickable: true,
             title: name,
             icon: {
-              content: createClusterMarkerHtml(count, false),
+              content: createClusterMarkerHtml(count, size, false),
               anchor: new window.naver.maps.Point(size / 2, size / 2),
             },
           });
@@ -576,42 +588,30 @@ const NaverMap = ({
           markers.current.push(marker);
         });
       }
-      // 3. 시/군/구
+      // 3. 구 단위 클러스터 (Zoom < 14) - [NEW] 여러 개의 구로 쪼개기
       else {
         const restaurantData = response.data as MapRestaurantData[];
-        if (restaurantData.length > 0) {
-          const centerLat =
-            restaurantData.reduce((acc, cur) => acc + cur.lat, 0) / restaurantData.length;
-          const centerLon =
-            restaurantData.reduce((acc, cur) => acc + cur.lon, 0) / restaurantData.length;
-          const count = restaurantData.length;
-          const size = 35 + count * 1.5;
+        const sigunguClusters = groupBySigungu(restaurantData);
 
-          const sample = restaurantData[0].address || '';
-          const areaName =
-            level === 'sigungu'
-              ? (sample.match(/([가-힣A-Za-z0-9]+(?:구|군|시))/)?.[1] ?? '선택 지역')
-              : (sample.match(/([가-힣]+(?:특별시|광역시|특별자치시|특별자치도|도))/)?.[1] ??
-                '선택 지역');
-
-          const restaurantIds = restaurantData.map((d) => d.restaurantId);
+        sigunguClusters.forEach(({ name, count, centerLat, centerLon, restaurantIds }) => {
+          const size = getClusterSize(count);
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(centerLat, centerLon),
             map: map,
             clickable: true,
-            title: areaName,
+            title: name,
             icon: {
-              content: createClusterMarkerHtml(count, false),
+              content: createClusterMarkerHtml(count, size, false),
               anchor: new window.naver.maps.Point(size / 2, size / 2),
             },
           });
 
           naver.maps.Event.addListener(marker, 'click', () => {
-            handleClusterMarkerClick(marker, { count, name: areaName, size }, restaurantIds);
+            handleClusterMarkerClick(marker, { count, name, size }, restaurantIds);
           });
 
           markers.current.push(marker);
-        }
+        });
       }
     } catch (error) {
       console.error('지도 데이터를 가져오는 데 실패했습니다:', error);
@@ -622,7 +622,7 @@ const NaverMap = ({
     handleClusterMarkerClick,
     handleRestaurantClick,
     onRestaurantClick,
-  ]); // 의존성 추가
+  ]);
 
   // Effect 1: 지도 초기화 (최초 1회)
   useEffect(() => {
@@ -644,8 +644,7 @@ const NaverMap = ({
     mapInstance.current = map;
   }, []);
 
-  // Effect 2: 이벤트 리스너 등록 및 데이터 Fetch
-  // fetchAndDrawMarkers가 변경될 때(=부모 props가 바뀌었을 때) 실행됨
+  // Effect 2: 초기 API 호출
   useEffect(() => {
     const map = mapInstance.current;
     if (!map) return;
@@ -653,7 +652,7 @@ const NaverMap = ({
     fetchAndDrawMarkers();
   }, [fetchAndDrawMarkers]);
 
-  // [수정] Effect 3: 지도 이벤트 리스너 전용 (이벤트 함수가 바뀌어도 지도를 다시 그리지 않음!)
+  // Effect 3: 지도 드래그 및 줌 이벤트 감지
   useEffect(() => {
     const map = mapInstance.current;
     if (!map) return;
