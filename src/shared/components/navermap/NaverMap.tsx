@@ -92,10 +92,12 @@ const getDongFromAddress = (address: string): string | null => {
 const getSigunguFromAddress = (address: string): string | null => {
   if (!address) return null;
   const parts = address.split(/\s+/);
-  const cand = parts.find(
+  const candidates = parts.filter(
     (t) => /(구|군|시)$/.test(t) && !/(특별시|광역시|특별자치시|도)$/.test(t)
   );
-  return cand || '기타';
+  if (candidates.length > 0) return candidates[candidates.length - 1];
+  const city = parts.find((t) => /(특별시|광역시|특별자치시)$/.test(t));
+  return city || '기타';
 };
 
 type DongBucket = {
@@ -419,8 +421,9 @@ const NaverMap = ({
     const level = getMapLevel(zoom);
 
     // [NEW] 캐싱 검사: 화면이 넓은 버퍼 안에 완전히 들어가 있고, 줌 레벨이 같다면 API 스킵
-    if (
-      !isSaveModeView &&
+    if (isSaveModeView) {
+      lastFetchInfo.current = null;
+    } else if (
       lastFetchInfo.current &&
       lastFetchInfo.current.zoom === zoom &&
       lastFetchInfo.current.bounds.hasBounds(rawBounds)
@@ -442,11 +445,6 @@ const NaverMap = ({
         rawBounds.east() + lonDiff * 0.5
       )
     );
-
-    // 다음 드래그 시 캐시 활용을 위해 기록 갱신
-    if (!isSaveModeView) {
-      lastFetchInfo.current = { bounds: expandedBounds, zoom };
-    }
 
     // API 요청용 파라미터는 확장된 버퍼 영역으로 설정
     const requestParams = {
@@ -539,6 +537,7 @@ const NaverMap = ({
       }
 
       const response = await getMapData(requestParams);
+      lastFetchInfo.current = { bounds: expandedBounds, zoom };
       clearMarkers();
 
       // 1. 개별 매장 (Zoom >= 17)
