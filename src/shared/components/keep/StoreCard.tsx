@@ -66,7 +66,7 @@ const StoreCard = ({
 
   return (
     <div
-      className="flex w-full flex-col bg-white"
+      className="flex w-full cursor-pointer flex-col bg-white"
       onClick={() => navigate(`/detail-info/${restaurant.restaurantId}`)}
     >
       <div className="relative flex w-full items-start justify-between pl-4">

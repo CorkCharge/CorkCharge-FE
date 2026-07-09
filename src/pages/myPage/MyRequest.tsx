@@ -33,6 +33,21 @@ function MyRequest() {
 
     try {
       const res = await getMyRequestDetail(Number(id));
+      if (res.preferredPrice === null || res.preferredPrice === undefined) {
+        // preferredPrice가 없는 경우는 1차 해주세요만 한 경우
+        navigate('/doit/request', {
+          state: {
+            // TODO: restaurantID 데이터 패칭 필요
+            // TODO: address 데이터 패칭필요
+            storeId: res.restaurantId ?? 1,
+            storeName: res.restaurantName,
+            address: res.address ?? '',
+          },
+          // 현재 페이지를 스택에서 제외하면서 이동
+          replace: true,
+        });
+        return;
+      }
       setMyReq(res);
     } catch (e) {
       console.error('해주세요 상세정보 가져오기 실패: ' + e);

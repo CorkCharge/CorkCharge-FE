@@ -1,4 +1,5 @@
 import { cn } from '@/shared/utils/utils';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,8 +12,8 @@ interface ModalProps {
 const Modal = ({ isOpen, onClose, children, hasCloseButton = false, className }: ModalProps) => {
   if (!isOpen) return null;
 
-  return (
-    <div className={'fixed inset-0 z-50 flex items-center justify-center bg-black/50'}>
+  return createPortal(
+    <div className={'fixed inset-0 z-[102] flex items-center justify-center bg-black/50'}>
       <div
         className={cn(
           'relative min-w-[300px] rounded-bl-lg rounded-br-3xl rounded-tl-3xl rounded-tr-lg bg-white p-6 shadow-lg',
@@ -29,7 +30,8 @@ const Modal = ({ isOpen, onClose, children, hasCloseButton = false, className }:
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
