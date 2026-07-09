@@ -15,11 +15,7 @@ function RequestList() {
       <div
         key={req.helprequestId}
         className="relative cursor-pointer border-b border-[var(--gray-3)] p-4"
-        onClick={() =>
-          navigate(`/my/request/${req.helprequestId}`, {
-            state: { restaurantName: 'rn', restaurantId: 5 },
-          })
-        }
+        onClick={() => navigate(`/my/request/${req.helprequestId}`)}
       >
         <div className="flex flex-col font-medium" style={{ maxWidth: 'calc(100% - 20px)' }}>
           <span className="truncate text-[var(--gray-8)]">{req.restaurantName}</span>

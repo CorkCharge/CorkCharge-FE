@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import { getMyRequestDetail } from '@/shared/apis/user/user.api';
@@ -22,9 +22,6 @@ function MyRequest() {
 
   const { id } = useParams();
 
-  const location = useLocation();
-  const { restName, restId } = location.state;
-
   const [myReq, setMyReq] = useState<MyReqDetailResponse>();
 
   useEffect(() => {
@@ -36,13 +33,15 @@ function MyRequest() {
 
     try {
       const res = await getMyRequestDetail(Number(id));
-      if (!res.preferredPrice) {
+      if (res.preferredPrice === null || res.preferredPrice === undefined) {
         // preferredPrice가 없는 경우는 1차 해주세요만 한 경우
         navigate('/doit/request', {
           state: {
-            storeId: restId,
-            storeName: restName,
-            address: '',
+            // TODO: restaurantID 데이터 패칭 필요
+            // TODO: address 데이터 패칭필요
+            storeId: res.restaurantId ?? 1,
+            storeName: res.restaurantName,
+            address: res.address ?? '',
           },
           // 현재 페이지를 스택에서 제외하면서 이동
           replace: true,

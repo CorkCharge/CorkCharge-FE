@@ -126,14 +126,7 @@ function DoitRequest() {
       {/* 헤더 */}
       <div className="relative flex h-12 items-center justify-center text-center font-bold text-white">
         해주세요
-        <img
-          src={arrow}
-          className="absolute left-0 cursor-pointer"
-          onClick={() => {
-            console.log('뒤로가기');
-            navigate(-1);
-          }}
-        />
+        <img src={arrow} className="absolute left-0 cursor-pointer" onClick={() => navigate(-1)} />
       </div>
 
       {/* 가게 정보 */}
